@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { crops } from '@/lib/catalog';
 import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
 import { clearDraft, loadDraft, saveDraft } from '@/lib/storage';
@@ -12,10 +13,11 @@ const initial: Form = { location: { latitude: '', longitude: '' }, history: empt
 const labels = ['Localização', 'Histórico', 'Solo', 'Prioridades', 'Revisar'];
 
 export function ExploreWizard() {
+  const router = useRouter();
   const [step, setStep] = useState(0); const [form, setForm] = useState<Form>(initial); const [message, setMessage] = useState<string>();
   const restore = () => { const draft = loadDraft(); if (!draft) { setMessage('Nenhum rascunho válido foi encontrado neste navegador.'); return; } setForm({ ...initial, ...draft.data, location: { latitude: String(draft.data.location.latitude), longitude: String(draft.data.location.longitude) } } as Form); setMessage('Rascunho restaurado.'); };
   const parsed = () => analysisInputSchema.safeParse({ ...form, location: { latitude: Number(form.location.latitude), longitude: Number(form.location.longitude) }, history: form.history.map((event) => ({ ...event, cropId: event.cropId || undefined })), soil: form.soil.ph || form.soil.organicCarbonGKg ? { origin: form.soil.origin, ...(form.soil.ph ? { ph: Number(form.soil.ph) } : {}), ...(form.soil.organicCarbonGKg ? { organicCarbonGKg: Number(form.soil.organicCarbonGKg) } : {}) } : undefined });
-  const next = () => { if (step < 4) { setStep(step + 1); return; } const result = parsed(); if (!result.success) { setMessage(result.error.issues[0]?.message ?? 'Revise os campos obrigatórios.'); return; } saveDraft(result.data); setMessage('Rascunho salvo localmente. As estratégias serão geradas no S3.'); };
+  const next = () => { if (step < 4) { setStep(step + 1); return; } const result = parsed(); if (!result.success) { setMessage(result.error.issues[0]?.message ?? 'Revise os campos obrigatórios.'); return; } saveDraft(result.data); router.push('/results'); };
   const updateHistory = (index: number, key: string, value: string) => setForm((current) => ({ ...current, history: current.history.map((event, eventIndex) => eventIndex === index ? { ...event, [key]: value } : event) }));
   return <section className="max-w-3xl"><ol className="mb-8 flex flex-wrap gap-2" aria-label="Etapas">{labels.map((label, index) => <li key={label} className={`rounded-full px-3 py-1 text-sm ${index === step ? 'bg-lime-300 text-slate-950' : 'bg-slate-800 text-slate-300'}`}>{index + 1}. {label}</li>)}</ol><h1 className="text-3xl font-bold">{labels[step]}</h1>
     {step === 0 && <div className="mt-6 grid gap-4 rounded-xl border border-slate-700 p-5"><p className="text-slate-300">Coordenadas permitem clima global. Regras agronômicas regionais só serão habilitadas para o piloto Rio Verde.</p><Button type="button" variant="secondary" onClick={() => setForm({ ...form, location: { latitude: '-17.798', longitude: '-50.919' } })}>Usar piloto Rio Verde (GO)</Button><label>Latitude<input className="mt-1 block w-full rounded bg-slate-800 p-2" inputMode="decimal" value={form.location.latitude} onChange={(event) => setForm({ ...form, location: { ...form.location, latitude: event.target.value } })} /></label><label>Longitude<input className="mt-1 block w-full rounded bg-slate-800 p-2" inputMode="decimal" value={form.location.longitude} onChange={(event) => setForm({ ...form, location: { ...form.location, longitude: event.target.value } })} /></label></div>}

@@ -2,16 +2,16 @@
 
 | Crop | Explicit verified evidence | Rio Verde ZARC window | Material gaps |
 |---|---|---|---|
-| Soybean | Air adaptation 20–30 °C; optimum ~30 °C, Embrapa Soja 2006, p. 12 | null | cultivar cycle, pH, Kc |
-| Maize | MAPA simulation group II 110–145 days; soil 25–30 °C, Embrapa 2022, pp. 137–138 | null | Rio Verde window, Kc |
-| Grain sorghum | optimum ~33 °C; loss below 16/above 38 °C, Embrapa 2015, p. 13 | null | cultivar cycle, Kc |
-| Sunflower | 10–34 °C tolerated; 27–28 °C optimum; pH 5.2–6.4 CaCl2, Embrapa 1997, pp. 7–9 | null | cultivar cycle, Kc |
-| Cowpea | base temperature ~11 °C, Embrapa 2000, p. 51; location Meio-Norte | null | Rio Verde transfer invalid, cycle, pH, Kc |
+| Soybean | air adaptation 20–30 °C; ideal ~30 °C, Embrapa 2006, p. 12 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar cycle, pH, Kc |
+| Maize | Group II 110–145 d emergence→physiological maturity, Embrapa 2022 | verified local ZARC segments: `rio-verde-zarc.json` | named cultivar, pH, Kc |
+| Grain sorghum | no good growth <16 or >38 °C, Embrapa 2011 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar-specific optimum/cycle, pH, Kc |
+| Sunflower | pH 5.2–6.4 CaCl₂, Embrapa 1997 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar cycle, temperature, Kc |
+| Cowpea | development 18–34 °C; germination base 8–11 °C, Embrapa 2017 | null | Rio Verde transfer invalid, cycle, pH, Kc |
 | Pearl millet | night mean 15–28 °C for most cultivars, Embrapa 2009 | null | cycle, pH, Kc |
-| U. ruziziensis | no numerical field verified | null | all requested fields |
-| C. juncea | 63–68 days to cycle/cut in Petrolina trials, Embrapa 2004, p. 14 | null | Rio Verde transfer invalid, temperature, pH, Kc |
+| U. ruziziensis | perennial classification only; no duration | null | temperature, pH, Kc, Rio Verde calendar |
+| C. juncea | 63–68 days to flowering/cycle, irrigated Petrolina trials, Embrapa 2004 | null | Rio Verde transfer invalid, temperature, pH, Kc |
 
-All missing values remain `null`. None of these non-ZARC regional results validate a Rio Verde calendar.
+All missing values remain `null`. Non-Rio-Verde values do not validate a local calendar. Partial evidence does not make any P0 crop recommendation-eligible.
 
 ## ZARC audit
 
