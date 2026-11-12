@@ -22,6 +22,11 @@ test('selects Brazil, Ghana, and India globally then transfers coordinates to fa
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
   await expect(page.getByText('Clima histórico observado')).toBeVisible();
+  await expect(page.getByRole('button', { name: /soja.*Evidência local insuficiente/i })).toBeVisible();
+  await page.getByRole('button', { name: /soja.*Evidência local insuficiente/i }).press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Detalhes de soja' })).toBeVisible();
+  await expect(page.getByText('N/D: faixa térmica verificável não está disponível.')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Fechar' }).click();
   await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
   await expect(page.getByRole('heading', { name: 'Localização' })).toBeVisible();
   await expect(page.getByText('Local do atlas aplicado. Complete os dados da fazenda.')).toBeVisible();

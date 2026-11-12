@@ -71,3 +71,7 @@ G0 está pronto para G1. A decisão de mapa está documentada, mas a dependênci
 ## Atualização G1
 
 G1 instalou `maplibre-gl` e criou o atlas em `/explore`. O componente só inicializa MapLibre no cliente quando `NEXT_PUBLIC_MAP_STYLE_URL` estiver configurada com estilo/tiles autorizados; `/.env.example` documenta a variável. Sem configuração, o fallback por coordenadas continua sendo o fluxo completo e testado, sem carregar tiles ou representar camada climática sintética. A localização escolhida é passada para o formulário preservado em `/farm`; G3 substituirá esse formulário por timeline e migrará o rascunho V1.
+
+## Atualização G2
+
+G2 adicionou o deck interativo das seis culturas P0 no painel do atlas. Cada carta e ficha usa `evidenceCoverageAssessment`, uma função pura que separa proveniência de adequação: fora de Rio Verde, a cobertura é `insufficient_evidence`; uma entrada ZARC exata de Rio Verde a eleva somente a `partial`. O drawer expõe valores documentados, `N/D`, fontes e lacunas, sem alegar aptidão local.

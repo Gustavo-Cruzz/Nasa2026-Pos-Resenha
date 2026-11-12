@@ -161,3 +161,13 @@ Implemented: panel shows NASA loading, recoverable error/retry, source, period, 
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (27 unit tests), `npm run build`, and `npm run test:e2e` (6 Playwright tests) passed. E2E covers no-style fallback, Brazil/Ghana/India selection, transfer to farm and retryable NASA failure.
 
 Limitations / next: a real tile map needs a user-supplied, authorized `NEXT_PUBLIC_MAP_STYLE_URL`; this repository ships none and loads no public OSM tiles. G1 does not classify land/ocean because no land-use dataset exists. G2 should add crop deck/cards and pure evidence-coverage statuses without promoting Brazilian evidence to global suitability.
+
+## G2 — Deck de culturas e evidência
+
+Status: complete.
+
+Implemented: added the six P0 crop deck to the global atlas, with pixel sprites, keyboard-operable cards, an accessible details dialog, explicit `N/D` values and source links. `evidenceCoverageAssessment` is a pure boundary: P0 crops are `insufficient_evidence` globally and only `partial` when an exact Rio Verde ZARC record exists. It never states that a crop is suitable for a coordinate; ZARC raw codes remain context, not percentages.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (31 unit tests), `npm run build`, and `npm run test:e2e` (6 Playwright tests) passed. Tests cover the exact six P0 IDs, non-pilot unknown evidence, Rio Verde partial context, preserved nulls, keyboard opening and source detail access.
+
+Limitations / next: the cards expose only documented catalog values and provenance; they do not infer calendars, Kc, crop water demand, irrigation, yield, soil suitability or local validation. G3 replaces the retained `/farm` wizard with a local-first timeline and a non-destructive V1-to-V2 draft migration.
