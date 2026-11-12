@@ -1,5 +1,15 @@
 # Sprint log
 
+## P0 — Clareza da fazenda e linguagem visual agrícola
+
+Status: complete.
+
+Implemented: the farm timeline now presents each date as a month/year input with local, Portuguese validation and focus on the first invalid control. Saving is split into explicit actions: `Salvar rascunho` remains on the page and confirms the local save with its time; `Salvar e ir ao laboratório` saves first and then opens the lab with a visible handoff confirmation. Crop cards have larger sprites, taller touch targets and compact evidence labels; the global visual language now uses forest, soil and crop tones with larger default small-text rendering.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (12 Playwright tests) passed. E2E covers the inline month-error message, saved-without-navigation feedback, saved-and-continue confirmation, overlap error and 375px draft migration.
+
+Limitations / next: the interface is clearer and more agricultural in palette, but a final immersive release still needs an intentional asset/art direction pass (terrain, farm-state and interaction sprites) after a product-level visual brief. This P0 does not change the evidence model, agronomic constraints, local-only storage or exploratory disclaimer.
+
 ## S0 — Foundation
 
 Status: complete.

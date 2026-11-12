@@ -1,3 +1,6 @@
 import { RotationLab } from '@/components/lab/rotation-lab';
 
-export default function LabPage() { return <RotationLab />; }
+export default async function LabPage({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
+  const params = await searchParams;
+  return <RotationLab savedFarm={params.saved === 'farm'} />;
+}

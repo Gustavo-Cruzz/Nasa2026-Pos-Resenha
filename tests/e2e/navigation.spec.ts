@@ -32,8 +32,8 @@ test('selects Brazil, Ghana, and India globally then transfers coordinates to fa
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
   await expect(page.getByText('Clima histórico observado')).toBeVisible();
-  await expect(page.getByRole('button', { name: /soja.*Evidência local insuficiente/i })).toBeVisible();
-  await page.getByRole('button', { name: /soja.*Evidência local insuficiente/i }).press('Enter');
+  await expect(page.getByRole('button', { name: /soja.*Sem evidência local/i })).toBeVisible();
+  await page.getByRole('button', { name: /soja.*Sem evidência local/i }).press('Enter');
   await expect(page.getByRole('dialog', { name: 'Detalhes de soja' })).toBeVisible();
   await expect(page.getByText('N/D: faixa térmica verificável não está disponível.')).toHaveCount(0);
   await page.getByRole('button', { name: 'Fechar' }).click();
@@ -73,8 +73,9 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
   await expect(page.getByRole('heading', { name: 'Linha do tempo da fazenda' })).toBeVisible();
   await expect(page.getByLabel('Cultura planejada')).toHaveValue('maize');
   await page.getByLabel('Cultura planejada').selectOption('sunflower');
-  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await page.getByRole('button', { name: 'Salvar e ir ao laboratório' }).click();
   await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('Rascunho da fazenda salvo');
   await page.getByRole('link', { name: 'Revisar comparação' }).click();
   await expect(page.getByRole('heading', { name: 'Plano do produtor' })).toBeVisible();
   await expect(page.getByRole('article').filter({ hasText: 'Plano do produtor' })).toContainText('girassol');
@@ -85,8 +86,8 @@ test('migrates a V1 draft on the farm timeline and preserves its data at 375px',
   await page.setViewportSize({ width: 375, height: 844 });
   await page.goto('/farm');
   await expect(page.getByRole('heading', { name: 'Linha do tempo da fazenda' })).toBeVisible();
-  await expect(page.getByLabel('Início do evento 1')).toHaveValue('2023-01');
-  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByLabel('Início (mês/ano) do evento 1')).toHaveValue('2023-01');
+  await page.getByRole('button', { name: 'Salvar e ir ao laboratório' }).click();
   await expect(page).toHaveURL(/\/lab/);
   const version = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').version);
   expect(version).toBe(2);
@@ -111,9 +112,33 @@ test('blocks overlapping timeline dates and allows another crop entry', async ({
   await page.getByLabel('Outra cultura do evento 2').isHidden().catch(() => undefined);
   await page.getByText('Outra cultura', { exact: true }).nth(1).click();
   await page.getByLabel('Outra cultura do evento 2').fill('mandioca');
-  await page.getByLabel('Início do evento 2').fill('2023-05');
+  await page.getByLabel('Início (mês/ano) do evento 2').fill('2023-05');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
-  await expect(page.getByRole('status')).toContainText('chronological');
+  await expect(page.getByText('Este evento se sobrepõe ao anterior. Ajuste o início ou fim.')).toBeVisible();
+  await expect(page.getByLabel('Início (mês/ano) do evento 2')).toHaveAttribute('aria-invalid', 'true');
+});
+
+test('explains invalid month fields and confirms a save without navigating away', async ({ page }) => {
+  await installDraft(page);
+  await page.addInitScript(() => {
+    const saved = JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}');
+    saved.data.history[1].startYearMonth = '';
+    window.localStorage.setItem('field-shift:draft', JSON.stringify(saved));
+  });
+  await page.goto('/farm');
+  const start = page.getByLabel('Início (mês/ano) do evento 2');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(start).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByText('Informe mês e ano, por exemplo 2024-06.').first()).toBeVisible();
+  await page.getByLabel('Início (mês/ano) do evento 1').fill('2023-01');
+  await page.getByLabel('Fim (mês/ano) do evento 1').fill('2023-06');
+  await start.fill('2023-07');
+  await page.getByLabel('Fim (mês/ano) do evento 2').fill('2023-12');
+  await page.getByLabel('Início (mês/ano) do evento 3').fill('2024-01');
+  await page.getByLabel('Fim (mês/ano) do evento 3').fill('2024-06');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo às');
+  await expect(page).toHaveURL(/\/farm$/);
 });
 
 test('shows three stacked global scenarios and unknown climate after NASA failure', async ({ page }) => {

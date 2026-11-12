@@ -12,11 +12,11 @@ import { generateCandidates } from '@/lib/engine';
 type Target = { scenario: 'A' | 'B' | 'C'; slot: number };
 const season = (slot: { year: number; season: string }) => `Ano ${slot.year} · Temporada ${slot.season}`;
 
-export function RotationLab() {
+export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
   const [draft] = useState(() => loadDraft());
   const [plan, setPlan] = useState<LabPlan | undefined>(() => draft ? draft.labPlan ?? createLabPlan(draft.data, generateCandidates(draft.data).map((scenario) => scenario.proposedCrop?.cropId)) : undefined);
   const [target, setTarget] = useState<Target>();
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<string | undefined>(savedFarm ? 'Rascunho da fazenda salvo. Agora monte ou revise os cenários.' : undefined);
   const coverage = useMemo(() => draft ? p0Crops.map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id)) : [], [draft]);
   if (!draft || !plan) return <section className="mt-6 rounded-xl border border-slate-700 p-5"><h1 className="text-3xl font-bold">Laboratório de rotações</h1><p className="mt-3 text-slate-300">Registre a fazenda antes de montar hipóteses de cenários.</p><Button asChild className="mt-5"><Link href="/farm">Ir para minha fazenda</Link></Button></section>;
   const pick = (cropId: LabCropId | null) => { if (!target) return; setPlan(changeLabSlot(plan, target.scenario, target.slot, cropId)); setTarget(undefined); setMessage('Slot atualizado. A comparação permanece exploratória e parcial quando houver lacunas.'); };
