@@ -29,7 +29,7 @@ test('selects Brazil, Ghana, and India globally then transfers coordinates to fa
   await page.getByRole('button', { name: 'Fechar' }).click();
   await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
   await expect(page.getByRole('heading', { name: 'Localização' })).toBeVisible();
-  await expect(page.getByText('Local do atlas aplicado. Complete os dados da fazenda.')).toBeVisible();
+  await expect(page.getByText('Local do atlas aplicado. Complete a linha do tempo.')).toBeVisible();
 });
 
 test('shows retryable NASA failure without a fabricated climate metric', async ({ page }) => {
@@ -58,12 +58,35 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
   const edit = page.getByRole('link', { name: 'Editar linha de base' });
   await edit.focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'Revisar' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Linha do tempo da fazenda' })).toBeVisible();
   await expect(page.getByLabel('Cultura planejada')).toHaveValue('maize');
   await page.getByLabel('Cultura planejada').selectOption('sunflower');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
   await expect(page.getByRole('heading', { name: 'Plano do produtor' })).toBeVisible();
   await expect(page.getByRole('article').filter({ hasText: 'Plano do produtor' })).toContainText('girassol');
+});
+
+test('migrates a V1 draft on the farm timeline and preserves its data at 375px', async ({ page }) => {
+  await installDraft(page);
+  await page.setViewportSize({ width: 375, height: 844 });
+  await page.goto('/farm');
+  await expect(page.getByRole('heading', { name: 'Linha do tempo da fazenda' })).toBeVisible();
+  await expect(page.getByLabel('Início do evento 1')).toHaveValue('2023-01');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page).toHaveURL(/\/results/);
+  const version = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').version);
+  expect(version).toBe(2);
+});
+
+test('blocks overlapping timeline dates and allows another crop entry', async ({ page }) => {
+  await installDraft(page);
+  await page.goto('/farm');
+  await page.getByLabel('Outra cultura do evento 2').isHidden().catch(() => undefined);
+  await page.getByText('Outra cultura', { exact: true }).nth(1).click();
+  await page.getByLabel('Outra cultura do evento 2').fill('mandioca');
+  await page.getByLabel('Início do evento 2').fill('2023-05');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByRole('status')).toContainText('chronological');
 });
 
 test('shows three stacked global scenarios and unknown climate after NASA failure', async ({ page }) => {

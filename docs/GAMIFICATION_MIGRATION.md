@@ -75,3 +75,7 @@ G1 instalou `maplibre-gl` e criou o atlas em `/explore`. O componente só inicia
 ## Atualização G2
 
 G2 adicionou o deck interativo das seis culturas P0 no painel do atlas. Cada carta e ficha usa `evidenceCoverageAssessment`, uma função pura que separa proveniência de adequação: fora de Rio Verde, a cobertura é `insufficient_evidence`; uma entrada ZARC exata de Rio Verde a eleva somente a `partial`. O drawer expõe valores documentados, `N/D`, fontes e lacunas, sem alegar aptidão local.
+
+## Atualização G3
+
+G3 substituiu o formulário preservado em `/farm` por uma linha do tempo de três eventos, com seleção P0 ou outro rótulo explícito, datas mensais, solo opcional, irrigação, prioridades e linha de base. `lib/storage.ts` lê V1 e o converte em memória para V2; preserva extras opacos em `legacy` e só escreve V2 após validação e ação explícita de salvar. A validação de cronologia e sobreposição continua centralizada em `analysisInputSchema`.

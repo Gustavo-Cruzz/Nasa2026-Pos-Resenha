@@ -171,3 +171,15 @@ Implemented: added the six P0 crop deck to the global atlas, with pixel sprites,
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (31 unit tests), `npm run build`, and `npm run test:e2e` (6 Playwright tests) passed. Tests cover the exact six P0 IDs, non-pilot unknown evidence, Rio Verde partial context, preserved nulls, keyboard opening and source detail access.
 
 Limitations / next: the cards expose only documented catalog values and provenance; they do not infer calendars, Kc, crop water demand, irrigation, yield, soil suitability or local validation. G3 replaces the retained `/farm` wizard with a local-first timeline and a non-destructive V1-to-V2 draft migration.
+
+## G3 — Linha do tempo da fazenda
+
+Status: complete.
+
+Implemented: replaced the retained `/farm` wizard with a responsive, local-first three-event timeline. Each event selects only the six P0 cards or an explicit “other crop” label, then records start/end month. The view retains optional pH/origin, irrigation, priority sliders, shared planting month and optional producer baseline; it does not invent cycle dates. Zod remains the single validation boundary and prevents reverse or overlapping events before a save.
+
+Implemented: draft persistence now writes V2. A valid V1 draft is read and projected to V2 in memory without overwriting the local V1 record; valid analysis data remains intact and unknown V1 root/data fields are carried in `legacy` when the user explicitly saves. Clearing still asks for confirmation. No server storage was added.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (33 unit tests), `npm run build`, and `npm run test:e2e` (8 Playwright tests) passed. Browser coverage proves V1-to-V2 save at 375px, other-crop entry and an overlap rejection.
+
+Limitations / next: P0 selection is an interaction constraint, not a suitability claim; historical labels may still be any explicit user-provided other crop. The timeline stores local observations only. G4 can build experimental scenario slots only on the existing pure engine/evidence boundaries.
