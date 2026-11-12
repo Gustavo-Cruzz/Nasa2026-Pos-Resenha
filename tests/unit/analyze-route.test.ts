@@ -15,6 +15,8 @@ describe('POST /api/analyze', () => {
     expect(response.status).toBe(200);
     expect(body.strategies).toHaveLength(3);
     expect(body.climate.status).toBe('unavailable');
+    expect(JSON.stringify(body)).not.toMatch(/"score"|"yield"|"etc"|"irrigationNeed"/i);
+    expect(JSON.stringify(body)).not.toContain('locally_validated');
     expect(mocks.resolveClimateContext).toHaveBeenCalledWith(valid.location, 7);
   });
   it('returns 422 before resolving climate for invalid input', async () => {
