@@ -16,6 +16,8 @@ describe('catalog and wizard contracts', () => {
     expect(cropEvidence.every((record) => record.context && record.location && record.source.title && record.source.pageOrSection && record.source.snippet && record.source.accessedAt)).toBe(true);
     expect(cropEvidence.find((record) => record.cropId === 'sunn_hemp' && record.field === 'cycleDaysRange')?.value).toEqual({ min: 63, max: 68 });
     expect(crops.every((crop) => crop.parameterStatus === 'missing')).toBe(true);
+    expect(cropEvidence.find((record) => record.cropId === 'cowpea' && record.field === 'maturityDays')?.source.verification).toBe('verified');
+    expect(cropEvidence.find((record) => record.cropId === 'cowpea' && record.field === 'maturityDays')?.cultivar).toBe('BRS Guariba');
   });
 
   it('accepts partial soil without changing its origin', () => {

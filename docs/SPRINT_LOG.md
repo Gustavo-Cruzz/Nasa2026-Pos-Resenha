@@ -217,3 +217,7 @@ Implemented: added a persistent pt-BR/en locale provider and accessible language
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (11 Playwright tests) passed. E2E proves English selection persists after reload and changes landing/methodology content.
 
 External blockers: no authorized `NEXT_PUBLIC_MAP_STYLE_URL` was supplied, so coordinate fallback remains the only shipped map mode. GitHub remote access cannot authenticate (`could not read Username`); Vercel CLI is not installed/authenticated. No crop evidence was promoted because no new primary source was supplied or verified. These are intentionally not replaced with placeholders, public tiles, credentials or inferred agronomic data.
+
+### Evidência adicional — 2026-11-12
+
+Reviewed the currently linked Embrapa BRS Guariba page directly and promoted only two existing cultivar-specific records: maturity cycle (65–70 days) and the stated disease-response profile. The source page/section and quote are now recorded; runtime does not use the disease claim and does not project either record into a Rio Verde calendar, global suitability, irrigation rule, score or validation. The evidence audit is now 28 verified / 9 unverified records. Lacking map authorization, GitHub/Vercel credentials and further verified primary evidence remain external blockers.
