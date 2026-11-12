@@ -12,6 +12,16 @@ test('navigates from home to the global atlas with coordinate fallback', async (
   await expect(page.getByRole('img', { name: /Mapa mundial indisponível sem estilo autorizado/ })).toBeVisible();
 });
 
+test('persists a real English language selection for landing and methodology', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('Idioma').selectOption('en');
+  await expect(page.getByRole('link', { name: 'Start exploring' })).toBeVisible();
+  await page.getByRole('link', { name: 'Methodology' }).click();
+  await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();
+});
+
 test('selects Brazil, Ghana, and India globally then transfers coordinates to farm', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');

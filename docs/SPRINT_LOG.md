@@ -207,3 +207,13 @@ Implemented: connected navigation across Explore → Farm → Laboratory → Com
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (10 Playwright tests) passed. Browser coverage includes full lab-to-results navigation, keyboard slot editing, source/provenance, NASA failure, global examples and a 375px horizontally scrollable comparison table.
 
 Limitations: the app remains pt-BR-first; the existing English dictionary is structural and not a runtime language switch. No laboratory slot is a verified rotation sequence, calendar, recommendation, score, yield, irrigation requirement or local validation. No deployment action was taken.
+
+## P1 — Internacionalização e entrega operacional
+
+Status: partial — local implementation complete; external credentials/evidence required.
+
+Implemented: added a persistent pt-BR/en locale provider and accessible language selector. Navigation, landing and methodology now switch at runtime and retain the selected language in browser storage. Removed the unused legacy `ExploreWizard`; `/farm` remains the sole farm flow. Updated README with the authorized MapLibre-style and Vercel deployment contract.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (11 Playwright tests) passed. E2E proves English selection persists after reload and changes landing/methodology content.
+
+External blockers: no authorized `NEXT_PUBLIC_MAP_STYLE_URL` was supplied, so coordinate fallback remains the only shipped map mode. GitHub remote access cannot authenticate (`could not read Username`); Vercel CLI is not installed/authenticated. No crop evidence was promoted because no new primary source was supplied or verified. These are intentionally not replaced with placeholders, public tiles, credentials or inferred agronomic data.

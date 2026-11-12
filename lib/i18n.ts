@@ -10,6 +10,12 @@ export const dictionaries = {
     compare: 'Comparar',
     results: 'Resultados',
     comingSoon: 'Fundação pronta. Este fluxo será habilitado nos próximos sprints.',
+    language: 'Idioma',
+    limitTitle: 'Limites visíveis desde o início',
+    limitText: 'Dados climáticos e regras agronômicas são mostrados separadamente. Ausência de evidência nunca vira recomendação.',
+    methodTitle: 'Método e limites',
+    methodIntro: 'Field Shift compara dados climáticos históricos e regras regionais rastreáveis. É apoio exploratório: não é previsão, prescrição agronômica ou validação em campo.',
+    sources: 'Fontes e evidências: docs/METHOD.md, docs/SOURCES.md, data/crop-evidence.json e data/rio-verde-zarc.json no repositório.',
   },
   en: {
     productName: 'Field Shift',
@@ -22,6 +28,12 @@ export const dictionaries = {
     compare: 'Compare',
     results: 'Results',
     comingSoon: 'Foundation ready. This flow will be enabled in later sprints.',
+    language: 'Language',
+    limitTitle: 'Visible limits from the start',
+    limitText: 'Climate data and agronomic rules are shown separately. Missing evidence never becomes a recommendation.',
+    methodTitle: 'Method and limits',
+    methodIntro: 'Field Shift compares historical climate data and traceable regional rules. It is exploratory support, not a forecast, agronomic prescription, or field validation.',
+    sources: 'Sources and evidence: docs/METHOD.md, docs/SOURCES.md, data/crop-evidence.json, and data/rio-verde-zarc.json in the repository.',
   },
 } as const;
 
