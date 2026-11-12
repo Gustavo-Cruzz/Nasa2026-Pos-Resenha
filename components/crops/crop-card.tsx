@@ -1,0 +1,4 @@
+import Image from 'next/image';
+import type { Crop } from '@/lib/catalog';
+const sprite: Record<string, string> = { soybean: 'soybean', maize: 'corn', sorghum: 'sorghum', sunflower: 'sunflower', cowpea: 'cowpea', pearl_millet: 'millet', ruziziensis: 'brachiaria', sunn_hemp: 'sunn-hemp', cotton: 'cotton', pigeon_pea: 'pigeon-pea' };
+export function CropCard({ crop }: { crop: Crop }) { return <article className="rounded-lg border border-slate-700 p-4"><Image className="h-16 w-16 object-contain [image-rendering:pixelated]" src={`/assets/crops/${sprite[crop.id]}.png`} alt="" width={64} height={64} /><h2 className="mt-2 font-bold">{crop.commonNames['pt-BR']}</h2><p className="text-sm text-slate-300">{crop.family} · {crop.parameterStatus === 'missing' ? 'Dados pendentes' : crop.parameterStatus}</p><p className="mt-2 text-xs text-amber-200">{crop.parameterStatus === 'missing' ? 'Não elegível para recomendação.' : 'Evidência parcial.'}</p></article>; }

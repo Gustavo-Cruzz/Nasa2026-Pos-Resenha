@@ -1,0 +1,6 @@
+{
+  "soybean": {"idealTempC":{"min":30,"max":30},"viableTempC":{"min":20,"max":30},"source":"https://www.infoteca.cnptia.embrapa.br/bitstream/doc/468943/1/SistemasdeProducao9.pdf","context":"air temperature; adaptation and growth"},
+  "maize": {"cycleDaysRange":{"min":110,"max":145},"source":"https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/486917/1/Sistema-de-Producao-Cultivo-do-Milho.pdf","context":"MAPA simulation group II; emergence to physiological maturity"},
+  "sunflower": {"idealTempC":{"min":27,"max":28},"viableTempC":{"min":10,"max":34},"soilPhRange":{"min":5.2,"max":6.4},"source":"https://www.infoteca.cnptia.embrapa.br/bitstream/doc/445832/1/ID2434.pdf","context":"air temperature; soil pH in CaCl2"},
+  "pearl_millet": {"idealTempC":{"min":15,"max":28},"source":"https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/877512","context":"mean night temperature for most cultivars"}
+}

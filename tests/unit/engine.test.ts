@@ -1,0 +1,4 @@
+import { describe, expect, it } from 'vitest';
+import { analyze } from '@/lib/engine';
+const base = { location: { latitude: -17.798, longitude: -50.919 }, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
+describe('decision engine', () => { it('uses climate-only scope outside pilot', () => expect(analyze({ ...base, location: { latitude: 0, longitude: 0 } }).scope).toBe('global_climate_only')); it('marks inferred baseline', () => expect(analyze(base).strategies[0].baselineAssumed).toBe(true)); it('does not invent alternatives without templates', () => expect(analyze(base).strategies.slice(1).every((item) => item.unavailable && item.score === null)).toBe(true)); });

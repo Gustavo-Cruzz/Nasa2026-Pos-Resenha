@@ -1,0 +1,22 @@
+import { describe, expect, it } from 'vitest';
+import { crops } from '@/lib/catalog';
+import { analysisInputSchema } from '@/lib/schema';
+
+const base = { location: { latitude: -17.798, longitude: -50.919 }, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
+
+describe('catalog and wizard contracts', () => {
+  it('contains precisely the 10 specified species and preserves missing parameters', () => {
+    expect(crops).toHaveLength(10);
+    expect(crops.filter((crop) => crop.parameterStatus === 'missing')).toHaveLength(10);
+    expect(crops.find((crop) => crop.id === 'soybean')?.idealTempC).toEqual({ min: 30, max: 30 });
+  });
+
+  it('accepts partial soil without changing its origin', () => {
+    const parsed = analysisInputSchema.parse({ ...base, soil: { origin: 'farmer_lab', ph: 6.1 } });
+    expect(parsed.soil).toMatchObject({ origin: 'farmer_lab', ph: 6.1 });
+  });
+
+  it('rejects overlapping historical events', () => {
+    expect(analysisInputSchema.safeParse({ ...base, history: [base.history[0], { ...base.history[1], startYearMonth: '2023-05' }, base.history[2]] }).success).toBe(false);
+  });
+});

@@ -1,0 +1,23 @@
+{
+  "sourceUrl": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&format=JSON&time-standard=UTC&start=20110101&end=20251231&latitude=-17.798&longitude=-50.919&parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CRH2M%2CWS2M%2CALLSKY_SFC_SW_DWN",
+  "fetchedAt": "2026-11-12T13:52:33.656Z",
+  "sha256": "11a3b46a05dbfba06798bb629e8872e1ffc16ff0e2d6c36dddf71aae3c6adac9",
+  "requestedCoordinates": {
+    "latitude": -17.798,
+    "longitude": -50.919
+  },
+  "period": {
+    "start": "20110101",
+    "end": "20251231"
+  },
+  "timezone": "UTC",
+  "units": {
+    "T2M": "C",
+    "T2M_MAX": "C",
+    "T2M_MIN": "C",
+    "PRECTOTCORR": "mm/day",
+    "RH2M": "%",
+    "WS2M": "m/s",
+    "ALLSKY_SFC_SW_DWN": "MJ/m^2/day"
+  }
+}

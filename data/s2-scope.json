@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "pilot": "Rio Verde, GO",
+  "auditedPilotCandidates": ["soybean", "maize", "sunflower", "sorghum"],
+  "displayOnly": ["cowpea", "pearl_millet", "ruziziensis", "sunn_hemp", "cotton", "pigeon_pea"],
+  "rule": "Display-only crops must not receive a regional calendar, eligibility, or recommendation until field evidence and pilot-compatible rules exist."
+}
