@@ -13,6 +13,10 @@
 
 All missing values remain `null`. Non-Rio-Verde values do not validate a local calendar. Partial evidence does not make any P0 crop recommendation-eligible.
 
+## Kc audit
+
+Stage-specific, location-bound Kc evidence is now recorded for soybean, maize, grain sorghum, sunflower, cowpea and sunn hemp in `data/crop-evidence.json`. These values are not interchangeable: cultivar, irrigation, salinity, cycle and locality remain attached to each record. Pearl millet and ruziziensis retain `null` Kc. A maize–ruziziensis consortium source was excluded because it does not establish a ruziziensis single-crop Kc. The engine still does not calculate ET0/ETc or irrigation requirement.
+
 ## ZARC audit
 
 The local official study was inspected. `rio-verde-zarc.json` contains only its explicit ≤20% rainfed segments: soybean, maize, sunflower and grain sorghum, with safra/cycle/texture/table-page evidence. Cowpea, pearl millet, ruziziensis and sunn hemp are not covered by its tables and remain without a Rio Verde window.
