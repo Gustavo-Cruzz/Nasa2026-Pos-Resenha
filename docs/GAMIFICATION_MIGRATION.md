@@ -83,3 +83,7 @@ G3 substituiu o formulário preservado em `/farm` por uma linha do tempo de trê
 ## Atualização G4
 
 G4 criou `/lab` e adicionou `labPlan` validado ao draft V2: três cenários e quatro slots neutros por cenário (Ano 1/2 × Temporada A/B). O laboratório só inicializa a primeira hipótese por cenário a partir do motor atual; slots restantes ficam `N/D` até escolha explícita. O seletor modal é acessível por teclado e só oferece as seis P0. A API/motor reaplicam os indicadores qualitativos existentes à primeira cultura escolhida, sem fabricar um calendário, score ou viabilidade.
+
+## Atualização G5
+
+G5 transformou `/results` em comparação A/B/C: tabela semântica horizontal para os cinco indicadores qualitativos, disclosure de comparação parcial, destaques de prioridades sem ranking e painéis de explicação/fontes. A navegação agora cobre Explorar → Minha fazenda → Laboratório → Comparar → Metodologia. Metodologia e demo documentam que slots A/B são neutros e não formam calendário ou rotação validada.

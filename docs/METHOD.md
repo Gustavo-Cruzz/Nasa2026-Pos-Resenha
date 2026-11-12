@@ -8,4 +8,6 @@ The engine uses a shared planting month (1–12) to summarize NASA climatology a
 
 Evidence levels are `climate_exploration`, `regionally_contextualized`, and reserved `locally_validated`. Rio Verde can raise a crop with a raw ZARC record to `regionally_contextualized`; raw risk codes are not percentages. The MVP never emits `locally_validated`. Priorities only highlight precipitation, cover, or diversity indicators; they do not score or change a selected crop.
 
+The rotation laboratory stores three A/B/C hypotheses with four neutral slots each (Year 1/2 × Season A/B). A slot has no date, duration or implied agricultural calendar. Only the first selected crop is sent to the existing qualitative engine; remaining empty slots are explicit `N/D` gaps. Results compare each available qualitative indicator side by side in a horizontally scrollable table. There is no aggregate ranking, even after priorities change.
+
 Not calculated: ET0, ETc/Kc, irrigation need, yield, NPK/SOC change, economics, pest diagnosis, forecast, or field diagnosis. FAO-56 `ETc = Kc × ET0` is context only, not an active calculation.

@@ -45,6 +45,8 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await installDraft(page);
   await page.goto('/results');
   await expect(page.getByRole('heading', { name: 'Continuidade presumida — confirmar' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
+  await expect(page.getByText('ranking ou nota agregada', { exact: false })).toBeVisible();
   await expect(page.getByText('Climatologia mensal: temperatura média diária mediana (°C)')).toBeVisible();
   await page.getByText('Proveniência climática').click();
   await expect(page.getByText('NASA POWER:', { exact: false })).toBeVisible();
@@ -115,4 +117,15 @@ test('shows three stacked global scenarios and unknown climate after NASA failur
   const y = await headings.evaluateAll((items) => items.map((item) => item.getBoundingClientRect().y));
   expect(y[0]).toBeLessThan(y[1]);
   expect(y[1]).toBeLessThan(y[2]);
+});
+
+test('keeps the comparison table scrollable on a 375px viewport', async ({ page }) => {
+  await installDraft(page);
+  await page.setViewportSize({ width: 375, height: 844 });
+  await page.goto('/results');
+  const table = page.getByRole('table');
+  await expect(table).toBeVisible();
+  const scrolls = await table.evaluate((element) => element.parentElement!.scrollWidth > element.parentElement!.clientWidth);
+  expect(scrolls).toBe(true);
+  await expect(page.getByRole('link', { name: 'Voltar ao laboratório' })).toBeVisible();
 });

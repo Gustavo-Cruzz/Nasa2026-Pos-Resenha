@@ -195,3 +195,15 @@ Implemented: introduced a validated `labPlan` inside the local V2 draft. The lab
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (9 Playwright tests) passed. Unit coverage verifies 3×4 slot structure, no score field and engine reuse; E2E verifies keyboard dialog selection.
 
 Limitations / next: a slot does not establish an agronomic sequence or local feasibility. G5 will make the result comparison explicitly table-oriented and partial, connect navigation/methodology, and add final desktop/mobile flow coverage.
+
+## G5 — Comparação e QA
+
+Status: complete.
+
+Implemented: results now begin with a semantic, horizontally scrollable criteria table for A/B/C and a clear partial-comparison disclosure. Priority weights only highlight table cells; no aggregate score/ranking is rendered. Scenario panels retain drill-down explanations, risks/limitations, source drawers, climate provenance, unknowns and links back to lab/farm. The selected laboratory plan is sent through the validated analysis boundary.
+
+Implemented: connected navigation across Explore → Farm → Laboratory → Compare → Methodology, added localized dictionary labels for the new navigation, updated landing CTAs, in-app methodology, `docs/METHOD.md` and the demo script. The methodology now distinguishes neutral lab slots from an agricultural calendar and explains why comparison remains partial.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (10 Playwright tests) passed. Browser coverage includes full lab-to-results navigation, keyboard slot editing, source/provenance, NASA failure, global examples and a 375px horizontally scrollable comparison table.
+
+Limitations: the app remains pt-BR-first; the existing English dictionary is structural and not a runtime language switch. No laboratory slot is a verified rotation sequence, calendar, recommendation, score, yield, irrigation requirement or local validation. No deployment action was taken.

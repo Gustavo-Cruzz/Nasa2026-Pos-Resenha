@@ -2,7 +2,8 @@ const rows = [
   ['Clima', 'NASA POWER Daily Point; 2011-01-01 a 2025-12-31, UTC. Sentinelas, ausências e valores fora de faixa ficam null.'],
   ['Qualidade', 'Cobertura é calculada por variável. A fixture só serve às coordenadas exatas do piloto e tem SHA-256 registrado.'],
   ['Escopo', 'Fora de Rio Verde (GO): clima global, sem recomendação regional. Dentro: apenas evidência ZARC registrada.'],
-  ['Motor', 'Linha de base explícita ou “presumida — confirmar”. Sem template regional comparável, B/C ficam indisponíveis e score = null.'],
+  ['Motor e laboratório', 'Linha de base explícita ou “presumida — confirmar”; o laboratório registra hipóteses A/B/C em slots neutros. Indicadores qualitativos existentes são recalculados somente para cultura escolhida; slots sem escolha ficam N/D.'],
+  ['Comparação', 'Prioridades apenas destacam indicadores disponíveis. Não há score, ranking agregado, produtividade ou probabilidade de sucesso quando faltam dados.'],
   ['Não calculado', 'Sem previsão, produtividade, NPK, SOC, necessidade de irrigação, diagnóstico de talhão ou ETc.'],
 ];
 
