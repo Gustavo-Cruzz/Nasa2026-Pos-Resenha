@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { cropEvidence, crops } from '@/lib/catalog';
 import { analysisInputSchema } from '@/lib/schema';
 
-const base = { location: { latitude: -17.798, longitude: -50.919 }, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
+const base = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 1, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
 
 describe('catalog and wizard contracts', () => {
   it('contains precisely the 10 specified species and preserves missing parameters', () => {

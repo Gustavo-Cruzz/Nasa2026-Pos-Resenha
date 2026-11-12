@@ -4,6 +4,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { coordinatesSchema, type Coordinates } from '@/lib/schema';
 import { isPilotLocation } from '@/lib/region';
+import { historicalPrecipitationForMonth, monthlyClimatology, type HistoricalPrecipitationMonth, type MonthlyClimateSummary } from '@/lib/climate/indicators';
 
 export const NASA_POWER_PERIOD = { start: '20110101', end: '20251231' } as const;
 export const NASA_POWER_PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN'] as const;
@@ -20,6 +21,14 @@ const physicalRanges: Record<NasaParameter, readonly [number, number]> = {
 export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null };
 export type ClimateProvenance = { source: 'NASA_POWER'; requestedCoordinates: Coordinates; period: typeof NASA_POWER_PERIOD; fetchedAt: string; rawParameterNames: string[]; sourceUrl: string; timezone: 'UTC'; coveragePct: Record<NasaParameter, number>; missingDays: string[]; warnings: string[] };
 export type ClimateDataset = { daily: ClimateDay[]; provenance: ClimateProvenance };
+export type ClimateContext = {
+  status: 'available' | 'unavailable';
+  origin: 'live' | 'verified_fixture' | 'unavailable';
+  monthly: MonthlyClimateSummary[];
+  plantingMonthPrecipitation: HistoricalPrecipitationMonth | null;
+  provenance: ClimateProvenance | null;
+  gaps: string[];
+};
 
 export class ClimateDataError extends Error {
   constructor(public readonly code: 'NASA_REQUEST_FAILED' | 'NASA_RESPONSE_INVALID' | 'NASA_COVERAGE_INSUFFICIENT', message: string) { super(message); }
@@ -100,4 +109,21 @@ export async function readVerifiedPilotFixture(coordinates: Coordinates): Promis
     if (createHash('sha256').update(raw).digest('hex') !== metadata.sha256) return undefined;
     return parseNasaPowerPayload(JSON.parse(raw.toString('utf8')), coordinates, metadata.sourceUrl, metadata.fetchedAt);
   } catch { return undefined; }
+}
+
+/** Single climate acquisition path for both public routes. Fixture fallback is pilot-exact only. */
+export async function resolveClimateContext(coordinates: Coordinates, plantingMonth: number): Promise<ClimateContext> {
+  try {
+    const dataset = await fetchNasaPower(coordinates);
+    return contextFromDataset(dataset, plantingMonth, 'live');
+  } catch (error) {
+    const fixture = await readVerifiedPilotFixture(coordinates);
+    if (fixture) return contextFromDataset(fixture, plantingMonth, 'verified_fixture');
+    const reason = error instanceof ClimateDataError ? error.code : 'NASA_REQUEST_FAILED';
+    return { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: [`Historical NASA POWER climate is unavailable (${reason}). No Rio Verde fixture was used for this coordinate.`] };
+  }
+}
+
+function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture'): ClimateContext {
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }

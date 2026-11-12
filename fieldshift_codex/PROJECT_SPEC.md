@@ -11,7 +11,7 @@
 
 **Proposta de valor:** “Built for the world. Validated locally. Powered by NASA.”
 
-**Regra geográfica:** análise ambiental por coordenadas globais; recomendações agronômicas com regras regionais habilitadas **somente para o piloto Rio Verde (GO)**. Fora do piloto, exibir clima, explicar a limitação e **não** simular uma recomendação validada. O piloto é escolhido em uma opção explícita, com coordenada de referência configurável, sem alegar a identificação automática da divisa municipal.
+**Regra geográfica (atualização exploratória):** análise por coordenadas globais sempre retorna três cenários exploratórios, sem alegação de recomendação agronômica. Rio Verde (GO) pode acrescentar contexto regional ZARC; isto é `regionally_contextualized`, nunca `locally_validated`. O último nível exige futura validação humana/campo rastreável. O piloto é escolhido em opção explícita, sem alegar identificação automática de divisa municipal.
 
 **O que a aplicação NÃO faz:** previsão meteorológica, previsão precisa de produtividade, cálculo quantitativo de variação de NPK/SOC, prescrição agronômica, recomendação fitossanitária universal, previsão de preço, identificação da condição real de cada talhão por uma grade climática regional.
 
@@ -88,7 +88,7 @@ lib/
 2. **Histórico:** 3 eventos anteriores `{cropId, startYearMonth, endYearMonth}` em ordem cronológica; ano/mês obrigatórios. Aceitar “não sei” para culturas não catalogadas com `otherLabel`, mas marcar compatibilidade histórica como incompleta. Não confundir três eventos com três anos.
 3. **Solo (opcional):** pH (0–14), areia/silte/argila (% somando ≈100, apenas quando todas informadas), carbono orgânico (g/kg), profundidade de amostragem e data. Origem `farmer_lab | regional_estimate | unknown`. Nenhum SOC/pH estimado deve ser rotulado como medição local. Entradas parciais são permitidas.
 4. **Prioridades:** conservação de água, saúde do solo e adequação comercial/operacional. Usar pesos normalizados com presets “equilibrado”, “água”, “solo”, “operacional”; irrigação `rainfed | irrigated | unknown`; permitir restrição de culturas sem mercado local.
-5. **Resultado:** 3 estratégias para próximos 24 meses: `A` linha de base, `B` foco em cobertura/solo, `C` alternativa de menor pressão hídrica **se viável**. Para cada uma: sequência, calendário, indicadores relativos, justificativa, alertas e fontes. Exibir “alternativa indisponível” quando não houver evidência suficiente, sem completar com uma rotação fictícia.
+5. **Resultado:** 3 cenários exploratórios para horizonte de 24 meses: `A` continuidade, `B` foco em cobertura/solo, `C` resiliência hídrica. Um único mês de plantio (1–12) é a janela climática comum. Sem ciclo verificável, exibir mês e duração desconhecida, sem inventar datas. Para cada cenário: indicadores qualitativos, justificativa, alertas, fontes, nível de evidência e lacunas.
 
 ### Baseline obrigatório
 
