@@ -107,3 +107,17 @@ Implemented: replaced numeric scores with qualitative thermal, historical-precip
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (21 unit tests), `npm run build`, and `npm run test:e2e` (2 Playwright tests) passed.
 
 Limitations: catalog evidence still leaves many agricultural attributes unknown. No ET0/ETc, Kc, water demand, irrigation need, yield, NPK/SOC change, calendar, local validation or recommendation is calculated. Live NASA availability was not assumed; the compatible verified pilot fixture is the only fallback. `locally_validated` remains a type reserved for traceable future field/human validation.
+
+## S7 — Baseline intent, climate display and boundary checks
+
+Status: complete.
+
+Plan: make the producer baseline genuinely editable without inventing dates; expose monthly climate context accessibly; verify the public analysis boundary under NASA failure; audit available crop evidence without promoting unsupported values.
+
+Implemented: the wizard now records a confirmed baseline crop as intentional future input, or retains the explicit presumed continuation. The baseline contract intentionally has no dates/cycle; results continue to show the selected planting month and unknown duration. Results now render an accessible 12-month NASA temperature climatology bar panel and retain the selected-month historical precipitation, provenance and limitations.
+
+Implemented: route tests mock climate acquisition and prove `POST /api/analyze` returns A/B/C with unavailable climate rather than failing, while invalid input returns 422 before climate resolution. `docs/CROP_EVIDENCE_AUDIT.md` audits 37 evidence records (21 verified, 16 not verified) and documents precisely which P0 fields remain unknown; no new agronomic value, calendar, Kc calculation or eligibility was invented.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (24 unit tests), `npm run build`, and `npm run test:e2e` (2 Playwright tests) passed.
+
+Limitations / next: deployment of this commit requires Vercel project authority and a production smoke test. Future scientific work must verify missing primary records before any expansion of suitability indicators. The product still does not calculate ET0/ETc, crop water demand, irrigation, yield, nutrient change, local calendars or field validation.

@@ -38,7 +38,12 @@ export const prioritiesSchema = z.object({
   operations: z.number().min(0),
 }).refine((weights) => weights.water + weights.soil + weights.operations > 0, 'At least one priority is required.');
 
-export const futureBaselineSchema = z.object({ events: z.array(cropEventSchema).min(1), confirmed: z.boolean() });
+/** Intentional next crop; dates are deliberately absent until a verified cycle exists. */
+export const futureBaselineSchema = z.object({
+  cropId: z.string().min(1).optional(),
+  otherLabel: z.string().min(1).optional(),
+  confirmed: z.literal(true),
+}).refine((baseline) => Boolean(baseline.cropId) !== Boolean(baseline.otherLabel), 'Select a catalog crop or describe another baseline crop.');
 
 export const analysisInputSchema = z.object({
   location: coordinatesSchema,

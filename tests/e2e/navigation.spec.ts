@@ -28,5 +28,6 @@ test('renders global exploratory pilot analysis from a valid local draft', async
   await page.goto('/results');
   await expect(page.getByRole('heading', { name: 'Continuidade presumida — confirmar' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Saúde do solo' })).toBeVisible();
+  await expect(page.getByText('Climatologia mensal: temperatura média diária mediana (°C)')).toBeVisible();
   await expect(page.getByText('Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.')).toBeVisible();
 });

@@ -23,6 +23,11 @@ describe('catalog and wizard contracts', () => {
     expect(parsed.soil).toMatchObject({ origin: 'farmer_lab', ph: 6.1 });
   });
 
+  it('accepts an explicit baseline crop without inventing dates', () => {
+    const parsed = analysisInputSchema.parse({ ...base, futureBaseline: { cropId: 'sunflower', confirmed: true } });
+    expect(parsed.futureBaseline).toEqual({ cropId: 'sunflower', confirmed: true });
+  });
+
   it('rejects overlapping historical events', () => {
     expect(analysisInputSchema.safeParse({ ...base, history: [base.history[0], { ...base.history[1], startYearMonth: '2023-05' }, base.history[2]] }).success).toBe(false);
   });
