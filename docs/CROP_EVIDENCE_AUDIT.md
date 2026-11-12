@@ -18,3 +18,16 @@ Verified P0 evidence currently available to the engine:
 The engine may use documented viable-temperature ranges only for its qualitative C scenario and documented purpose/family only for B. It does not activate Kc, ET0/ETc, irrigation, yield, nutrient, residue or calendar calculations. Non-local evidence does not create a Rio Verde planting calendar or local validation.
 
 Rio Verde ZARC remains a separate contextual source in `data/rio-verde-zarc.json`; its raw codes remain un-interpreted and are never percentages in this product.
+
+## Remaining-record review
+
+All 11 remaining records were reviewed on 2026-11-12 and remain `not_verified`.
+
+| Records | Review result | Runtime action |
+|---|---|---|
+| Soybean experimental pH and photoperiod; maize experimental pH/classification; cowpea BRS Guariba maturity/disease | The named Embrapa primary URLs returned HTTP 403 to independent retrieval, so their page/section claims could not be checked. | No pH range, cycle, disease, or compatibility value is promoted. |
+| Cowpea pH context | No primary URL was supplied. | Stays absent. |
+| *Urochloa ruziziensis* soil limitation, management context, and risks | The cited Embrapa ILPF page was retrievable, but a full-text review found no `ruziziensis`, `cigarrinha`, or claimed prolonged-drought statements. | Stays absent; no drought/risk claim appears in scenarios. |
+| Sunflower cultivar disease response | It was not needed for current qualitative indicators and was not independently confirmed in this review. | Stays absent. |
+
+This closes the review without converting inaccessible, source-free, or non-matching material into data. It does not authorize new compatibility rules.

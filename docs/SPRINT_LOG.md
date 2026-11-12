@@ -128,7 +128,7 @@ Status: complete.
 
 Scope: implement remaining steps 2–6 while Vercel builds independently: review primary crop evidence; enable result-page baseline edits; expose sources/provenance; extend browser coverage; preserve non-calculation guardrails.
 
-Implemented: primary-source review promoted only five cultivar-specific statements to verified evidence: BRS 310 grain sorghum flowering/maturity/disease response and BRS 323/BRS 422 sunflower physiological maturity. Page/section and excerpts were corrected from the primary Embrapa sources. These records remain cultivar-specific and do not become a universal calendar, Rio Verde rule or new scenario eligibility. The evidence audit now records 26 verified and 11 unverified records.
+Implemented: primary-source review promoted only five cultivar-specific statements to verified evidence: BRS 310 grain sorghum flowering/maturity/disease response and BRS 323/BRS 422 sunflower physiological maturity. Page/section and excerpts were corrected from the primary Embrapa sources. These records remain cultivar-specific and do not become a universal calendar, Rio Verde rule or new scenario eligibility. The remaining 11 were reviewed: three Embrapa URLs returned 403, one cowpea pH item has no primary URL, and the cited ILPF page does not contain the claimed ruziziensis details; all remain excluded. The evidence audit now records 26 verified and 11 unverified records.
 
 Implemented: results include native accessible drawers for climate provenance and per-scenario sources. The baseline scenario now links to `/explore?edit=baseline`; the wizard restores the saved draft directly to review, preserves the selected crop and allows resaving without adding dates/cycles.
 
