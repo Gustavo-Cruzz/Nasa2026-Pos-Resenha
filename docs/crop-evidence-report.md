@@ -16,3 +16,7 @@ All missing values remain `null`. Non-Rio-Verde values do not validate a local c
 ## ZARC audit
 
 The local official study was inspected. `rio-verde-zarc.json` contains only its explicit ≤20% rainfed segments: soybean, maize, sunflower and grain sorghum, with safra/cycle/texture/table-page evidence. Cowpea, pearl millet, ruziziensis and sunn hemp are not covered by its tables and remain without a Rio Verde window.
+
+### Excluded lead
+
+Official DOU material for Goiás cowpea ZARC was found (SPA/MAPA, 13 Jun 2023, https://pesquisa.in.gov.br/imprensa/servlet/INPDFViewer?captchafield=firstAccess&data=14%2F06%2F2023&jornal=515&pagina=22), including a Rio Verde row. The accessible extraction does not preserve the table header that maps values to cultivar group, soil type and risk. It is therefore **not recorded** as a verified `rio-verde-zarc.json` window. A primary table/PDF with legible headers is required.
