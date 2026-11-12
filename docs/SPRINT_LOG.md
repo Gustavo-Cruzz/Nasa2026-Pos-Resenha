@@ -137,3 +137,13 @@ Implemented: browser coverage now checks source/provenance drawer behavior, keyb
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (24 unit tests), `npm run build`, and `npm run test:e2e` (4 Playwright tests) passed.
 
 Limitations: 11 evidence records remain unverified; they are not projected into runtime compatibility. The product remains exploratory: no ET0/ETc, irrigation, yield, nutrient, universal calendar, local recommendation or local validation is calculated. Vercel deployment status was intentionally not changed while an external deployment is building.
+
+## G0 — Auditoria de migração Field Shift 2.0
+
+Status: complete.
+
+Implemented: audited the existing routes, wizard, results UI, pure engine, NASA resolver, catalog/evidence records, local draft, region/ZARC conditions and regression tests. Wrote `docs/GAMIFICATION_MIGRATION.md` with the component/file map, geographic-condition audit, MapLibre client-only decision, authorized-tile fallback rule, V1→V2 draft migration plan, evidence-coverage design, risk register and G1–G5 test plan. No production UI, engine, scientific data or API behavior was changed.
+
+Evidence (2026-11-12): baseline `npm run lint`, `npm run typecheck`, `npm run test` (24 unit tests), `npm run build`, and `npm run test:e2e` (4 Playwright tests) passed.
+
+Limitations / next: G1 requires a separately approved MapLibre dependency and an authorized public map-style URL before tiles are enabled. Coordinate entry remains the mandatory fallback. ZARC stays Rio Verde-only contextual evidence; global NASA availability does not establish local crop suitability. Do not begin G1 until requested.
