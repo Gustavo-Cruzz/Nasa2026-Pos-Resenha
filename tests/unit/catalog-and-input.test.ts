@@ -13,6 +13,7 @@ describe('catalog and wizard contracts', () => {
 
   it('keeps retained P0 evidence traceable without making partial crops eligible', () => {
     expect(cropEvidence.every((record) => record.source.url === null || record.source.url.startsWith('https://'))).toBe(true);
+    expect(cropEvidence.every((record) => record.context && record.location && record.source.title && record.source.year && record.source.pageOrSection && record.source.snippet)).toBe(true);
     expect(cropEvidence.find((record) => record.cropId === 'sunn_hemp' && record.field === 'cycleDaysRange')?.value).toEqual({ min: 63, max: 68 });
     expect(crops.every((crop) => crop.parameterStatus === 'missing')).toBe(true);
   });
