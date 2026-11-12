@@ -17,7 +17,8 @@ export function generateCandidates(input: AnalysisInput): Rotation[] {
   const last = input.history.at(-1)!; const cropId = last.cropId ?? 'unknown'; const start = addMonths(last.endYearMonth, 1); const assumed = !input.futureBaseline?.confirmed;
   const baseline: Rotation = { id: 'A', title: assumed ? 'Presumed continuation — confirm' : 'Farmer baseline', baseline: true, baselineAssumed: assumed, horizonMonths: 24, timeline: [{ cropIds: [cropId], startYearMonth: start, endYearMonth: addMonths(start, 23), mode: 'single' }], feasibility: 'unknown', score: null, metrics: [], explanations: [{ kind: 'limitation', message: assumed ? 'Baseline is inferred from the last recorded crop and must be confirmed.' : 'Baseline comes from the confirmed farmer plan.', ruleId: 'BASELINE_EXPLICIT', sourceRefs: [], certainty: assumed ? 'low' : 'high', missingData: assumed ? ['futureBaseline'] : [] }], missingData: assumed ? ['futureBaseline'] : [] };
   const covered = new Set(zarc.windows.map((window) => window.cropId));
-  const available = scope.auditedPilotCandidates.filter((id) => covered.has(id));
+  const excludedFromMvpRecommendations = new Set(scope.excludedFromMvpRecommendations);
+  const available = scope.auditedPilotCandidates.filter((id) => covered.has(id) && !excludedFromMvpRecommendations.has(id));
   return [baseline, unavailable('B', 'Coverage / soil focus alternative', `No validated regional template exists. Audited ZARC crops: ${available.join(', ')}.`), unavailable('C', 'Lower water-pressure alternative', 'No validated comparative water rule or regional template exists for this alternative.')];
 }
 export function computeMetrics(candidate: Rotation): Rotation { return candidate; }
