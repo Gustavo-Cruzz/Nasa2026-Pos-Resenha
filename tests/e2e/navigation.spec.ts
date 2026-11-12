@@ -7,8 +7,10 @@ const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ 
 
 test('navigates from home to the global atlas with coordinate fallback', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('.field-atmosphere')).toBeVisible();
   await page.getByRole('link', { name: 'Começar exploração' }).click();
   await expect(page.getByRole('heading', { name: 'Atlas climático global' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Jornada de exploração' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'step');
   await expect(page.getByRole('img', { name: /Mapa mundial indisponível sem estilo autorizado/ })).toBeVisible();
 });
 
@@ -103,6 +105,7 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await expect(page.getByRole('dialog', { name: 'Escolher cultura para slot' })).toBeVisible();
   await page.getByRole('button', { name: /feijão-caupi/i }).click();
   await expect(page.getByLabel('Três cenários do laboratório').getByText('feijão-caupi')).toBeVisible();
+  await expect(page.locator('.field-slot-updated')).toBeVisible();
   await expect(page.getByText(/sem score agregado, ciclo ou janela local/i)).toHaveCount(3);
 });
 

@@ -10,6 +10,26 @@ Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 u
 
 Limitations / next: the interface is clearer and more agricultural in palette, but a final immersive release still needs an intentional asset/art direction pass (terrain, farm-state and interaction sprites) after a product-level visual brief. This P0 does not change the evidence model, agronomic constraints, local-only storage or exploratory disclaimer.
 
+## P1 — Orientação contínua da jornada
+
+Status: complete.
+
+Implemented: added a responsive route-progress trail for Explorar → Minha fazenda → Laboratório → Comparar, with the current step programmatically identified without falsely marking prior steps as complete. Primary navigation now exposes its active route. The existing save/continue handoff remains explicit, so the user can understand both the current screen and the next action without being pushed through a blocking wizard.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run test:e2e` (12 Playwright tests), and `npm run build` passed. Browser coverage asserts the active exploration step.
+
+Limitations: route progress communicates orientation only; it does not claim that a farm, laboratory plan or agronomic comparison is complete. This keeps missing evidence and local-first drafts visible rather than gamifying them as achievements.
+
+## P2 — Atmosfera agrícola e feedback de exploração
+
+Status: complete.
+
+Implemented: created a decorative, CSS-built field vignette for the landing experience using the existing crop sprites. It is explicitly visual-only and carries no crop, yield, location or field-observation claim. The laboratory now gives a short visual acknowledgement when a crop slot changes; the interaction respects `prefers-reduced-motion`. Existing six P0 crop sprites remain sufficient for the MVP because they identify the selectable crops; no extra pseudo-scientific terrain or crop-state asset was introduced.
+
+Evidence (2026-11-12): the same full validation suite passed. Playwright confirms the decorative vignette renders and that selecting a laboratory crop produces visible slot feedback.
+
+Limitations / future art direction: a branded production release could commission original environment, weather-state and interaction art under a documented visual brief. Such assets must remain clearly decorative unless tied to a verified data source.
+
 ## S0 — Foundation
 
 Status: complete.
