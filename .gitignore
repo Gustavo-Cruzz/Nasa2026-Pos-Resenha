@@ -37,3 +37,6 @@ pnpm-debug.log*
 .vscode/
 .vercel
 .env*
+
+# local official source download; its auditable extraction is data/rio-verde-zarc.json
+dados-abertos-tabua-de-risco-safra-2026-2027.csv

@@ -210,7 +210,7 @@ export interface RotationResult {
 |---|---:|---|---|
 | **S0 — Foundation** | 0–4 h | Scaffold, lint/typecheck/test/build, tokens de design, layout, AGENTS.md, schemas, README, mock navigation | Página inicial e wizard renderizam; comandos verdes; tipos sem `any` desnecessário |
 | **S1 — NASA & provenance** | 4–12 h | Adaptador POWER, normalização, QA, fixture real do piloto + metadata, endpoint, indicadores | NASA usada de fato; 3 testes de parsing/ausências; fallback nunca usa fixture em outro local |
-| **S2 — Catálogo & entrada** | 12–20 h | 10 fichas, 8 priorizadas, wizard 5 passos, validação, solo opcional, presets de prioridade, rascunho | Formulário completo funciona no celular; entradas inválidas bloqueadas; dados ausentes preservados |
+| **S2 — Catálogo & entrada** | 12–20 h | 10 fichas, 6 P0 priorizadas, 2 P1 exploratórias, wizard 5 passos, validação, solo opcional, presets de prioridade, rascunho | Formulário completo funciona no celular; entradas inválidas bloqueadas; dados ausentes preservados |
 | **S3 — Engine** | 20–32 h | Baseline explícita/editável, 3 estratégias, filtros, ranking, explicações e `unknown` | 3 casos de validação agronômica; riscos e fontes por estratégia; fora do piloto sem recomendação regional |
 | **S4 — Pixel art & polish** | 32–40 h | Sprites, CropCards, modal técnico, timeline, comparação, i18n, mobile/a11y | Status reais computados, sem números falsos; navegação teclado; visual pronto para demo |
 | **S5 — Validation & ship** | 40–48 h | Testes unit/E2E, build, deploy, README, metodologia, ciência, fontes e roteiro de demo | Demo ponta a ponta sem incidentes críticos; URL pública; documentos e limites declarados |

@@ -1,28 +1,26 @@
 # P0 scientific evidence audit
 
-P0 now contains soybean, maize, grain sorghum, sunflower, cowpea and *Urochloa ruziziensis*. Pearl millet and sunn hemp remain preserved in the catalog/assets but are excluded from MVP research and recommendation generation.
+P0 is soybean, maize, grain sorghum, sunflower, cowpea and *Urochloa ruziziensis*. Pearl millet and sunn hemp remain preserved in the catalog and art, but are excluded from MVP research and recommendation generation. Cotton and pigeon pea remain P1 and outside the regional engine.
 
-| Crop | Explicit verified evidence | Rio Verde ZARC window | Material gaps |
+| Crop | Evidence recorded | Rio Verde ZARC 2026/2027 | Critical gap |
 |---|---|---|---|
-| Soybean | air adaptation 20–30 °C; ideal ~30 °C, Embrapa 2006, p. 12 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar cycle, pH, Kc |
-| Maize | Group II 110–145 d emergence→physiological maturity, Embrapa 2022 | verified local ZARC segments: `rio-verde-zarc.json` | named cultivar, pH, Kc |
-| Grain sorghum | no good growth <16 or >38 °C, Embrapa 2011 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar-specific optimum/cycle, pH, Kc |
-| Sunflower | pH 5.2–6.4 CaCl₂, Embrapa 1997 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar cycle, temperature, Kc |
-| Cowpea | development 18–34 °C; germination base 8–11 °C, Embrapa 2017 | null | Rio Verde transfer invalid, cycle, pH, Kc |
-| Pearl millet | night mean 15–28 °C for most cultivars, Embrapa 2009 | null | cycle, pH, Kc |
-| U. ruziziensis | perennial classification only; no duration | null | temperature, pH, Kc, Rio Verde calendar |
-| C. juncea | 63–68 days to flowering/cycle, irrigated Petrolina trials, Embrapa 2004 | null | Rio Verde transfer invalid, temperature, pH, Kc |
+| Soybean | Air adaptation 20–30 °C and ideal ≈30 °C; pH 6.7 experimental result; photoperiod limitation | 18 rainfed rows; groups I–III; AD1–AD6; Port. 198/2026 | cultivar-specific cycle; risk-code legend; Rio Verde template |
+| Maize | 24–30 °C air from emergence to flowering; 25–30 °C soil germination; Group II 110–145 d; pH evidence kept experimental/interpretative | 30 sole-crop rows plus 30 maize–brachiaria consortium rows; groups I–III; AD1–AD6; 1st/2nd season | named hybrid; risk-code legend; regional template |
+| Grain sorghum | 16–38 °C development context; BRS 310: flowering 65 d, maturity 120 d; cultivar disease profile | 18 rows; groups I–III; sandy/medium/clayey; 1st/2nd season; Port. 273/2026 | pH method/range; risk-code legend; regional template |
+| Sunflower | pH 5.2–6.4 CaCl₂; BRS 323 80–98 d and BRS 422 85–107 d to physiological maturity; BRS 323 mildew race-330 profile | 12 rows; groups I–II; AD1–AD6; Port. 100/2026 | temperature; risk-code legend; cultivar applicability |
+| Cowpea | 18–34 °C development; 30 °C day/22 °C night; ≈35 °C flower-abortion risk; BRS Guariba 65–70 d | 9 rows; groups I–III; sandy/medium/clayey; Port. 124/2026 | pH method; risk-code legend; regional template |
+| *U. ruziziensis* | perennial classification; drainage/fertility, drought, leafhopper and straw-persistence limits; consortium context | no standalone row; 30 maize–brachiaria rows are retained as system evidence only | numeric pH, management duration, Kc and standalone regional window |
 
-All missing values remain `null`. Non-Rio-Verde values do not validate a local calendar. Partial evidence does not make any P0 crop recommendation-eligible.
+## Evidence status
 
-## Kc audit
+`data/crop-evidence.json` contains one record per parameter, including value, unit, context, cultivar, locality, institution, source year, URL, access date, page/section field and excerpt. The 16 additions from the supplied matrix are marked `not_verified`: their primary pages/PDF sections still need direct checking. They cannot become universal pH limits, species-wide cultivar traits or recommendation rules. Missing evidence remains `null` or absent.
 
-Stage-specific, location-bound Kc evidence is now recorded for soybean, maize, grain sorghum, sunflower, cowpea and sunn hemp in `data/crop-evidence.json`. These values are not interchangeable: cultivar, irrigation, salinity, cycle and locality remain attached to each record. Pearl millet and ruziziensis retain `null` Kc. A maize–ruziziensis consortium source was excluded because it does not establish a ruziziensis single-crop Kc. The engine still does not calculate ET0/ETc or irrigation requirement.
+Kc evidence stays contextual only. It is not used for ETc, irrigation need or regional suitability because stage, cultivar, irrigation and location are not equivalent to the pilot.
 
-## ZARC audit
+## ZARC extraction
 
-The local official study was inspected. `rio-verde-zarc.json` contains only its explicit ≤20% rainfed segments: soybean, maize, sunflower and grain sorghum, with safra/cycle/texture/table-page evidence. Cowpea, pearl millet, ruziziensis and sunn hemp are not covered by its tables and remain without a Rio Verde window.
+`data/rio-verde-zarc.json` is a reproducible extraction of the attached official MAPA 2026/2027 CSV. It contains 117 Rio Verde/GO P0-related rainfed rows, source URL, local CSV SHA-256, portaria, culture, group, soil and every non-zero `dec1…dec36` value. The MAPA dictionary verifies the meanings of group, soil and decêndio columns. It does **not** provide the numeric legend for the non-zero values in the consulted material; they are therefore stored as `riskCodeByDecendio`, never as a claimed risk percentage.
 
-### Excluded lead
+The extraction is regenerated by `scripts/extract-rio-verde-zarc.mjs`. The 244 MB CSV is a local source input and is intentionally ignored by Git; the extracted, traceable JSON is versioned.
 
-Official DOU material for Goiás cowpea ZARC was found (SPA/MAPA, 13 Jun 2023, https://pesquisa.in.gov.br/imprensa/servlet/INPDFViewer?captchafield=firstAccess&data=14%2F06%2F2023&jornal=515&pagina=22), including a Rio Verde row. The accessible extraction does not preserve the table header that maps values to cultivar group, soil type and risk. It is therefore **not recorded** as a verified `rio-verde-zarc.json` window. A primary table/PDF with legible headers is required.
+No ZARC row alone enables a rotation recommendation. The engine remains evidence-limited until risk-code semantics, cultivar/strategy compatibility and validated regional templates are available.

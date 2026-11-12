@@ -7,9 +7,13 @@ describe('crop scientific guards', () => {
   it('does not make a crop eligible when its evidence status is missing', () => {
     expect(crops.every((crop) => !isRecommendationEligible(crop))).toBe(true);
   });
-  it('does not fabricate a Rio Verde ZARC window', () => {
-    expect(zarc.windows).toHaveLength(6);
-    expect(zarc.status).toBe('partially_verified_from_local_official_study');
+  it('retains the official 2026/2027 Rio Verde ZARC rows without relabelling risk codes', () => {
+    expect(zarc.entries).toHaveLength(117);
+    expect(zarc.status).toBe('verified_from_MAPA_2026_2027_csv_risk_codes_not_semantically_interpreted');
+    expect(zarc.entries.every((entry) => entry.safra === '2026/2027' && entry.management === 'Sequeiro')).toBe(true);
+    expect(zarc.entries.some((entry) => entry.cropId === 'cowpea')).toBe(true);
+    expect(zarc.entries.every((entry) => !('riskPct' in entry))).toBe(true);
+    expect(zarc.notCoveredAsStandaloneCrop).toEqual(['ruziziensis']);
   });
   it('limits S2 pilot candidates to crops with verified Rio Verde windows', () => {
     expect(scope.auditedPilotCandidates).toEqual(['soybean', 'maize', 'sunflower', 'sorghum']);

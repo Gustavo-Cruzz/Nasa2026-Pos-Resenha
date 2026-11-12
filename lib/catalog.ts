@@ -18,8 +18,10 @@ const evidenceRecordSchema = z.object({
   location: z.string().min(1),
   source: z.object({
     title: z.string().min(1),
-    year: z.number().int().positive(),
+    institution: z.string().nullable(),
+    year: z.number().int().positive().nullable(),
     url: z.string().url().nullable(),
+    accessedAt: z.string().date(),
     pageOrSection: z.string().min(1),
     snippet: z.string().min(1),
     verification: z.enum(['verified', 'not_verified']),

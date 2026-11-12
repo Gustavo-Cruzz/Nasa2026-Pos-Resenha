@@ -2,26 +2,939 @@
   "version": 2,
   "scope": "Each record supports only its stated context and location. Missing evidence stays null or absent.",
   "records": [
-    {"cropId":"soybean","field":"viableTempC","value":{"min":20,"max":30},"unit":"°C","context":"air temperature; adaptation and growth","cultivar":null,"location":"Brazilian production guidance; not Rio Verde validation","source":{"title":"Tecnologias de produção de soja - região central do Brasil 2006","year":2006,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/468943","pageOrSection":"p. 12, Exigências térmicas e fotoperiódicas","snippet":"A soja melhor se adapta a temperaturas do ar entre 20°C e 30°C.","verification":"verified"}},
-    {"cropId":"soybean","field":"idealTempC","value":{"min":30,"max":30},"unit":"°C","context":"air temperature; growth and development","cultivar":null,"location":"Brazilian production guidance; not Rio Verde validation","source":{"title":"Tecnologias de produção de soja - região central do Brasil 2006","year":2006,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/468943","pageOrSection":"p. 12","snippet":"a temperatura ideal para seu crescimento e desenvolvimento está em torno de 30°C.","verification":"verified"}},
-    {"cropId":"maize","field":"cycleDaysRange","value":{"min":110,"max":145},"unit":"days","context":"MAPA simulation group II; emergence to physiological maturity","cultivar":"Group II, not a named cultivar","location":"Brazilian ZARC classification; not a Rio Verde calendar","source":{"title":"Cultivo do Milho","year":2022,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/748759/1/Milho-Plantio.pdf","pageOrSection":"Classificação das cultivares","snippet":"Grupo II (n = 110 dias e = 145 dias), onde n expressa o número de dias da emergência à maturação fisiológica.","verification":"verified"}},
-    {"cropId":"sorghum","field":"viableTempC","value":{"min":16,"max":38},"unit":"°C","context":"air temperature; development","cultivar":null,"location":"Brazilian cultivar guidance; not Rio Verde validation","source":{"title":"Cultivares de sorgo para o mercado brasileiro na safra 2011/2012","year":2011,"url":"https://www.infoteca.cnptia.embrapa.br/bitstream/doc/908224/1/doc117.pdf","pageOrSection":"Introdução","snippet":"a maioria não cresce bem sob temperaturas inferiores a 16°C e superiores a 38°C.","verification":"verified"}},
-    {"cropId":"sunflower","field":"soilPhRange","value":{"min":5.2,"max":6.4},"unit":"pH CaCl₂","context":"area selection; not an acidity-class label","cultivar":null,"location":"Brazilian technical guidance; not Rio Verde validation","source":{"title":"A cultura do girassol","year":1997,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/445832","pageOrSection":"Escolha da área / correção da acidez","snippet":"pH de 5,2 a 6,4 (CaCl₂).","verification":"verified"}},
-    {"cropId":"cowpea","field":"temperatureBaseC","value":{"min":8,"max":11},"unit":"°C","context":"germination; base temperature varies by stage","cultivar":null,"location":"General and Meio-Norte discussion; not Rio Verde validation","source":{"title":"Cultivo de Feijão-Caupi","year":2017,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1071686/1/SistemaProducaoCaupiCapituloClima.pdf","pageOrSection":"Temperatura","snippet":"Na germinação, varia de 8°C a 11°C.","verification":"verified"}},
-    {"cropId":"cowpea","field":"viableTempC","value":{"min":18,"max":34},"unit":"°C","context":"good crop development","cultivar":null,"location":"General and Meio-Norte discussion; not Rio Verde validation","source":{"title":"Cultivo de Feijão-Caupi","year":2017,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1071686/1/SistemaProducaoCaupiCapituloClima.pdf","pageOrSection":"Temperatura","snippet":"O bom desenvolvimento da cultura ocorre na faixa de temperatura de 18°C a 34°C.","verification":"verified"}},
-    {"cropId":"pearl_millet","field":"idealTempC","value":{"min":15,"max":28},"unit":"°C","context":"mean night temperature for most cultivars","cultivar":"most cultivars","location":"Brazilian technical guidance; not Rio Verde validation","source":{"title":"Clima, in Cultivo do milheto","year":2009,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/877512","pageOrSection":"Clima","snippet":"temperaturas noturnas médias de 15°C a 28°C.","verification":"verified"}},
-    {"cropId":"ruziziensis","field":"cycleDaysRange","value":null,"unit":"days","context":"Source classifies species as perennial; it gives no maturity/cut duration usable here.","cultivar":null,"location":"Organic-system cover-crop table; not Rio Verde validation","source":{"title":"Boas práticas agrícolas para manejo do solo em sistema orgânico","year":2024,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1166202/1/Documentos256-AnaLuciaBorges-2024-AINFO-1.pdf","pageOrSection":"Table 4","snippet":"Capim ruziziensis ... Ciclo: perene.","verification":"verified"}},
-    {"cropId":"sunn_hemp","field":"cycleDaysRange","value":{"min":63,"max":68},"unit":"days","context":"planting to full flowering/cycle in irrigated trials; not maturity and not a Rio Verde calendar","cultivar":null,"location":"Campo Experimental de Bebedouro, Petrolina, PE","source":{"title":"Comportamento de leguminosas para adubação verde no Submédio São Francisco","year":2004,"url":"https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/154470","pageOrSection":"p. 14","snippet":"A crotalária júncea tem um ciclo curto (63 a 68 dias nos três ensaios).","verification":"verified"}},
-    {"cropId":"soybean","field":"kcStages","value":[{"stage":"S-V1/V2","kc":0.56,"days":15},{"stage":"V2-R1","kc":1.21,"days":45},{"stage":"R1-R6/R7","kc":1.5,"days":50},{"stage":"R7-R9","kc":0.9,"days":30}],"unit":"dimensionless","context":"140-day modeled cycle; source table values, not Rio Verde validation","cultivar":null,"location":"Brazil","source":{"title":"Acta Scientiarum Agronomy soybean water-balance study","year":2011,"url":"https://www.scielo.br/j/asagr/a/BBJDwJrmZKLhZPVQKXyhhJb/?format=pdf&lang=pt","pageOrSection":"Table 2","snippet":"Ciclo de 140 dias; kc: 0,56; 1,21; 1,50; 0,90.","verification":"verified"}},
-    {"cropId":"maize","field":"kcStages","value":[{"stage":"0-18 DAE","kc":0.32},{"stage":"19-37 DAE","kc":1.07},{"stage":"37-50 DAE","kc":1.5},{"stage":"51-64 DAE","kc":1.43},{"stage":"64-77 DAE","kc":1.25},{"stage":"78-89 DAE","kc":1.01},{"stage":"90-99 DAE","kc":0.39}],"unit":"dimensionless","context":"irrigated maize; stage-specific experiment","cultivar":null,"location":"Brazil; source experiment","source":{"title":"Acta Scientiarum Agronomy irrigated maize study","year":2009,"url":"https://www.scielo.br/j/asagr/a/sxQRq7LVjkQN8Gqm5jjmKgJ/?format=pdf&lang=pt","pageOrSection":"Table 5","snippet":"Valores de coeficiente de cultura em função de diferentes fases de desenvolvimento.","verification":"verified"}},
-    {"cropId":"sorghum","field":"kcStages","value":[{"stage":"initial","kc":0.3},{"stage":"mid","kc":1.05},{"stage":"end","kc":0.55}],"unit":"dimensionless","context":"grain sorghum technical coefficients; not a Rio Verde calibration","cultivar":null,"location":"Brazilian irrigated-agriculture technical table","source":{"title":"Coeficientes Técnicos de Uso da Água para a Agricultura Irrigada","year":2019,"url":"https://www.snirh.gov.br/portal/centrais-de-conteudos/central-de-publicacoes/ana_coeficientes_agricultura_irrigada_vf.pdf","pageOrSection":"Sorgo em grão row","snippet":"Sorgo em grão: 0,3; 1,05; 0,55.","verification":"verified"}},
-    {"cropId":"sunflower","field":"kcStages","value":[{"stage":"initial","kc":0.52,"days":28},{"stage":"vegetative","kc":0.74,"days":15},{"stage":"flowering","kc":0.98,"days":27},{"stage":"physiological maturation","kc":0.81,"days":20}],"unit":"dimensionless","context":"irrigated Catissol I; weighing lysimeters; 90-day cycle","cultivar":"Catissol I","location":"Chapada do Apodi, RN","source":{"title":"Necessidade hídrica da cultura do girassol irrigado na chapada do Apodi","year":2012,"url":"https://www.scielo.br/j/rbeaa/a/Y5F3Y683GrD3XpK6Zg86dZc/?format=html","pageOrSection":"Conclusions / Table 1","snippet":"0,52; 0,74; 0,98 e 0,81 para as diferentes fases fenológicas.","verification":"verified"}},
-    {"cropId":"cowpea","field":"kcStages","value":[{"stage":"initial","kc":0.4,"days":{"min":15,"max":20}},{"stage":"growth","kc":0.75,"days":{"min":15,"max":20}},{"stage":"mid","kc":1.05,"days":{"min":20,"max":30}},{"stage":"end","kc":0.95,"days":{"min":5,"max":20}}],"unit":"dimensionless","context":"semi-arid localities; table-based crop-water simulation, not Rio Verde","cultivar":null,"location":"Jatobá/Petrolândia/Tacaratu, PE and Banzaê/Quijingue, BA","source":{"title":"Condições hídricas e crescimento vegetal de culturas agrícolas importantes para comunidades indígenas do semiárido brasileiro","year":2017,"url":"https://www.scielo.br/j/rceres/a/pgRHdZbDQLDf3CjFb4937cp/abstract/?lang=pt","pageOrSection":"Table 1","snippet":"Feijão-caupi: Kc 0,40; 0,75; 1,05; 0,95.","verification":"verified"}},
-    {"cropId":"sunn_hemp","field":"kcStages","value":[{"stage":"initial","kc":0.34,"days":18},{"stage":"development","kc":0.89,"days":18},{"stage":"flowering","kc":1.41,"days":14}],"unit":"dimensionless","context":"lowest residual-salinity treatment S1; not a Rio Verde calibration","cultivar":null,"location":"Mossoró, RN","source":{"title":"Necessidade hídrica da Crotalaria juncea L. em resposta à salinidade residual do solo","year":2014,"url":"https://ppgmsa.ufersa.edu.br/wp-content/uploads/sites/59/2014/10/DISSERTA%C3%87%C3%83O-PEDRO-RAMUALYSON-FERNANDES-SAMPAIO.pdf","pageOrSection":"Table 2","snippet":"Kc S1: 0,34; 0,89; 1,41.","verification":"verified"}},
-    {"cropId":"maize","field":"idealTempC","value":{"min":24,"max":30},"unit":"°C","context":"air temperature; emergence to flowering","cultivar":null,"location":"Brazilian Embrapa technical guidance","source":{"title":"Relações com o clima","year":2021,"url":"https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/relacoes-com-o-clima","pageOrSection":"Temperatura","snippet":"A temperatura ideal para o desenvolvimento do milho, da emergência à floração, está compreendida entre 24ºC e 30ºC.","verification":"verified"}},
-    {"cropId":"maize","field":"germinationSoilTempC","value":{"min":25,"max":30},"unit":"°C","context":"soil temperature during germination; not air temperature","cultivar":null,"location":"Brazilian Embrapa technical guidance","source":{"title":"Relações com o clima","year":2021,"url":"https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/relacoes-com-o-clima","pageOrSection":"Temperatura","snippet":"Durante o período de germinação, as temperaturas ideais do solo ... entre 25ºC e 30ºC.","verification":"verified"}},
-    {"cropId":"cowpea","field":"idealTempC","value":{"day":30,"night":22},"unit":"°C","context":"air temperature for high grain productivity; day and night values, not a single mean","cultivar":null,"location":"General Embrapa guidance; not Rio Verde validation","source":{"title":"Listagem Perguntas e Respostas - Feijão-caupi","year":2017,"url":"https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas","pageOrSection":"Ecofisiologia, pergunta 2","snippet":"em torno de 30 °C durante o dia e 22 °C durante a noite.","verification":"verified"}},
-    {"cropId":"cowpea","field":"knownRiskTempC","value":35,"unit":"°C","context":"air temperature; flower abortion risk, especially with limited water","cultivar":null,"location":"General Embrapa guidance; not Rio Verde validation","source":{"title":"Listagem Perguntas e Respostas - Feijão-caupi","year":2017,"url":"https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas","pageOrSection":"Ecofisiologia, pergunta 2","snippet":"Temperaturas do ar ao redor de 35 °C podem ocasionar o abortamento de flores.","verification":"verified"}},
-    {"cropId":"cowpea","field":"cycleDaysRange","value":{"groups":[{"group":"I","maxExclusive":75},{"group":"II","min":75,"max":85},{"group":"III","minExclusive":85}]},"unit":"days","context":"emergence to physiological maturity; maturity groups","cultivar":"maturity group classification","location":"Brazilian Embrapa guidance; not Rio Verde validation","source":{"title":"Listagem Perguntas e Respostas - Feijão-caupi","year":2017,"url":"https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas","pageOrSection":"Cultivares / grupos de maturação","snippet":"I: menos de 75 dias; II: 75–85 dias; III: mais de 85 dias.","verification":"verified"}}
+    {
+      "cropId": "soybean",
+      "field": "viableTempC",
+      "value": {
+        "min": 20,
+        "max": 30
+      },
+      "unit": "°C",
+      "context": "air temperature; adaptation and growth",
+      "cultivar": null,
+      "location": "Brazilian production guidance; not Rio Verde validation",
+      "source": {
+        "title": "Tecnologias de produção de soja - região central do Brasil 2006",
+        "year": 2006,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/468943",
+        "pageOrSection": "p. 12, Exigências térmicas e fotoperiódicas",
+        "snippet": "A soja melhor se adapta a temperaturas do ar entre 20°C e 30°C.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "idealTempC",
+      "value": {
+        "min": 30,
+        "max": 30
+      },
+      "unit": "°C",
+      "context": "air temperature; growth and development",
+      "cultivar": null,
+      "location": "Brazilian production guidance; not Rio Verde validation",
+      "source": {
+        "title": "Tecnologias de produção de soja - região central do Brasil 2006",
+        "year": 2006,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/468943",
+        "pageOrSection": "p. 12",
+        "snippet": "a temperatura ideal para seu crescimento e desenvolvimento está em torno de 30°C.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 110,
+        "max": 145
+      },
+      "unit": "days",
+      "context": "MAPA simulation group II; emergence to physiological maturity",
+      "cultivar": "Group II, not a named cultivar",
+      "location": "Brazilian ZARC classification; not a Rio Verde calendar",
+      "source": {
+        "title": "Cultivo do Milho",
+        "year": 2022,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/748759/1/Milho-Plantio.pdf",
+        "pageOrSection": "Classificação das cultivares",
+        "snippet": "Grupo II (n = 110 dias e = 145 dias), onde n expressa o número de dias da emergência à maturação fisiológica.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "viableTempC",
+      "value": {
+        "min": 16,
+        "max": 38
+      },
+      "unit": "°C",
+      "context": "air temperature; development",
+      "cultivar": null,
+      "location": "Brazilian cultivar guidance; not Rio Verde validation",
+      "source": {
+        "title": "Cultivares de sorgo para o mercado brasileiro na safra 2011/2012",
+        "year": 2011,
+        "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/908224/1/doc117.pdf",
+        "pageOrSection": "Introdução",
+        "snippet": "a maioria não cresce bem sob temperaturas inferiores a 16°C e superiores a 38°C.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.2,
+        "max": 6.4
+      },
+      "unit": "pH CaCl₂",
+      "context": "area selection; not an acidity-class label",
+      "cultivar": null,
+      "location": "Brazilian technical guidance; not Rio Verde validation",
+      "source": {
+        "title": "A cultura do girassol",
+        "year": 1997,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/445832",
+        "pageOrSection": "Escolha da área / correção da acidez",
+        "snippet": "pH de 5,2 a 6,4 (CaCl₂).",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "temperatureBaseC",
+      "value": {
+        "min": 8,
+        "max": 11
+      },
+      "unit": "°C",
+      "context": "germination; base temperature varies by stage",
+      "cultivar": null,
+      "location": "General and Meio-Norte discussion; not Rio Verde validation",
+      "source": {
+        "title": "Cultivo de Feijão-Caupi",
+        "year": 2017,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1071686/1/SistemaProducaoCaupiCapituloClima.pdf",
+        "pageOrSection": "Temperatura",
+        "snippet": "Na germinação, varia de 8°C a 11°C.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "viableTempC",
+      "value": {
+        "min": 18,
+        "max": 34
+      },
+      "unit": "°C",
+      "context": "good crop development",
+      "cultivar": null,
+      "location": "General and Meio-Norte discussion; not Rio Verde validation",
+      "source": {
+        "title": "Cultivo de Feijão-Caupi",
+        "year": 2017,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1071686/1/SistemaProducaoCaupiCapituloClima.pdf",
+        "pageOrSection": "Temperatura",
+        "snippet": "O bom desenvolvimento da cultura ocorre na faixa de temperatura de 18°C a 34°C.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "idealTempC",
+      "value": {
+        "min": 15,
+        "max": 28
+      },
+      "unit": "°C",
+      "context": "mean night temperature for most cultivars",
+      "cultivar": "most cultivars",
+      "location": "Brazilian technical guidance; not Rio Verde validation",
+      "source": {
+        "title": "Clima, in Cultivo do milheto",
+        "year": 2009,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/877512",
+        "pageOrSection": "Clima",
+        "snippet": "temperaturas noturnas médias de 15°C a 28°C.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": "Source classifies species as perennial; it gives no maturity/cut duration usable here.",
+      "cultivar": null,
+      "location": "Organic-system cover-crop table; not Rio Verde validation",
+      "source": {
+        "title": "Boas práticas agrícolas para manejo do solo em sistema orgânico",
+        "year": 2024,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1166202/1/Documentos256-AnaLuciaBorges-2024-AINFO-1.pdf",
+        "pageOrSection": "Table 4",
+        "snippet": "Capim ruziziensis ... Ciclo: perene.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 63,
+        "max": 68
+      },
+      "unit": "days",
+      "context": "planting to full flowering/cycle in irrigated trials; not maturity and not a Rio Verde calendar",
+      "cultivar": null,
+      "location": "Campo Experimental de Bebedouro, Petrolina, PE",
+      "source": {
+        "title": "Comportamento de leguminosas para adubação verde no Submédio São Francisco",
+        "year": 2004,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/154470",
+        "pageOrSection": "p. 14",
+        "snippet": "A crotalária júncea tem um ciclo curto (63 a 68 dias nos três ensaios).",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "S-V1/V2",
+          "kc": 0.56,
+          "days": 15
+        },
+        {
+          "stage": "V2-R1",
+          "kc": 1.21,
+          "days": 45
+        },
+        {
+          "stage": "R1-R6/R7",
+          "kc": 1.5,
+          "days": 50
+        },
+        {
+          "stage": "R7-R9",
+          "kc": 0.9,
+          "days": 30
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "140-day modeled cycle; source table values, not Rio Verde validation",
+      "cultivar": null,
+      "location": "Brazil",
+      "source": {
+        "title": "Acta Scientiarum Agronomy soybean water-balance study",
+        "year": 2011,
+        "url": "https://www.scielo.br/j/asagr/a/BBJDwJrmZKLhZPVQKXyhhJb/?format=pdf&lang=pt",
+        "pageOrSection": "Table 2",
+        "snippet": "Ciclo de 140 dias; kc: 0,56; 1,21; 1,50; 0,90.",
+        "verification": "verified",
+        "institution": "SciELO",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "0-18 DAE",
+          "kc": 0.32
+        },
+        {
+          "stage": "19-37 DAE",
+          "kc": 1.07
+        },
+        {
+          "stage": "37-50 DAE",
+          "kc": 1.5
+        },
+        {
+          "stage": "51-64 DAE",
+          "kc": 1.43
+        },
+        {
+          "stage": "64-77 DAE",
+          "kc": 1.25
+        },
+        {
+          "stage": "78-89 DAE",
+          "kc": 1.01
+        },
+        {
+          "stage": "90-99 DAE",
+          "kc": 0.39
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "irrigated maize; stage-specific experiment",
+      "cultivar": null,
+      "location": "Brazil; source experiment",
+      "source": {
+        "title": "Acta Scientiarum Agronomy irrigated maize study",
+        "year": 2009,
+        "url": "https://www.scielo.br/j/asagr/a/sxQRq7LVjkQN8Gqm5jjmKgJ/?format=pdf&lang=pt",
+        "pageOrSection": "Table 5",
+        "snippet": "Valores de coeficiente de cultura em função de diferentes fases de desenvolvimento.",
+        "verification": "verified",
+        "institution": "SciELO",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.3
+        },
+        {
+          "stage": "mid",
+          "kc": 1.05
+        },
+        {
+          "stage": "end",
+          "kc": 0.55
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "grain sorghum technical coefficients; not a Rio Verde calibration",
+      "cultivar": null,
+      "location": "Brazilian irrigated-agriculture technical table",
+      "source": {
+        "title": "Coeficientes Técnicos de Uso da Água para a Agricultura Irrigada",
+        "year": 2019,
+        "url": "https://www.snirh.gov.br/portal/centrais-de-conteudos/central-de-publicacoes/ana_coeficientes_agricultura_irrigada_vf.pdf",
+        "pageOrSection": "Sorgo em grão row",
+        "snippet": "Sorgo em grão: 0,3; 1,05; 0,55.",
+        "verification": "verified",
+        "institution": "Agência Nacional de Águas e Saneamento Básico (ANA)",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.52,
+          "days": 28
+        },
+        {
+          "stage": "vegetative",
+          "kc": 0.74,
+          "days": 15
+        },
+        {
+          "stage": "flowering",
+          "kc": 0.98,
+          "days": 27
+        },
+        {
+          "stage": "physiological maturation",
+          "kc": 0.81,
+          "days": 20
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "irrigated Catissol I; weighing lysimeters; 90-day cycle",
+      "cultivar": "Catissol I",
+      "location": "Chapada do Apodi, RN",
+      "source": {
+        "title": "Necessidade hídrica da cultura do girassol irrigado na chapada do Apodi",
+        "year": 2012,
+        "url": "https://www.scielo.br/j/rbeaa/a/Y5F3Y683GrD3XpK6Zg86dZc/?format=html",
+        "pageOrSection": "Conclusions / Table 1",
+        "snippet": "0,52; 0,74; 0,98 e 0,81 para as diferentes fases fenológicas.",
+        "verification": "verified",
+        "institution": "SciELO",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.4,
+          "days": {
+            "min": 15,
+            "max": 20
+          }
+        },
+        {
+          "stage": "growth",
+          "kc": 0.75,
+          "days": {
+            "min": 15,
+            "max": 20
+          }
+        },
+        {
+          "stage": "mid",
+          "kc": 1.05,
+          "days": {
+            "min": 20,
+            "max": 30
+          }
+        },
+        {
+          "stage": "end",
+          "kc": 0.95,
+          "days": {
+            "min": 5,
+            "max": 20
+          }
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "semi-arid localities; table-based crop-water simulation, not Rio Verde",
+      "cultivar": null,
+      "location": "Jatobá/Petrolândia/Tacaratu, PE and Banzaê/Quijingue, BA",
+      "source": {
+        "title": "Condições hídricas e crescimento vegetal de culturas agrícolas importantes para comunidades indígenas do semiárido brasileiro",
+        "year": 2017,
+        "url": "https://www.scielo.br/j/rceres/a/pgRHdZbDQLDf3CjFb4937cp/abstract/?lang=pt",
+        "pageOrSection": "Table 1",
+        "snippet": "Feijão-caupi: Kc 0,40; 0,75; 1,05; 0,95.",
+        "verification": "verified",
+        "institution": "SciELO",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.34,
+          "days": 18
+        },
+        {
+          "stage": "development",
+          "kc": 0.89,
+          "days": 18
+        },
+        {
+          "stage": "flowering",
+          "kc": 1.41,
+          "days": 14
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "lowest residual-salinity treatment S1; not a Rio Verde calibration",
+      "cultivar": null,
+      "location": "Mossoró, RN",
+      "source": {
+        "title": "Necessidade hídrica da Crotalaria juncea L. em resposta à salinidade residual do solo",
+        "year": 2014,
+        "url": "https://ppgmsa.ufersa.edu.br/wp-content/uploads/sites/59/2014/10/DISSERTA%C3%87%C3%83O-PEDRO-RAMUALYSON-FERNANDES-SAMPAIO.pdf",
+        "pageOrSection": "Table 2",
+        "snippet": "Kc S1: 0,34; 0,89; 1,41.",
+        "verification": "verified",
+        "institution": "Universidade Federal Rural do Semi-Árido (UFERSA)",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "idealTempC",
+      "value": {
+        "min": 24,
+        "max": 30
+      },
+      "unit": "°C",
+      "context": "air temperature; emergence to flowering",
+      "cultivar": null,
+      "location": "Brazilian Embrapa technical guidance",
+      "source": {
+        "title": "Relações com o clima",
+        "year": 2021,
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/relacoes-com-o-clima",
+        "pageOrSection": "Temperatura",
+        "snippet": "A temperatura ideal para o desenvolvimento do milho, da emergência à floração, está compreendida entre 24ºC e 30ºC.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "germinationSoilTempC",
+      "value": {
+        "min": 25,
+        "max": 30
+      },
+      "unit": "°C",
+      "context": "soil temperature during germination; not air temperature",
+      "cultivar": null,
+      "location": "Brazilian Embrapa technical guidance",
+      "source": {
+        "title": "Relações com o clima",
+        "year": 2021,
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/relacoes-com-o-clima",
+        "pageOrSection": "Temperatura",
+        "snippet": "Durante o período de germinação, as temperaturas ideais do solo ... entre 25ºC e 30ºC.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "idealTempC",
+      "value": {
+        "day": 30,
+        "night": 22
+      },
+      "unit": "°C",
+      "context": "air temperature for high grain productivity; day and night values, not a single mean",
+      "cultivar": null,
+      "location": "General Embrapa guidance; not Rio Verde validation",
+      "source": {
+        "title": "Listagem Perguntas e Respostas - Feijão-caupi",
+        "year": 2017,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas",
+        "pageOrSection": "Ecofisiologia, pergunta 2",
+        "snippet": "em torno de 30 °C durante o dia e 22 °C durante a noite.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "knownRiskTempC",
+      "value": 35,
+      "unit": "°C",
+      "context": "air temperature; flower abortion risk, especially with limited water",
+      "cultivar": null,
+      "location": "General Embrapa guidance; not Rio Verde validation",
+      "source": {
+        "title": "Listagem Perguntas e Respostas - Feijão-caupi",
+        "year": 2017,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas",
+        "pageOrSection": "Ecofisiologia, pergunta 2",
+        "snippet": "Temperaturas do ar ao redor de 35 °C podem ocasionar o abortamento de flores.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "cycleDaysRange",
+      "value": {
+        "groups": [
+          {
+            "group": "I",
+            "maxExclusive": 75
+          },
+          {
+            "group": "II",
+            "min": 75,
+            "max": 85
+          },
+          {
+            "group": "III",
+            "minExclusive": 85
+          }
+        ]
+      },
+      "unit": "days",
+      "context": "emergence to physiological maturity; maturity groups",
+      "cultivar": "maturity group classification",
+      "location": "Brazilian Embrapa guidance; not Rio Verde validation",
+      "source": {
+        "title": "Listagem Perguntas e Respostas - Feijão-caupi",
+        "year": 2017,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas",
+        "pageOrSection": "Cultivares / grupos de maturação",
+        "snippet": "I: menos de 75 dias; II: 75–85 dias; III: mais de 85 dias.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-12"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "soilPhExperimental",
+      "value": 6.7,
+      "unit": "pH (method not confirmed)",
+      "context": "maximum production in a Cerrado Oxisol experiment; experimental result, not a universal suitability range",
+      "cultivar": null,
+      "location": "Cerrado experimental setting; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Soja e características da espécie",
+        "year": null,
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/soja/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/caracteristicas-da-soja",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: pH 6.7 associated with maximum production in a Cerrado experiment.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "photoperiodLimitation",
+      "value": "flowering and cycle duration depend on cultivar, latitude and photoperiod",
+      "unit": null,
+      "context": "species context; not a cultivar cycle for Rio Verde",
+      "cultivar": null,
+      "location": "Brazilian Embrapa guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Soja e características da espécie",
+        "year": null,
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/soja/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/caracteristicas-da-soja",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: photoperiod influences flowering and cycle duration.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "soilPhExperimental",
+      "value": 6.5,
+      "unit": "pH (method not confirmed)",
+      "context": "maximum production in a Cerrado soil experiment; experimental result, not a universal crop optimum",
+      "cultivar": null,
+      "location": "Cerrado experimental setting; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Planejamento da adubação e calagem",
+        "year": null,
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/milho/producao/manejo-do-solo-e-adubacao/adubacao-e-fertilidade-do-solo/planejamento-da-adubacao-e-calagem",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: pH 6.5 associated with maximum production in a Cerrado experiment.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "soilPhInterpretation",
+      "value": {
+        "method": "water, soil:water 1:2.5",
+        "goodClass": {
+          "min": 5.5,
+          "max": 6
+        }
+      },
+      "unit": "pH",
+      "context": "soil-analysis interpretation; not an exclusive optimum for maize",
+      "cultivar": null,
+      "location": "Brazilian Embrapa guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Planejamento da adubação e calagem",
+        "year": null,
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/milho/producao/manejo-do-solo-e-adubacao/adubacao-e-fertilidade-do-solo/planejamento-da-adubacao-e-calagem",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: pH in water, 1:2.5; agronomic class good between 5.5 and 6.0.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "maturityDays",
+      "value": 120,
+      "unit": "days",
+      "context": "BRS 310; planting to maturity",
+      "cultivar": "BRS 310",
+      "location": "Goiás is among states indicated by Embrapa; no Rio Verde calendar implied",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Comunicado Técnico 101 — BRS 310",
+        "year": null,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/484881/1/Com101.pdf",
+        "pageOrSection": "not yet page-verified",
+        "snippet": "User-supplied evidence: 120 days to maturity.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "floweringDays",
+      "value": 65,
+      "unit": "days",
+      "context": "BRS 310; planting to flowering, distinct from maturity",
+      "cultivar": "BRS 310",
+      "location": "Goiás is among states indicated by Embrapa; no Rio Verde calendar implied",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Comunicado Técnico 101 — BRS 310",
+        "year": null,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/484881/1/Com101.pdf",
+        "pageOrSection": "not yet page-verified",
+        "snippet": "User-supplied evidence: flowering at 65 days.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "diseaseProfile",
+      "value": {
+        "resistant": [
+          "cercosporiose"
+        ],
+        "moderatelyResistant": [
+          "antracnose",
+          "ferrugem",
+          "helmintosporiose"
+        ],
+        "moderatelySusceptible": [
+          "míldio"
+        ]
+      },
+      "unit": null,
+      "context": "cultivar disease profile; not species-wide resistance",
+      "cultivar": "BRS 310",
+      "location": "Brazilian Embrapa cultivar guidance",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Comunicado Técnico 101 — BRS 310",
+        "year": null,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/484881/1/Com101.pdf",
+        "pageOrSection": "not yet page-verified",
+        "snippet": "User-supplied evidence: cultivar-specific disease profile.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "physiologicalMaturityDays",
+      "value": {
+        "min": 80,
+        "max": 98
+      },
+      "unit": "days",
+      "context": "planting to physiological maturity",
+      "cultivar": "BRS 323",
+      "location": "Brazilian Embrapa cultivar guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Girassol BRS 323",
+        "year": null,
+        "url": "https://lp-cnpso.comunica.embrapa.br/girassol-brs-422",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: BRS 323 takes 80–98 days to physiological maturity.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "physiologicalMaturityDays",
+      "value": {
+        "min": 85,
+        "max": 107
+      },
+      "unit": "days",
+      "context": "planting to physiological maturity",
+      "cultivar": "BRS 422",
+      "location": "Brazilian Embrapa cultivar guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Girassol BRS 422",
+        "year": null,
+        "url": "https://lp-cnpso.comunica.embrapa.br/girassol-brs-422",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: BRS 422 takes 85–107 days to physiological maturity.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "diseaseResistance",
+      "value": {
+        "disease": "míldio",
+        "race": 330,
+        "response": "resistant"
+      },
+      "unit": null,
+      "context": "cultivar- and race-specific; not generalizable to other races or hybrids",
+      "cultivar": "BRS 323",
+      "location": "Brazilian Embrapa cultivar guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Girassol BRS 323",
+        "year": null,
+        "url": "https://lp-cnpso.comunica.embrapa.br/girassol-brs-422",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: resistance to mildew race 330.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "soilPhContextRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH (method not stated)",
+      "context": "preference for irrigated green-grain cultivation; not a universal suitability range",
+      "cultivar": null,
+      "location": "Context not validated for Rio Verde",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Feijão-caupi — produção irrigada de grãos verdes",
+        "year": null,
+        "url": null,
+        "pageOrSection": "not yet source-verified",
+        "snippet": "User-supplied evidence: pH 5.5–6.5.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "maturityDays",
+      "value": {
+        "min": 65,
+        "max": 70
+      },
+      "unit": "days",
+      "context": "cultivar cycle; maturity endpoint as described by source",
+      "cultivar": "BRS Guariba",
+      "location": "Brazilian Embrapa cultivar guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Cultivar de feijão-caupi BRS Guariba",
+        "year": null,
+        "url": "https://www.embrapa.br/en/busca-de-solucoes-tecnologicas/-/produto-servico/12197/cultivar-de-feijao-caupi-brs-guariba",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: BRS Guariba takes 65–70 days.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "diseaseProfile",
+      "value": {
+        "resistant": [
+          "specified mosaics"
+        ],
+        "moderatelyResistant": [
+          "oídio",
+          "mancha-café"
+        ]
+      },
+      "unit": null,
+      "context": "cultivar disease profile; not species-wide or absolute resistance",
+      "cultivar": "BRS Guariba",
+      "location": "Brazilian Embrapa cultivar guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Cultivar de feijão-caupi BRS Guariba",
+        "year": null,
+        "url": "https://www.embrapa.br/en/busca-de-solucoes-tecnologicas/-/produto-servico/12197/cultivar-de-feijao-caupi-brs-guariba",
+        "pageOrSection": "not yet page/section-verified",
+        "snippet": "User-supplied evidence: cultivar-specific mosaic, powdery mildew and coffee-spot response.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "soilLimitation",
+      "value": "prefers well-drained soil; low fertility, especially low P and K, limits performance",
+      "unit": null,
+      "context": "qualitative soil limitation; no numeric pH interval",
+      "cultivar": null,
+      "location": "Brazilian ILPF guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Listagem Perguntas e Respostas — ILPF",
+        "year": null,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/ilpf/listagem-perguntas-e-respostas",
+        "pageOrSection": "not yet question-verified",
+        "snippet": "User-supplied evidence: drainage and fertility limitation.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "managementContext",
+      "value": "facilitates intercropping and crop-rotation systems",
+      "unit": null,
+      "context": "cover/consortium management context; not a duration or calendar",
+      "cultivar": null,
+      "location": "Brazilian ILPF guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Listagem Perguntas e Respostas — ILPF",
+        "year": null,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/ilpf/listagem-perguntas-e-respostas",
+        "pageOrSection": "not yet question-verified",
+        "snippet": "User-supplied evidence: intercropping and rotation use.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "knownRisks",
+      "value": [
+        "does not tolerate prolonged drought",
+        "sensitive to pasture leafhopper",
+        "lower relative straw persistence"
+      ],
+      "unit": null,
+      "context": "qualitative management risks; no numeric threshold",
+      "cultivar": null,
+      "location": "Brazilian ILPF guidance; not Rio Verde validation",
+      "source": {
+        "institution": "Embrapa",
+        "title": "Listagem Perguntas e Respostas — ILPF",
+        "year": null,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/ilpf/listagem-perguntas-e-respostas",
+        "pageOrSection": "not yet question-verified",
+        "snippet": "User-supplied evidence: drought, leafhopper and straw-persistence limitations.",
+        "accessedAt": "2026-11-12",
+        "verification": "not_verified"
+      }
+    }
   ]
 }

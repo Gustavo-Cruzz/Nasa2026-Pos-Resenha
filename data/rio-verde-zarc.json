@@ -1,1 +1,3220 @@
-{"pilot":"Rio Verde, GO","status":"partially_verified_from_local_official_study","source":{"title":"Zoneamento Agrícola de Risco Climático para Grandes Culturas no Município de Rio Verde, Goiás","authors":"Ferreira et al.","year":2020,"sourceData":"ZARC - Plantio Certo (EMBRAPA, 2019)","localDocument":"2021-Marco Antônio Alves Ferreira-ZONEAMENTO AGRÍCOLA DE RISCO CLIMÁTICO PARA GRANDES CULTURAS NO MUNICÍPIO DE RIO VERDE, GOIÁS.pdf"},"windows":[{"cropId":"soybean","safra":"2020/2021","cycle":"any","soilTexture":"any","riskPct":20,"start":"10-2","end":"12-3","evidence":"Table 1, p. 4"},{"cropId":"maize","safra":"2019/2020","cycle":"any","soilTexture":"any","riskPct":20,"start":"10-1","end":"12-3","evidence":"Table 2, p. 5; exception: late/arenoso has 30%"},{"cropId":"sunflower","safra":"2020/2021","cycle":"early","soilTexture":"clayey","riskPct":20,"start":"01-1","end":"02-2","evidence":"Table 4, p. 6"},{"cropId":"sorghum","safra":"2019/2020","cycle":"early","soilTexture":"clayey","riskPct":20,"start":"01-1","end":"03-1","evidence":"Table 5, p. 7"},{"cropId":"sorghum","safra":"2019/2020","cycle":"early","soilTexture":"medium","riskPct":20,"start":"01-1","end":"02-3","evidence":"Table 5, p. 7"},{"cropId":"sorghum","safra":"2019/2020","cycle":"early","soilTexture":"sandy","riskPct":20,"start":"01-1","end":"02-2","evidence":"Table 5, p. 7"}],"notCovered":["cowpea","pearl_millet","ruziziensis","sunn_hemp"],"note":"Windows are rainfed, study/safra-specific and not evergreen rules. Do not substitute generic beans for cowpea."}
+{
+  "version": 2,
+  "pilot": "Rio Verde, GO",
+  "status": "verified_from_MAPA_2026_2027_csv_risk_codes_not_semantically_interpreted",
+  "source": {
+    "institution": "Ministério da Agricultura e Pecuária (MAPA)",
+    "title": "Zoneamento Agrícola de Risco Climático (Zarc) - Tábua de Risco - Safra 2026/2027",
+    "year": 2026,
+    "url": "https://dados.agricultura.gov.br/dataset/6d3d141c-885e-41a4-ab7f-dc8ff323b96f/resource/139e5a60-1f43-4cc8-aeab-a35dbbf816c0/download/dados-abertos-tabua-de-risco-safra-2026-2027.csv",
+    "dictionaryUrl": "https://dados.agricultura.gov.br/dataset/6d3d141c-885e-41a4-ab7f-dc8ff323b96f/resource/bebb0ebb-bc75-460c-b900-a7a1ebd87bee/download/dicionario-de-dados-tabua-de-risco-2026.pdf",
+    "accessedAt": "2026-11-12",
+    "localFile": "dados-abertos-tabua-de-risco-safra-2026-2027.csv",
+    "sha256": "199fe1d9c700b25b7367a0dcced6fed7ffc32f5141743c482a234b70942b0050"
+  },
+  "fieldSemantics": {
+    "cycleGroup": "MAPA dictionary: 20=Grupo I, 21=Grupo II, 22=Grupo III.",
+    "soil": "MAPA dictionary: 1=Arenoso, 2=Textura Média, 3=Argiloso, 11–16=AD1–AD6.",
+    "riskCodeByDecendio": "Raw non-zero values from dec1–dec36. The consulted dictionary defines decêndios as planting periods but does not define the numeric risk-code legend; therefore these values are not labelled as percentages in this artifact."
+  },
+  "entries": [
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "28": 30,
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "28": 30,
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "28": 30,
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "soybean",
+      "zarcCulture": "Soja",
+      "systemCropIds": [
+        "soybean"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.198_de_03-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "27": 40,
+        "28": 20,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 30,
+        "5": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.322_de_30-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 30,
+        "3": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "30": 30,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "30": 30,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "30": 30,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 40,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 40,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.248_de_14-07-2026",
+      "riskCodeByDecendio": {
+        "29": 40,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "1": 40,
+        "2": 30,
+        "3": 20,
+        "4": 20,
+        "5": 30
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "2": 40,
+        "3": 30,
+        "4": 20,
+        "5": 20,
+        "6": 20,
+        "7": 30
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "3": 40,
+        "4": 30,
+        "5": 20,
+        "6": 20,
+        "7": 20,
+        "8": 30
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "2": 40,
+        "3": 30,
+        "4": 20,
+        "5": 20,
+        "6": 40
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "1": 40,
+        "2": 30,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 40
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "3": 40,
+        "4": 30,
+        "5": 20,
+        "6": 20,
+        "7": 20,
+        "8": 40
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "1": 40,
+        "2": 30,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 30
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "3": 40,
+        "4": 30,
+        "5": 20,
+        "6": 30,
+        "7": 40
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "zarcCulture": "Feijão Caupi",
+      "systemCropIds": [
+        "cowpea"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.124_de_26-05-2026",
+      "riskCodeByDecendio": {
+        "2": 40,
+        "3": 30,
+        "4": 20,
+        "5": 20,
+        "6": 30,
+        "7": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 40,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 40,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "28": 30,
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "30": 30,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 40,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "30": 30,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "30": 30,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 20,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 40,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 30,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 1ª Safra",
+      "systemCropIds": [
+        "maize"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.221_de_10-07-2026",
+      "riskCodeByDecendio": {
+        "29": 40,
+        "30": 20,
+        "31": 20,
+        "32": 20,
+        "33": 20,
+        "34": 20,
+        "35": 20,
+        "36": 20
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 30,
+        "3": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 30,
+        "5": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 40
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 30
+      }
+    },
+    {
+      "cropId": "maize",
+      "zarcCulture": "Milho 2ª Safra consorciado com Braquiária",
+      "systemCropIds": [
+        "maize",
+        "ruziziensis"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.337_de_06-08-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 30
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 22,
+        "name": "III"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 20,
+        "7": 20,
+        "8": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 1,
+        "name": "Arenoso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 40
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 20,
+        "7": 30
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 2,
+        "name": "Textura Média"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 30
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "zarcCulture": "Sorgo Granífero 2ª Safra",
+      "systemCropIds": [
+        "sorghum"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 3,
+        "name": "Argiloso"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.273_de_22-07-2026",
+      "riskCodeByDecendio": {
+        "1": 20,
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 20,
+        "7": 20,
+        "8": 20,
+        "9": 30
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 30,
+        "4": 40,
+        "30": 40
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 40,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 11,
+        "name": "AD1"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 40,
+        "30": 40
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 30,
+        "7": 30,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 30,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 40,
+        "29": 40,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 40,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 14,
+        "name": "AD4"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 40,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 15,
+        "name": "AD5"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 30,
+        "6": 40,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 21,
+        "name": "II"
+      },
+      "soil": {
+        "code": 12,
+        "name": "AD2"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 30,
+        "29": 40,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 16,
+        "name": "AD6"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 20,
+        "5": 20,
+        "6": 20,
+        "7": 20,
+        "8": 30,
+        "29": 30,
+        "30": 20
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "zarcCulture": "Girassol",
+      "systemCropIds": [
+        "sunflower"
+      ],
+      "safra": "2026/2027",
+      "cycleGroup": {
+        "code": 20,
+        "name": "I"
+      },
+      "soil": {
+        "code": 13,
+        "name": "AD3"
+      },
+      "management": "Sequeiro",
+      "ordinance": "Port.100_de_07-05-2026",
+      "riskCodeByDecendio": {
+        "2": 20,
+        "3": 20,
+        "4": 30,
+        "29": 30,
+        "30": 20
+      }
+    }
+  ],
+  "notCoveredAsStandaloneCrop": [
+    "ruziziensis"
+  ],
+  "note": "Rows for maize intercropped with brachiaria document the consortium system only; they do not establish an independent Urochloa ruziziensis planting window. This dataset does not by itself enable a recommendation."
+}
