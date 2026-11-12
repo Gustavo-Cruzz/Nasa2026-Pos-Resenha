@@ -14,5 +14,7 @@ describe('crop scientific guards', () => {
   it('limits S2 pilot candidates to crops with verified Rio Verde windows', () => {
     expect(scope.auditedPilotCandidates).toEqual(['soybean', 'maize', 'sunflower', 'sorghum']);
     expect(scope.displayOnly).toContain('ruziziensis');
+    expect(scope.p0).toEqual(['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis']);
+    expect(scope.excludedFromMvpRecommendations).toEqual(['pearl_millet', 'sunn_hemp']);
   });
 });

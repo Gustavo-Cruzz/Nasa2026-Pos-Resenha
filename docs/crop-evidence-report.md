@@ -1,5 +1,7 @@
 # P0 scientific evidence audit
 
+P0 now contains soybean, maize, grain sorghum, sunflower, cowpea and *Urochloa ruziziensis*. Pearl millet and sunn hemp remain preserved in the catalog/assets but are excluded from MVP research and recommendation generation.
+
 | Crop | Explicit verified evidence | Rio Verde ZARC window | Material gaps |
 |---|---|---|---|
 | Soybean | air adaptation 20–30 °C; ideal ~30 °C, Embrapa 2006, p. 12 | verified local ZARC segments: `rio-verde-zarc.json` | cultivar cycle, pH, Kc |

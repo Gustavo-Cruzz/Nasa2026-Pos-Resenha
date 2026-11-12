@@ -1,7 +1,9 @@
 {
   "version": 1,
   "pilot": "Rio Verde, GO",
+  "p0": ["soybean", "maize", "sorghum", "sunflower", "cowpea", "ruziziensis"],
   "auditedPilotCandidates": ["soybean", "maize", "sunflower", "sorghum"],
-  "displayOnly": ["cowpea", "pearl_millet", "ruziziensis", "sunn_hemp", "cotton", "pigeon_pea"],
-  "rule": "Display-only crops must not receive a regional calendar, eligibility, or recommendation until field evidence and pilot-compatible rules exist."
+  "displayOnly": ["cowpea", "ruziziensis", "cotton", "pigeon_pea"],
+  "excludedFromMvpRecommendations": ["pearl_millet", "sunn_hemp"],
+  "rule": "Only P0 crops may receive future MVP research. Display-only and excluded crops must not receive a regional calendar, eligibility, or recommendation until evidence and pilot-compatible rules exist."
 }
