@@ -183,3 +183,15 @@ Implemented: draft persistence now writes V2. A valid V1 draft is read and proje
 Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (33 unit tests), `npm run build`, and `npm run test:e2e` (8 Playwright tests) passed. Browser coverage proves V1-to-V2 save at 375px, other-crop entry and an overlap rejection.
 
 Limitations / next: P0 selection is an interaction constraint, not a suitability claim; historical labels may still be any explicit user-provided other crop. The timeline stores local observations only. G4 can build experimental scenario slots only on the existing pure engine/evidence boundaries.
+
+## G4 — Laboratório de rotações
+
+Status: complete.
+
+Implemented: added `/lab` with three editable A/B/C hypothesis boards, four neutral slots per scenario (two years × Temporadas A/B), P0 deck, evidence labels and an accessible keyboard-operable crop selection dialog. A slot is only a user hypothesis: no crop cycle, regional calendar, rainfall season, score or rotation duration is inferred. Empty slots remain `N/D`.
+
+Implemented: introduced a validated `labPlan` inside the local V2 draft. The laboratory starts from the existing engine's proposed crop for the first slot only; it never creates a full fictional rotation. The API and pure engine accept that optional plan and recalculate only existing qualitative indicators for the selected first crop. Missing slots explicitly make the comparison partial.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (9 Playwright tests) passed. Unit coverage verifies 3×4 slot structure, no score field and engine reuse; E2E verifies keyboard dialog selection.
+
+Limitations / next: a slot does not establish an agronomic sequence or local feasibility. G5 will make the result comparison explicitly table-oriented and partial, connect navigation/methodology, and add final desktop/mobile flow coverage.

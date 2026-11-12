@@ -79,3 +79,7 @@ G2 adicionou o deck interativo das seis culturas P0 no painel do atlas. Cada car
 ## Atualização G3
 
 G3 substituiu o formulário preservado em `/farm` por uma linha do tempo de três eventos, com seleção P0 ou outro rótulo explícito, datas mensais, solo opcional, irrigação, prioridades e linha de base. `lib/storage.ts` lê V1 e o converte em memória para V2; preserva extras opacos em `legacy` e só escreve V2 após validação e ação explícita de salvar. A validação de cronologia e sobreposição continua centralizada em `analysisInputSchema`.
+
+## Atualização G4
+
+G4 criou `/lab` e adicionou `labPlan` validado ao draft V2: três cenários e quatro slots neutros por cenário (Ano 1/2 × Temporada A/B). O laboratório só inicializa a primeira hipótese por cenário a partir do motor atual; slots restantes ficam `N/D` até escolha explícita. O seletor modal é acessível por teclado e só oferece as seis P0. A API/motor reaplicam os indicadores qualitativos existentes à primeira cultura escolhida, sem fabricar um calendário, score ou viabilidade.

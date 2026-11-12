@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
+import { labPlanSchema, type LabPlan } from '@/lib/lab';
 
 const DRAFT_KEY = 'field-shift:draft';
-const v2DraftSchema = z.object({ version: z.literal(2), savedAt: z.string().datetime(), data: analysisInputSchema, legacy: z.record(z.string(), z.unknown()).optional() });
+const v2DraftSchema = z.object({ version: z.literal(2), savedAt: z.string().datetime(), data: analysisInputSchema, labPlan: labPlanSchema.optional(), legacy: z.record(z.string(), z.unknown()).optional() });
 export type Draft = z.infer<typeof v2DraftSchema>;
 
 /** Converts only validated V1 content. Unknown V1 fields stay in `legacy` until a V2 save succeeds. */
@@ -27,8 +28,10 @@ export function loadDraft(): Draft | undefined {
 }
 
 /** Writes V2 only after form validation succeeds; callers may pass migrated opaque fields back unchanged. */
-export function saveDraft(data: AnalysisInput, legacy?: Draft['legacy']): void {
-  window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ version: 2, savedAt: new Date().toISOString(), data, ...(legacy ? { legacy } : {}) }));
+export function saveDraft(data: AnalysisInput, legacy?: Draft['legacy'], labPlan?: LabPlan): void {
+  window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ version: 2, savedAt: new Date().toISOString(), data, ...(labPlan ? { labPlan } : {}), ...(legacy ? { legacy } : {}) }));
 }
+
+export function saveLabPlan(draft: Draft, labPlan: LabPlan): void { saveDraft(draft.data, draft.legacy, labPlan); }
 
 export function clearDraft(): void { window.localStorage.removeItem(DRAFT_KEY); }

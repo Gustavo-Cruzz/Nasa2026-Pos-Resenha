@@ -62,6 +62,8 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
   await expect(page.getByLabel('Cultura planejada')).toHaveValue('maize');
   await page.getByLabel('Cultura planejada').selectOption('sunflower');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
+  await page.getByRole('link', { name: 'Revisar comparação' }).click();
   await expect(page.getByRole('heading', { name: 'Plano do produtor' })).toBeVisible();
   await expect(page.getByRole('article').filter({ hasText: 'Plano do produtor' })).toContainText('girassol');
 });
@@ -73,9 +75,22 @@ test('migrates a V1 draft on the farm timeline and preserves its data at 375px',
   await expect(page.getByRole('heading', { name: 'Linha do tempo da fazenda' })).toBeVisible();
   await expect(page.getByLabel('Início do evento 1')).toHaveValue('2023-01');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
-  await expect(page).toHaveURL(/\/results/);
+  await expect(page).toHaveURL(/\/lab/);
   const version = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').version);
   expect(version).toBe(2);
+});
+
+test('edits a laboratory slot by keyboard without inventing a calendar', async ({ page }) => {
+  await installDraft(page);
+  await page.goto('/lab');
+  await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
+  const choose = page.getByRole('button', { name: 'Escolher cultura' }).nth(1);
+  await choose.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog', { name: 'Escolher cultura para slot' })).toBeVisible();
+  await page.getByRole('button', { name: /feijão-caupi/i }).click();
+  await expect(page.getByLabel('Três cenários do laboratório').getByText('feijão-caupi')).toBeVisible();
+  await expect(page.getByText(/sem score agregado, ciclo ou janela local/i)).toHaveCount(3);
 });
 
 test('blocks overlapping timeline dates and allows another crop entry', async ({ page }) => {

@@ -4,6 +4,7 @@ import { isPilotLocation } from '@/lib/region';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import zarc from '@/data/rio-verde-zarc.json';
 import type { AnalysisResult, Explanation, IndicatorState, QualitativeIndicator, Rotation, ValidationLevel } from '@/lib/engine/types';
+import { labPrimaryCrop, type LabPlan } from '@/lib/lab';
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis'] as const;
 const ZARC_SOURCE = 'data/rio-verde-zarc.json';
@@ -42,12 +43,17 @@ function baselineCrop(input: AnalysisInput): Crop | undefined { const cropId = i
 function selectCover(input: AnalysisInput): Crop | undefined { const last = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined; const candidates = P0.map((id) => getCrop(id)).filter((crop): crop is Crop => Boolean(crop?.purposes.includes('cover'))); return candidates.find((crop) => !last || crop.family !== last.family) ?? candidates[0]; }
 function selectResilience(input: AnalysisInput): Crop | undefined { const last = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined; const candidates = P0.map((id) => getCrop(id)).filter((crop): crop is Crop => Boolean(crop && (crop.commercial || crop.purposes.includes('cover')) && crop.viableTempC)); return candidates.find((crop) => !last || crop.family !== last.family) ?? candidates[0]; }
 export function evaluateConstraints(input: AnalysisInput): Explanation[] { return isPilotLocation(input.location) ? [] : [{ kind: 'limitation', message: 'No regional context exists for this coordinate; climate exploration remains available.', ruleId: 'GLOBAL_EXPLORATION', sourceRefs: [], certainty: 'high', missingData: ['regional_source'] }]; }
-export function generateCandidates(input: AnalysisInput, climate: ClimateContext = EMPTY_CLIMATE): Rotation[] { const confirmed = Boolean(input.futureBaseline?.confirmed); const resilience = selectResilience(input); return [strategy('A', confirmed ? 'Plano do produtor' : 'Continuidade presumida — confirmar', baselineCrop(input), input, climate, true, !confirmed), strategy('B', 'Saúde do solo', selectCover(input), input, climate), strategy('C', 'Resiliência hídrica', resilience, input, climate, false, false, resilience ? undefined : 'Nenhuma cultura P0 possui requisito térmico documentado para esta comparação.')]; }
+export function generateCandidates(input: AnalysisInput, climate: ClimateContext = EMPTY_CLIMATE, labPlan?: LabPlan): Rotation[] {
+  const confirmed = Boolean(input.futureBaseline?.confirmed); const resilience = selectResilience(input);
+  const defaults = [strategy('A', confirmed ? 'Plano do produtor' : 'Continuidade presumida — confirmar', baselineCrop(input), input, climate, true, !confirmed), strategy('B', 'Saúde do solo', selectCover(input), input, climate), strategy('C', 'Resiliência hídrica', resilience, input, climate, false, false, resilience ? undefined : 'Nenhuma cultura P0 possui requisito térmico documentado para esta comparação.')];
+  if (!labPlan) return defaults;
+  return defaults.map((item) => { const configured = labPlan.scenarios.find((scenario) => scenario.id === item.id); if (!configured) return item; const cropId = labPrimaryCrop(labPlan, item.id); const crop = cropId ? getCrop(cropId) : undefined; const selected = strategy(item.id, configured.title, crop, input, climate, item.baseline, item.baselineAssumed, crop ? undefined : 'Nenhuma cultura foi escolhida nos slots do laboratório.'); return { ...selected, missingData: [...new Set([...selected.missingData, 'unconfigured_lab_slots'])] }; });
+}
 export function computeMetrics(candidate: Rotation): Rotation { return candidate; }
 export function rankCandidates(candidates: Rotation[]): Rotation[] { return candidates; }
 export function explain(candidate: Rotation): Explanation[] { return candidate.explanations; }
-export function analyze(input: unknown, climate: ClimateContext = EMPTY_CLIMATE): AnalysisResult {
+export function analyze(input: unknown, climate: ClimateContext = EMPTY_CLIMATE, labPlan?: LabPlan): AnalysisResult {
   const parsed = validateInputs(input); if (!parsed.success) throw new Error(parsed.error.issues.map((issue) => issue.message).join('; '));
   const priorityHighlights = (Object.entries(parsed.data.priorities) as Array<[keyof AnalysisInput['priorities'], number]>).sort((a, b) => b[1] - a[1]).map(([key]) => key === 'water' ? 'historical_precipitation' : key === 'soil' ? 'cover_potential' : 'functional_diversity');
-  return { strategies: generateCandidates(parsed.data, climate), climate, warnings: [...evaluateConstraints(parsed.data).map((item) => item.message), ...climate.gaps], input: parsed.data, regionalContextAvailable: isPilotLocation(parsed.data.location) && zarc.entries.length > 0, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights };
+  return { strategies: generateCandidates(parsed.data, climate, labPlan), climate, warnings: [...evaluateConstraints(parsed.data).map((item) => item.message), ...climate.gaps], input: parsed.data, regionalContextAvailable: isPilotLocation(parsed.data.location) && zarc.entries.length > 0, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights };
 }

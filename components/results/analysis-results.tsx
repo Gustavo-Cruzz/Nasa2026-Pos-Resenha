@@ -16,7 +16,7 @@ export function AnalysisResults() {
   useEffect(() => {
     const draft = loadDraft();
     if (!draft) { void Promise.resolve().then(() => setState({ kind: 'empty' })); return; }
-    void fetch('/api/analyze', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(draft.data) })
+    void fetch('/api/analyze', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ input: draft.data, ...(draft.labPlan ? { labPlan: draft.labPlan } : {}) }) })
       .then(async (response) => { const body: unknown = await response.json(); if (!response.ok) throw new Error(typeof body === 'object' && body && 'message' in body ? String(body.message) : 'Não foi possível analisar o rascunho.'); setState({ kind: 'ready', data: body as AnalysisResult }); })
       .catch((error: unknown) => setState({ kind: 'error', message: error instanceof Error ? error.message : 'Não foi possível analisar o rascunho.' }));
   }, []);
