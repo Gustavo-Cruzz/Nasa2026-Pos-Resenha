@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { crops } from '@/lib/catalog';
-import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
+import { analysisInputSchema, coordinatesSchema, type AnalysisInput } from '@/lib/schema';
 import { clearDraft, loadDraft, saveDraft, type Draft } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 
@@ -16,7 +16,7 @@ function formFromDraft(draft: Draft, editBaseline = false): Form { return { ...i
 export function ExploreWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [restored] = useState(() => { const editBaseline = searchParams.get('edit') === 'baseline'; const draft = editBaseline ? loadDraft() : undefined; return { step: editBaseline && draft ? 4 : 0, form: draft ? formFromDraft(draft, true) : initial, message: editBaseline && draft ? 'Rascunho restaurado para editar a linha de base.' : undefined }; });
+  const [restored] = useState(() => { const editBaseline = searchParams.get('edit') === 'baseline'; const draft = editBaseline ? loadDraft() : undefined; const selected = coordinatesSchema.safeParse({ latitude: Number(searchParams.get('lat')), longitude: Number(searchParams.get('lon')) }); const locationForm = selected.success ? { ...initial, location: { latitude: String(selected.data.latitude), longitude: String(selected.data.longitude) } } : initial; return { step: editBaseline && draft ? 4 : 0, form: draft ? formFromDraft(draft, true) : locationForm, message: editBaseline && draft ? 'Rascunho restaurado para editar a linha de base.' : selected.success ? 'Local do atlas aplicado. Complete os dados da fazenda.' : undefined }; });
   const [step, setStep] = useState(restored.step); const [form, setForm] = useState<Form>(restored.form); const [message, setMessage] = useState<string | undefined>(restored.message);
   const restore = (editBaseline = false) => { const draft = loadDraft(); if (!draft) { setMessage('Nenhum rascunho válido foi encontrado neste navegador.'); return; } setForm(formFromDraft(draft, editBaseline)); if (editBaseline) setStep(4); setMessage('Rascunho restaurado.'); };
   const parsed = () => analysisInputSchema.safeParse({ ...form, location: { latitude: Number(form.location.latitude), longitude: Number(form.location.longitude) }, history: form.history.map((event) => ({ ...event, cropId: event.cropId || undefined })), futureBaseline: form.baselineConfirmed ? { cropId: form.baselineCropId, confirmed: true } : undefined, soil: form.soil.ph || form.soil.organicCarbonGKg ? { origin: form.soil.origin, ...(form.soil.ph ? { ph: Number(form.soil.ph) } : {}), ...(form.soil.organicCarbonGKg ? { organicCarbonGKg: Number(form.soil.organicCarbonGKg) } : {}) } : undefined });

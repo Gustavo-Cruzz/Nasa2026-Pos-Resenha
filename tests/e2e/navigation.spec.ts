@@ -3,10 +3,36 @@ import { expect, test, type Page } from '@playwright/test';
 const draft = (futureBaseline?: { cropId: string; confirmed: true }) => ({ version: 1, savedAt: '2026-11-12T15:00:00.000Z', data: { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], futureBaseline, priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' } });
 async function installDraft(page: Page, futureBaseline?: { cropId: string; confirmed: true }) { await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), draft(futureBaseline)); }
 
-test('navigates from home to the exploration foundation', async ({ page }) => {
+const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
+
+test('navigates from home to the global atlas with coordinate fallback', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Começar exploração' }).click();
+  await expect(page.getByRole('heading', { name: 'Atlas climático global' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Mapa mundial indisponível sem estilo autorizado/ })).toBeVisible();
+});
+
+test('selects Brazil, Ghana, and India globally then transfers coordinates to farm', async ({ page }) => {
+  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
+  await page.goto('/explore');
+  await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
+  await expect(page.getByLabel('Latitude')).toHaveValue('-17.798');
+  await page.getByRole('button', { name: 'Acra, Gana' }).click();
+  await expect(page.getByLabel('Latitude')).toHaveValue('5.6037');
+  await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
+  await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
+  await expect(page.getByText('Clima histórico observado')).toBeVisible();
+  await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
   await expect(page.getByRole('heading', { name: 'Localização' })).toBeVisible();
+  await expect(page.getByText('Local do atlas aplicado. Complete os dados da fazenda.')).toBeVisible();
+});
+
+test('shows retryable NASA failure without a fabricated climate metric', async ({ page }) => {
+  await page.route('**/api/climate*', (route) => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ status: 'error', code: 'NASA_REQUEST_FAILED', message: 'NASA indisponível.' }) }));
+  await page.goto('/explore');
+  await page.getByRole('button', { name: 'Acra, Gana' }).click();
+  await expect(page.getByText('NASA indisponível.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
 });
 
 test('renders provenance and source drawers for pilot analysis', async ({ page }) => {

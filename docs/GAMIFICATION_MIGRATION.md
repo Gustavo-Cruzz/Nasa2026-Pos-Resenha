@@ -67,3 +67,7 @@ Criar em G2 uma função pura `evidenceCoverageAssessment(location, crop, rotati
 ## Resultado G0
 
 G0 está pronto para G1. A decisão de mapa está documentada, mas a dependência e as telas novas aguardam autorização do próximo sprint. A lógica climática, catálogo, engine, proveniência e testes existentes são a base a preservar.
+
+## Atualização G1
+
+G1 instalou `maplibre-gl` e criou o atlas em `/explore`. O componente só inicializa MapLibre no cliente quando `NEXT_PUBLIC_MAP_STYLE_URL` estiver configurada com estilo/tiles autorizados; `/.env.example` documenta a variável. Sem configuração, o fallback por coordenadas continua sendo o fluxo completo e testado, sem carregar tiles ou representar camada climática sintética. A localização escolhida é passada para o formulário preservado em `/farm`; G3 substituirá esse formulário por timeline e migrará o rascunho V1.

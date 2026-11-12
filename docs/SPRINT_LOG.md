@@ -147,3 +147,17 @@ Implemented: audited the existing routes, wizard, results UI, pure engine, NASA 
 Evidence (2026-11-12): baseline `npm run lint`, `npm run typecheck`, `npm run test` (24 unit tests), `npm run build`, and `npm run test:e2e` (4 Playwright tests) passed.
 
 Limitations / next: G1 requires a separately approved MapLibre dependency and an authorized public map-style URL before tiles are enabled. Coordinate entry remains the mandatory fallback. ZARC stays Rio Verde-only contextual evidence; global NASA availability does not establish local crop suitability. Do not begin G1 until requested.
+
+## G1 — Atlas global
+
+Status: complete.
+
+Plan: install only MapLibre GL; make `/explore` an atlas client-only; keep coordinate selection as a fully usable fallback when no authorized map style exists; reuse the existing climate endpoint; preserve the old form under `/farm` until G3.
+
+Implemented: added `maplibre-gl`, `WorldMap`, `LocationExplorer`, typed atlas/API response contracts and `.env.example`. With `NEXT_PUBLIC_MAP_STYLE_URL`, the map supports click selection, a draggable marker and provider attribution. Without it, the page intentionally shows an accessible no-tiles state while latitude/longitude selection, examples and NASA climate lookup remain fully functional. The atlas offers Rio Verde, Accra and New Delhi examples; each is only a coordinate example, not a recommendation. The selected location transfers to `/farm` by query parameters and local browser state.
+
+Implemented: panel shows NASA loading, recoverable error/retry, source, period, variable coverage and January point climatology; it does not show synthetic raster/heatmap, crop suitability or land-use claims. Rio Verde's exact-coordinate fixture rule is unchanged. Results baseline editing now correctly targets `/farm` after the route split.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (27 unit tests), `npm run build`, and `npm run test:e2e` (6 Playwright tests) passed. E2E covers no-style fallback, Brazil/Ghana/India selection, transfer to farm and retryable NASA failure.
+
+Limitations / next: a real tile map needs a user-supplied, authorized `NEXT_PUBLIC_MAP_STYLE_URL`; this repository ships none and loads no public OSM tiles. G1 does not classify land/ocean because no land-use dataset exists. G2 should add crop deck/cards and pure evidence-coverage statuses without promoting Brazilian evidence to global suitability.
