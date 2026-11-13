@@ -1,5 +1,17 @@
 # Sprint log
 
+## V5 — Mapa-base geográfico navegável
+
+Status: complete.
+
+Plan: replace the abstract coordinate canvas with a real-world, attributed MapLibre basemap. Retain click-to-position, draggable marker, pan/zoom and coordinate fallback; do not derive agricultural evidence from the basemap.
+
+Implemented: replaced the neutral tiled canvas with OpenFreeMap's public Liberty MapLibre style, derived from OpenStreetMap. The rendered map has road/place geography, visible OpenStreetMap/OpenFreeMap attribution, compass and zoom controls; a farmer can pan, zoom, click to set the farm marker or drag it to refine the point. The latitude/longitude form remains the accessible fallback when WebGL2 is unavailable.
+
+Evidence (2026-11-13): verified the style endpoint returns HTTPS `200` with public caching and CORS headers. `npm run lint`, `npm run typecheck`, `npm run test` (48 unit tests), `npm run build`, and `npm run test:e2e` (17 Playwright tests) passed. The headless test browser has no WebGL2, so it verified the fallback rather than rasterizing the basemap; real WebGL2 browsers load the external style and tiles directly.
+
+Limitations / next: OpenFreeMap availability remains an external map dependency. The base map is used only for positioning and navigation; it does not identify farm boundaries, ownership, crops, soil, use of land or climate conditions.
+
 ## V4 — UI de demonstração enxuta
 
 Status: complete.

@@ -30,7 +30,7 @@ Runtime pixel art lives under `public/assets/`. Editable generators, manifests, 
 
 ## Map and deployment
 
-`/explore` ships with a local MapLibre coordinate canvas, neutral offline tiles, and reduced-motion-safe decorative NASA-style animations. This local style contains no map provider, geographic layers, land-use inference, climate raster, or satellite feed. It is only a tactile way to select coordinates; latitude/longitude fields remain the complete keyboard-accessible fallback.
+`/explore` ships with a navigable real-world MapLibre basemap from OpenFreeMap, derived from OpenStreetMap data. Attribution is visible in the map control. Users can pan, zoom, click and drag the marker to position their farm; latitude/longitude fields remain the keyboard-accessible fallback. The basemap is for location selection only and does not add farm, crop, soil or climate observations.
 
 Deploy requires an authenticated Vercel account and GitHub write credentials. This repository intentionally contains neither credential nor a map-style URL.
 

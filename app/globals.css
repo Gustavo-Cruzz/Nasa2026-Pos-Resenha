@@ -14,11 +14,7 @@ a { text-underline-offset: 4px; }
 .atlas-layout { display: grid; gap: 1rem; }
 .atlas-map-frame { position: relative; min-height: 26rem; overflow: hidden; border: 1px solid #405840; border-radius: .9rem; background: #142018; }
 .atlas-map { min-height: 26rem; }
-.atlas-map-texture { position: absolute; z-index: 1; inset: 0; background-image: url('/assets/tiles/neutral-terrain-sheet.png'); background-repeat: repeat; background-size: 128px 64px; mix-blend-mode: screen; opacity: .2; pointer-events: none; }
 .atlas-map-error { position: absolute; z-index: 3; top: 50%; right: 1rem; left: 1rem; margin: 0; transform: translateY(-50%); border: 1px solid #dca84e; border-radius: .5rem; background: rgb(47 31 11 / .92); padding: .75rem; text-align: center; color: #fff3c4; }
-.atlas-map-animation { position: absolute; z-index: 2; pointer-events: none; filter: drop-shadow(0 2px 5px rgb(0 0 0 / .45)); }
-.atlas-map-orbit { top: .65rem; left: .65rem; opacity: .86; }.atlas-map-satellite { top: 3.1rem; left: 2.55rem; }.atlas-map-pulse { top: 4.15rem; left: 1rem; }
-.atlas-tile-key { position: absolute; z-index: 2; top: .7rem; right: .7rem; display: flex; gap: .35rem; margin: 0; padding: .35rem; border: 1px solid rgb(64 88 64 / .82); border-radius: .4rem; background: rgb(20 32 24 / .82); color: #d2dacb; font-size: .65rem; list-style: none; pointer-events: none; }.atlas-tile-key li { display: inline-flex; align-items: center; gap: .2rem; }.atlas-tile-key img { width: 16px; height: 16px; image-rendering: pixelated; }
 .journey-progress { border-bottom: 1px solid #405840; background: #1a291c; }
 .journey-mobile-label { display: none; margin: 0; padding: .65rem 1rem; color: #d8efa0; font-size: .875rem; font-weight: 700; }
 .journey-progress ol { display: flex; max-width: 72rem; margin: 0 auto; padding: .65rem 1rem; gap: .35rem; overflow-x: auto; list-style: none; }
