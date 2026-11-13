@@ -7,7 +7,7 @@
 
 **Problema:** agricultores precisam comparar estratégias de rotação sob variações climáticas, limitações do solo e prioridades individuais.
 
-**Produto:** web app gamificado, responsivo e bilíngue (pt-BR/en) que recebe localização, três cultivos recentes e dados opcionais do solo, consulta/sumariza dados históricos reais da NASA e compara **três estratégias de rotação** para os próximos 24 meses (incluindo linha de base), exibindo benefícios potenciais, limitações e evidências.
+**Produto:** web app gamificado, responsivo e bilíngue (pt-BR/en) que recebe localização, de um a três cultivos recentes e dados opcionais do solo, consulta/sumariza dados históricos reais da NASA e compara **três estratégias de rotação** para os próximos 24 meses (incluindo linha de base), exibindo benefícios potenciais, limitações e evidências.
 
 **Proposta de valor:** “Built for the world. Contextualized with Brazilian sources. Powered by NASA.”
 
@@ -85,7 +85,7 @@ lib/
 ### Jornada principal
 
 1. **Selecionar localização:** atalho “Piloto: Rio Verde (GO)”, além de formulário de latitude/longitude para análise global. Não usar geolocalização obrigatória; coordenadas válidas: lat [-90, 90], lon [-180, 180]. Se escolher coordenadas externas, bloquear apenas o motor **regional**, nunca os dados climáticos.
-2. **Histórico:** 3 eventos anteriores `{cropId, startYearMonth, endYearMonth}` em ordem cronológica; ano/mês obrigatórios. Aceitar “não sei” para culturas não catalogadas com `otherLabel`, mas marcar compatibilidade histórica como incompleta. Não confundir três eventos com três anos.
+2. **Histórico:** de 1 a 3 eventos anteriores `{cropId, startYearMonth, endYearMonth}` em ordem cronológica; ano/mês obrigatórios. O primeiro evento é obrigatório; eventos adicionais são opcionais e explícitos. Aceitar cultura não catalogada com `otherLabel`, mas marcar compatibilidade histórica como incompleta. Não confundir eventos com anos.
 3. **Solo (opcional):** pH (0–14), areia/silte/argila (% somando ≈100, apenas quando todas informadas), carbono orgânico (g/kg), profundidade de amostragem e data. Origem `farmer_lab | regional_estimate | unknown`. Nenhum SOC/pH estimado deve ser rotulado como medição local. Entradas parciais são permitidas.
 4. **Prioridades:** conservação de água, saúde do solo e adequação comercial/operacional. Usar pesos normalizados com presets “equilibrado”, “água”, “solo”, “operacional”; irrigação `rainfed | irrigated | unknown`; permitir restrição de culturas sem mercado local.
 5. **Resultado:** 3 cenários exploratórios para horizonte de 24 meses: `A` continuidade, `B` foco em cobertura/solo, `C` resiliência hídrica. Um único mês de plantio (1–12) é a janela climática comum. Sem ciclo verificável, exibir mês e duração desconhecida, sem inventar datas. Para cada cenário: indicadores qualitativos, justificativa, alertas, fontes, nível de evidência e lacunas.

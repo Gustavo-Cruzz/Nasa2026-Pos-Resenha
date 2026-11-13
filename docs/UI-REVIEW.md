@@ -2,7 +2,7 @@
 
 Review date: 2026-11-13. Real Chromium captures inspected at 390×844 and 1440×900 for Farm, Results and Methodology.
 
-Overall score: **22/24**.
+Overall score after the history simplification: **23/24**.
 
 | Pillar | Score | Evidence |
 |---|---:|---|
@@ -11,7 +11,7 @@ Overall score: **22/24**.
 | Color | 4/4 | Farm greens, lime actions, cyan evidence and amber gaps have stable semantic roles and accessible contrast. |
 | Typography | 4/4 | Mobile headings, body text and controls remain readable at 390 px; long technical content wraps safely. |
 | Spacing | 4/4 | Desktop uses the available width; mobile cards preserve touch targets and separation. |
-| Experience design | 3/4 | Results have clear progressive disclosure and export, but three manually entered historical events remain the largest completion cost. |
+| Experience design | 4/4 | Results use progressive disclosure and export; Farm requires one historical event and reveals up to two optional events on demand. |
 
 ## Implemented in this review
 
@@ -22,8 +22,8 @@ Overall score: **22/24**.
 - Local-only journey counters record route visits, successful comparisons and last completion time without a backend or personal identifiers.
 - Explore and Results gained primary bilingual copy; locale persists. Methodology was rewritten around four data foundations and three engine steps.
 
-## Remaining decision
+## Resolved decision
 
-The 390 px Farm capture is valid and usable, but one open event plus two collapsed events still produces the longest manual step. Recommended next experiment: require one historical event and make events 2–3 optional, or provide a compact “repeat last crop / add event” interaction. This changes the analysis-input contract and should be approved as a product decision, not hidden as a visual tweak.
+Farm now requires one historical event. Events 2–3 are optional, added explicitly, removable, and still validated for chronological overlap. Existing three-event drafts remain valid and load without migration loss.
 
 Full-flow value and hackathon strategy remain in [UX_VALUE_HACKATHON_REVIEW.md](./UX_VALUE_HACKATHON_REVIEW.md).

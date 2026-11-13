@@ -223,6 +223,40 @@ test('explains invalid month fields and confirms a save without navigating away'
   await expect(page).toHaveURL(/\/farm$/);
 });
 
+test('starts with one history event and lets the producer add or remove optional events', async ({ page }) => {
+  const oneEvent = draft();
+  oneEvent.data.history = [oneEvent.data.history[0]];
+  await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), oneEvent);
+  await page.goto('/farm');
+  await expect(page.getByRole('heading', { name: 'Histórico recente de cultivos' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /1\. soja/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /2\./ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Adicionar evento' }).click();
+  await expect(page.getByRole('button', { name: 'Remover evento 2' })).toBeVisible();
+  await page.getByRole('button', { name: 'Remover evento 2' }).click();
+  await expect(page.getByRole('button', { name: 'Remover evento 2' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo');
+});
+
+test('keeps the core farm, laboratory, and results flow in English', async ({ page }) => {
+  await installDraft(page);
+  await page.addInitScript(() => window.localStorage.setItem('field-shift:locale', 'en'));
+  await page.goto('/farm');
+  await expect(page.getByRole('heading', { name: 'Farm timeline' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Recent crop history' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Save and open laboratory' })).toBeVisible();
+  await page.goto('/lab');
+  await expect(page.getByRole('heading', { name: 'Rotation laboratory' })).toBeVisible();
+  await expect(page.getByText('P0 crop deck')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Review comparison' })).toBeVisible();
+  await page.goto('/results');
+  await expect(page.getByRole('heading', { name: 'Strategy comparison' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Compare criteria' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Take this conversation forward' })).toBeVisible();
+  await expect(page.getByText('Prioridades em destaque:')).toHaveCount(0);
+});
+
 test('shows three stacked global scenarios and unknown climate after NASA failure', async ({ page }) => {
   await installDraft(page);
   await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, regionalContext: { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Fora do Brasil.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));

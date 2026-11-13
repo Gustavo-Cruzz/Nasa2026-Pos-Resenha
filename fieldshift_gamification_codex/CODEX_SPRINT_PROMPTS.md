@@ -16,7 +16,7 @@ Implemente `/explore` com mapa global MapLibre (ou alternativa compatível aprov
 Implemente `CropCard`, `CropDeck`, `CropDetailDrawer` e `EvidenceStatus`; use seis P0 e sprites disponíveis; preserve as P1 como informativas se já existirem. Mostre indicadores comprovados com fonte, outros como N/D; não classifique cultura como boa para região sem regra aplicável. Integre ao painel da localização. Teste keyboard/mobile, estados e links de fonte.
 
 ## G3 — Linha do tempo
-Reaproveite o estado e validações de formulário para construir `/farm` com histórico de três eventos em timeline, seleção por cards, campo outra cultura, solo opcional, irrigação e sliders. Converta versões antigas de draft, sem destruir dados. Verifique datas, sobreposição e editabilidade em 375px.
+Reaproveite o estado e validações de formulário para construir `/farm` com um evento histórico obrigatório e até dois opcionais em timeline, seleção por cards, campo outra cultura, solo opcional, irrigação e sliders. Converta versões antigas de draft, sem destruir dados. Verifique datas, sobreposição e editabilidade em 375px.
 
 ## G4 — Laboratório
 Implemente `/lab` com três cenários (baseline + 2 alternativas), 2 anos e temporadas configuráveis; deck para seleção por modal acessível. Reuse engine atual; adaptações com testes para `supported`/`partial`/`insufficient_evidence`. Respeite eventos de manejo e regras de consórcio. Sem DnD obrigatório. Não gere três rotações fictícias para satisfazer UX.

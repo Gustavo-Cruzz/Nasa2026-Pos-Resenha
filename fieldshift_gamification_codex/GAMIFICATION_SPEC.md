@@ -17,7 +17,7 @@ Não criar mundo 3D, personagens, loot, moedas, XP, rendimento de safra inventad
 ## 2. Contexto do projeto existente
 
 - Projeto original: Next.js App Router, TypeScript strict, Tailwind/shadcn, Zod, Recharts, Vitest/Playwright, API NASA POWER.
-- Telas atuais: Localização, Histórico (3 eventos), Solo, Prioridades, Revisar. **Reutilizar lógica e validação**; redesenhar a apresentação sem reimplementar o motor agronômico do zero.
+- Telas atuais: Localização, Histórico (1 obrigatório + até 2 opcionais), Solo, Prioridades, Revisar. **Reutilizar lógica e validação**; redesenhar a apresentação sem reimplementar o motor agronômico do zero.
 - Catálogo ativo P0: soja, milho, sorgo granífero, girassol, feijão-caupi, *Urochloa ruziziensis*. P1: algodão, feijão-guandu (cartas de exploração opcionais; sem indicação automática se não habilitadas). Milheto e crotalária excluídos do escopo prioritário.
 - Imagens: usar sprites existentes no projeto, PNG transparentes; fornecer fallback textual para imagens faltantes; `image-rendering: pixelated` e dimensões apropriadas.
 - Atualizar instruções existentes que limitem recomendação ao piloto brasileiro. Substituir regra `location === Rio Verde` por `evidenceCoverageAssessment(location, crop, rotation, soil, season, management)`.
@@ -105,7 +105,7 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 
 ### 5.3 Tela B — Minha fazenda
 
-- Linha do tempo de três eventos históricos editáveis (cartas de cultura + início/fim); campo de cultura “Outra”; detecção de sobreposição com mensagem clara.
+- Linha do tempo de um a três eventos históricos editáveis (cartas de cultura + início/fim); campo de cultura “Outra”; detecção de sobreposição com mensagem clara.
 - Solo opcional em painel expansível com indicação de origem e método de pH. Irrigação e prioridades com sliders e valores numéricos.
 - Preview de clima por janela selecionada; se faltarem datas, “sem janela definida”.
 - Salvar rascunho versionado localmente; limpar/restaurar rascunho com confirmação.
@@ -157,7 +157,7 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 
 **Cartas:** seis culturas P0 visíveis, com pixel art/fallback; dados sem evidência aparecem como `N/D`, indicação de origem e expansão de fontes.
 
-**Histórico:** três eventos modificáveis com datas; mensagens para datas inválidas; local e inputs sobrevivem à navegação e migração de rascunho.
+**Histórico:** um evento obrigatório e até dois opcionais com datas; mensagens para datas inválidas; local e inputs sobrevivem à navegação e migração de rascunho.
 
 **Lab:** baseline imutável por padrão (edição apenas em cópia), duas alternativas editáveis; troca por botão em mobile/teclado; nenhuma combinação inválida silenciosa; recálculo sem scores fictícios.
 
@@ -181,7 +181,7 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 
 ### Sprint G3 — Fazenda em timeline (4–5 h)
 - Transformar histórico em slots de timeline; solo e prioridades em painéis; migrar draft antigo; preservar validações.
-- Aceite: três eventos, edição mobile, datas válidas e estado persistente.
+- Aceite: um a três eventos, adição/remoção mobile, datas válidas e estado persistente.
 
 ### Sprint G4 — Laboratório interativo (6–8 h)
 - Três cenários (baseline + 2), slots de ano/temporada, menus trocar/adicionar, replicar base, regras do motor existente e faltas de evidência. Drag-and-drop somente se sobrar tempo.

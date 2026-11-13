@@ -48,7 +48,7 @@ export const futureBaselineSchema = z.object({
 export const analysisInputSchema = z.object({
   location: coordinatesSchema,
   plantingMonth: z.number().int().min(1).max(12),
-  history: z.array(cropEventSchema).length(3),
+  history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
   soil: soilProfileSchema.optional(),
   priorities: prioritiesSchema,

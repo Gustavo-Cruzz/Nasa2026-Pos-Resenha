@@ -105,7 +105,7 @@ Se contexto insuficiente, trocar CTA para `CONSIDERAR COMO HIPÓTESE` e exigir r
 +------------------------------------------------------------------------------------+
 | < Voltar ao mapa                SUA ÁREA: [local + lat/lon]       [Alterar local]   |
 +------------------------------------------------------------------------------------+
-| HISTÓRICO DE CULTIVOS (3 eventos)                                                   |
+| HISTÓRICO DE CULTIVOS (1 obrigatório + até 2 opcionais)                             |
 | [1] [sprite] [Selecionar cultura / Outra] [Início ___] [Fim ___] [editar]          |
 |  |                                                                                 |
 | [2] [sprite] [Selecionar cultura / Outra] [Início ___] [Fim ___] [editar]          |

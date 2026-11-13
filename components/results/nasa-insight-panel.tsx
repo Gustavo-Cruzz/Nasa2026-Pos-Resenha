@@ -5,6 +5,7 @@ import { ArrowDown, ExternalLink } from 'lucide-react';
 import type { NasaInsight, NasaInsightEffect } from '@/lib/engine/types';
 import { useLocale } from '@/components/locale-provider';
 import { EvidenceIcon } from '@/components/pixel/evidence-icon';
+import { cropDisplayName } from '@/lib/presentation';
 
 const monthNames = {
   'pt-BR': ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -36,9 +37,9 @@ export function NasaInsightPanel({ insights = [], initialMonth }: { insights?: N
       <div className="grid gap-3 text-center sm:grid-cols-[1fr_auto_1.3fr] sm:items-center sm:text-left">
         <div><p className="text-xs font-semibold uppercase tracking-wide text-cyan-200">NASA POWER · {monthNames[locale][month - 1]}</p><p className="mt-1 text-3xl font-bold">{insight.observedValue === null ? 'N/D' : `${insight.observedValue} ${insight.unit}`}</p>{insight.period ? <p className="mt-1 text-xs text-slate-400">{insight.period.start}–{insight.period.end} · {insight.coveragePct ?? 'N/D'}%</p> : null}</div>
         <ArrowDown className="mx-auto text-cyan-300 sm:-rotate-90" aria-hidden="true" />
-        <div><p className="font-bold">{headline}</p><p className="mt-1 text-xs text-slate-300">{insight.limitations[0]}</p></div>
+        <div><p className="font-bold">{headline}</p><p className="mt-1 text-xs text-slate-300">{locale === 'en' ? 'Exploratory comparison using documented thermal ranges; not an agronomic recommendation.' : insight.limitations[0]}</p></div>
       </div>
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">{insight.effects.map((effect) => <article className={`rounded-lg border p-3 ${tone[effect.state]}`} key={effect.scenarioId}><p className="text-xs font-semibold uppercase">Cenário {effect.scenarioId}</p><p className="mt-1 font-bold">{effect.cropName ?? 'N/D'} · {stateLabel(effect.state)}</p><p className="mt-2 text-xs"><b>{copy.nasaInsightRule}:</b> {ruleLabel(effect)}</p>{effect.documentedRangeC ? <p className="mt-1 text-xs">{effect.documentedRangeC.min}–{effect.documentedRangeC.max} °C</p> : null}</article>)}</div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">{insight.effects.map((effect) => <article className={`rounded-lg border p-3 ${tone[effect.state]}`} key={effect.scenarioId}><p className="text-xs font-semibold uppercase">{locale === 'en' ? 'Scenario' : 'Cenário'} {effect.scenarioId}</p><p className="mt-1 font-bold">{cropDisplayName(effect.cropId, effect.cropName, locale)} · {stateLabel(effect.state)}</p><p className="mt-2 text-xs"><b>{copy.nasaInsightRule}:</b> {ruleLabel(effect)}</p>{effect.documentedRangeC ? <p className="mt-1 text-xs">{effect.documentedRangeC.min}–{effect.documentedRangeC.max} °C</p> : null}</article>)}</div>
       <p className="mt-4 text-xs text-slate-400">{copy.nasaInsightTemporary}</p>
       {insight.sourceUrl ? <a className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline" href={insight.sourceUrl} rel="noreferrer" target="_blank">{copy.nasaInsightSource}<ExternalLink size={15} aria-hidden="true" /></a> : null}
     </div>

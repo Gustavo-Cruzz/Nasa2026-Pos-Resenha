@@ -12,7 +12,7 @@ Data: 2026-11-12. Escopo: auditoria e plano. Nenhuma interface, regra agronômic
 | Dados climáticos | `lib/climate/nasa-power.ts` resolve NASA POWER para coordenadas globais, com timeout, normalização, cobertura/proveniência e fixture SHA-validada exclusiva das coordenadas exatas de Rio Verde. | Reutilizar `resolveClimateContext` no painel do atlas; nunca reutilizar fixture para outro ponto. |
 | Motor | `lib/engine/index.ts` é puro, retorna A/B/C, indicadores qualitativos e lacunas. Não calcula score, produtividade, ET0/ETc, irrigação ou calendário. | Manter puro. G4 adapta cenários/slots sem criar resultados agronômicos onde a evidência é incompleta. |
 | Catálogo | `lib/catalog.ts`, `data/crops.json` e `data/crop-evidence.json` preservam fontes e campos nulos; sprites P0 existem em `public/assets/crops`. | G2 monta deck/ficha usando este catálogo; P0 são interativos. P1 só informativos, se expostos. |
-| Entrada e rascunho | `lib/schema.ts` valida coordenadas globais, três eventos, solo parcial, prioridades, irrigação e baseline. `lib/storage.ts` persiste somente `version: 1`. | G3 introduz versão 2 e migração não destrutiva de V1 antes de adicionar timeline/sessão. |
+| Entrada e rascunho | `lib/schema.ts` valida coordenadas globais, de um a três eventos, solo parcial, prioridades, irrigação e baseline. `lib/storage.ts` persiste somente `version: 1`. | G3 introduz versão 2 e migração não destrutiva de V1 antes de adicionar timeline/sessão. |
 | UI | `ExploreWizard` mistura localização, histórico, solo, prioridades e revisão; `AnalysisResults` já possui painel climático e fontes expansíveis. | Extrair componentes gradualmente; não reimplementar validações nem proveniência. |
 | Testes | 24 unitários e 4 E2E cobrem clima, engine, rascunho, baseline, fonte, mobile de resultados e falha NASA. | Acrescentar testes por sprint; manter os existentes como regressão. |
 
@@ -80,7 +80,7 @@ G2 adicionou o deck interativo das seis culturas P0 no painel do atlas. Cada car
 
 ## Atualização G3
 
-G3 substituiu o formulário preservado em `/farm` por uma linha do tempo de três eventos, com seleção P0 ou outro rótulo explícito, datas mensais, solo opcional, irrigação, prioridades e linha de base. `lib/storage.ts` lê V1 e o converte em memória para V2; preserva extras opacos em `legacy` e só escreve V2 após validação e ação explícita de salvar. A validação de cronologia e sobreposição continua centralizada em `analysisInputSchema`.
+G3 substituiu o formulário preservado em `/farm` por uma linha do tempo de um evento obrigatório e até dois opcionais, com seleção P0 ou outro rótulo explícito, datas mensais, solo opcional, irrigação, prioridades e linha de base. `lib/storage.ts` lê V1 e o converte em memória para V2; preserva extras opacos em `legacy` e só escreve V2 após validação e ação explícita de salvar. A validação de cronologia e sobreposição continua centralizada em `analysisInputSchema`.
 
 ## Atualização G4
 

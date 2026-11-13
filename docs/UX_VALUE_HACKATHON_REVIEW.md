@@ -58,8 +58,8 @@ Escala: 1 = frágil, 2 = funcional, 3 = bom, 4 = excelente/pronto para competiç
 ### Achados críticos de UX
 
 1. **Promessa inconsistente:** “Built for the world. Validated locally.” conflita com a regra implementada de que Rio Verde é apenas `regionally_contextualized`; `locally_validated` está reservado. Sugestão: **“Built for the world. Contextualized in Rio Verde. Powered by NASA.”**
-2. **Insight demora demais:** o usuário precisa selecionar local, preencher três eventos e atravessar o laboratório antes de receber uma comparação. Um modo demo precisa entregar o primeiro insight em menos de 30 segundos.
-3. **Fazenda mobile longa:** transformar os três eventos em cards colapsáveis com um resumo (“soja · jan–jun/2023”) após preenchimento; manter apenas o evento ativo aberto.
+2. **Insight demora demais:** o usuário precisa selecionar local, preencher pelo menos um evento e atravessar o laboratório antes de receber uma comparação. O modo demo deve entregar o primeiro insight em menos de 30 segundos.
+3. **Fazenda mobile:** manter um evento obrigatório aberto e adicionar até dois eventos opcionais em cards colapsáveis somente quando trouxerem contexto útil.
 4. **Laboratório pouco imersivo:** o deck mostra nomes e selos, mas não os sprites que já existem; os 12 slots vazios dominam a tela. Exibir primeiro um resumo de A/B/C e expandir a edição detalhada sob demanda.
 5. **Resultados técnicos:** traduzir níveis e chaves internas. “Contextualização regional”, “precipitação histórica”, “diversidade funcional” e “duração não documentada” são mais úteis do que tokens de implementação.
 6. **Comparação mobile sem direção:** adicionar tabs A/B/C e uma pista “deslize para comparar”; manter a tabela completa como visão secundária.

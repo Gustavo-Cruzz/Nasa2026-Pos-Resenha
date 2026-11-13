@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AtlasPoint } from '@/lib/atlas';
 import { fieldShiftMapAttribution, fieldShiftMapStyleUrl } from '@/lib/atlas-map-style';
+import { useLocale } from '@/components/locale-provider';
 
 type WorldMapProps = { point: AtlasPoint | null; onPointChange: (point: AtlasPoint) => void };
 
 export function WorldMap({ point, onPointChange }: WorldMapProps) {
+  const { locale } = useLocale();
+  const en = locale === 'en';
   const [mapError, setMapError] = useState<string>();
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<import('maplibre-gl').Map | null>(null);
@@ -34,9 +37,9 @@ export function WorldMap({ point, onPointChange }: WorldMapProps) {
       instance.on('click', (event: import('maplibre-gl').MapMouseEvent) => { const next = { latitude: Number(event.lngLat.lat.toFixed(6)), longitude: Number(event.lngLat.lng.toFixed(6)) }; setMarker(next); onPointChangeRef.current(next); });
       instance.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
       instance.on('load', () => { if (pointRef.current) setMarker(pointRef.current); });
-    }).catch((error: unknown) => setMapError(error instanceof Error ? error.message : 'Não foi possível iniciar o mapa local.'));
+    }).catch((error: unknown) => setMapError(error instanceof Error ? error.message : en ? 'Could not start the local map.' : 'Não foi possível iniciar o mapa local.'));
     return () => { disposed = true; marker.current?.remove(); marker.current = null; map.current?.remove(); map.current = null; };
-  }, []);
+  }, [en]);
 
-  return <div className="atlas-map-frame"><div className="atlas-map" ref={container} aria-label="Mapa mundial interativo; arraste, aproxime e clique para escolher a localização da fazenda" />{mapError ? <p className="atlas-map-error" role="status">Mapa interativo indisponível neste navegador. Use latitude e longitude abaixo.</p> : null}</div>;
+  return <div className="atlas-map-frame"><div className="atlas-map" ref={container} aria-label={en ? 'Interactive world map; drag, zoom, and click to choose the farm location' : 'Mapa mundial interativo; arraste, aproxime e clique para escolher a localização da fazenda'} />{mapError ? <p className="atlas-map-error" role="status">{en ? 'Interactive map unavailable in this browser. Use latitude and longitude below.' : 'Mapa interativo indisponível neste navegador. Use latitude e longitude abaixo.'}</p> : null}</div>;
 }

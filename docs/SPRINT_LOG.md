@@ -399,3 +399,17 @@ Visual evidence (2026-11-13): inspected full-page Chromium captures for Farm, Re
 Checks before commit: `npm run lint`, `npm run typecheck`, `npm run test` (56 unit tests), `npm run build`, and `npm run test:e2e`. Final counts and production validation are recorded after the final gates.
 
 Limitations / next: the engine-generated agronomic explanation text is still authored in pt-BR, so English core navigation and primary instructions do not yet translate every evidence sentence. Local metrics measure this browser only. No scientific value, recommendation or validation level changed.
+
+## P1-UX2 — Histórico progressivo e tradução integral da jornada
+
+Status: complete.
+
+Implemented: changed the validated history contract from exactly three events to one through three. Farm begins with one required event and offers explicit add/remove actions for two optional events. Chronology, overlap detection, “other crop,” local draft restoration and existing three-event drafts remain supported. No missing history is fabricated.
+
+Implemented: completed the English presentation layer across Atlas crop cards/details, Brazil context, Farm, Laboratory, NASA Insight, comparison indicators, decision handoff, regional technical details and Evidence Center claims. Scenario, crop, indicator and explanation texts are localized semantically at presentation time while engine rules and identifiers remain stable.
+
+Tests added: schema boundaries for 0/1/3/4 history events; browser add/remove/save behavior for the optional history; and an English Farm → Laboratory → Results flow that rejects Portuguese primary UI leakage.
+
+Visual review: production-build captures at 390×844 and 1440×900 use a one-event draft and confirm reduced Farm height, visible “Add event” affordance, readable controls and unchanged Results hierarchy.
+
+Limitations: third-party/source-authored proper names and raw rule IDs remain unchanged by design. Existing saved drafts are not rewritten until the user explicitly saves. No deployment or push was performed; the user will send the verified commits to Vercel.
