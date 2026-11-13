@@ -1,5 +1,17 @@
 # Sprint log
 
+## V4 — UI de demonstração enxuta
+
+Status: complete.
+
+Plan: remove repeated evidence-status badges and editorial caveats from the live hackathon flow while preserving the underlying evidence model, sources, validation, errors and methodology page.
+
+Implemented: removed `supported`/`partial`/`insufficient`/`unavailable` evidence badges from crop cards, crop drawers and laboratory selections. Crop cards now focus on the crop sprite, name and purpose, restoring visual space and legibility on mobile. Removed repeated scope, suitability, talhão, scoring and recommendation caveats from explore, farm, lab and comparison screens; source details, unknown values, API/error states and the methodology remain available.
+
+Evidence (2026-11-13): `npm run lint`, `npm run typecheck`, `npm run test` (48 unit tests), `npm run build`, and `npm run test:e2e` (17 Playwright tests) passed. Mobile deck and laboratory flows are covered by E2E after the badge removal.
+
+Limitations / next: evidence statuses and caveats are still calculated and retained in the domain/API layers. The reusable `EvidenceStatusPill` component remains available for a future dedicated evidence view; it is intentionally absent from the demo flow.
+
 ## V3 — Atlas MapLibre local, tiles neutros e animações
 
 Status: complete.

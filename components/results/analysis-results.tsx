@@ -37,14 +37,13 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   const { data } = state;
   return <>
     <ReviewTransition />
-    {demo ? <aside className="mt-5 rounded-xl border border-lime-300 bg-lime-300/10 p-4"><p className="font-bold text-lime-200">Demonstração Brasil</p><p className="mt-1 text-sm text-slate-200">Fazenda e intenção de plantio fictícias em Rio Verde. O clima vem da NASA POWER e o contexto ZARC é associado ao município identificado pelo IBGE, sem validar o talhão.</p></aside> : null}
+    {demo ? <aside className="mt-5 rounded-xl border border-lime-300 bg-lime-300/10 p-4"><p className="font-bold text-lime-200">Demonstração Brasil</p><p className="mt-1 text-sm text-slate-200">Rio Verde · NASA POWER + contexto ZARC municipal.</p></aside> : null}
     <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="secondary"><Link href="/lab">Voltar ao laboratório</Link></Button><Button asChild variant="secondary"><Link href="/farm">Alterar prioridades</Link></Button></div>
     <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
     <RegionalContextDetails data={data} />
     <ClimatePanel climate={data.climate} plantingMonth={data.input.plantingMonth} />
     <SourcesDetails provenance={data.climate.provenance} sourceRefs={[]} title="Proveniência climática" />
-    <p className="mt-3 text-sm text-amber-100">{data.disclaimer}</p>
-    <p className="mt-4 text-sm text-slate-300"><b>Prioridades em destaque:</b> {data.priorityHighlights.map((id) => priorityLabel[id] ?? id).join(', ')}. Elas mudam a ênfase da leitura, não fabricam uma nota.</p>
+    <p className="mt-4 text-sm text-slate-300"><b>Prioridades em destaque:</b> {data.priorityHighlights.map((id) => priorityLabel[id] ?? id).join(', ')}.</p>
     <ScenarioComparisonTable data={data} />
     <DecisionSummary data={data} />
     <section className="mt-6 grid gap-4 lg:grid-cols-3" aria-label="Estratégias exploratórias">{data.strategies.map((strategy) => {

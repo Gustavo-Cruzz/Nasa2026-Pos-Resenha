@@ -24,7 +24,7 @@ test('navigates from home to the global atlas with its local neutral MapLibre ca
   await expect(page.locator('.atlas-map')).toBeVisible();
   await expect(page.locator('.atlas-map-texture')).toBeVisible();
   await expect(page.locator('.atlas-map-orbit span')).toHaveCSS('background-image', /earth-orbit-sheet/);
-  await expect(page.getByText('Mapa-base abstrato para selecionar coordenadas.')).toBeVisible();
+  await expect(page.getByText('textura', { exact: true })).toBeVisible();
 });
 
 test('keeps coordinate entry available when MapLibre WebGL is unavailable', async ({ page }) => {
@@ -75,8 +75,8 @@ test('selects Brazil, Ghana, and India globally then transfers coordinates to fa
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
   await expect(page.getByText('Clima histórico observado')).toBeVisible();
-  await expect(page.getByRole('button', { name: /soja.*Sem evidência local/i })).toBeVisible();
-  await page.getByRole('button', { name: /soja.*Sem evidência local/i }).press('Enter');
+  await expect(page.getByRole('button', { name: 'soja' })).toBeVisible();
+  await page.getByRole('button', { name: 'soja' }).press('Enter');
   await expect(page.getByRole('dialog', { name: 'Detalhes de soja' })).toBeVisible();
   await expect(page.getByText('N/D: faixa térmica verificável não está disponível.')).toHaveCount(0);
   await page.getByRole('button', { name: 'Fechar' }).click();
@@ -100,10 +100,10 @@ test('resolves a Brazilian coordinate to municipality-wide ZARC context', async 
   await page.getByLabel('Longitude').fill('-46.6333');
   await page.getByRole('button', { name: 'Ir ao ponto' }).click();
   await expect(page.getByText(/São Paulo \(SP\), código IBGE 3550308/)).toBeVisible();
-  await expect(page.getByRole('button', { name: /milho.*Análise parcial/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'milho' })).toBeVisible();
   await expect(page.getByRole('button', { name: /feijão-comum/i }).locator('img')).toHaveAttribute('src', /common-bean/);
   await expect(page.getByRole('button', { name: /arroz de terras altas/i }).locator('img')).toHaveAttribute('src', /upland-rice/);
-  await page.getByRole('button', { name: /milho.*Análise parcial/i }).click();
+  await page.getByRole('button', { name: 'milho' }).click();
   await expect(page.getByRole('dialog', { name: 'Detalhes de milho' })).toContainText('ZARC 2026/2027 disponível para São Paulo');
 });
 
@@ -113,7 +113,7 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await page.goto('/results');
   await expect(page.getByRole('heading', { name: 'Continuidade presumida — confirmar' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
-  await expect(page.getByText('ranking ou nota agregada', { exact: false })).toBeVisible();
+  await expect(page.getByText('Indicadores disponíveis lado a lado.')).toBeVisible();
   await expect(page.getByText('Climatologia mensal: temperatura média diária mediana (°C)')).toBeVisible();
   await page.getByText('Proveniência climática').click();
   await expect(page.getByText('NASA POWER:', { exact: false })).toBeVisible();
@@ -171,7 +171,7 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await page.getByRole('button', { name: /feijão-caupi/i }).click();
   await expect(page.locator('.field-slot-updated')).toContainText('feijão-caupi');
   await expect(page.locator('.field-slot-updated')).toBeVisible();
-  await expect(page.getByText(/sem score agregado, ciclo ou janela local/i)).toHaveCount(3);
+  await expect(page.getByLabel('Três cenários do laboratório').getByRole('tabpanel')).toHaveCount(3);
 });
 
 test('blocks overlapping timeline dates and allows another crop entry', async ({ page }) => {
