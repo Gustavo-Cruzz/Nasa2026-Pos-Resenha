@@ -342,6 +342,20 @@ Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 u
 
 Limitations: the app remains pt-BR-first; the existing English dictionary is structural and not a runtime language switch. No laboratory slot is a verified rotation sequence, calendar, recommendation, score, yield, irrigation requirement or local validation. No deployment action was taken.
 
+## NI-1 — NASA Insight causal
+
+Status: complete.
+
+Implemented: added a twelve-month historical precipitation lookup and a pure NASA Insight derivation that traces monthly NASA temperature through each proposed crop's documented thermal range. The output distinguishes a real A/B/C contrast, a shared signal, precipitation-only observation, and unknown evidence. It includes period, coverage, source, rule IDs, crop ranges, limitations, and scenario effects. The selected planting-month insight and all twelve exploratory months now travel in the public analysis result.
+
+Implemented: added a responsive, bilingual NASA Insight panel above the comparison. Users may explore another month without changing crops, priorities, evidence levels, or the saved draft. The panel exposes the NASA observation, rule, per-scenario state, limitation, and direct source link. Historical precipitation is never converted into water demand, suitability, irrigation need, score, or recommendation.
+
+Tests added: deterministic contrast from documented thermal ranges; precipitation-only degradation; NASA-unavailable degradation; twelve-month precipitation summaries; and browser coverage for the interactive month selector.
+
+Evidence (2026-11-13): `npm run lint`, `npm run typecheck`, `npm run test` (52 unit tests), `npm run build`, and `npm run test:e2e` (17 Playwright tests) passed. Browser coverage verifies that the panel renders from the real analysis boundary, changes month interactively, and states that this exploration cannot mutate cultures or the saved draft.
+
+Limitations / next: NASA Insight compares monthly median daily temperature with documented crop ranges; it is not causal inference, a forecast, or field validation. It does not use precipitation to judge crops. Future refinement may add historical distribution bands only after their semantics and labels are documented.
+
 ## P1 — Internacionalização e entrega operacional
 
 Status: partial — local implementation complete; external credentials/evidence required.

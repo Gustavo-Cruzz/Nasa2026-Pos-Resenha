@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildNasaPowerUrl, parseNasaPowerPayload, readVerifiedPilotFixture } from '@/lib/climate/nasa-power';
-import { precipitationForWindow } from '@/lib/climate/indicators';
+import { historicalPrecipitationByMonth, precipitationForWindow } from '@/lib/climate/indicators';
 import { RIO_VERDE_PILOT } from '@/lib/region';
 
 const parameters = { T2M: { '20200101': 25, '20200102': -999 }, T2M_MAX: { '20200101': 30, '20200102': 31 }, T2M_MIN: { '20200101': 20, '20200102': 21 }, PRECTOTCORR: { '20200101': 10, '20200102': null }, RH2M: { '20200101': 60, '20200102': 61 }, WS2M: { '20200101': 2, '20200102': 3 }, ALLSKY_SFC_SW_DWN: { '20200101': 20, '20200102': 21 } };
@@ -13,6 +13,16 @@ describe('NASA POWER adapter', () => {
     expect(url.searchParams.get('start')).toBe('20110101');
     expect(url.searchParams.get('end')).toBe('20251231');
     expect(url.searchParams.get('parameters')).toContain('PRECTOTCORR');
+  });
+
+  it('builds twelve historical precipitation windows without inventing missing months', () => {
+    const summaries = historicalPrecipitationByMonth([
+      { date: '20200101', tmeanC: 20, tmaxC: 25, tminC: 15, precipMm: 10, rhPct: 60, windMps: 2, solarMjM2Day: 15 },
+      { date: '20210101', tmeanC: 21, tmaxC: 26, tminC: 16, precipMm: 20, rhPct: 61, windMps: 2, solarMjM2Day: 15 },
+    ]);
+    expect(summaries).toHaveLength(12);
+    expect(summaries[0]).toMatchObject({ month: 1, medianTotalMm: 15, validYears: 2 });
+    expect(summaries[1]).toMatchObject({ month: 2, medianTotalMm: null, validYears: 0, expectedYears: 0 });
   });
 
   it('turns NASA sentinels and nulls into explicit missing values', () => {

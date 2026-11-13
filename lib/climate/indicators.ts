@@ -41,3 +41,8 @@ export function historicalPrecipitationForMonth(daily: ClimateDay[], month: numb
   const expectedYears = byYear.size;
   return { month, medianTotalMm: median(completeTotals), validYears: completeTotals.length, expectedYears, coveragePct: expectedYears ? Number((completeTotals.length / expectedYears * 100).toFixed(2)) : 0 };
 }
+
+/** Complete monthly lookup used by exploratory month comparisons. */
+export function historicalPrecipitationByMonth(daily: ClimateDay[]): HistoricalPrecipitationMonth[] {
+  return Array.from({ length: 12 }, (_, index) => historicalPrecipitationForMonth(daily, index + 1));
+}

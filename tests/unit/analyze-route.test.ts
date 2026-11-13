@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 
 const mocks = vi.hoisted(() => ({ resolveClimateContext: vi.fn(), resolveBrazilRegionalContext: vi.fn() }));
-const unavailableClimate: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA_POWER unavailable for this coordinate.'] };
+const unavailableClimate: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['NASA_POWER unavailable for this coordinate.'] };
 vi.mock('@/lib/climate/nasa-power', () => ({ resolveClimateContext: mocks.resolveClimateContext }));
 vi.mock('@/lib/brazil/context', () => ({ resolveBrazilRegionalContext: mocks.resolveBrazilRegionalContext }));
 import { POST } from '@/app/api/analyze/route';
@@ -13,10 +13,12 @@ describe('POST /api/analyze', () => {
     mocks.resolveClimateContext.mockResolvedValue(unavailableClimate);
     mocks.resolveBrazilRegionalContext.mockReturnValue({ country: null, municipality: null, municipalitySource: null, zarc: null, pam: null, gaps: ['Outside Brazil'] });
     const response = await POST(new Request('http://localhost/api/analyze', { method: 'POST', body: JSON.stringify(valid) }) as never);
-    const body = await response.json() as { strategies: unknown[]; climate: ClimateContext };
+    const body = await response.json() as { strategies: unknown[]; climate: ClimateContext; nasaInsight: { status: string }; nasaInsightByMonth: unknown[] };
     expect(response.status).toBe(200);
     expect(body.strategies).toHaveLength(3);
     expect(body.climate.status).toBe('unavailable');
+    expect(body.nasaInsight.status).toBe('unknown');
+    expect(body.nasaInsightByMonth).toHaveLength(12);
     expect(JSON.stringify(body)).not.toMatch(/"score"|"yield"|"etc"|"irrigationNeed"/i);
     expect(JSON.stringify(body)).not.toContain('locally_validated');
     expect(mocks.resolveClimateContext).toHaveBeenCalledWith(valid.location, 7);

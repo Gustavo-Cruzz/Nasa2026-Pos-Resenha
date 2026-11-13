@@ -4,9 +4,10 @@ import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { AnalysisResult, Explanation, IndicatorState, QualitativeIndicator, Rotation, ValidationLevel } from '@/lib/engine/types';
 import { labPrimaryCrop, type LabPlan } from '@/lib/lab';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
+import { deriveNasaInsights } from '@/lib/engine/nasa-insight';
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
-const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
+const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
 const EMPTY_REGIONAL_CONTEXT: BrazilRegionalContext = { country: null, municipality: null, municipalitySource: null, zarc: null, pam: null, gaps: ['Regional context was not supplied to the pure engine.'] };
 export function validateInputs(input: unknown) { return analysisInputSchema.safeParse(input); }
 function cropName(crop: Crop): string { return crop.commonNames['pt-BR']; }
@@ -54,5 +55,7 @@ export function explain(candidate: Rotation): Explanation[] { return candidate.e
 export function analyze(input: unknown, climate: ClimateContext = EMPTY_CLIMATE, labPlan?: LabPlan, regionalContext: BrazilRegionalContext = EMPTY_REGIONAL_CONTEXT): AnalysisResult {
   const parsed = validateInputs(input); if (!parsed.success) throw new Error(parsed.error.issues.map((issue) => issue.message).join('; '));
   const priorityHighlights = (Object.entries(parsed.data.priorities) as Array<[keyof AnalysisInput['priorities'], number]>).sort((a, b) => b[1] - a[1]).map(([key]) => key === 'water' ? 'historical_precipitation' : key === 'soil' ? 'cover_potential' : 'functional_diversity');
-  return { strategies: generateCandidates(parsed.data, climate, labPlan, regionalContext), climate, regionalContext, warnings: [...evaluateConstraints(regionalContext).map((item) => item.message), ...regionalContext.gaps, ...climate.gaps], input: parsed.data, regionalContextAvailable: Boolean(regionalContext.zarc), disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights };
+  const strategies = generateCandidates(parsed.data, climate, labPlan, regionalContext);
+  const nasaInsightByMonth = deriveNasaInsights(strategies, climate);
+  return { strategies, climate, regionalContext, warnings: [...evaluateConstraints(regionalContext).map((item) => item.message), ...regionalContext.gaps, ...climate.gaps], input: parsed.data, regionalContextAvailable: Boolean(regionalContext.zarc), disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights, nasaInsight: nasaInsightByMonth[parsed.data.plantingMonth - 1], nasaInsightByMonth };
 }

@@ -113,6 +113,9 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
   await expect(page.getByText('Indicadores disponíveis lado a lado.')).toBeVisible();
   await expect(page.getByText('Climatologia mensal: temperatura média diária mediana (°C)')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'NASA Insight' })).toBeVisible();
+  await page.getByLabel('Mês explorado').selectOption('5');
+  await expect(page.getByText(/trocar o mês aqui não altera culturas/i)).toBeVisible();
   await page.getByText('Proveniência climática').click();
   await expect(page.getByText('NASA POWER:', { exact: false })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Editar linha de base' })).toBeVisible();

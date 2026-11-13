@@ -16,6 +16,7 @@ import { PixelAnimation } from '@/components/pixel/pixel-animation';
 import { ReviewTransition } from '@/components/pixel/review-transition';
 import { ScenarioArtwork } from '@/components/pixel/scenario-artwork';
 import { ReviewObjects } from '@/components/pixel/review-objects';
+import { NasaInsightPanel } from '@/components/results/nasa-insight-panel';
 
 type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult };
 const validationLabel: Record<ValidationLevel, string> = { climate_exploration: 'Exploração climática', regionally_contextualized: 'Contexto regional disponível', locally_validated: 'Validação local rastreável' };
@@ -42,6 +43,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
     <RegionalContextDetails data={data} />
     <ClimatePanel climate={data.climate} plantingMonth={data.input.plantingMonth} />
+    <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <SourcesDetails provenance={data.climate.provenance} sourceRefs={[]} title="Proveniência climática" />
     <p className="mt-4 text-sm text-slate-300"><b>Prioridades em destaque:</b> {data.priorityHighlights.map((id) => priorityLabel[id] ?? id).join(', ')}.</p>
     <ScenarioComparisonTable data={data} />

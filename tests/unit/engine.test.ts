@@ -3,7 +3,7 @@ import { analyze } from '@/lib/engine';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import { resolveBrazilRegionalContext } from '@/lib/brazil/context';
 const base = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
-const unavailable: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA down'] };
+const unavailable: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['NASA down'] };
 describe('exploration engine', () => {
   it('returns A/B/C globally with climate exploration, never a local validation claim', () => { const result = analyze({ ...base, location: { latitude: 0, longitude: 0 } }, unavailable); expect(result.strategies).toHaveLength(3); expect(result.strategies.every((item) => item.validationLevel === 'climate_exploration')).toBe(true); expect(result.strategies.some((item) => item.validationLevel === 'locally_validated')).toBe(false); });
   it('marks inferred baseline and retains unknown climate when NASA fails', () => { const result = analyze(base, unavailable); expect(result.strategies[0].baselineAssumed).toBe(true); expect(result.strategies[0].indicators.find((item) => item.id === 'historical_precipitation')?.state).toBe('unknown'); });

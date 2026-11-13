@@ -100,6 +100,7 @@ A linha de base é a **intenção de rotação atual do agricultor**. Se não in
 - Cartão resumido: sprite, nome, família, finalidade, consumo relativo de água **no cenário**, função na rotação, nível de evidência.
 - Modal detalhado: parâmetros, fonte, unidade, janelas, compatibilidade local e `unknown` quando não houver dado.
 - Comparação: três colunas (desktop), cartões empilhados (mobile), timeline dos dois anos, barras individuais (sem esconder trade-offs em nota única), botão “Por que?”.
+- NASA Insight: ligar uma observação histórica mensal a regras térmicas documentadas e aos estados A/B/C. Se não houver contraste ou evidência suficiente, declarar isso explicitamente. A exploração de outro mês nunca troca culturas, prioridades ou dados salvos; precipitação histórica nunca vira demanda hídrica.
 - Legendas que separem claramente **observação NASA**, **estimativa de solo** e **inferência baseada em regras**.
 - `pt-BR` padrão, troca para `en`, sem textos hardcoded fora do dicionário; WCAG básico, navegação teclado, loading/empty/error states, reduced motion.
 
