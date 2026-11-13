@@ -20,5 +20,5 @@ export async function GET(request: NextRequest) {
   if (!parsed.success) return NextResponse.json({ status: 'error', code: 'INVALID_COORDINATES', message: 'Latitude and longitude must be valid numbers in global bounds.' }, { status: 400 });
   const climate = await resolveClimateContext(parsed.data, Number(request.nextUrl.searchParams.get('month')) || 1);
   if (climate.status === 'unavailable') return NextResponse.json({ status: 'error', code: 'NASA_REQUEST_FAILED', message: climate.gaps[0] }, { status: 503 });
-  return NextResponse.json({ status: 'ok', origin: climate.origin, climateSummary: { monthly: climate.monthly, plantingMonthPrecipitation: climate.plantingMonthPrecipitation, historicalPrecipitationByMonth: climate.historicalPrecipitationByMonth }, provenance: climate.provenance, warnings: climate.gaps });
+  return NextResponse.json({ status: 'ok', origin: climate.origin, climateSummary: { monthly: climate.monthly, plantingMonthPrecipitation: climate.plantingMonthPrecipitation, historicalPrecipitationByMonth: climate.historicalPrecipitationByMonth, waterContext: climate.waterContext }, provenance: climate.provenance, warnings: climate.gaps });
 }

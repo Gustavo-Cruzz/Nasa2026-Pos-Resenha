@@ -4,11 +4,13 @@ import path from 'node:path';
 import { z } from 'zod';
 import { coordinatesSchema, type Coordinates } from '@/lib/schema';
 import { isPilotLocation } from '@/lib/region';
-import { historicalPrecipitationByMonth, historicalPrecipitationForMonth, monthlyClimatology, type HistoricalPrecipitationMonth, type MonthlyClimateSummary } from '@/lib/climate/indicators';
+import { historicalPrecipitationByMonth, historicalPrecipitationForMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary } from '@/lib/climate/indicators';
 
 export const NASA_POWER_PERIOD = { start: '20110101', end: '20251231' } as const;
 export const NASA_POWER_PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN'] as const;
 export type NasaParameter = (typeof NASA_POWER_PARAMETERS)[number];
+export const NASA_POWER_ENHANCED_PARAMETERS = ['IMERG_PRECTOT', 'GWETROOT'] as const;
+export type EnhancedNasaParameter = (typeof NASA_POWER_ENHANCED_PARAMETERS)[number];
 
 const expectedUnits: Record<NasaParameter, string> = {
   T2M: 'C', T2M_MAX: 'C', T2M_MIN: 'C', PRECTOTCORR: 'mm/day', RH2M: '%', WS2M: 'm/s', ALLSKY_SFC_SW_DWN: 'MJ/m^2/day',
@@ -18,8 +20,8 @@ const physicalRanges: Record<NasaParameter, readonly [number, number]> = {
   T2M: [-90, 70], T2M_MAX: [-90, 75], T2M_MIN: [-100, 65], PRECTOTCORR: [0, 2000], RH2M: [0, 100], WS2M: [0, 150], ALLSKY_SFC_SW_DWN: [0, 50],
 };
 
-export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null };
-export type ClimateProvenance = { source: 'NASA_POWER'; requestedCoordinates: Coordinates; period: typeof NASA_POWER_PERIOD; fetchedAt: string; rawParameterNames: string[]; sourceUrl: string; timezone: 'UTC'; coveragePct: Record<NasaParameter, number>; missingDays: string[]; warnings: string[] };
+export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null; imergPrecipMm?: number | null; rootZoneWetness?: number | null };
+export type ClimateProvenance = { source: 'NASA_POWER'; requestedCoordinates: Coordinates; period: typeof NASA_POWER_PERIOD; fetchedAt: string; rawParameterNames: string[]; sourceUrl: string; timezone: 'UTC'; coveragePct: Record<NasaParameter, number> & Partial<Record<EnhancedNasaParameter, number>>; missingDays: string[]; warnings: string[] };
 export type ClimateDataset = { daily: ClimateDay[]; provenance: ClimateProvenance };
 export type ClimateContext = {
   status: 'available' | 'unavailable';
@@ -27,6 +29,7 @@ export type ClimateContext = {
   monthly: MonthlyClimateSummary[];
   plantingMonthPrecipitation: HistoricalPrecipitationMonth | null;
   historicalPrecipitationByMonth: HistoricalPrecipitationMonth[];
+  waterContext?: HistoricalWaterContextMonth | null;
   provenance: ClimateProvenance | null;
   gaps: string[];
 };
@@ -40,7 +43,7 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 export function buildNasaPowerUrl(coordinates: Coordinates): string {
   const valid = coordinatesSchema.parse(coordinates);
-  const query = new URLSearchParams({ community: 'AG', format: 'JSON', 'time-standard': 'UTC', start: NASA_POWER_PERIOD.start, end: NASA_POWER_PERIOD.end, latitude: String(valid.latitude), longitude: String(valid.longitude), parameters: NASA_POWER_PARAMETERS.join(',') });
+  const query = new URLSearchParams({ community: 'AG', format: 'JSON', 'time-standard': 'UTC', start: NASA_POWER_PERIOD.start, end: NASA_POWER_PERIOD.end, latitude: String(valid.latitude), longitude: String(valid.longitude), parameters: [...NASA_POWER_PARAMETERS, ...NASA_POWER_ENHANCED_PARAMETERS].join(',') });
   return `https://power.larc.nasa.gov/api/temporal/daily/point?${query.toString()}`;
 }
 
@@ -67,6 +70,12 @@ export function parseNasaPowerPayload(payload: unknown, coordinates: Coordinates
     if (reportedUnit && reportedUnit !== expectedUnits[parameter]) warnings.push(`Unexpected unit for ${parameter}: ${reportedUnit}. Expected ${expectedUnits[parameter]}.`);
     if (!reportedUnit) warnings.push(`NASA POWER did not expose unit metadata for ${parameter}; values are preserved only in the documented request unit.`);
   }
+  const enhancedUnits: Record<EnhancedNasaParameter, string> = { IMERG_PRECTOT: 'mm/day', GWETROOT: '1' };
+  for (const parameter of NASA_POWER_ENHANCED_PARAMETERS) {
+    if (!parameterData[parameter]) continue;
+    const reportedUnit = data.parameters?.[parameter]?.units ?? data.parameters?.[parameter]?.unit;
+    if (reportedUnit && reportedUnit !== enhancedUnits[parameter]) warnings.push(`Unexpected unit for ${parameter}: ${reportedUnit}. Expected ${enhancedUnits[parameter]}.`);
+  }
 
   const dates = [...new Set(NASA_POWER_PARAMETERS.flatMap((parameter) => Object.keys(parameterData[parameter])))].sort();
   if (dates.length === 0) throw new ClimateDataError('NASA_RESPONSE_INVALID', 'NASA POWER response contains no daily dates.');
@@ -80,10 +89,18 @@ export function parseNasaPowerPayload(payload: unknown, coordinates: Coordinates
     rhPct: normalizedValue(parameterData.RH2M[date], 'RH2M', fillValue),
     windMps: normalizedValue(parameterData.WS2M[date], 'WS2M', fillValue),
     solarMjM2Day: normalizedValue(parameterData.ALLSKY_SFC_SW_DWN[date], 'ALLSKY_SFC_SW_DWN', fillValue),
+    imergPrecipMm: normalizedOptionalValue(parameterData.IMERG_PRECTOT?.[date], [0, 2000], fillValue),
+    rootZoneWetness: normalizedOptionalValue(parameterData.GWETROOT?.[date], [0, 1], fillValue),
   }));
   const keyByParameter: Record<NasaParameter, keyof ClimateDay> = { T2M: 'tmeanC', T2M_MAX: 'tmaxC', T2M_MIN: 'tminC', PRECTOTCORR: 'precipMm', RH2M: 'rhPct', WS2M: 'windMps', ALLSKY_SFC_SW_DWN: 'solarMjM2Day' };
-  const coveragePct = Object.fromEntries(NASA_POWER_PARAMETERS.map((parameter) => [parameter, Number((daily.filter((day) => day[keyByParameter[parameter]] !== null).length / daily.length * 100).toFixed(2))])) as Record<NasaParameter, number>;
-  const missingDays = daily.filter((day) => Object.values(day).some((value) => value === null)).map((day) => day.date);
+  const coveragePct = Object.fromEntries(NASA_POWER_PARAMETERS.map((parameter) => [parameter, Number((daily.filter((day) => day[keyByParameter[parameter]] !== null).length / daily.length * 100).toFixed(2))])) as ClimateProvenance['coveragePct'];
+  if (parameterData.IMERG_PRECTOT) coveragePct.IMERG_PRECTOT = coverage(daily, 'imergPrecipMm');
+  if (parameterData.GWETROOT) coveragePct.GWETROOT = coverage(daily, 'rootZoneWetness');
+  const missingDays = daily.filter((day) => {
+    const requiredMissing = [day.tmeanC, day.tmaxC, day.tminC, day.precipMm, day.rhPct, day.windMps, day.solarMjM2Day].some((value) => value === null);
+    const enhancedMissing = (parameterData.IMERG_PRECTOT && day.imergPrecipMm === null) || (parameterData.GWETROOT && day.rootZoneWetness === null);
+    return requiredMissing || Boolean(enhancedMissing);
+  }).map((day) => day.date);
   return { daily, provenance: { source: 'NASA_POWER', requestedCoordinates: validCoordinates, period: NASA_POWER_PERIOD, fetchedAt, rawParameterNames: Object.keys(parameterData), sourceUrl, timezone: 'UTC', coveragePct, missingDays, warnings } };
 }
 
@@ -121,10 +138,19 @@ export async function resolveClimateContext(coordinates: Coordinates, plantingMo
     const fixture = await readVerifiedPilotFixture(coordinates);
     if (fixture) return contextFromDataset(fixture, plantingMonth, 'verified_fixture');
     const reason = error instanceof ClimateDataError ? error.code : 'NASA_REQUEST_FAILED';
-    return { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: [`Historical NASA POWER climate is unavailable (${reason}). No Rio Verde fixture was used for this coordinate.`] };
+    return { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], waterContext: null, provenance: null, gaps: [`Historical NASA POWER climate is unavailable (${reason}). No Rio Verde fixture was used for this coordinate.`] };
   }
 }
 
 function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture'): ClimateContext {
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+}
+
+function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {
+  if (value === null || value === undefined || !Number.isFinite(value) || value === -999 || value === fillValue) return null;
+  return value >= range[0] && value <= range[1] ? value : null;
+}
+
+function coverage(daily: ClimateDay[], key: 'imergPrecipMm' | 'rootZoneWetness'): number {
+  return Number((daily.filter((day) => day[key] !== null && day[key] !== undefined).length / daily.length * 100).toFixed(2));
 }

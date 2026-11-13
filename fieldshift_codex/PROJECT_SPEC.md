@@ -137,9 +137,9 @@ Documentação: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
 
 **Endpoint:** `https://power.larc.nasa.gov/api/temporal/daily/point`
 
-**Consulta padrão (servidor):** `community=AG`, `format=JSON`, `time-standard=UTC`, `start=20110101`, `end=20251231`, `latitude`, `longitude`, `parameters=T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,RH2M,WS2M,ALLSKY_SFC_SW_DWN`. Confirmar cada parâmetro no endpoint real e tratar indisponibilidade por parâmetro. Escolha de período: 15 anos completos, nunca misturar 2026 incompleto com anos completos.
+**Consulta padrão (servidor):** `community=AG`, `format=JSON`, `time-standard=UTC`, `start=20110101`, `end=20251231`, `latitude`, `longitude`, `parameters=T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,RH2M,WS2M,ALLSKY_SFC_SW_DWN,IMERG_PRECTOT,GWETROOT`. Os dois últimos acrescentam distribuição histórica da chuva GPM IMERG e contexto relativo modelado da zona radicular; ausência degrada somente esses indicadores para `unknown`. Escolha de período: 15 anos completos, nunca misturar 2026 incompleto com anos completos.
 
-**Resposta normalizada:** lista diária `{date, tmeanC, tmaxC, tminC, precipMm, rhPct, windMps, solarMjM2Day}` com nulos explícitos; `{source:'NASA_POWER', requestedCoordinates, period, fetchedAt, rawParameterNames, sourceUrl, timezone:'UTC', coveragePct, missingDays}`. Converter unidade de radiação **somente após verificar metadados da resposta**.
+**Resposta normalizada:** lista diária `{date, tmeanC, tmaxC, tminC, precipMm, rhPct, windMps, solarMjM2Day, imergPrecipMm, rootZoneWetness}` com nulos explícitos; `{source:'NASA_POWER', requestedCoordinates, period, fetchedAt, rawParameterNames, sourceUrl, timezone:'UTC', coveragePct, missingDays}`. `rootZoneWetness` é índice relativo de grade modelada, não umidade volumétrica nem medição do talhão. Converter unidade de radiação **somente após verificar metadados da resposta**.
 
 **Normalização e qualidade:** rejeitar lat/lon inválidas, rejeitar `-999`/sentinelas/nulos, valores fora de faixa física plausível e cobertura insuficiente; preservar dias ausentes como `null`; gerar percentis somente sobre períodos comparáveis. Cobertura mínima sugerida como regra de engenharia: pelo menos **80% dos dias válidos da variável na janela analisada**; rotular esse limiar como convenção de MVP, não padrão NASA.
 

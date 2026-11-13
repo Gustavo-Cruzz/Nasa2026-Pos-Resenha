@@ -11,7 +11,7 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
   const sources: EvidenceSource[] = [{ id: 'farmer-input', kind: 'farmer', title: 'Dados informados pelo produtor', status: 'available', scope: 'user_supplied', url: null, period: null, coveragePct: null }];
   const sourceByUrl = new Map<string, string>();
   if (climate.provenance) {
-    sources.push({ id: 'nasa-power', kind: 'nasa', title: 'NASA POWER Daily Point', status: climate.status === 'available' ? 'available' : 'unavailable', scope: 'global', url: climate.provenance.sourceUrl, period: `${climate.provenance.period.start}–${climate.provenance.period.end}`, coveragePct: climate.provenance.coveragePct.T2M });
+    sources.push({ id: 'nasa-power', kind: 'nasa', title: climate.provenance.rawParameterNames.includes('IMERG_PRECTOT') ? 'NASA POWER · MERRA-2 + GPM IMERG' : 'NASA POWER Daily Point', status: climate.status === 'available' ? 'available' : 'unavailable', scope: 'global', url: climate.provenance.sourceUrl, period: `${climate.provenance.period.start}–${climate.provenance.period.end}`, coveragePct: climate.provenance.coveragePct.T2M });
     sourceByUrl.set(climate.provenance.sourceUrl, 'nasa-power');
   } else sources.push({ id: 'nasa-power', kind: 'nasa', title: 'NASA POWER Daily Point', status: 'unavailable', scope: 'global', url: null, period: null, coveragePct: null });
   if (regionalContext.zarc) {
@@ -31,7 +31,7 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
   const sourceIds = (refs: string[], indicatorId: string) => [...new Set([
     ...refs.flatMap((ref) => sourceByUrl.get(ref) ? [sourceByUrl.get(ref)!] : []),
     ...(['functional_diversity', 'soil_context'].includes(indicatorId) ? ['farmer-input'] : []),
-    ...(['thermal_compatibility', 'historical_precipitation'].includes(indicatorId) ? ['nasa-power'] : []),
+    ...(['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness'].includes(indicatorId) ? ['nasa-power'] : []),
   ])];
   const claims: EvidenceClaim[] = strategies.flatMap((strategy) => {
     const summary = strategy.indicators.map((indicator) => ({ id: `${strategy.id}-summary-${indicator.id}`, scenarioId: strategy.id, slotIndex: null, indicatorId: indicator.id, label: `${indicator.label} — cenário ${strategy.id}`, observation: indicator.detail, ruleId: `SUMMARY_${indicator.id.toUpperCase()}`, result: indicator.state, status: claimStatus(indicator.state), validationLevel: strategy.validationLevel, sourceIds: sourceIds(indicator.sourceRefs, indicator.id), missingData: indicator.state === 'unknown' ? [indicator.id] : [] }));

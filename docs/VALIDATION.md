@@ -9,5 +9,7 @@
 - Rio Verde without a confirmed baseline → “Continuação presumida — confirmar”.
 - Crop evidence records retain source metadata; partial evidence cannot make a crop eligible.
 - NASA fixture tests SHA, units, coverage and exact pilot-only coordinate. The national ZARC expansion does not broaden NASA fixture fallback.
+- Live POWER parsing keeps `IMERG_PRECTOT` and `GWETROOT` coverage separate. Their absence remains `unknown`; no fixture is enriched or simulated.
+- GPM rain-day counts and root-zone wetness are historical regional context only. They never alter crop selection or become irrigation, drought tolerance, field moisture, or local validation.
 
 Automated checks: `tests/unit/`, `tests/e2e/navigation.spec.ts`. National tests cover Rio Verde, São Paulo, Salvador, Boa Esperança do Norte and coordinates outside Brazil. No field validation claim.

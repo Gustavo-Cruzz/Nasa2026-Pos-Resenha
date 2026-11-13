@@ -45,7 +45,7 @@ export function rankCandidates(candidates: Rotation[]): Rotation[] { return cand
 export function explain(candidate: Rotation): Explanation[] { return candidate.explanations; }
 export function analyze(input: unknown, climate: ClimateContext = EMPTY_CLIMATE, labPlan?: LabPlan, regionalContext: BrazilRegionalContext = EMPTY_REGIONAL_CONTEXT): AnalysisResult {
   const parsed = validateInputs(input); if (!parsed.success) throw new Error(parsed.error.issues.map((issue) => issue.message).join('; '));
-  const priorityHighlights = (Object.entries(parsed.data.priorities) as Array<[keyof AnalysisInput['priorities'], number]>).sort((a, b) => b[1] - a[1]).map(([key]) => key === 'water' ? 'historical_precipitation' : key === 'soil' ? 'cover_potential' : 'functional_diversity');
+  const priorityHighlights = (Object.entries(parsed.data.priorities) as Array<[keyof AnalysisInput['priorities'], number]>).sort((a, b) => b[1] - a[1]).map(([key]) => key === 'water' ? 'root_zone_wetness' : key === 'soil' ? 'cover_potential' : 'functional_diversity');
   const strategies = generateCandidates(parsed.data, climate, labPlan, regionalContext);
   const nasaInsightByMonth = deriveNasaInsights(strategies, climate);
   const evidenceManifest = buildEvidenceManifest(strategies, climate, regionalContext);

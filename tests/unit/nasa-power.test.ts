@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildNasaPowerUrl, parseNasaPowerPayload, readVerifiedPilotFixture } from '@/lib/climate/nasa-power';
-import { historicalPrecipitationByMonth, precipitationForWindow } from '@/lib/climate/indicators';
+import { historicalPrecipitationByMonth, historicalWaterContextForMonth, precipitationForWindow } from '@/lib/climate/indicators';
 import { RIO_VERDE_PILOT } from '@/lib/region';
 
 const parameters = { T2M: { '20200101': 25, '20200102': -999 }, T2M_MAX: { '20200101': 30, '20200102': 31 }, T2M_MIN: { '20200101': 20, '20200102': 21 }, PRECTOTCORR: { '20200101': 10, '20200102': null }, RH2M: { '20200101': 60, '20200102': 61 }, WS2M: { '20200101': 2, '20200102': 3 }, ALLSKY_SFC_SW_DWN: { '20200101': 20, '20200102': 21 } };
@@ -13,6 +13,19 @@ describe('NASA POWER adapter', () => {
     expect(url.searchParams.get('start')).toBe('20110101');
     expect(url.searchParams.get('end')).toBe('20251231');
     expect(url.searchParams.get('parameters')).toContain('PRECTOTCORR');
+    expect(url.searchParams.get('parameters')).toContain('IMERG_PRECTOT');
+    expect(url.searchParams.get('parameters')).toContain('GWETROOT');
+  });
+
+  it('keeps GPM rainfall distribution and modeled root-zone wetness observational', () => {
+    const parsed = parseNasaPowerPayload({ properties: { parameter: { ...parameters, IMERG_PRECTOT: { '20200101': 12, '20200102': 0 }, GWETROOT: { '20200101': 0.62, '20200102': 0.66 } } } }, RIO_VERDE_PILOT.coordinates, 'https://example.test');
+    expect(parsed.daily[0]).toMatchObject({ imergPrecipMm: 12, rootZoneWetness: 0.62 });
+    expect(historicalWaterContextForMonth(parsed.daily, 1)).toMatchObject({ imergMedianTotalMm: 12, medianRainDays: 1, rootZoneWetnessMedian: 0.64, imergCoveragePct: 100, rootZoneCoveragePct: 100 });
+  });
+
+  it('does not invent enhanced water context when an older verified series lacks it', () => {
+    const parsed = parseNasaPowerPayload({ properties: { parameter: parameters } }, RIO_VERDE_PILOT.coordinates, 'https://example.test');
+    expect(historicalWaterContextForMonth(parsed.daily, 1)).toMatchObject({ imergMedianTotalMm: null, medianRainDays: null, rootZoneWetnessMedian: null });
   });
 
   it('builds twelve historical precipitation windows without inventing missing months', () => {

@@ -23,7 +23,7 @@ import { cropDisplayName, explanationDisplay, scenarioDisplayTitle } from '@/lib
 
 type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult };
 const validationLabel: Record<ValidationLevel, string> = { climate_exploration: 'Exploração climática', regionally_contextualized: 'Contexto regional disponível', locally_validated: 'Validação local rastreável' };
-const priorityLabel: Record<string, string> = { historical_precipitation: 'precipitação histórica', cover_potential: 'potencial de cobertura', functional_diversity: 'diversidade funcional' };
+const priorityLabel: Record<string, string> = { root_zone_wetness: 'contexto hídrico da zona radicular', cover_potential: 'potencial de cobertura', functional_diversity: 'diversidade funcional' };
 const missingLabel: Record<string, string> = { cycle_duration: 'duração documentada', eligible_crop: 'cultura com critérios mínimos', historical_climate: 'clima histórico', documented_temperature_range: 'faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'slots ainda não configurados', futureBaseline: 'plano futuro confirmado' };
 const stateText: Record<string, string> = { compatible: 'compatível', attention: 'atenção', unknown: 'desconhecido', yes: 'presente', no: 'não catalogado', observed: 'observado' };
 
@@ -44,7 +44,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   if (state.kind === 'error') return <Empty message={state.message} />;
   const { data } = state;
   const validationLabels: Record<ValidationLevel, string> = en ? { climate_exploration: 'Climate exploration', regionally_contextualized: 'Regional context available', locally_validated: 'Traceable local validation' } : validationLabel;
-  const priorityLabels: Record<string, string> = en ? { historical_precipitation: 'historical precipitation', cover_potential: 'cover potential', functional_diversity: 'functional diversity' } : priorityLabel;
+  const priorityLabels: Record<string, string> = en ? { root_zone_wetness: 'root-zone water context', cover_potential: 'cover potential', functional_diversity: 'functional diversity' } : priorityLabel;
   const missingLabels: Record<string, string> = en ? { cycle_duration: 'documented duration', eligible_crop: 'crop meeting minimum criteria', historical_climate: 'historical climate', documented_temperature_range: 'documented thermal range', soil_ph_or_verified_range: 'informed pH or verifiable range', unconfigured_lab_slots: 'unconfigured slots', futureBaseline: 'confirmed future plan' } : missingLabel;
   const states: Record<string, string> = en ? { compatible: 'compatible', attention: 'attention', unknown: 'unknown', yes: 'present', no: 'not cataloged', observed: 'observed' } : stateText;
   return <>

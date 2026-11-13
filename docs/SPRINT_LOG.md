@@ -413,3 +413,15 @@ Tests added: schema boundaries for 0/1/3/4 history events; browser add/remove/sa
 Visual review: production-build captures at 390×844 and 1440×900 use a one-event draft and confirm reduced Farm height, visible “Add event” affordance, readable controls and unchanged Results hierarchy.
 
 Limitations: third-party/source-authored proper names and raw rule IDs remain unchanged by design. Existing saved drafts are not rewritten until the user explicitly saves. No deployment or push was performed; the user will send the verified commits to Vercel.
+
+## NASA-W1 — Contexto hídrico multissensor
+
+Status: complete.
+
+Implemented: extended the existing credential-free NASA POWER request with `IMERG_PRECTOT` and `GWETROOT`, after validating both parameters, units and a complete 2011–2025 Rio Verde request against the live service. Daily normalization now preserves GPM IMERG precipitation and modeled relative root-zone wetness independently, including per-variable coverage and null/sentinel handling. The verified legacy Rio Verde fixture remains immutable and valid; because it predates these parameters, enhanced indicators correctly remain `unknown` during fallback.
+
+Implemented: added pure monthly water-context indicators: GPM monthly total, median count of days with recorded rainfall, and median relative root-zone wetness. Results expose these alongside historical precipitation and the already available median minimum/maximum air temperatures. The comparison now includes rainfall distribution and root-zone wetness for A/B/C. Water priority highlights root-zone context but does not select, replace, rank or score crops. Methodology, project specification, sources, validation rules and bilingual UI explain that these are regional historical grids—not field moisture, crop demand, drought tolerance, forecast or irrigation advice.
+
+Evidence (2026-11-13): the full nine-parameter live NASA request returned HTTP 200 with 809,637 bytes in 2.96 seconds. `npm run lint`, `npm run typecheck`, `npm run test` (60 unit tests), `npm run build`, and `npm run test:e2e` (19 Playwright tests) passed. New unit coverage verifies URL parameters, GPM rain-day calculation, root-zone median and absence-preserving fallback behavior.
+
+Limitations / next: `GWETROOT` is a POWER/MERRA-2 modeled relative wetness index, not SMAP volumetric soil moisture or a talhão measurement. Direct SMAP ingestion would require an authenticated/preprocessed Earthdata pipeline and is intentionally not simulated. ECOSTRESS/Landsat field-scale layers remain out of scope until the product has an explicit farm polygon and a defensible cloud/coverage workflow. No deployment or push was performed.

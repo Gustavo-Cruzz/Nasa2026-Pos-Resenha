@@ -6,7 +6,7 @@ import { useLocale } from '@/components/locale-provider';
 import { indicatorDisplay, scenarioDisplayTitle } from '@/lib/presentation';
 
 const stateText: Record<IndicatorState, string> = { compatible: 'compatível', attention: 'atenção', unknown: 'desconhecido', yes: 'presente', no: 'não catalogado', observed: 'observação' };
-const indicatorOrder = ['thermal_compatibility', 'historical_precipitation', 'cover_potential', 'functional_diversity', 'soil_context'] as const;
+const indicatorOrder = ['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'cover_potential', 'functional_diversity', 'soil_context'] as const;
 
 export function ScenarioComparisonTable({ data }: { data: AnalysisResult }) {
   const { locale } = useLocale();

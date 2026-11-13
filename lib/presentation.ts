@@ -14,7 +14,7 @@ export function scenarioDisplayTitle(strategy: Pick<Rotation, 'id' | 'title' | '
 
 export function indicatorDisplay(indicator: QualitativeIndicator, locale: Locale): { label: string; detail: string } {
   if (locale === 'pt-BR') return indicator;
-  const labels = { thermal_compatibility: 'Thermal compatibility', historical_precipitation: 'Historical precipitation in the month', cover_potential: 'Cover potential', functional_diversity: 'Functional diversity', soil_context: 'Soil context (pH)' } as const;
+  const labels = { thermal_compatibility: 'Thermal compatibility', historical_precipitation: 'Historical precipitation in the month', rainfall_distribution: 'Historical rainfall distribution', root_zone_wetness: 'Relative root-zone wetness', cover_potential: 'Cover potential', functional_diversity: 'Functional diversity', soil_context: 'Soil context (pH)' } as const;
   const detail = (() => {
     if (indicator.id === 'thermal_compatibility') return indicator.state === 'unknown' ? 'Documented thermal range and/or historical climate is unavailable.' : 'Exploratory comparison with NASA monthly climatology.';
     if (indicator.id === 'historical_precipitation') {
@@ -22,6 +22,8 @@ export function indicatorDisplay(indicator: QualitativeIndicator, locale: Locale
       const values = indicator.detail.match(/[\d.]+/g);
       return values?.length ? `${values[0]} mm (historical median; ${values[1] ?? 'N/D'}% coverage). This is not crop water demand.` : 'Historical observation available; this is not crop water demand.';
     }
+    if (indicator.id === 'rainfall_distribution') return indicator.state === 'unknown' ? 'GPM IMERG is unavailable for this series.' : indicator.detail.replace('dias com chuva registrada no mês mediano', 'days with recorded rain in the median month').replace('cobertura anual completa de', 'complete annual coverage of').replace('Não indica suficiência para a cultura.', 'It does not indicate crop sufficiency.');
+    if (indicator.id === 'root_zone_wetness') return indicator.state === 'unknown' ? 'Root-zone wetness context is unavailable.' : indicator.detail.replace('índice relativo', 'relative index').replace('cobertura diária de', 'daily coverage of').replace('Grade regional modelada, não medição do talhão.', 'Modeled regional grid, not a field measurement.');
     if (indicator.id === 'cover_potential') return indicator.state === 'unknown' ? 'No crop is proposed.' : indicator.state === 'yes' ? 'Cataloged cover purpose; does not estimate carbon, N, or fertility.' : 'Cover purpose is not cataloged.';
     if (indicator.id === 'functional_diversity') return indicator.state === 'unknown' ? 'The previous or proposed crop family is unknown.' : indicator.state === 'compatible' ? 'Different family from the previous informed crop.' : 'Same family as the previous informed crop.';
     return indicator.state === 'unknown' ? 'Informed pH and a verifiable pH range are required.' : indicator.state === 'compatible' ? 'Informed pH is within the documented range.' : 'Informed pH is outside the documented range.';
