@@ -4,12 +4,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '@/components/locale-provider';
+import { useEffect } from 'react';
+import { recordJourneyVisit } from '@/lib/journey-metrics';
 
 export function JourneyProgress() {
   const pathname = usePathname();
   const { copy } = useLocale();
   const steps = [{ href: '/explore', icon: 'explore', label: copy.explore }, { href: '/farm', icon: 'farm', label: copy.farm }, { href: '/lab', icon: 'lab', label: copy.lab }, { href: '/results', icon: 'compare', label: copy.compare }];
   const active = steps.findIndex((step) => pathname === step.href);
+  useEffect(() => { if (active >= 0) recordJourneyVisit(pathname); }, [active, pathname]);
   if (active < 0) return null;
   return <nav aria-label={copy.journey} className="journey-progress"><p className="journey-mobile-label">{active + 1} de {steps.length} · {steps[active].label}</p><ol>{steps.map((step, index) => {
     const current = index === active;

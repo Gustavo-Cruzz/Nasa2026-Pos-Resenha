@@ -112,7 +112,6 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await expect(page.getByRole('heading', { name: 'Continuidade presumida — confirmar' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
   await expect(page.getByText('Indicadores disponíveis lado a lado.')).toBeVisible();
-  await expect(page.getByText('Climatologia mensal: temperatura média diária mediana (°C)')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'NASA Insight' })).toBeVisible();
   await page.getByLabel('Mês explorado').selectOption('5');
   await expect(page.getByText(/trocar o mês aqui não altera culturas/i)).toBeVisible();
@@ -123,8 +122,13 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'Centro de Evidências' })).toHaveCount(0);
   await expect(evidenceTrigger).toBeFocused();
-  await page.getByText('Proveniência climática').click();
-  await expect(page.getByText('NASA POWER:', { exact: false })).toBeVisible();
+  await page.getByText('Detalhes técnicos de clima e contexto regional').click();
+  await expect(page.getByText('Clima histórico NASA')).toBeVisible();
+  await page.getByText('Ver gráfico climático de 12 meses').click();
+  await expect(page.getByText('Climatologia mensal: temperatura média diária mediana (°C)')).toBeVisible();
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Exportar resumo técnico' }).click();
+  expect((await download).suggestedFilename()).toMatch(/^field-shift-.*\.md$/);
   await expect(page.getByRole('link', { name: 'Editar linha de base' })).toBeVisible();
 });
 
@@ -224,6 +228,7 @@ test('shows three stacked global scenarios and unknown climate after NASA failur
   await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, regionalContext: { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Fora do Brasil.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/results');
+  await page.getByText('Detalhes técnicos de clima e contexto regional').click();
   await expect(page.getByText('Indisponível: cenários preservados com métricas climáticas desconhecidas.')).toBeVisible();
   const headings = page.getByLabel('Estratégias exploratórias').getByRole('heading', { name: /Cenário [ABC]/ });
   await expect(headings).toHaveCount(3);

@@ -385,3 +385,17 @@ External blockers: no authorized `NEXT_PUBLIC_MAP_STYLE_URL` was supplied, so co
 ### Evidência adicional — 2026-11-12
 
 Reviewed the currently linked Embrapa BRS Guariba page directly and promoted only two existing cultivar-specific records: maturity cycle (65–70 days) and the stated disease-response profile. The source page/section and quote are now recorded; runtime does not use the disease claim and does not project either record into a Rio Verde calendar, global suitability, irrigation rule, score or validation. The evidence audit is now 28 verified / 9 unverified records. Lacking map authorization, GitHub/Vercel credentials and further verified primary evidence remain external blockers.
+
+## P1-UX — Clareza, entrega e higiene
+
+Status: implementation complete; production verification pending push.
+
+Implemented: reduced Results density through progressive disclosure, removed repeated scenario artwork/source blocks, centralized provenance in the Evidence Center and added a Markdown technical-summary export. Evidence scopes, claim states and validation levels now have readable pt-BR/en labels. Explore and Results primary copy switch with the persistent locale. Methodology now explains each of four bases as origin, use and non-claim, followed by the three deterministic engine steps.
+
+Implemented: added privacy-preserving local journey metrics for visits, successful comparison count and last completion duration. No analytics service, identifier or network request was added. Moved the TypeScript incremental cache to `.next/cache`, ignored `*.tsbuildinfo`, preserved `fieldshift_gamification_codex`, and added a repeatable Chromium visual-review script.
+
+Visual evidence (2026-11-13): inspected full-page Chromium captures for Farm, Results and Methodology at 390×844 and 1440×900. Results are readable and progressively disclosed in both layouts. Farm remains the highest-friction step because three historical events are mandatory; reducing the contract to one required plus two optional events is a product decision for the next sprint.
+
+Checks before commit: `npm run lint`, `npm run typecheck`, `npm run test` (56 unit tests), `npm run build`, and `npm run test:e2e`. Final counts and production validation are recorded after the final gates.
+
+Limitations / next: the engine-generated agronomic explanation text is still authored in pt-BR, so English core navigation and primary instructions do not yet translate every evidence sentence. Local metrics measure this browser only. No scientific value, recommendation or validation level changed.

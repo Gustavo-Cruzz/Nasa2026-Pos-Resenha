@@ -1,23 +1,29 @@
 'use client';
 
+import { Database, FileCheck2, Satellite, UserRound } from 'lucide-react';
 import { useLocale } from '@/components/locale-provider';
+import { JourneyMetricsPanel } from '@/components/methodology/journey-metrics-panel';
 
 export default function MethodologyPage() {
   const { locale, copy } = useLocale();
-  const rows = locale === 'en' ? [
-    ['Climate', 'NASA POWER Daily Point; 2011-01-01 to 2025-12-31, UTC. Sentinels, gaps, and implausible values remain null.'],
-    ['Quality', 'Coverage is calculated per variable. The fixture only serves exact pilot coordinates and has a recorded SHA-256.'],
-    ['Scope', 'Outside Rio Verde (GO): global climate, without regional recommendation. Within it: only registered ZARC context.'],
-    ['Engine and laboratory', 'An explicit or presumed baseline; the laboratory records A/B/C hypotheses in neutral slots. Existing qualitative indicators are recalculated only for the selected crop; empty slots remain N/D.'],
-    ['Comparison', 'Priorities only highlight available indicators. No score, aggregate ranking, yield, or success probability is shown when data is missing.'],
-    ['Not calculated', 'No forecast, yield, NPK, SOC, irrigation need, field diagnosis, or ETc.'],
+  const en = locale === 'en';
+  const bases = en ? [
+    { title: 'NASA POWER', icon: Satellite, origin: 'Daily observations, 2011–2025, UTC.', use: 'Monthly historical temperature and precipitation context.', limit: 'Not a forecast, field measurement, crop demand, or irrigation prescription.' },
+    { title: 'Farmer input', icon: UserRound, origin: 'Coordinates, three historical events, optional pH, irrigation, priorities, and future baseline.', use: 'Defines the farm context and functional-diversity comparison.', limit: 'User input is not independently verified.' },
+    { title: 'Crop evidence catalog', icon: FileCheck2, origin: 'Verified source records linked to each crop parameter.', use: 'Family, documented purpose, and available thermal/pH ranges.', limit: 'Missing parameters remain N/D; no values are inferred.' },
+    { title: 'IBGE · ZARC · PAM', icon: Database, origin: 'Brazilian municipal mesh, current ZARC package, and municipal production observations.', use: 'Identifies municipality and adds crop-specific regional context where records exist.', limit: 'PAM never selects crops; municipal context is not field validation.' },
   ] : [
-    ['Clima', 'NASA POWER Daily Point; 2011-01-01 a 2025-12-31, UTC. Sentinelas, ausências e valores fora de faixa ficam null.'],
-    ['Qualidade', 'Cobertura é calculada por variável. A fixture só serve às coordenadas exatas do piloto e tem SHA-256 registrado.'],
-    ['Escopo', 'Fora de Rio Verde (GO): clima global, sem recomendação regional. Dentro: apenas evidência ZARC registrada.'],
-    ['Motor e laboratório', 'Linha de base explícita ou “presumida — confirmar”; o laboratório registra hipóteses A/B/C em slots neutros. Indicadores qualitativos existentes são recalculados somente para cultura escolhida; slots sem escolha ficam N/D.'],
-    ['Comparação', 'Prioridades apenas destacam indicadores disponíveis. Não há score, ranking agregado, produtividade ou probabilidade de sucesso quando faltam dados.'],
-    ['Não calculado', 'Sem previsão, produtividade, NPK, SOC, necessidade de irrigação, diagnóstico de talhão ou ETc.'],
+    { title: 'NASA POWER', icon: Satellite, origin: 'Observações diárias, 2011–2025, UTC.', use: 'Contexto histórico mensal de temperatura e precipitação.', limit: 'Não é previsão, medição do talhão, demanda da cultura ou prescrição de irrigação.' },
+    { title: 'Dados do produtor', icon: UserRound, origin: 'Coordenadas, três eventos históricos, pH opcional, irrigação, prioridades e linha de base futura.', use: 'Define o contexto da fazenda e a comparação de diversidade funcional.', limit: 'A informação do usuário não é verificada automaticamente.' },
+    { title: 'Catálogo de evidências', icon: FileCheck2, origin: 'Registros de fontes verificadas ligados a cada parâmetro da cultura.', use: 'Família, finalidade documentada e faixas térmicas/pH disponíveis.', limit: 'Parâmetros ausentes ficam N/D; nenhum valor é inferido.' },
+    { title: 'IBGE · ZARC · PAM', icon: Database, origin: 'Malha municipal, pacote ZARC vigente e observações municipais de produção.', use: 'Identifica o município e adiciona contexto regional específico por cultura quando há registro.', limit: 'PAM nunca seleciona culturas; contexto municipal não é validação do talhão.' },
   ];
-  return <section className="max-w-3xl"><h1 className="text-3xl font-bold">{copy.methodTitle}</h1><p className="mt-5 leading-7 text-slate-300">{copy.methodIntro}</p><dl className="mt-8 grid gap-4">{rows.map(([term, description]) => <div className="rounded-xl border border-slate-700 p-4" key={term}><dt className="font-bold text-lime-300">{term}</dt><dd className="mt-1 leading-7 text-slate-300">{description}</dd></div>)}</dl><p className="mt-8 text-sm text-slate-400">{copy.sources}</p></section>;
+  const steps = en ? ['Validate inputs and preserve missing values.', 'Generate A/B/C deterministically from P0 crops and explicit rules.', 'Compare qualitative indicators; priorities highlight information but never change crops or create a score.'] : ['Validar entradas e preservar valores ausentes.', 'Gerar A/B/C de forma determinística com culturas P0 e regras explícitas.', 'Comparar indicadores qualitativos; prioridades destacam informação, mas não trocam culturas nem criam nota.'];
+  return <section className="mx-auto max-w-5xl"><h1 className="text-3xl font-bold">{copy.methodTitle}</h1><p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{en ? 'Four evidence layers enter the system. Each has a specific purpose and a visible limit.' : 'Quatro camadas de evidência entram no sistema. Cada uma possui finalidade específica e limite visível.'}</p>
+    <section className="mt-8 grid gap-4 md:grid-cols-2" aria-label={en ? 'System data foundations' : 'Bases de dados do sistema'}>{bases.map((base) => { const Icon = base.icon; return <article className="rounded-xl border border-slate-700 bg-slate-900/70 p-5" key={base.title}><div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-lg bg-lime-300/10 text-lime-200"><Icon aria-hidden="true" /></span><h2 className="text-xl font-bold">{base.title}</h2></div><dl className="mt-4 grid gap-3 text-sm"><div><dt className="font-semibold text-cyan-200">{en ? 'Origin' : 'Origem'}</dt><dd className="mt-1 text-slate-300">{base.origin}</dd></div><div><dt className="font-semibold text-lime-200">{en ? 'Used for' : 'Usada para'}</dt><dd className="mt-1 text-slate-300">{base.use}</dd></div><div><dt className="font-semibold text-amber-200">{en ? 'Does not prove' : 'Não comprova'}</dt><dd className="mt-1 text-slate-300">{base.limit}</dd></div></dl></article>; })}</section>
+    <section className="mt-8 rounded-xl border border-slate-700 p-5"><h2 className="text-xl font-bold">{en ? 'How the engine works' : 'Como o motor trabalha'}</h2><ol className="mt-4 grid gap-3 md:grid-cols-3">{steps.map((step, index) => <li className="rounded-lg bg-slate-900/70 p-4" key={step}><span className="text-sm font-bold text-lime-300">{index + 1}</span><p className="mt-2 text-sm text-slate-300">{step}</p></li>)}</ol></section>
+    <section className="mt-6 rounded-xl border border-amber-300/40 bg-amber-950/20 p-5"><h2 className="font-bold text-amber-100">{en ? 'Evidence levels' : 'Níveis de evidência'}</h2><dl className="mt-3 grid gap-3 text-sm text-amber-50"><div><dt className="font-semibold">{en ? 'Climate exploration' : 'Exploração climática'} <code className="ml-1 text-xs font-normal text-amber-200/70">climate_exploration</code></dt><dd>{en ? 'NASA climate plus documented crop rules.' : 'Clima NASA mais regras documentadas da cultura.'}</dd></div><div><dt className="font-semibold">{en ? 'Regional context' : 'Contexto regional'} <code className="ml-1 text-xs font-normal text-amber-200/70">regionally_contextualized</code></dt><dd>{en ? 'A matching municipal ZARC crop record is also available.' : 'Também existe registro municipal ZARC correspondente à cultura.'}</dd></div><div><dt className="font-semibold">{en ? 'Traceable local validation' : 'Validação local rastreável'} <code className="ml-1 text-xs font-normal text-amber-200/70">locally_validated</code></dt><dd>{en ? 'Reserved for future traceable human/field validation; unavailable in this MVP.' : 'Reservado para futura validação humana/campo rastreável; indisponível neste MVP.'}</dd></div></dl></section>
+    <JourneyMetricsPanel />
+    <p className="mt-8 text-sm text-slate-400">{copy.sources}</p>
+  </section>;
 }
