@@ -15,13 +15,33 @@ async function installDraft(page: Page, futureBaseline?: { cropId: string; confi
 
 const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
-test('navigates from home to the global atlas with coordinate fallback', async ({ page }) => {
+test('navigates from home to the global atlas with its local neutral MapLibre canvas', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.field-atmosphere')).toBeVisible();
   await page.getByRole('link', { name: 'Começar exploração' }).click();
   await expect(page.getByRole('heading', { name: 'Atlas climático global' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Jornada de exploração' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'step');
-  await expect(page.getByRole('img', { name: /Mapa mundial indisponível sem estilo autorizado/ })).toBeVisible();
+  await expect(page.locator('.atlas-map')).toBeVisible();
+  await expect(page.locator('.atlas-map-texture')).toBeVisible();
+  await expect(page.locator('.atlas-map-orbit span')).toHaveCSS('background-image', /earth-orbit-sheet/);
+  await expect(page.getByText('Mapa-base abstrato para selecionar coordenadas.')).toBeVisible();
+});
+
+test('keeps coordinate entry available when MapLibre WebGL is unavailable', async ({ page }) => {
+  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
+  await page.goto('/explore');
+  const canvas = page.locator('.atlas-map .maplibregl-canvas');
+  if (await canvas.count()) {
+    await canvas.click({ position: { x: 240, y: 150 } });
+    await expect(page.getByLabel('Latitude')).not.toHaveValue('');
+    await expect(page.getByLabel('Longitude')).not.toHaveValue('');
+  } else {
+    await expect(page.getByRole('status')).toContainText('Mapa interativo indisponível neste navegador');
+    await page.getByLabel('Latitude').fill('5.6037');
+    await page.getByLabel('Longitude').fill('-0.187');
+    await page.getByRole('button', { name: 'Ir ao ponto' }).click();
+    await expect(page.getByText('Clima histórico observado')).toBeVisible();
+  }
 });
 
 test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {

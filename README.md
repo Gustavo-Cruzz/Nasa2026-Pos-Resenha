@@ -30,7 +30,7 @@ Runtime pixel art lives under `public/assets/`. Editable generators, manifests, 
 
 ## Map and deployment
 
-`/explore` works without tiles through the coordinate fallback. To enable an interactive MapLibre map, set `NEXT_PUBLIC_MAP_STYLE_URL` to a style URL you are authorized to use; do not use an unlicensed/public tile service as an implicit default. Configure the same variable in Vercel before deployment.
+`/explore` ships with a local MapLibre coordinate canvas, neutral offline tiles, and reduced-motion-safe decorative NASA-style animations. This local style contains no map provider, geographic layers, land-use inference, climate raster, or satellite feed. It is only a tactile way to select coordinates; latitude/longitude fields remain the complete keyboard-accessible fallback.
 
 Deploy requires an authenticated Vercel account and GitHub write credentials. This repository intentionally contains neither credential nor a map-style URL.
 

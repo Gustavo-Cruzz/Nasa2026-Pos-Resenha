@@ -1,5 +1,17 @@
 # Sprint log
 
+## V3 — Atlas MapLibre local, tiles neutros e animações
+
+Status: complete.
+
+Plan: replace the optional externally configured style with a bundled local MapLibre base style; use the supplied neutral terrain texture and tile key as decorative coordinate-selection affordances; add reduced-motion-safe orbit, satellite and data-pulse animations. Preserve coordinate fields, do not load external tiles, and make the non-geographic status explicit.
+
+Implemented: `/explore` now initializes a bundled, data-free MapLibre style without an environment variable or external tile provider. A local neutral texture and visible tile key make the selection surface tactile; the orbit, satellite, and pulse sprites animate around it and fall back to static art for reduced motion. The map remains only a coordinate picker: its disclosure explicitly rules out land-use, soil, climate, satellite-live or field-observation meaning. Latitude/longitude fields and examples remain fully usable.
+
+Evidence (2026-11-13): `npm run lint`, `npm run typecheck`, `npm run test` (48 unit tests), `npm run build`, and `npm run test:e2e` (17 Playwright tests) passed. Browser inspection at 1280px and 390px verified local texture, responsive overlays and the visual disclosure; E2E checks the local canvas, animated orbit asset and either click-driven selection (with WebGL2) or the complete coordinate-entry fallback (without WebGL2).
+
+Limitations / next: this is deliberately not a geographic basemap. It has no boundaries, roads, imagery, land cover, remote sensing layer or location lookup; an actual geographic layer requires separately authorized, attributed source data and an updated evidence policy. MapLibre requires WebGL2, so unsupported browsers receive an explicit coordinate-input fallback. The map visuals do not change NASA, ZARC, PAM, crop evidence or scenario outputs.
+
 ## V2 — Integração dos assets imersivos P0/P1
 
 Status: complete.
