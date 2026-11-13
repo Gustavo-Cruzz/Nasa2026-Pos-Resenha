@@ -1,5 +1,15 @@
 # Sprint log
 
+## R1 — Revisão de UX, valor e estratégia de competição
+
+Status: complete — audit only; no runtime behavior changed.
+
+Reviewed: compared the flow at `ceb05f8` with `3652658`, inspected current desktop/mobile renders across landing, farm, laboratory and results, scored the UI against six pillars, evaluated producer value against implemented evidence, and mapped the project to the current NASA Space Apps Field Shift challenge and global award positioning. The review identifies a plausible but unvalidated value hypothesis, recommends extension workers/agronomists with producers as the first user, and provides a 3-minute pitch narrative plus prioritized competition roadmap.
+
+Artifacts: `docs/UI-REVIEW.md` and `docs/UX_VALUE_HACKATHON_REVIEW.md`.
+
+Evidence (2026-11-12): local rendered screenshots at 1440 px and 390 px, current code/contracts/tests, Git diff, official NASA Space Apps challenge and awards pages. No scientific data, app logic or validation claim was added.
+
 ## P0 — Clareza da fazenda e linguagem visual agrícola
 
 Status: complete.
