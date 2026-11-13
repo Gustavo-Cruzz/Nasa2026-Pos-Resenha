@@ -1,7 +1,6 @@
 import { cropById, crops, type Crop } from '@/lib/catalog';
-import { isPilotLocation } from '@/lib/region';
-import zarc from '@/data/rio-verde-zarc.json';
 import type { Coordinates } from '@/lib/schema';
+import type { BrazilRegionalContext } from '@/lib/brazil/types';
 
 export type EvidenceStatus = 'supported' | 'partial' | 'insufficient_evidence' | 'unavailable';
 export type EvidenceIndicator = { id: 'temperature' | 'cycle' | 'soil_ph' | 'purpose'; label: string; value: string | null; status: EvidenceStatus; sourceRefs: string[]; explanation: string };
@@ -9,14 +8,13 @@ export type CropCoverage = { crop: Crop; status: EvidenceStatus; indicators: Evi
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis'] as const;
 
 function range(value: { min: number; max: number } | null, unit: string): string | null { return value ? `${value.min}–${value.max} ${unit}` : null; }
-function zarcExists(cropId: string): boolean { return zarc.entries.some((entry) => entry.cropId === cropId); }
 
 /** Evaluates source applicability, not crop performance or local suitability. */
-export function evidenceCoverageAssessment(location: Coordinates | null, cropId: string): CropCoverage {
+export function evidenceCoverageAssessment(location: Coordinates | null, cropId: string, regionalContext?: BrazilRegionalContext | null): CropCoverage {
   const crop = cropById.get(cropId as Crop['id']);
   if (!crop) throw new Error(`Unknown crop: ${cropId}`);
   const p0 = (P0 as readonly string[]).includes(crop.id);
-  const contextualZarc = Boolean(location && isPilotLocation(location) && zarcExists(crop.id));
+  const contextualZarc = Boolean(location && regionalContext?.zarc?.crops[crop.id]);
   const status: EvidenceStatus = !p0 ? 'unavailable' : contextualZarc ? 'partial' : 'insufficient_evidence';
   const reference = crop.sourceRefs;
   const indicators: EvidenceIndicator[] = [
@@ -26,9 +24,10 @@ export function evidenceCoverageAssessment(location: Coordinates | null, cropId:
     { id: 'purpose', label: 'Finalidades catalogadas', value: crop.purposes.join(', '), status: 'partial', sourceRefs: reference, explanation: 'Finalidade catalogada não equivale a adequação local.' },
   ];
   const missingEvidence = [...new Set(indicators.filter((indicator) => indicator.status === 'insufficient_evidence').map((indicator) => indicator.id))];
-  return { crop, status, indicators, warnings: [contextualZarc ? 'ZARC de Rio Verde está disponível como contexto regional; seus códigos brutos não são percentuais.' : 'Há fontes brasileiras no catálogo. Não há calendário ou regra agronômica local aplicável a esta coordenada.'], missingEvidence };
+  const place = regionalContext?.municipality ? `${regionalContext.municipality.name} (${regionalContext.municipality.uf})` : null;
+  return { crop, status, indicators, warnings: [contextualZarc ? `ZARC ${regionalContext?.zarc?.safra} disponível para ${place}; códigos brutos preservados sem interpretação.` : place ? `Município identificado: ${place}. Não há registro ZARC desta cultura P0 na safra carregada.` : 'Há fontes brasileiras no catálogo. Não há contexto regional aplicável a esta coordenada.'], missingEvidence };
 }
 
-export function p0CropCoverage(location: Coordinates | null): CropCoverage[] { return P0.map((cropId) => evidenceCoverageAssessment(location, cropId)); }
+export function p0CropCoverage(location: Coordinates | null, regionalContext?: BrazilRegionalContext | null): CropCoverage[] { return P0.map((cropId) => evidenceCoverageAssessment(location, cropId, regionalContext)); }
 export const P0_CROP_IDS = P0;
 export const p0Crops = crops.filter((crop) => (P0 as readonly string[]).includes(crop.id));

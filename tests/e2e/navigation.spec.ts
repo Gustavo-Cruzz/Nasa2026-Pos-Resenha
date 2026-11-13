@@ -63,6 +63,18 @@ test('shows retryable NASA failure without a fabricated climate metric', async (
   await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
 });
 
+test('resolves a Brazilian coordinate to municipality-wide ZARC context', async ({ page }) => {
+  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
+  await page.goto('/explore');
+  await page.getByLabel('Latitude').fill('-23.5505');
+  await page.getByLabel('Longitude').fill('-46.6333');
+  await page.getByRole('button', { name: 'Ir ao ponto' }).click();
+  await expect(page.getByText(/São Paulo \(SP\), código IBGE 3550308/)).toBeVisible();
+  await expect(page.getByRole('button', { name: /milho.*Análise parcial/i })).toBeVisible();
+  await page.getByRole('button', { name: /milho.*Análise parcial/i }).click();
+  await expect(page.getByRole('dialog', { name: 'Detalhes de milho' })).toContainText('ZARC 2026/2027 disponível para São Paulo');
+});
+
 test('renders provenance and source drawers for pilot analysis', async ({ page }) => {
   test.setTimeout(25_000);
   await installDraft(page);
@@ -150,7 +162,7 @@ test('explains invalid month fields and confirms a save without navigating away'
 
 test('shows three stacked global scenarios and unknown climate after NASA failure', async ({ page }) => {
   await installDraft(page);
-  await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));
+  await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, regionalContext: { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Fora do Brasil.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/results');
   await expect(page.getByText('Indisponível: cenários preservados com métricas climáticas desconhecidas.')).toBeVisible();

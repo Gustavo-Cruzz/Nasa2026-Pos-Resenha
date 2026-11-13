@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { analyze } from '@/lib/engine';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
+import { resolveBrazilRegionalContext } from '@/lib/brazil/context';
 const base = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
 const unavailable: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA down'] };
 describe('exploration engine', () => {
@@ -9,5 +10,6 @@ describe('exploration engine', () => {
   it('uses only P0 for deterministic cover and leaves duration unknown', () => { const result = analyze(base, unavailable); expect(result.strategies[1].proposedCrop?.cropId).toBe('sorghum'); expect(result.strategies[1].proposedCrop?.durationDays).toBeNull(); });
   it('keeps resilience distinct from baseline and cover when another documented P0 crop exists', () => { const result = analyze(base, unavailable).strategies; expect(result[2].proposedCrop?.cropId).toBe('cowpea'); expect(result[2].proposedCrop?.cropId).not.toBe(result[0].proposedCrop?.cropId); expect(result[2].proposedCrop?.cropId).not.toBe(result[1].proposedCrop?.cropId); });
   it('uses planting month only for climate context and priorities only for highlights', () => { const changed = analyze({ ...base, plantingMonth: 9, priorities: { water: 0, soil: 10, operations: 0 } }, unavailable); expect(changed.strategies[1].proposedCrop?.cropId).toBe('sorghum'); expect(changed.priorityHighlights[0]).toBe('cover_potential'); });
-  it('adds Rio Verde ZARC context without local validation', () => { const result = analyze(base, unavailable); expect(result.strategies[0].validationLevel).toBe('regionally_contextualized'); expect(result.strategies[0].explanations.some((item) => item.ruleId === 'RIO_VERDE_ZARC_CONTEXT')).toBe(true); });
+  it('adds municipal ZARC context without local validation', () => { const context = resolveBrazilRegionalContext(base.location); const result = analyze(base, unavailable, undefined, context); expect(result.strategies[0].validationLevel).toBe('regionally_contextualized'); expect(result.strategies[0].explanations.some((item) => item.ruleId === 'BRAZIL_MUNICIPAL_ZARC_CONTEXT')).toBe(true); expect(result.regionalContext.municipality?.code).toBe('5218805'); });
+  it('keeps a crop without standalone ZARC at climate exploration', () => { const context = resolveBrazilRegionalContext(base.location); const result = analyze({ ...base, futureBaseline: { cropId: 'ruziziensis', confirmed: true } }, unavailable, undefined, context); expect(result.strategies[0].validationLevel).toBe('climate_exploration'); expect(result.strategies[0].regionalContextAvailable).toBe(false); });
 });

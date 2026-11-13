@@ -11,7 +11,7 @@
 
 **Proposta de valor:** “Built for the world. Contextualized with Brazilian sources. Powered by NASA.”
 
-**Regra geográfica (atualização exploratória):** análise por coordenadas globais sempre retorna três cenários exploratórios, sem alegação de recomendação agronômica. O catálogo pode reunir fontes brasileiras, mas isso não estabelece aplicabilidade nacional. Somente a coordenada exata do piloto de Rio Verde (GO) pode acrescentar o contexto regional ZARC disponível; isto é `regionally_contextualized`, nunca `locally_validated`. O último nível exige futura validação humana/campo rastreável. O piloto é escolhido em opção explícita, sem alegar identificação automática de divisa municipal.
+**Regra geográfica (MVP Brasil 1):** análise por coordenadas globais sempre retorna três cenários exploratórios, sem alegação de recomendação agronômica. Coordenadas no Brasil são associadas à malha municipal versionada do IBGE e cruzadas com a Tábua de Risco ZARC da safra carregada. Somente uma cultura com registro no município identificado pode receber `regionally_contextualized`; ausência de registro permanece lacuna, nunca inadequação. `locally_validated` continua reservado a futura validação humana/campo rastreável. A coordenada não confirma propriedade, talhão nem uso agrícola do solo.
 
 **O que a aplicação NÃO faz:** previsão meteorológica, previsão precisa de produtividade, cálculo quantitativo de variação de NPK/SOC, prescrição agronômica, recomendação fitossanitária universal, previsão de preço, identificação da condição real de cada talhão por uma grade climática regional.
 

@@ -1,5 +1,19 @@
 # Sprint log
 
+## B1 — MVP Brasil 1: município IBGE + ZARC nacional
+
+Status: complete.
+
+Implemented: replaced the exact-coordinate Rio Verde regional gate with a server-only Brazilian context resolver. Coordinates are matched by bounding box plus point-in-polygon against 5,571 IBGE 2025 municipal geometries. The minimum-quality API artifact is completed with Boa Esperança do Norte from the official 2025 mesh; the two ZARC operational-area codes that are not municipalities remain explicitly unmatched. The exact Rio Verde rule remains only for the verified NASA fixture fallback.
+
+Implemented: added a reproducible `build:brazil-context` pipeline. It filters 536,728 official MAPA 2026/2027 source rows for the existing P0 scope into 23,068 municipality/crop entries, retaining source-row counts, culture names, cycle/soil/climate codes, managements, ordinances, non-zero decêndios and raw risk-code sets. Source URLs, access dates and SHA-256 hashes are embedded. The runtime never interprets those codes as probabilities and never treats absence as unsuitability.
+
+Implemented: added `GET /api/regional-context`, municipality/ZARC provenance to `POST /api/analyze`, independent per-crop evidence levels, atlas and laboratory context loading, human-readable municipal coverage in results, source links and cache headers. National data stays in server chunks; it is not shipped in client components. Climate acquisition, regional context and agronomic evidence remain separate.
+
+Evidence (2026-11-13): `npm run lint`, `npm run typecheck`, `npm run test` (43 unit tests), `npm run build`, and `npm run test:e2e` (14 Playwright tests) passed during implementation. Tests cover Rio Verde, São Paulo, Salvador, the newly represented Boa Esperança do Norte, coordinates outside Brazil, invalid/missing coordinates, per-crop ZARC presence, raw-code preservation, NASA failure and mobile flows. Production build exposes `/api/regional-context`; inspection confirms the national JSON markers occur only in server chunks.
+
+Limitations / next: municipal context does not prove the coordinate is a farm or identify a talhão. The artifact covers only existing P0 mappings and the loaded 2026/2027 annual-safra file; ruziziensis has no standalone row. Aggregation preserves unique dimension/code sets but not row-level correlations, so the app does not derive planting windows or risk percentages. Automating weekly source refresh and adding PAM relevance remain later work.
+
 ## A1 — Especificação do pacote visual imersivo
 
 Status: complete — documentation only.

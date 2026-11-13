@@ -1,5 +1,7 @@
 # G0 — Auditoria de migração Field Shift 2.0
 
+> Historical architecture note. MVP Brasil 1 superseded the ZARC-specific items below on 2026-11-13: `isPilotLocation` now restricts only the NASA fixture fallback. Regional evidence is resolved through the versioned IBGE municipal mesh plus the MAPA 2026/2027 municipal ZARC index. The original G0 text is retained as migration history.
+
 Data: 2026-11-12. Escopo: auditoria e plano. Nenhuma interface, regra agronômica, contrato público ou dado científico foi alterado neste sprint.
 
 ## Diagnóstico atual

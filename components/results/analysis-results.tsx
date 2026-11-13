@@ -31,9 +31,10 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   if (state.kind === 'error') return <Empty message={state.message} />;
   const { data } = state;
   return <>
-    {demo ? <aside className="mt-5 rounded-xl border border-lime-300 bg-lime-300/10 p-4"><p className="font-bold text-lime-200">Demonstração Brasil</p><p className="mt-1 text-sm text-slate-200">Fazenda e intenção de plantio fictícias em Rio Verde. O clima vem da NASA POWER; o contexto ZARC permanece regional e não é extrapolado para o país.</p></aside> : null}
+    {demo ? <aside className="mt-5 rounded-xl border border-lime-300 bg-lime-300/10 p-4"><p className="font-bold text-lime-200">Demonstração Brasil</p><p className="mt-1 text-sm text-slate-200">Fazenda e intenção de plantio fictícias em Rio Verde. O clima vem da NASA POWER e o contexto ZARC é associado ao município identificado pelo IBGE, sem validar o talhão.</p></aside> : null}
     <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="secondary"><Link href="/lab">Voltar ao laboratório</Link></Button><Button asChild variant="secondary"><Link href="/farm">Alterar prioridades</Link></Button></div>
-    <div className="mt-5"><BrazilContextNote /></div>
+    <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
+    <RegionalContextDetails data={data} />
     <ClimatePanel climate={data.climate} plantingMonth={data.input.plantingMonth} />
     <SourcesDetails provenance={data.climate.provenance} sourceRefs={[]} title="Proveniência climática" />
     <p className="mt-3 text-sm text-amber-100">{data.disclaimer}</p>
@@ -45,6 +46,13 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
       return <article className="rounded-xl border border-slate-700 bg-slate-900 p-5" key={strategy.id}><p className="text-sm font-semibold text-lime-300">Cenário {strategy.id} · {validationLabel[strategy.validationLevel]}</p><h2 className="mt-1 text-xl font-bold">{strategy.title}</h2>{strategy.baselineAssumed ? <p className="mt-3 rounded bg-amber-950/60 p-3 text-sm text-amber-100">Continuação presumida — confirmar.</p> : null}{strategy.baseline ? <Link className="mt-3 inline-block text-sm underline" href="/farm?edit=baseline">Editar linha de base</Link> : null}{strategy.proposedCrop ? <div className="mt-4 flex items-center gap-3 rounded-lg bg-slate-800/60 p-3"><CropSprite cropId={strategy.proposedCrop.cropId} name={strategy.proposedCrop.name} size={52} /><div className="text-sm"><p><b>Hipótese:</b> {strategy.proposedCrop.name}</p><p>Plantio: mês {strategy.proposedCrop.plantingMonth}; duração: não documentada.</p></div></div> : <p className="mt-4 text-sm text-amber-100">Cultura proposta indisponível: critério mínimo sem evidência.</p>}<details className="mt-4"><summary className="cursor-pointer font-semibold">Por que este cenário?</summary>{strategy.explanations.length ? strategy.explanations.map((item) => <div className="mt-3 border-l-2 border-slate-600 pl-3 text-sm" key={item.ruleId}><p>{item.message}</p><p className="mt-1 text-xs text-slate-300">Evidência: {item.certainty === 'high' ? 'regra rastreável' : item.certainty === 'medium' ? 'parcial' : 'baixa; requer confirmação'}.</p></div>) : <p className="mt-2 text-sm text-slate-300">Sem explicação adicional além dos indicadores e lacunas.</p>}</details><SourcesDetails sourceRefs={sourceRefs} title="Fontes do cenário" />{strategy.missingData.length ? <p className="mt-4 text-xs text-slate-300"><b>Falta:</b> {strategy.missingData.map((item) => missingLabel[item] ?? 'evidência adicional').join(', ')}.</p> : null}</article>;
     })}</section>
   </>;
+}
+
+function RegionalContextDetails({ data }: { data: AnalysisResult }) {
+  const context = data.regionalContext;
+  if (!context.municipality) return null;
+  const crops = Object.values(context.zarc?.crops ?? {});
+  return <details className="mt-3 rounded-lg border border-slate-700 p-4"><summary className="cursor-pointer font-semibold">Município e cobertura ZARC</summary><div className="mt-3 text-sm text-slate-300"><p><b>Município:</b> {context.municipality.name} ({context.municipality.uf}) · código IBGE {context.municipality.code}</p>{context.zarc ? <><p className="mt-2"><b>Safra:</b> {context.zarc.safra} · {crops.length} culturas P0 com registros agregados.</p><ul className="mt-3 grid gap-2 sm:grid-cols-2">{crops.map((crop) => <li className="rounded bg-slate-800/60 p-3" key={crop.cropId}><b>{crop.zarcCultures.join(' / ')}</b><span className="mt-1 block">{crop.rowCount} linhas-fonte · ciclos {crop.cycleCodes.join(', ') || 'N/D'} · solos {crop.soilCodes.join(', ') || 'N/D'}</span><span className="mt-1 block">Códigos brutos encontrados: {crop.riskCodes.join(', ') || 'N/D'} — não interpretados como percentuais pelo aplicativo.</span></li>)}</ul><div className="mt-3 flex flex-wrap gap-3"><a className="underline" href={context.zarc.sourceUrl} rel="noreferrer" target="_blank">Abrir Tábua ZARC</a><a className="underline" href={context.zarc.dictionaryUrl} rel="noreferrer" target="_blank">Abrir dicionário</a></div></> : <p className="mt-2">Sem registro P0 no pacote ZARC carregado para este município.</p>}</div></details>;
 }
 
 function DecisionSummary({ data }: { data: AnalysisResult }) {

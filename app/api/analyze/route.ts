@@ -3,6 +3,7 @@ import { analyze } from '@/lib/engine';
 import { analysisInputSchema } from '@/lib/schema';
 import { resolveClimateContext } from '@/lib/climate/nasa-power';
 import { labPlanSchema } from '@/lib/lab';
+import { resolveBrazilRegionalContext } from '@/lib/brazil/context';
 import { z } from 'zod';
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) throw new Error(parsed.error.issues.map((issue) => issue.message).join('; '));
     const input = 'input' in parsed.data ? parsed.data.input : parsed.data;
     const labPlan = 'input' in parsed.data ? parsed.data.labPlan : undefined;
-    const climate = await resolveClimateContext(input.location, input.plantingMonth);
-    return NextResponse.json(analyze(input, climate, labPlan));
+    const [climate, regionalContext] = await Promise.all([resolveClimateContext(input.location, input.plantingMonth), Promise.resolve(resolveBrazilRegionalContext(input.location))]);
+    return NextResponse.json(analyze(input, climate, labPlan, regionalContext));
   } catch (error) { return NextResponse.json({ status: 'error', code: 'INVALID_ANALYSIS_INPUT', message: error instanceof Error ? error.message : 'Invalid input.' }, { status: 422 }); }
 }
