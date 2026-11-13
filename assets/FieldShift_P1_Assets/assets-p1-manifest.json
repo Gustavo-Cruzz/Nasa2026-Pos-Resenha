@@ -1,0 +1,363 @@
+{
+  "product": "Field Shift",
+  "assetLot": "P1",
+  "version": "1.0",
+  "generatedAt": "2026-11-13",
+  "pixelStyle": {
+    "logicalPixelScale": 2,
+    "resize": "nearest-neighbor",
+    "transparentCanvas": "RGBA",
+    "lightDirection": "upper-left"
+  },
+  "night": {
+    "files": [
+      "environment/field-night.png",
+      "environment/field-night-lights.png",
+      "environment/field-sky-night.png"
+    ],
+    "role": "decorative theme only",
+    "observational": false,
+    "baseScene": "P0 original, same coordinates"
+  },
+  "characters": {
+    "files": [
+      "characters/producer-neutral.png",
+      "characters/producer-talk.png",
+      "characters/producer-talk-sheet.png",
+      "characters/technician-neutral.png",
+      "characters/technician-talk.png",
+      "characters/technician-talk-sheet.png"
+    ],
+    "frameSize": [
+      64,
+      64
+    ],
+    "talkFrames": 4,
+    "talkSheetWidth": 256,
+    "role": "fictional non-region-specific demo characters"
+  },
+  "conversationObjects": {
+    "files": [
+      "objects/clipboard.png",
+      "objects/sample.png",
+      "objects/tablet.png",
+      "objects/report.png"
+    ],
+    "size": [
+      32,
+      32
+    ]
+  },
+  "tiles": {
+    "frameSize": [
+      32,
+      32
+    ],
+    "sheet": "tiles/neutral-terrain-sheet.png",
+    "sheetDimensions": [
+      128,
+      64
+    ],
+    "order": [
+      {
+        "name": "tile-soil",
+        "row": 0,
+        "column": 0
+      },
+      {
+        "name": "tile-soil-alt",
+        "row": 0,
+        "column": 1
+      },
+      {
+        "name": "tile-path",
+        "row": 0,
+        "column": 2
+      },
+      {
+        "name": "tile-path-alt",
+        "row": 0,
+        "column": 3
+      },
+      {
+        "name": "tile-grass",
+        "row": 1,
+        "column": 0
+      },
+      {
+        "name": "tile-grass-alt",
+        "row": 1,
+        "column": 1
+      },
+      {
+        "name": "tile-water",
+        "row": 1,
+        "column": 2
+      },
+      {
+        "name": "tile-water-alt",
+        "row": 1,
+        "column": 3
+      }
+    ],
+    "semantics": "generic surface only"
+  },
+  "reviewTransition": {
+    "file": "transitions/transition-review-sheet.png",
+    "static": "transitions/transition-review-static.png",
+    "frames": 8,
+    "frameSize": [
+      512,
+      288
+    ],
+    "sheetDimensions": [
+      4096,
+      288
+    ],
+    "frameDurationMs": 100,
+    "loop": false,
+    "semantic": "three equal hypotheses enter a review clipboard, no winner"
+  },
+  "assets": [
+    {
+      "path": "characters/producer-neutral.png",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 493,
+      "sha256": "74f20d5bae78c11d22330dc6fcceb765f6ab8bd7492412b810cd882f774ba303"
+    },
+    {
+      "path": "characters/producer-talk-sheet.png",
+      "size": [
+        256,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 795,
+      "sha256": "e4604f533eebe058a942bef83a563f7795f68d0625428db4f8521ed854e8ed3f"
+    },
+    {
+      "path": "characters/producer-talk.png",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 519,
+      "sha256": "599f7c82539360fcee40f728beb28179ebe514e47db83a8f0ea5b9534698bd56"
+    },
+    {
+      "path": "characters/technician-neutral.png",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 485,
+      "sha256": "0bde0fed6f150c3c9ac5b0d21c8e806f55b2c6360ab431d2102ffbf0da2c7144"
+    },
+    {
+      "path": "characters/technician-talk-sheet.png",
+      "size": [
+        256,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 805,
+      "sha256": "bc61b508a960080428c69f58833afa5f9b10d2a6ccea127b941ea68eb141aeb6"
+    },
+    {
+      "path": "characters/technician-talk.png",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 500,
+      "sha256": "55ab17526892de6e9f70ff94b507d8cc16a97ba243a075ae47fdc10b1608e2c3"
+    },
+    {
+      "path": "environment/field-night-lights.png",
+      "size": [
+        512,
+        288
+      ],
+      "mode": "RGBA",
+      "bytes": 932,
+      "sha256": "a99ec42afd2f0194cce5a98097619331eb6328d0dab0b50e1bba38c29b239383"
+    },
+    {
+      "path": "environment/field-night.png",
+      "size": [
+        512,
+        288
+      ],
+      "mode": "RGB",
+      "bytes": 7181,
+      "sha256": "2a125a1989e1ecb68b79c2b2033c9744d09cdac18df594dfa3194bcc4ffece0f"
+    },
+    {
+      "path": "environment/field-sky-night.png",
+      "size": [
+        512,
+        288
+      ],
+      "mode": "RGB",
+      "bytes": 1681,
+      "sha256": "cd3bd3f436369866221838cb32639c511f4682b863357a32fa95ae25d5ccf527"
+    },
+    {
+      "path": "objects/clipboard.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 190,
+      "sha256": "852c2dba95962c1b77b19b2f839f913793ba3a7249b97546272ac1e2ac2eb45f"
+    },
+    {
+      "path": "objects/report.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 211,
+      "sha256": "42305116421729acd43e7e163152e2d4f3b943bfda246e6046d34a8f15801b53"
+    },
+    {
+      "path": "objects/sample.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 226,
+      "sha256": "bd147d87fe172824df5182c4ca36615ef7f79ca9ced19198fc101afc6dc2c9b1"
+    },
+    {
+      "path": "objects/tablet.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 200,
+      "sha256": "390ae7697d4d84fd8826486d844fd64226cc4e8e33067b78983058a889731bc1"
+    },
+    {
+      "path": "tiles/neutral-terrain-sheet.png",
+      "size": [
+        128,
+        64
+      ],
+      "mode": "RGBA",
+      "bytes": 1231,
+      "sha256": "9d25aefb1477f54a33c3d36c0fdad88c681f15e10ba2a127daa2e8f265a86207"
+    },
+    {
+      "path": "tiles/tile-grass-alt.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 303,
+      "sha256": "d8680aee4f2fd83d5de852bc913bcc91ad2294956928fde0ff9c4a85ef354ffb"
+    },
+    {
+      "path": "tiles/tile-grass.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 327,
+      "sha256": "03f1869c142e2eac6570a0a117839c3f4dc5432a8f13ecaa0c27a6485d963410"
+    },
+    {
+      "path": "tiles/tile-path-alt.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 315,
+      "sha256": "0dd21690d8852a43b5d498b13782b216331699095a20e107f60abb55335c1a7b"
+    },
+    {
+      "path": "tiles/tile-path.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 320,
+      "sha256": "4a48b9419aaae130670dd1c54627aeeb55d151520d432c1b7f133f3cd52f3a5b"
+    },
+    {
+      "path": "tiles/tile-soil-alt.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 322,
+      "sha256": "a5e03379811a0328074447fc2f16f6c757f4c4a06d9c8b7c257ff8276f40fd24"
+    },
+    {
+      "path": "tiles/tile-soil.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 319,
+      "sha256": "42801d302a4a78bbbd1cf7ba3a0fe9307c0368616fdd6481861786c75585fbce"
+    },
+    {
+      "path": "tiles/tile-water-alt.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 179,
+      "sha256": "ab805a5c0b1606166d4936865e58c4e7dda9ab0406b27a46157254dff3a7bfe3"
+    },
+    {
+      "path": "tiles/tile-water.png",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "bytes": 185,
+      "sha256": "cb9d35418d6b3301755c57dab2ad2339514fc6adfecbd207a7f6a98e7373dca6"
+    },
+    {
+      "path": "transitions/transition-review-sheet.png",
+      "size": [
+        4096,
+        288
+      ],
+      "mode": "RGBA",
+      "bytes": 23100,
+      "sha256": "9946dac45017d5561d61c91945ea9b0674799930eca4632950980d67ec2297b0"
+    },
+    {
+      "path": "transitions/transition-review-static.png",
+      "size": [
+        512,
+        288
+      ],
+      "mode": "RGBA",
+      "bytes": 7534,
+      "sha256": "31ea3be8b9d40dbd72de447fe1d1b6f32491adfd6485e53bd07939774090687d"
+    }
+  ]
+}

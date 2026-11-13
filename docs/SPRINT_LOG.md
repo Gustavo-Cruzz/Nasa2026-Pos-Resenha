@@ -1,5 +1,17 @@
 # Sprint log
 
+## V2 — Integração dos assets imersivos P0/P1
+
+Status: complete.
+
+Implemented: validated and published all 43 P0 and 24 P1 runtime PNGs while retaining their manifests, licenses and reproducible sources under `assets/`. Added optimized 64×64 runtime derivatives for the supplied common-bean and upland-rice art; the eight P0 crops now have dedicated sprites. The original 1254×1254 uploads remain source assets and are not shipped to the browser.
+
+Implemented: replaced the CSS-only landing vignette with the modular farm scene and an explicit persisted day/night decorative preference. Added accessible evidence icons, equal-weight A/B/C artwork, journey icons, finite/reduced-motion-safe feedback animations, a one-time review transition, fictional technical-review character and neutral review-object icons. Visuals never modify NASA, ZARC, PAM, crop selection or evidence levels. Long crop names now use a vertical mobile card composition.
+
+Evidence (2026-11-13): both supplied Python validators passed (43 P0 and 24 P1 assets). `npm run lint`, `npm run typecheck`, `npm run test` (47 unit tests), `npm run build` and `npm run test:e2e` (16 Playwright tests) passed. Browser verification covers explicit/persisted night theme, the two new crop sprites, reduced-motion review art and the existing end-to-end flow. Rendered inspection covered landing at 390/1440 px, the eight-crop atlas deck at 390 px and results at 390/1440 px.
+
+Limitations / next: the neutral terrain tiles and NASA orbit/satellite sheets are published for future use but intentionally not shown as field or climate observations. Production deployment and smoke testing remain external follow-up; an authorized MapLibre style is still optional and not bundled. Scientific parameters still missing for common bean/upland rice remain `N/D`; visual assets do not close evidence gaps.
+
 ## B2 — MVP Brasil 2: oito culturas + contexto PAM
 
 Status: complete.
@@ -10,7 +22,7 @@ Implemented: added a reproducible IBGE PAM/SIDRA 5457 municipal index for the la
 
 Evidence (2026-11-13): official refresh produced 704,422 filtered ZARC source rows, 31,702 municipality/crop entries and 14,176 positive PAM municipality/product entries for PAM 2025. All 3,160 `upland_rice` ZARC entries are explicitly `Sequeiro`. `npm run lint`, `npm run typecheck`, `npm run test` (45 unit tests), `npm run build`, and `npm run test:e2e` (14 Playwright tests) passed.
 
-Limitations: PAM does not identify a field or farming system. It aggregates paddy rice and grain beans, so it cannot validate upland rice, common bean or cowpea individually. New crop scientific parameters remain unknown. Dedicated sprites are pending from the user.
+Limitations: PAM does not identify a field or farming system. It aggregates paddy rice and grain beans, so it cannot validate upland rice, common bean or cowpea individually. New crop scientific parameters remain unknown. Dedicated sprites were supplied and integrated in V2.
 
 ## B1 — MVP Brasil 1: município IBGE + ZARC nacional
 

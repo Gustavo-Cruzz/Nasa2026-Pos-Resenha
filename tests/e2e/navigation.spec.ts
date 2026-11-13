@@ -1,6 +1,16 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const draft = (futureBaseline?: { cropId: string; confirmed: true }) => ({ version: 1, savedAt: '2026-11-12T15:00:00.000Z', data: { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], futureBaseline, priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' } });
+
+test('switches the decorative farm scene explicitly and persists the choice', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Noite' }).click();
+  await expect(page.getByRole('button', { name: 'Noite' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('img[src*="field-night"]')).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Noite' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText('Cena ilustrativa — não é observação da fazenda.')).toBeVisible();
+});
 async function installDraft(page: Page, futureBaseline?: { cropId: string; confirmed: true }) { await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), draft(futureBaseline)); }
 
 const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
@@ -71,6 +81,8 @@ test('resolves a Brazilian coordinate to municipality-wide ZARC context', async 
   await page.getByRole('button', { name: 'Ir ao ponto' }).click();
   await expect(page.getByText(/São Paulo \(SP\), código IBGE 3550308/)).toBeVisible();
   await expect(page.getByRole('button', { name: /milho.*Análise parcial/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: /feijão-comum/i }).locator('img')).toHaveAttribute('src', /common-bean/);
+  await expect(page.getByRole('button', { name: /arroz de terras altas/i }).locator('img')).toHaveAttribute('src', /upland-rice/);
   await page.getByRole('button', { name: /milho.*Análise parcial/i }).click();
   await expect(page.getByRole('dialog', { name: 'Detalhes de milho' })).toContainText('ZARC 2026/2027 disponível para São Paulo');
 });
@@ -86,6 +98,15 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await page.getByText('Proveniência climática').click();
   await expect(page.getByText('NASA POWER:', { exact: false })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Editar linha de base' })).toBeVisible();
+});
+
+test('uses static review art when reduced motion is requested', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await installDraft(page);
+  await page.goto('/results');
+  const transition = page.getByRole('img', { name: /três hipóteses entram em revisão/i });
+  await expect(transition).toBeVisible();
+  await expect(transition).toHaveCSS('background-image', /transition-review-static/);
 });
 
 test('edits confirmed baseline through the result link using the keyboard', async ({ page }) => {

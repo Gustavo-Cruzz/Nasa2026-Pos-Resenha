@@ -24,6 +24,10 @@ npm run test
 npm run build
 ```
 
+## Visual assets
+
+Runtime pixel art lives under `public/assets/`. Editable generators, manifests, previews and provenance/license records remain under `assets/FieldShift_P0_Assets/` and `assets/FieldShift_P1_Assets/`. The original common-bean and upland-rice uploads are retained in `assets/crops/`; optimized 64×64 derivatives are published for the app. Visual themes and animations are decorative and never alter scientific analysis or evidence status.
+
 ## Map and deployment
 
 `/explore` works without tiles through the coordinate fallback. To enable an interactive MapLibre map, set `NEXT_PUBLIC_MAP_STYLE_URL` to a style URL you are authorized to use; do not use an unlicensed/public tile service as an implicit default. Configure the same variable in Vercel before deployment.
