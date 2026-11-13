@@ -1,5 +1,15 @@
 # Sprint log
 
+## A1 — Especificação do pacote visual imersivo
+
+Status: complete — documentation only.
+
+Specified: a modular asset system for environment layers, NASA-to-farm narrative, provenance icons, A/B/C thumbnails, interaction feedback and journey markers. The brief defines exact filenames, dimensions, frame counts, export budgets, semantic restrictions and production priority. Existing crop sprites remain unchanged and sufficient; the minimum useful delivery is 15 files covering evidence, scenarios and the farm environment.
+
+Evidence (2026-11-12): specification reconciled with the current routes, ten existing 64×64 RGBA crop sprites, gamification documents and scientific-scope rules. No runtime, scientific data or user flow changed; automated application checks were therefore not rerun.
+
+Limitations / next: visual assets still need original production, licensing metadata and integration review at 390 px/1440 px. Any weather or field-state art must remain decorative or be rendered only beside its actual source data.
+
 ## U1 — Fluxo responsivo e contexto Brasil
 
 Status: complete.
