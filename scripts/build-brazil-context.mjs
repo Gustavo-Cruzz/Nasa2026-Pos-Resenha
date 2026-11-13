@@ -8,6 +8,7 @@ const municipalityNamesPath = process.argv[3] ?? '/tmp/ibge-localidades.json';
 const zarcCsvPath = process.argv[4] ?? 'dados-abertos-tabua-de-risco-safra-2026-2027.csv';
 const extraMunicipalityGeometryPath = process.argv[5] ?? 'data/ibge-2025-extra-municipality-features.json';
 const accessedAt = process.env.SOURCE_ACCESSED_AT ?? new Date().toISOString().slice(0, 10);
+const configuredZarcSourceUrl = process.env.ZARC_SOURCE_URL;
 
 const municipalityOutput = 'data/brazil-municipalities.json';
 const zarcOutput = 'data/brazil-zarc-index.json';
@@ -88,6 +89,7 @@ await new Promise((resolve, reject) => {
 const aggregate = new Map();
 let header;
 let rowCount = 0;
+const sourceSafras = new Set();
 const reader = createInterface({ input: createReadStream(zarcCsvPath), crlfDelay: Infinity });
 for await (const line of reader) {
   if (!header) {
@@ -99,6 +101,7 @@ for await (const line of reader) {
   const at = (name) => row[header[name]] ?? '';
   const cropId = cultureMap.get(at('Nome_cultura'));
   if (!cropId) continue;
+  sourceSafras.add(`${at('SafraIni')}/${at('SafraFin')}`);
   const municipalityCode = at('geocodigo');
   if (!/^\d{7}$/.test(municipalityCode)) throw new Error(`Invalid ZARC municipality code: ${municipalityCode}`);
   rowCount += 1;
@@ -136,15 +139,19 @@ const entries = [...aggregate.values()].map((item) => ({
 })).sort((a, b) => a.municipalityCode.localeCompare(b.municipalityCode) || a.cropId.localeCompare(b.cropId));
 const municipalityCodes = new Set(municipalities.map((item) => item.code));
 const unmatchedMunicipalityCodes = sortStrings(new Set(entries.map((item) => item.municipalityCode).filter((code) => !municipalityCodes.has(code))));
+if (sourceSafras.size !== 1) throw new Error(`Expected one annual ZARC safra in filtered rows, found: ${sortStrings(sourceSafras).join(', ')}`);
+const [safra] = sourceSafras;
+const zarcSourceUrl = configuredZarcSourceUrl ?? (safra === '2026/2027' ? 'https://dados.agricultura.gov.br/dataset/6d3d141c-885e-41a4-ab7f-dc8ff323b96f/resource/139e5a60-1f43-4cc8-aeab-a35dbbf816c0/download/dados-abertos-tabua-de-risco-safra-2026-2027.csv' : null);
+if (!zarcSourceUrl) throw new Error('ZARC_SOURCE_URL is required when building a different safra.');
 
 const zarcDocument = {
   version: 1,
-  safra: '2026/2027',
+  safra,
   status: 'official_MAPA_rows_aggregated_by_municipality_and_P0_crop_raw_codes_not_interpreted',
   source: {
     institution: 'Ministério da Agricultura e Pecuária (MAPA)',
-    title: 'Zoneamento Agrícola de Risco Climático (Zarc) — Tábua de Risco — Safra 2026/2027',
-    url: 'https://dados.agricultura.gov.br/dataset/6d3d141c-885e-41a4-ab7f-dc8ff323b96f/resource/139e5a60-1f43-4cc8-aeab-a35dbbf816c0/download/dados-abertos-tabua-de-risco-safra-2026-2027.csv',
+    title: `Zoneamento Agrícola de Risco Climático (Zarc) — Tábua de Risco — Safra ${safra}`,
+    url: zarcSourceUrl,
     dictionaryUrl: 'https://dados.agricultura.gov.br/dataset/6d3d141c-885e-41a4-ab7f-dc8ff323b96f/resource/bebb0ebb-bc75-460c-b900-a7a1ebd87bee/download/dicionario-de-dados-tabua-de-risco-2026.pdf',
     accessedAt,
     sha256: hash.digest('hex'),
@@ -159,8 +166,15 @@ const zarcDocument = {
   notCoveredAsStandaloneCrop: ['ruziziensis'],
 };
 
+function serializeZarc(document) {
+  const { entries: documentEntries, ...metadata } = document;
+  const metadataLines = JSON.stringify(metadata, null, 2).split('\n');
+  metadataLines[metadataLines.length - 1] = '  ,"entries": [';
+  return `${metadataLines.join('\n')}\n${documentEntries.map((entry) => `    ${JSON.stringify(entry)}`).join(',\n')}\n  ]\n}\n`;
+}
+
 await Promise.all([
   writeFile(municipalityOutput, `${JSON.stringify(municipalityDocument)}\n`),
-  writeFile(zarcOutput, `${JSON.stringify(zarcDocument)}\n`),
+  writeFile(zarcOutput, serializeZarc(zarcDocument)),
 ]);
 console.log(JSON.stringify({ municipalities: municipalities.length, zarcRows: rowCount, zarcEntries: entries.length, zarcMunicipalities: zarcDocument.municipalityCount }, null, 2));

@@ -1,0 +1,40 @@
+name: Update Brazil context
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 9 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run update:brazil-context
+      - run: npm run typecheck
+      - run: npm run test
+      - name: Open pull request when official artifacts changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/brazil-municipalities.json data/brazil-zarc-index.json; then
+            echo "Official artifacts are unchanged."
+            exit 0
+          fi
+          branch="automation/brazil-context-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add data/brazil-municipalities.json data/brazil-zarc-index.json
+          git commit -m "data: refresh Brazil municipal ZARC context"
+          git push origin "$branch"
+          gh pr create --base "${GITHUB_REF_NAME}" --head "$branch" --title "data: refresh Brazil municipal ZARC context" --body "Automated refresh from the latest official IBGE and MAPA sources. Source URLs, access dates and SHA-256 hashes are embedded in the artifacts. Review data diff and validation checks before merging."
