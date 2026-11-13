@@ -4,6 +4,11 @@ import zarc from '@/data/rio-verde-zarc.json';
 import scope from '@/data/s2-scope.json';
 
 describe('crop scientific guards', () => {
+  it('offers exactly eight P0 crops and preserves unknown scientific parameters', () => {
+    const p0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'];
+    expect(crops.filter((crop) => p0.includes(crop.id))).toHaveLength(8);
+    for (const id of ['common_bean', 'upland_rice']) expect(crops.find((item) => item.id === id)).toMatchObject({ cycleDaysRange: null, idealTempC: null, viableTempC: null, soilPhRange: null, parameterStatus: 'missing' });
+  });
   it('does not make a crop eligible when its evidence status is missing', () => {
     expect(crops.every((crop) => !isRecommendationEligible(crop))).toBe(true);
   });
@@ -18,7 +23,7 @@ describe('crop scientific guards', () => {
   it('limits S2 pilot candidates to crops with verified Rio Verde windows', () => {
     expect(scope.auditedPilotCandidates).toEqual(['soybean', 'maize', 'sunflower', 'sorghum']);
     expect(scope.displayOnly).toContain('ruziziensis');
-    expect(scope.p0).toEqual(['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis']);
+    expect(scope.p0).toEqual(['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis']);
     expect(scope.excludedFromMvpRecommendations).toEqual(['pearl_millet', 'sunn_hemp']);
   });
 });

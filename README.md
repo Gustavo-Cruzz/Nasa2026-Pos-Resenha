@@ -2,7 +2,7 @@
 
 Field Shift is a Space Apps 2026 MVP for comparing crop-rotation hypotheses using traceable historical climate data and explicitly scoped regional evidence.
 
-The product is global by coordinates and contextualized with Brazilian sources. In Brazil, coordinates are resolved against a versioned IBGE municipal mesh and matched to the loaded MAPA ZARC crop records. This is municipal context, not a national suitability rule or field validation.
+The product is global by coordinates and contextualized with Brazilian sources. In Brazil, coordinates are resolved against a versioned IBGE municipal mesh and matched to MAPA ZARC crop records plus IBGE PAM observations. PAM is statistical context only; neither source is a national suitability rule or field validation. The generator uses eight P0 crops, including common bean and rainfed upland rice.
 
 ## Status
 

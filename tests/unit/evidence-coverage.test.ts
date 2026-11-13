@@ -4,7 +4,7 @@ import { RIO_VERDE_PILOT } from '@/lib/region';
 import { resolveBrazilRegionalContext } from '@/lib/brazil/context';
 
 describe('evidence coverage assessment', () => {
-  it('returns exactly the six P0 cards', () => expect(p0CropCoverage(null).map((item) => item.crop.id)).toEqual(['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis']));
+  it('returns exactly the eight P0 cards', () => expect(p0CropCoverage(null).map((item) => item.crop.id)).toEqual(['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis']));
   it('keeps a non-pilot coordinate insufficient instead of inferring local suitability', () => {
     const coverage = evidenceCoverageAssessment({ latitude: 5.6037, longitude: -0.187 }, 'soybean');
     expect(coverage.status).toBe('insufficient_evidence');

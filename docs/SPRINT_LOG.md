@@ -1,5 +1,17 @@
 # Sprint log
 
+## B2 — MVP Brasil 2: oito culturas + contexto PAM
+
+Status: complete.
+
+Implemented: expanded the interactive P0 scope to eight crops with `common_bean` (*Phaseolus vulgaris*) and `upland_rice` (*Oryza sativa*, explicitly upland). Both retain unknown cycle, thermal, pH and Kc fields; accessible initials render until dedicated sprites arrive. Deferred/P1 crops remain outside the generator.
+
+Implemented: added a reproducible IBGE PAM/SIDRA 5457 municipal index for the latest published year. Positive harvested area and production quantity are statistical context only. Aggregate rice and bean products carry explicit caveats. PAM never changes scenario selection, compatibility, ZARC evidence level or suitability. Automated refresh now covers IBGE geometry, MAPA ZARC and PAM.
+
+Evidence (2026-11-13): official refresh produced 704,422 filtered ZARC source rows, 31,702 municipality/crop entries and 14,176 positive PAM municipality/product entries for PAM 2025. All 3,160 `upland_rice` ZARC entries are explicitly `Sequeiro`. `npm run lint`, `npm run typecheck`, `npm run test` (45 unit tests), `npm run build`, and `npm run test:e2e` (14 Playwright tests) passed.
+
+Limitations: PAM does not identify a field or farming system. It aggregates paddy rice and grain beans, so it cannot validate upland rice, common bean or cowpea individually. New crop scientific parameters remain unknown. Dedicated sprites are pending from the user.
+
 ## B1 — MVP Brasil 1: município IBGE + ZARC nacional
 
 Status: complete.

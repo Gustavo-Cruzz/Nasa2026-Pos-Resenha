@@ -1,5 +1,8 @@
 # Sources
 
+- IBGE Produção Agrícola Municipal, tabela SIDRA 5457: área colhida e quantidade produzida municipal do último ano publicado. Contexto estatístico somente; presença não significa aptidão. “Arroz (em casca)” e “Feijão (em grão)” não distinguem sistema ou espécie.
+- Embrapa Arroz e Feijão: páginas de ZARC para feijão-comum e arroz de terras altas, usadas como referência de identidade/escopo. Nenhum parâmetro numérico foi inferido.
+
 - NASA POWER Daily API: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
 - FAO-56: https://www.fao.org/4/X0490E/x0490e0b.htm — background only; ET0/ETc not calculated.
 - Local verified NASA Rio Verde fixture: `data/nasa-power-rio-verde.meta.json`.

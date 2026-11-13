@@ -5,7 +5,7 @@ import type { BrazilRegionalContext } from '@/lib/brazil/types';
 export type EvidenceStatus = 'supported' | 'partial' | 'insufficient_evidence' | 'unavailable';
 export type EvidenceIndicator = { id: 'temperature' | 'cycle' | 'soil_ph' | 'purpose'; label: string; value: string | null; status: EvidenceStatus; sourceRefs: string[]; explanation: string };
 export type CropCoverage = { crop: Crop; status: EvidenceStatus; indicators: EvidenceIndicator[]; warnings: string[]; missingEvidence: string[] };
-const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis'] as const;
+const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 
 function range(value: { min: number; max: number } | null, unit: string): string | null { return value ? `${value.min}–${value.max} ${unit}` : null; }
 

@@ -22,6 +22,12 @@ const cultureMap = new Map([
   ['Sorgo Granífero 2ª Safra', 'sorghum'],
   ['Girassol', 'sunflower'],
   ['Feijão Caupi', 'cowpea'],
+  ['Feijão 1ª Safra', 'common_bean'],
+  ['Feijão', 'common_bean'],
+  ['Feijão 2ª Safra', 'common_bean'],
+  ['Feijão 3ª Safra', 'common_bean'],
+  ['Arroz de Sequeiro', 'upland_rice'],
+  ['Arroz', 'upland_rice'],
 ]);
 
 function collectCoordinates(geometry) {
@@ -101,6 +107,7 @@ for await (const line of reader) {
   const at = (name) => row[header[name]] ?? '';
   const cropId = cultureMap.get(at('Nome_cultura'));
   if (!cropId) continue;
+  if (cropId === 'upland_rice' && at('Nome_Outros_Manejos') !== 'Sequeiro') continue;
   sourceSafras.add(`${at('SafraIni')}/${at('SafraFin')}`);
   const municipalityCode = at('geocodigo');
   if (!/^\d{7}$/.test(municipalityCode)) throw new Error(`Invalid ZARC municipality code: ${municipalityCode}`);

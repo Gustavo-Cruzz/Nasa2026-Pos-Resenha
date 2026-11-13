@@ -24,5 +24,8 @@ describe('Brazil municipal and ZARC context', () => {
     expect(context.municipalitySource?.version).toBe('2025');
     expect(context.municipalitySource?.sha256).toHaveLength(64);
     expect(context.zarc?.sha256).toHaveLength(64);
+    expect(context.pam?.year).toBe('2025');
+    expect(context.pam?.products.some((product) => product.productLabel === 'Soja (em grão)' && (product.harvestedAreaHa ?? 0) > 0)).toBe(true);
+    expect(context.pam?.products.find((product) => product.productLabel === 'Feijão (em grão)')?.caveat).toContain('não distingue');
   });
 });

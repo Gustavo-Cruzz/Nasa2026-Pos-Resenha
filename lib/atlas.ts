@@ -17,6 +17,7 @@ export const brazilRegionalContextSchema = z.object({
   municipality: z.object({ code: z.string().regex(/^\d{7}$/), name: z.string(), uf: z.string().length(2) }).nullable(),
   municipalitySource: z.object({ version: z.literal('2025'), url: z.string().url(), officialMeshUrl: z.string().url(), accessedAt: z.string(), referenceSystem: z.string(), sha256: z.string().length(64) }).nullable(),
   zarc: z.object({ safra: z.string(), sourceUrl: z.string().url(), dictionaryUrl: z.string().url(), accessedAt: z.string(), sha256: z.string().length(64), crops: z.record(z.string(), zarcCropContextSchema) }).nullable(),
+  pam: z.object({ year: z.string(), sourceUrl: z.string().url(), accessedAt: z.string(), sha256: z.string().length(64), caveat: z.string(), products: z.array(z.object({ productCode: z.string(), productLabel: z.string(), cropIds: z.array(z.string()), harvestedAreaHa: z.number().nullable(), producedQuantity: z.number().nullable(), productionUnit: z.string().nullable(), caveat: z.string().nullable() })) }).nullable(),
   gaps: z.array(z.string()),
 });
 export const regionalContextApiResponseSchema = z.discriminatedUnion('status', [

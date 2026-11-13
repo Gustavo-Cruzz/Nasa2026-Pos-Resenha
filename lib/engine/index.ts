@@ -5,9 +5,9 @@ import type { AnalysisResult, Explanation, IndicatorState, QualitativeIndicator,
 import { labPrimaryCrop, type LabPlan } from '@/lib/lab';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
 
-const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis'] as const;
+const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
-const EMPTY_REGIONAL_CONTEXT: BrazilRegionalContext = { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Regional context was not supplied to the pure engine.'] };
+const EMPTY_REGIONAL_CONTEXT: BrazilRegionalContext = { country: null, municipality: null, municipalitySource: null, zarc: null, pam: null, gaps: ['Regional context was not supplied to the pure engine.'] };
 export function validateInputs(input: unknown) { return analysisInputSchema.safeParse(input); }
 function cropName(crop: Crop): string { return crop.commonNames['pt-BR']; }
 function getCrop(id: string): Crop | undefined { return cropById.get(id as Crop['id']); }

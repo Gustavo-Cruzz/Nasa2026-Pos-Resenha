@@ -26,7 +26,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --quiet -- data/brazil-municipalities.json data/brazil-zarc-index.json; then
+          if git diff --quiet -- data/brazil-municipalities.json data/brazil-zarc-index.json data/brazil-pam-index.json; then
             echo "Official artifacts are unchanged."
             exit 0
           fi
@@ -34,7 +34,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add data/brazil-municipalities.json data/brazil-zarc-index.json
-          git commit -m "data: refresh Brazil municipal ZARC context"
+          git add data/brazil-municipalities.json data/brazil-zarc-index.json data/brazil-pam-index.json
+          git commit -m "data: refresh Brazil municipal context"
           git push origin "$branch"
-          gh pr create --base "${GITHUB_REF_NAME}" --head "$branch" --title "data: refresh Brazil municipal ZARC context" --body "Automated refresh from the latest official IBGE and MAPA sources. Source URLs, access dates and SHA-256 hashes are embedded in the artifacts. Review data diff and validation checks before merging."
+          gh pr create --base "${GITHUB_REF_NAME}" --head "$branch" --title "data: refresh Brazil municipal context" --body "Automated refresh from the latest official IBGE, SIDRA/PAM and MAPA sources. Source URLs, access dates and SHA-256 hashes are embedded in the artifacts. Review data diff and validation checks before merging."

@@ -1,7 +1,8 @@
 import municipalitiesData from '@/data/brazil-municipalities.json';
 import zarcData from '@/data/brazil-zarc-index.json';
+import pamData from '@/data/brazil-pam-index.json';
 import type { Coordinates } from '@/lib/schema';
-import type { BrazilRegionalContext, MunicipalityContext, ZarcCropContext } from '@/lib/brazil/types';
+import type { BrazilRegionalContext, MunicipalityContext, PamProductContext, ZarcCropContext } from '@/lib/brazil/types';
 
 type Position = [number, number];
 type Ring = Position[];
@@ -11,6 +12,8 @@ type MunicipalityRecord = MunicipalityContext & { bbox: [number, number, number,
 type ZarcIndexEntry = ZarcCropContext & { municipalityCode: string };
 const municipalityDocument = municipalitiesData as unknown as { source: { geometryUrl: string; officialMeshUrl: string; officialMeshSha256: string; accessedAt: string; referenceSystem: string }; municipalities: MunicipalityRecord[] };
 const zarcDocument = zarcData as unknown as { safra: string; source: { url: string; dictionaryUrl: string; accessedAt: string; sha256: string }; entries: ZarcIndexEntry[] };
+type PamIndexEntry = PamProductContext & { municipalityCode: string };
+const pamDocument = pamData as unknown as { year: string; caveat: string; source: { url: string; accessedAt: string; sha256: string }; entries: PamIndexEntry[] };
 
 const zarcByMunicipality = new Map<string, ZarcIndexEntry[]>();
 for (const entry of zarcDocument.entries) {
@@ -18,6 +21,8 @@ for (const entry of zarcDocument.entries) {
   entries.push(entry);
   zarcByMunicipality.set(entry.municipalityCode, entries);
 }
+const pamByMunicipality = new Map<string, PamIndexEntry[]>();
+for (const entry of pamDocument.entries) pamByMunicipality.set(entry.municipalityCode, [...(pamByMunicipality.get(entry.municipalityCode) ?? []), entry]);
 
 function onSegment(point: Position, start: Position, end: Position): boolean {
   const cross = (point[1] - start[1]) * (end[0] - start[0]) - (point[0] - start[0]) * (end[1] - start[1]);
@@ -54,8 +59,9 @@ export function resolveBrazilMunicipality(coordinates: Coordinates): Municipalit
 
 export function resolveBrazilRegionalContext(coordinates: Coordinates): BrazilRegionalContext {
   const municipality = resolveBrazilMunicipality(coordinates);
-  if (!municipality) return { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['A coordenada não foi associada a um município brasileiro na malha IBGE publicada.'] };
+  if (!municipality) return { country: null, municipality: null, municipalitySource: null, zarc: null, pam: null, gaps: ['A coordenada não foi associada a um município brasileiro na malha IBGE publicada.'] };
   const entries = zarcByMunicipality.get(municipality.code) ?? [];
+  const pamEntries = pamByMunicipality.get(municipality.code) ?? [];
   const crops = Object.fromEntries(entries.map((entry) => [entry.cropId, {
     cropId: entry.cropId,
     rowCount: entry.rowCount,
@@ -73,6 +79,7 @@ export function resolveBrazilRegionalContext(coordinates: Coordinates): BrazilRe
     municipality,
     municipalitySource: { version: '2025', url: municipalityDocument.source.geometryUrl, officialMeshUrl: municipalityDocument.source.officialMeshUrl, accessedAt: municipalityDocument.source.accessedAt, referenceSystem: municipalityDocument.source.referenceSystem, sha256: municipalityDocument.source.officialMeshSha256 },
     zarc: entries.length ? { safra: zarcDocument.safra, sourceUrl: zarcDocument.source.url, dictionaryUrl: zarcDocument.source.dictionaryUrl, accessedAt: zarcDocument.source.accessedAt, sha256: zarcDocument.source.sha256, crops } : null,
-    gaps: entries.length ? [] : ['O município foi identificado, mas não há registro das culturas P0 no índice ZARC desta safra.'],
+    pam: pamEntries.length ? { year: pamDocument.year, sourceUrl: pamDocument.source.url, accessedAt: pamDocument.source.accessedAt, sha256: pamDocument.source.sha256, caveat: pamDocument.caveat, products: pamEntries.map(({ municipalityCode: _municipalityCode, ...entry }) => entry) } : null,
+    gaps: [...(entries.length ? [] : ['O município foi identificado, mas não há registro das culturas P0 no índice ZARC desta safra.']), ...(pamEntries.length ? [] : ['Não há observação PAM positiva das culturas cobertas para este município e ano.'])],
   };
 }

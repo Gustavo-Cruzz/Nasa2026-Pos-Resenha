@@ -11,6 +11,7 @@ export type ZarcCropContext = {
   riskCodes: number[];
   decendiosWithRiskCode: number[];
 };
+export type PamProductContext = { productCode: string; productLabel: string; cropIds: string[]; harvestedAreaHa: number | null; producedQuantity: number | null; productionUnit: string | null; caveat: string | null };
 export type BrazilRegionalContext = {
   country: 'BR' | null;
   municipality: MunicipalityContext | null;
@@ -23,5 +24,6 @@ export type BrazilRegionalContext = {
     sha256: string;
     crops: Record<string, ZarcCropContext>;
   } | null;
+  pam: { year: string; sourceUrl: string; accessedAt: string; sha256: string; caveat: string; products: PamProductContext[] } | null;
   gaps: string[];
 };

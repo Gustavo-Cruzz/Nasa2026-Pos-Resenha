@@ -1,7 +1,7 @@
 {
   "version": 1,
   "pilot": "Rio Verde, GO",
-  "p0": ["soybean", "maize", "sorghum", "sunflower", "cowpea", "ruziziensis"],
+  "p0": ["soybean", "maize", "sorghum", "sunflower", "cowpea", "common_bean", "upland_rice", "ruziziensis"],
   "auditedPilotCandidates": ["soybean", "maize", "sunflower", "sorghum"],
   "displayOnly": ["cowpea", "ruziziensis", "cotton", "pigeon_pea"],
   "excludedFromMvpRecommendations": ["pearl_millet", "sunn_hemp"],

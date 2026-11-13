@@ -105,7 +105,7 @@ A linha de base é a **intenção de rotação atual do agricultor**. Se não in
 
 ## 3. Catálogo agronômico e fontes
 
-**10 espécies fixas:**
+**12 espécies catalogadas; 8 P0 no gerador Brasil 2:**
 
 | ID | Espécie | Nome comum | Prioridade |
 |---|---|---|---|
@@ -114,6 +114,8 @@ A linha de base é a **intenção de rotação atual do agricultor**. Se não in
 | `sorghum` | Sorghum bicolor | sorgo granífero | P0 |
 | `sunflower` | Helianthus annuus | girassol | P0 |
 | `cowpea` | Vigna unguiculata | feijão-caupi | P0 |
+| `common_bean` | Phaseolus vulgaris | feijão-comum | P0 |
+| `upland_rice` | Oryza sativa | arroz de terras altas | P0 |
 | `pearl_millet` | Cenchrus americanus (sin. Pennisetum glaucum) | milheto | deferred |
 | `ruziziensis` | Urochloa ruziziensis | braquiária-ruziziensis | P0 |
 | `sunn_hemp` | Crotalaria juncea | crotalária-júncea | deferred |
@@ -122,7 +124,7 @@ A linha de base é a **intenção de rotação atual do agricultor**. Se não in
 
 **Cada registro:** `id`, `commonNames`, `scientificName`, `family`, `purposes[]`, `commercial`, `cycleDaysRange`, `idealTempC`, `viableTempC`, `soilPhRange`, `kcStages`, `residuePotential`, `nitrogenFixationPotential`, `rootingClass`, `regionalWindows[]`, `knownRisks[]`, `sourceRefs[]`, `parameterStatus` (`verified | provisional | missing`). Propriedades agronômicas com valores não disponíveis devem ficar `null` e ter fonte ausente, não defaults de conveniência. Não atribuir `Kc`, tolerância ou calendário por dedução de LLM sem documento científico verificável. Resolver sinônimos científicos via nomes estáveis.
 
-**Para P0:** fichas científicas de seis culturas: soja, milho, sorgo granífero, girassol, feijão-caupi e *Urochloa ruziziensis*. Milheto e crotalária-júncea permanecem no catálogo/arte para versões futuras, mas ficam excluídos da pesquisa prioritária e das recomendações MVP. Evidência de outra localidade brasileira deve conservar sua localização e não validar calendário de Rio Verde. **Para P1:** algodão e guandu podem ser mostrados no catálogo, mas desativados para recomendação se calendário/parâmetros ainda não forem validados.
+**Para P0:** oito culturas: soja, milho, sorgo granífero, girassol, feijão-caupi, feijão-comum, arroz de terras altas e *Urochloa ruziziensis*. Arroz de terras altas não representa arroz irrigado. PAM é somente observação estatística municipal; seus agregados “arroz em casca” e “feijão em grão” não distinguem sistemas ou espécies e nunca alteram seleção, compatibilidade ou nível de evidência. Milheto e crotalária-júncea permanecem fora do gerador. **Para P1:** algodão e guandu permanecem informativos.
 
 **Solo:** `SoilProfile` com pH, areia/silte/argila e SOC opcionais + `origin`, `depthCm`, `observedAt`, `sourceRef`. A API REST SoilGrids está pausada; dados regionais são arquivos pré-processados **somente quando realmente obtidos**, com licença CC BY 4.0 e metadados; se não, usar apenas preenchimento manual e `unknown`. Nunca inventar dados regionais.
 

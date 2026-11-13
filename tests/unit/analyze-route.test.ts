@@ -11,7 +11,7 @@ const valid = { location: { latitude: 0, longitude: 0 }, plantingMonth: 7, histo
 describe('POST /api/analyze', () => {
   it('preserves three global scenarios when NASA climate is unavailable', async () => {
     mocks.resolveClimateContext.mockResolvedValue(unavailableClimate);
-    mocks.resolveBrazilRegionalContext.mockReturnValue({ country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Outside Brazil'] });
+    mocks.resolveBrazilRegionalContext.mockReturnValue({ country: null, municipality: null, municipalitySource: null, zarc: null, pam: null, gaps: ['Outside Brazil'] });
     const response = await POST(new Request('http://localhost/api/analyze', { method: 'POST', body: JSON.stringify(valid) }) as never);
     const body = await response.json() as { strategies: unknown[]; climate: ClimateContext };
     expect(response.status).toBe(200);

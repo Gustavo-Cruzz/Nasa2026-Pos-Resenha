@@ -46,6 +46,14 @@ async function runBuild(paths, sourceUrl) {
   });
 }
 
+async function runPamBuild() {
+  await new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, ['scripts/update-brazil-pam.mjs'], { cwd: process.cwd(), stdio: 'inherit' });
+    child.on('exit', (code) => code === 0 ? resolve() : reject(new Error(`PAM builder exited with code ${code}`)));
+    child.on('error', reject);
+  });
+}
+
 const directory = await mkdtemp(join(tmpdir(), 'field-shift-brazil-'));
 try {
   const metadata = await checkedFetch(ckanUrl).then((response) => response.json());
@@ -54,6 +62,7 @@ try {
   const paths = { geometry: join(directory, 'municipalities.json'), localities: join(directory, 'localities.json'), zarc: join(directory, 'zarc.csv') };
   await Promise.all([download(geometryUrl, paths.geometry), download(localityUrl, paths.localities), download(resource.url, paths.zarc)]);
   await runBuild(paths, resource.url);
+  await runPamBuild();
   console.log(JSON.stringify({ updatedAt: accessedAt, resource: resource.name, sourceUrl: resource.url }, null, 2));
 } finally {
   await rm(directory, { recursive: true, force: true });

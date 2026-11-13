@@ -14,6 +14,7 @@
     "test:e2e": "playwright test",
     "build:brazil-context": "node scripts/build-brazil-context.mjs",
     "update:brazil-context": "node scripts/update-brazil-context.mjs",
+    "update:brazil-pam": "node scripts/update-brazil-pam.mjs",
     "fetch:nasa-fixture": "node --experimental-strip-types scripts/fetch-nasa-fixture.ts"
   },
   "dependencies": {

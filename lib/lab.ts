@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import type { AnalysisInput } from '@/lib/schema';
 
-export const LAB_CROP_IDS = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'ruziziensis'] as const;
+export const LAB_CROP_IDS = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 export type LabCropId = typeof LAB_CROP_IDS[number];
 const slotSchema = z.object({ year: z.union([z.literal(1), z.literal(2)]), season: z.union([z.literal('A'), z.literal('B')]), cropId: z.enum(LAB_CROP_IDS).nullable() });
 const scenarioSchema = z.object({ id: z.union([z.literal('A'), z.literal('B'), z.literal('C')]), title: z.string().min(1), slots: z.array(slotSchema).length(4) });
