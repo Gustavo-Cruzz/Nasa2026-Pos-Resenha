@@ -26,7 +26,7 @@ export function evidenceCoverageAssessment(location: Coordinates | null, cropId:
     { id: 'purpose', label: 'Finalidades catalogadas', value: crop.purposes.join(', '), status: 'partial', sourceRefs: reference, explanation: 'Finalidade catalogada não equivale a adequação local.' },
   ];
   const missingEvidence = [...new Set(indicators.filter((indicator) => indicator.status === 'insufficient_evidence').map((indicator) => indicator.id))];
-  return { crop, status, indicators, warnings: [contextualZarc ? 'ZARC de Rio Verde está disponível como contexto regional; seus códigos brutos não são percentuais.' : 'Não há calendário ou regra agronômica local aplicável a esta coordenada.'], missingEvidence };
+  return { crop, status, indicators, warnings: [contextualZarc ? 'ZARC de Rio Verde está disponível como contexto regional; seus códigos brutos não são percentuais.' : 'Há fontes brasileiras no catálogo. Não há calendário ou regra agronômica local aplicável a esta coordenada.'], missingEvidence };
 }
 
 export function p0CropCoverage(location: Coordinates | null): CropCoverage[] { return P0.map((cropId) => evidenceCoverageAssessment(location, cropId)); }

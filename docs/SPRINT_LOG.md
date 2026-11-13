@@ -1,5 +1,15 @@
 # Sprint log
 
+## U1 — Fluxo responsivo e contexto Brasil
+
+Status: complete.
+
+Implemented: replaced the invalid “validated locally” promise with global exploration contextualized by Brazilian sources, while preserving Rio Verde ZARC as exact-pilot regional evidence only. Added a clearly fictional one-click Brazil demo, consistent desktop/mobile navigation, localized journey labels, compact expandable farm history, explicit draft status, reusable crop sprites, distinct A/B/C crops when evidence permits, mobile comparison tabs, collapsible laboratory editing and a final decision-handoff summary. Raw validation IDs and missing-data tokens now have human-readable labels.
+
+Evidence (2026-11-12): `npm run lint`, `npm run typecheck`, `npm run test` (35 unit tests), `npm run build`, and `npm run test:e2e` (13 Playwright tests) passed. E2E covers the mobile menu, one-click demo, compact farm validation, keyboard laboratory editing, NASA failure, provenance and mobile A/B/C comparison. Final rendered-screen review covered home, farm, laboratory and results at 390 px and 1440 px; the six-pillar re-audit scored 23/24.
+
+Limitations / next: Brazilian provenance is not national agronomic applicability; the regional ZARC package remains restricted to the exact Rio Verde pilot coordinate, and `locally_validated` remains unavailable. A truly immersive final art direction still depends on an intentional terrain/farm-state asset pack; sprites support crop recognition but do not replace field-state visuals. No scientific measurement, calendar or suitability rule was added.
+
 ## R1 — Revisão de UX, valor e estratégia de competição
 
 Status: complete — audit only; no runtime behavior changed.

@@ -1,9 +1,9 @@
 # Demo
 
-1. Open Explore; select Rio Verde.
-2. Enter three historical crops and optional soil.
-3. Select one planting month; explain it is a common historical climate window, not a calendar prescription.
-4. Open Laboratory; show the three A/B/C boards, choose a P0 crop in a slot, and point out that Season A/B is not a regional calendar.
-5. Open Results; compare global A/B/C in the horizontal criteria table, then open scenario sources and explanations.
-6. Explain Rio Verde ZARC adds regional context only; it is not field validation and raw codes are not percentages.
-7. State: no forecast, yield, NPK, irrigation prescription, aggregate ranking, or field validation.
+1. On the home page, use “Ver demonstração do Brasil”; explain that the prefilled farm is fictional and exists only to shorten the demo.
+2. Show the compact journey menu and the prefilled historical crops, priorities and common planting month.
+3. Explain that the planting month is a shared historical climate window, not a calendar prescription.
+4. Open Laboratory; switch between the A/B/C tabs on mobile, inspect the distinct crop hypotheses and expand the four neutral slots only if editing is needed.
+5. Open Results; compare A/B/C through mobile tabs or the desktop criteria table, then open scenario sources and explanations.
+6. Explain that Brazilian sources contextualize the catalog, while Rio Verde ZARC adds regional context only at the pilot coordinate; neither is field validation or a national suitability rule, and raw codes are not percentages.
+7. End with the decision handoff: what is known, what remains unknown and what should be reviewed with technical assistance. State: no forecast, yield, NPK, irrigation prescription, aggregate ranking, or field validation.

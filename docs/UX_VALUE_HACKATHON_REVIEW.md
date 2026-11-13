@@ -1,5 +1,7 @@
 # Field Shift — revisão de UX, valor ao produtor e estratégia NASA Space Apps
 
+> Atualização de implementação (2026-11-12): os defeitos prioritários deste relatório foram tratados no sprint U1. A reavaliação visual está em `UI-REVIEW.md` e alcançou 23/24; o ponto restante depende de direção de arte e assets de terreno/estado, não de repetir sprites de culturas.
+
 Data: 2026-11-12  
 Escopo: estado atual de `main` (`3652658`), comparação com o fluxo anterior a P0 (`ceb05f8`), inspeção visual local em 1440 px e 390 px, contratos científicos, testes e documentação.
 

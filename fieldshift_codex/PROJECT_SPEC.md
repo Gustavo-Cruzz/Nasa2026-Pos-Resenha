@@ -9,9 +9,9 @@
 
 **Produto:** web app gamificado, responsivo e bilíngue (pt-BR/en) que recebe localização, três cultivos recentes e dados opcionais do solo, consulta/sumariza dados históricos reais da NASA e compara **três estratégias de rotação** para os próximos 24 meses (incluindo linha de base), exibindo benefícios potenciais, limitações e evidências.
 
-**Proposta de valor:** “Built for the world. Validated locally. Powered by NASA.”
+**Proposta de valor:** “Built for the world. Contextualized with Brazilian sources. Powered by NASA.”
 
-**Regra geográfica (atualização exploratória):** análise por coordenadas globais sempre retorna três cenários exploratórios, sem alegação de recomendação agronômica. Rio Verde (GO) pode acrescentar contexto regional ZARC; isto é `regionally_contextualized`, nunca `locally_validated`. O último nível exige futura validação humana/campo rastreável. O piloto é escolhido em opção explícita, sem alegar identificação automática de divisa municipal.
+**Regra geográfica (atualização exploratória):** análise por coordenadas globais sempre retorna três cenários exploratórios, sem alegação de recomendação agronômica. O catálogo pode reunir fontes brasileiras, mas isso não estabelece aplicabilidade nacional. Somente a coordenada exata do piloto de Rio Verde (GO) pode acrescentar o contexto regional ZARC disponível; isto é `regionally_contextualized`, nunca `locally_validated`. O último nível exige futura validação humana/campo rastreável. O piloto é escolhido em opção explícita, sem alegar identificação automática de divisa municipal.
 
 **O que a aplicação NÃO faz:** previsão meteorológica, previsão precisa de produtividade, cálculo quantitativo de variação de NPK/SOC, prescrição agronômica, recomendação fitossanitária universal, previsão de preço, identificação da condição real de cada talhão por uma grade climática regional.
 

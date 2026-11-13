@@ -14,6 +14,17 @@ test('navigates from home to the global atlas with coordinate fallback', async (
   await expect(page.getByRole('img', { name: /Mapa mundial indisponível sem estilo autorizado/ })).toBeVisible();
 });
 
+test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByText('Menu', { exact: true }).click();
+  await expect(page.getByRole('navigation', { name: 'Navegação principal' }).getByRole('link', { name: 'Explorar' })).toBeVisible();
+  await page.getByRole('button', { name: 'Ver demonstração Brasil' }).click();
+  await expect(page).toHaveURL(/\/results\?demo=brasil/);
+  await expect(page.getByText('Demonstração Brasil', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Leve esta conversa adiante' })).toBeVisible();
+});
+
 test('persists a real English language selection for landing and methodology', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Idioma').selectOption('en');
@@ -99,12 +110,13 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await installDraft(page);
   await page.goto('/lab');
   await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
+  await page.getByText('Editar sequência de 4 slots').first().click();
   const choose = page.getByRole('button', { name: 'Escolher cultura' }).nth(1);
   await choose.focus();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('dialog', { name: 'Escolher cultura para slot' })).toBeVisible();
   await page.getByRole('button', { name: /feijão-caupi/i }).click();
-  await expect(page.getByLabel('Três cenários do laboratório').getByText('feijão-caupi')).toBeVisible();
+  await expect(page.locator('.field-slot-updated')).toContainText('feijão-caupi');
   await expect(page.locator('.field-slot-updated')).toBeVisible();
   await expect(page.getByText(/sem score agregado, ciclo ou janela local/i)).toHaveCount(3);
 });
@@ -112,8 +124,8 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
 test('blocks overlapping timeline dates and allows another crop entry', async ({ page }) => {
   await installDraft(page);
   await page.goto('/farm');
-  await page.getByLabel('Outra cultura do evento 2').isHidden().catch(() => undefined);
-  await page.getByText('Outra cultura', { exact: true }).nth(1).click();
+  await page.getByRole('button', { name: /2\. milho/ }).click();
+  await page.getByText('Outra cultura', { exact: true }).click();
   await page.getByLabel('Outra cultura do evento 2').fill('mandioca');
   await page.getByLabel('Início (mês/ano) do evento 2').fill('2023-05');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
@@ -123,22 +135,14 @@ test('blocks overlapping timeline dates and allows another crop entry', async ({
 
 test('explains invalid month fields and confirms a save without navigating away', async ({ page }) => {
   await installDraft(page);
-  await page.addInitScript(() => {
-    const saved = JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}');
-    saved.data.history[1].startYearMonth = '';
-    window.localStorage.setItem('field-shift:draft', JSON.stringify(saved));
-  });
   await page.goto('/farm');
+  await page.getByRole('button', { name: /2\. milho/ }).click();
   const start = page.getByLabel('Início (mês/ano) do evento 2');
+  await start.fill('');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
   await expect(start).toHaveAttribute('aria-invalid', 'true');
   await expect(page.getByText('Informe mês e ano, por exemplo 2024-06.').first()).toBeVisible();
-  await page.getByLabel('Início (mês/ano) do evento 1').fill('2023-01');
-  await page.getByLabel('Fim (mês/ano) do evento 1').fill('2023-06');
   await start.fill('2023-07');
-  await page.getByLabel('Fim (mês/ano) do evento 2').fill('2023-12');
-  await page.getByLabel('Início (mês/ano) do evento 3').fill('2024-01');
-  await page.getByLabel('Fim (mês/ano) do evento 3').fill('2024-06');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
   await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo às');
   await expect(page).toHaveURL(/\/farm$/);
@@ -150,20 +154,20 @@ test('shows three stacked global scenarios and unknown climate after NASA failur
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/results');
   await expect(page.getByText('Indisponível: cenários preservados com métricas climáticas desconhecidas.')).toBeVisible();
-  const headings = page.getByRole('heading', { name: /Cenário [ABC]/ });
+  const headings = page.getByLabel('Estratégias exploratórias').getByRole('heading', { name: /Cenário [ABC]/ });
   await expect(headings).toHaveCount(3);
   const y = await headings.evaluateAll((items) => items.map((item) => item.getBoundingClientRect().y));
   expect(y[0]).toBeLessThan(y[1]);
   expect(y[1]).toBeLessThan(y[2]);
 });
 
-test('keeps the comparison table scrollable on a 375px viewport', async ({ page }) => {
+test('compares scenarios with mobile tabs on a 375px viewport', async ({ page }) => {
   await installDraft(page);
   await page.setViewportSize({ width: 375, height: 844 });
   await page.goto('/results');
-  const table = page.getByRole('table');
-  await expect(table).toBeVisible();
-  const scrolls = await table.evaluate((element) => element.parentElement!.scrollWidth > element.parentElement!.clientWidth);
-  expect(scrolls).toBe(true);
+  await expect(page.getByRole('tab', { name: 'Cenário A' })).toHaveAttribute('aria-selected', 'true');
+  await page.getByRole('tab', { name: 'Cenário B' }).click();
+  await expect(page.getByRole('tab', { name: 'Cenário B' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tabpanel').getByRole('heading', { name: /B\./ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Voltar ao laboratório' })).toBeVisible();
 });
