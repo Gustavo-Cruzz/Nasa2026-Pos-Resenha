@@ -101,6 +101,8 @@ A linha de base é a **intenção de rotação atual do agricultor**. Se não in
 - Modal detalhado: parâmetros, fonte, unidade, janelas, compatibilidade local e `unknown` quando não houver dado.
 - Comparação: três colunas (desktop), cartões empilhados (mobile), timeline dos dois anos, barras individuais (sem esconder trade-offs em nota única), botão “Por que?”.
 - NASA Insight: ligar uma observação histórica mensal a regras térmicas documentadas e aos estados A/B/C. Se não houver contraste ou evidência suficiente, declarar isso explicitamente. A exploração de outro mês nunca troca culturas, prioridades ou dados salvos; precipitação histórica nunca vira demanda hídrica.
+- Laboratório: avaliar cada slot com as mesmas regras puras do resultado, comparar família somente com o predecessor imediato e manter lacunas como `unknown`. Toda edição mostra delta antes/depois, lacunas persistentes, ação de desfazer e acesso à evidência filtrada; não classificar mudanças como melhora/piora.
+- Centro de Evidências: um manifesto estruturado e compacto reúne camadas NASA, produtor, catálogo e contexto regional, claims rastreáveis, lacunas e limites. Evitar badges repetidos; contagens de fontes/lacunas não são notas de confiança.
 - Legendas que separem claramente **observação NASA**, **estimativa de solo** e **inferência baseada em regras**.
 - `pt-BR` padrão, troca para `en`, sem textos hardcoded fora do dicionário; WCAG básico, navegação teclado, loading/empty/error states, reduced motion.
 

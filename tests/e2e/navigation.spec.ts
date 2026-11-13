@@ -116,6 +116,13 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await expect(page.getByRole('heading', { name: 'NASA Insight' })).toBeVisible();
   await page.getByLabel('Mês explorado').selectOption('5');
   await expect(page.getByText(/trocar o mês aqui não altera culturas/i)).toBeVisible();
+  const evidenceTrigger = page.getByRole('button', { name: /Evidências ·/ });
+  await evidenceTrigger.click();
+  await expect(page.getByRole('dialog', { name: 'Centro de Evidências' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Camadas de dados' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: 'Centro de Evidências' })).toHaveCount(0);
+  await expect(evidenceTrigger).toBeFocused();
   await page.getByText('Proveniência climática').click();
   await expect(page.getByText('NASA POWER:', { exact: false })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Editar linha de base' })).toBeVisible();
@@ -142,10 +149,11 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
   await page.getByLabel('Cultura planejada').selectOption('sunflower');
   await page.getByRole('button', { name: 'Salvar e ir ao laboratório' }).click();
   await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
-  await expect(page.getByRole('status')).toContainText('Rascunho da fazenda salvo');
+  await expect(page.getByRole('status').filter({ hasText: 'Rascunho da fazenda salvo' })).toBeVisible();
   await page.getByRole('link', { name: 'Revisar comparação' }).click();
   await expect(page.getByRole('heading', { name: 'Plano do produtor' })).toBeVisible();
   await expect(page.getByRole('article').filter({ hasText: 'Plano do produtor' })).toContainText('girassol');
+  await expect(page.getByLabel('Sequência do cenário A')).toBeVisible();
 });
 
 test('migrates a V1 draft on the farm timeline and preserves its data at 375px', async ({ page }) => {
@@ -164,6 +172,7 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await installDraft(page);
   await page.goto('/lab');
   await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Evidências ·/ })).toBeVisible();
   await page.getByText('Editar sequência de 4 slots').first().click();
   const choose = page.getByRole('button', { name: 'Escolher cultura' }).nth(1);
   await choose.focus();
@@ -171,7 +180,15 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await expect(page.getByRole('dialog', { name: 'Escolher cultura para slot' })).toBeVisible();
   await page.getByRole('button', { name: /feijão-caupi/i }).click();
   await expect(page.locator('.field-slot-updated')).toContainText('feijão-caupi');
-  await expect(page.locator('.field-slot-updated')).toBeVisible();
+  await expect(page.getByRole('status', { name: 'Efeito da alteração do slot' })).toContainText(/Mudou|permaneceram iguais/);
+  await page.getByRole('button', { name: 'Ver evidências' }).click();
+  const evidence = page.getByRole('dialog', { name: 'Centro de Evidências' });
+  await expect(evidence).toBeVisible();
+  await expect(evidence.getByText(/cenário A, slot 3/i).first()).toBeVisible();
+  await page.getByRole('button', { name: 'Fechar evidências' }).click();
+  await page.getByRole('button', { name: 'Desfazer' }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Última alteração desfeita.' })).toBeVisible();
+  await expect(page.locator('.field-slot-updated')).toHaveCount(0);
   await expect(page.getByLabel('Três cenários do laboratório').getByRole('tabpanel')).toHaveCount(3);
 });
 

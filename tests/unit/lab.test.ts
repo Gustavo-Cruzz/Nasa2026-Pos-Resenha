@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { analyze } from '@/lib/engine';
 import { changeLabSlot, createLabPlan } from '@/lib/lab';
+import { assessLabPlan } from '@/lib/lab/assessment';
+import { diffLabSlot } from '@/lib/lab/diff';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { AnalysisInput } from '@/lib/schema';
 
@@ -18,7 +20,28 @@ describe('laboratory plan', () => {
     const plan = changeLabSlot(createLabPlan(base, ['soybean', 'sorghum', 'sorghum']), 'B', 1, 'cowpea');
     const result = analyze(base, unavailable, plan);
     expect(result.strategies[1]?.proposedCrop?.cropId).toBe('sorghum');
+    expect(result.strategies[1]?.slots).toHaveLength(4);
+    expect(result.strategies[1]?.configuredSlots).toBe(2);
     expect(result.strategies[1]?.missingData).toContain('unconfigured_lab_slots');
     expect('score' in result.strategies[1]!).toBe(false);
+  });
+  it('evaluates each slot against only its immediate predecessor and preserves gaps', () => {
+    let plan = createLabPlan(base, ['soybean', 'sorghum', 'cowpea']);
+    plan = changeLabSlot(plan, 'B', 2, 'cowpea');
+    const slots = assessLabPlan(base, plan, unavailable).filter((slot) => slot.scenarioId === 'B');
+    expect(slots[0].previousCropId).toBe('soybean');
+    expect(slots[0].indicators.find((item) => item.id === 'functional_diversity')?.state).toBe('compatible');
+    expect(slots[2].previousCropId).toBeNull();
+    expect(slots[2].indicators.find((item) => item.id === 'functional_diversity')?.state).toBe('unknown');
+  });
+  it('returns an honest before/after delta without calling changes improvements', () => {
+    const beforePlan = createLabPlan(base, ['soybean', 'sorghum', 'cowpea']);
+    const afterPlan = changeLabSlot(beforePlan, 'B', 1, 'cowpea');
+    const before = assessLabPlan(base, beforePlan, unavailable).find((slot) => slot.scenarioId === 'B' && slot.slotIndex === 1)!;
+    const after = assessLabPlan(base, afterPlan, unavailable).find((slot) => slot.scenarioId === 'B' && slot.slotIndex === 1)!;
+    const delta = diffLabSlot(before, after);
+    expect(delta.nextCropId).toBe('cowpea');
+    expect(delta.changes.some((change) => change.indicator === 'cover_potential' && change.before === 'unknown' && change.after === 'yes')).toBe(true);
+    expect(JSON.stringify(delta)).not.toMatch(/improved|worse|score/i);
   });
 });

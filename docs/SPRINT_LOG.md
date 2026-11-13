@@ -356,6 +356,22 @@ Evidence (2026-11-13): `npm run lint`, `npm run typecheck`, `npm run test` (52 u
 
 Limitations / next: NASA Insight compares monthly median daily temperature with documented crop ranges; it is not causal inference, a forecast, or field validation. It does not use precipitation to judge crops. Future refinement may add historical distribution bands only after their semantics and labels are documented.
 
+## LE-1 — Feedback imediato e Centro de Evidências
+
+Status: complete.
+
+Implemented: extracted the qualitative crop indicators into one pure shared function and added per-slot assessments for all A/B/C laboratory sequences. Slot 1 compares family with the last historical event; later slots use only the immediate predecessor, so an empty predecessor remains `unknown`. Results now expose all four neutral slots and configured-slot count while retaining the first configured crop only as a visual summary.
+
+Implemented: the laboratory obtains analysis context once, then recomputes edits locally with the same engine. Each change shows a compact before/after delta, up to three changed indicators, persistent evidence gaps, a filtered evidence action and one-step undo. No change is called better/worse and no score, ranking or new NASA request is introduced.
+
+Implemented: added an API-authored evidence manifest and responsive Evidence Center drawer/bottom sheet. It deduplicates NASA, farmer, catalog and ZARC/IBGE layers; traces summary and slot claims to rule/source IDs; groups gaps; exposes guardrails; supports scenario/slot/indicator filtering; traps keyboard focus, closes with Escape and restores focus. Repeated evidence badges remain absent.
+
+Tests added: immediate-predecessor semantics, gap preservation, before/after delta without improvement language, source deduplication, claim traceability, guardrails, filtered drawer, undo, focus restoration and matching four-slot results.
+
+Evidence (2026-11-13): `npm run lint`, `npm run typecheck`, `npm run test` (55 unit tests), `npm run build`, and `npm run test:e2e` (17 Playwright tests) passed. Browser coverage verifies immediate feedback, filtered evidence, one-step undo, Escape close, focus restoration and the results Evidence Center. React review found and corrected one render-time ref mutation before the final green lint.
+
+Limitations / next: slot assessment remains exploratory and uses one common planting-month climate window; neutral seasons are not an agricultural calendar. Source/gap counts are navigation summaries, never confidence scores. Full core-flow English translation remains broader than this sprint.
+
 ## P1 — Internacionalização e entrega operacional
 
 Status: partial — local implementation complete; external credentials/evidence required.
