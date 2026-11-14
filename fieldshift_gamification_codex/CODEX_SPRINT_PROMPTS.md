@@ -10,7 +10,7 @@ Leia `GAMIFICATION_SPEC.md`, `UX_WIREFRAMES.md`, os documentos atuais do projeto
 Inspecione rotas, componentes, modelos, dados, schemas, APIs e testes existentes. Localize todos os condicionais que restringem localização a Rio Verde/GO e a lógica que pressupõe estação brasileira. Produza `docs/GAMIFICATION_MIGRATION.md` com arquivos a mudar, riscos, decisão de biblioteca de mapas, migração de `localStorage`, cobertura de evidência e plano de testes. Não redesenhe todo o app ainda. Rode validações disponíveis.
 
 ## G1 — Atlas
-Implemente `/explore` com mapa global MapLibre (ou alternativa compatível aprovada), pin click/drag, lat/lon, botão exemplo Rio Verde, painel lateral com dados climáticos NASA existentes, loading/erro, fallback sem tiles. Não ative heatmap sem dataset geoespacial real. Não crie bloqueio fora do Brasil. Valide seleção por coordenadas de Brasil, Gana e Índia; liste resultados e testes.
+Implemente `/explore` com mapa nacional MapLibre (ou alternativa compatível aprovada), pin click/drag, lat/lon, botão exemplo Rio Verde, painel lateral com dados climáticos NASA existentes, loading/erro, fallback sem tiles. Não ative heatmap sem dataset geoespacial real. Valide seleção por coordenadas de municípios em diferentes UFs brasileiras; liste resultados e testes.
 
 ## G2 — Deck contextualizado
 Implemente `CropCard`, `CropDeck`, `CropDetailDrawer` e `EvidenceStatus`; use seis P0 e sprites disponíveis; preserve as P1 como informativas se já existirem. Mostre indicadores comprovados com fonte, outros como N/D; não classifique cultura como boa para região sem regra aplicável. Integre ao painel da localização. Teste keyboard/mobile, estados e links de fonte.
@@ -22,4 +22,4 @@ Reaproveite o estado e validações de formulário para construir `/farm` com um
 Implemente `/lab` com três cenários (baseline + 2 alternativas), 2 anos e temporadas configuráveis; deck para seleção por modal acessível. Reuse engine atual; adaptações com testes para `supported`/`partial`/`insufficient_evidence`. Respeite eventos de manejo e regras de consórcio. Sem DnD obrigatório. Não gere três rotações fictícias para satisfazer UX.
 
 ## G5 — Resultados/QA
-Implemente `/results` com comparação dos indicadores disponíveis, explicação, riscos, fontes e pesos. Quando dados faltarem, remover ranking agregado e exibir comparação parcial. Ajuste landing, navegação, i18n, mobile e metodologia. Rode lint, typecheck, unit, Playwright e build. Documente decisões e capturas de tela. Não afirme que o produto recomenda globalmente sem evidência.
+Implemente `/results` com comparação dos indicadores disponíveis, explicação, riscos, fontes e pesos. Quando dados faltarem, remover ranking agregado e exibir comparação parcial. Ajuste landing, navegação, i18n, mobile e metodologia. Rode lint, typecheck, unit, Playwright e build. Documente decisões e capturas de tela. Não afirme que o produto recomenda qualquer talhão brasileiro sem evidência aplicável.

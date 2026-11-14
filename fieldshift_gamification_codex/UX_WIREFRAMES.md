@@ -8,7 +8,7 @@ Versão 2.0 | Layouts conceituais, não imagens finais. Todos os valores abaixo 
 [Landing / Iniciar exploração]
        |
        v
-[ATLAS GLOBAL /explore] -- clicar no mapa --> [PIN + PAINEL REGIONAL]
+[ATLAS BRASIL /explore] -- clicar no mapa --> [PIN + PAINEL REGIONAL]
        |                                      |
        |                                      +-- [Carta de cultura] --> [Ficha detalhada]
        v
@@ -38,13 +38,13 @@ Todos os passos podem ser revisitados sem perder os dados. Nenhum ponto do mapa 
 |  [ EXPLORAR O MAPA ]      [ TESTAR EXEMPLO: RIO VERDE ]                             |
 |                                                                                    |
 |  [mini visuais de culturas pixel art]                                              |
-|  Clima global  •  Diferentes estratégias  •  Incerteza explícita                   |
+|  Clima no Brasil  •  Diferentes estratégias  •  Incerteza explícita                |
 +------------------------------------------------------------------------------------+
 ```
 
-**Ações:** clicar mapa abre `/explore`; exemplo preenche somente localização demonstrativa; não afirma validação global.
+**Ações:** clicar mapa abre `/explore`; exemplo preenche somente localização demonstrativa; não afirma validação de talhão no Brasil.
 
-## III. Tela 1 — Atlas global /explore
+## III. Tela 1 — Atlas Brasil /explore
 
 ```text
 +------------------------------------------------------------------------------------+
@@ -286,7 +286,7 @@ Na comparação usar seletor de estratégia, mas garantir ação de contraste `C
 ## XII. Testes de experiência (cenários E2E)
 
 1. Seleção no Brasil: selecionar Rio Verde por botão; pin e painel aparecem; usar como exemplo, não padrão obrigatório.
-2. Seleção fora do Brasil: clicar em Gana ou Índia; coordenadas persistem; retorno NASA quando disponível; cartas mostram status certo sem extrapolar ZARC brasileiro.
+2. Seleção em UFs distintas: coordenadas persistem; o retorno NASA e o contexto municipal são resolvidos independentemente, sem extrapolar ZARC, solo ou artefato de uma UF para outra.
 3. Seleção remota: coordenadas digitadas; funciona sem interagir com tiles.
 4. Oceano: informa que o ponto não corresponde a área agrícola terrestre; sem roteiros de rotação.
 5. NASA indisponível: erro, retry, sem falso indicador.

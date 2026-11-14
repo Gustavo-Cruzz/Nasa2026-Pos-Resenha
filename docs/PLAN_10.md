@@ -1,5 +1,7 @@
 # Plano de implementação — Field Shift rumo a 10
 
+> Historical implementation plan. The current product scope is Brazil nationwide; no local plan artifact is generalized beyond its stated evidence.
+
 Base: avaliação externa (a NASA não diferencia os cenários, leitura só qualitativa, campos vazios, sem sliders nem vulnerabilidade). Decisões aprovadas em 2026-11-14: (1) liberar ET0 como indicador **climático** (P − ET0), (2) NDVI MODIS numérico, (3) SMAP numérico continua fora (exige Earthdata autenticado).
 
 ## Ajuste de escopo (descoberto na investigação)

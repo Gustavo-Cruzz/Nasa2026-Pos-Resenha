@@ -1,5 +1,11 @@
 # Decisions
 
+## Brazil nationwide scope — 2026-11-14
+
+- The product's agronomic/regional scope is Brazil nationwide, not Goiás or the Rio Verde demonstration. The versioned IBGE municipal mesh and MAPA ZARC index remain the national regional-context boundary.
+- Rio Verde remains a reproducible example and the first verified SoilGrids artifact, not a geographical gate. A partial UF batch only makes its listed artifacts available; every unprocessed Brazilian coordinate remains `unknown`.
+- Global NASA exploration is technically retained but is outside the Brazilian product promise and does not acquire Brazilian crop, soil or municipal context outside the country.
+
 ## S0 — 2026-11-12
 
 - The initial product scope contains navigation and domain contracts only. No crop parameter, regional rule, climate fixture, score, or recommendation is introduced before its assigned sprint.

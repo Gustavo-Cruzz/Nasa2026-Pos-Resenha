@@ -1,5 +1,15 @@
 # Sprint log
 
+## Scope F9 — Brasil nacional
+
+Status: complete — documentation and product-contract scope updated.
+
+Implemented: changed the active project, agent, product, data, methodology, validation, demo and gamification documentation from a GO/Rio Verde pilot framing to Brazil nationwide. Rio Verde remains a reproducible example and exact-coordinate fixture, while the existing IBGE/ZARC municipal context is the national boundary. State-organized SoilGrids batches remain partial until their exact points or native-grid tiles have been processed and verified.
+
+Guardrails: national product scope does not make every Brazilian coordinate regionally evidenced, locally validated or soil-covered. Global NASA inspection remains a technical climate-only capability outside the Brazilian agronomic promise.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (146 unit tests), and `npm run build` passed after the documentation-contract update.
+
 ## Soil artifacts F7 — versioned SoilGrids WCS extraction
 
 Status: complete for the exact Rio Verde demonstration coordinate; Brazil-wide coverage intentionally not claimed.

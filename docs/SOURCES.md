@@ -1,5 +1,7 @@
 # Sources
 
+Field Shift's product scope is Brazil nationwide. Sources with Rio Verde/GO scope below remain demonstration or local evidence only; they are not used to limit the national municipal-context boundary or to generalize a value to another location.
+
 - IBGE Produção Agrícola Municipal, tabela SIDRA 5457: área colhida e quantidade produzida municipal do último ano publicado. Contexto estatístico somente; presença não significa aptidão. “Arroz (em casca)” e “Feijão (em grão)” não distinguem sistema ou espécie.
 - Embrapa Arroz e Feijão: páginas de ZARC para feijão-comum e arroz de terras altas, usadas como referência de identidade/escopo. Nenhum parâmetro numérico foi inferido.
 

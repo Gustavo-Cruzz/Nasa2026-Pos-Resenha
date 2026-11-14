@@ -8,7 +8,7 @@ The first artifact is the exact Field Shift demonstration coordinate in Rio Verd
 
 ## National processing
 
-Brazil-wide coverage is a data-production job, not a browser request: at native 250 m, Brazil contains roughly 136 million cells before multiplying by properties and quantiles. Generate reviewed regional tiles or exact-coordinate artifacts offline, verify hashes, then register and commit them in reviewable batches. Do not substitute coarse resampling, municipality averages or a nearest pixel for a missing exact artifact.
+Brazil-wide coverage is the product target and a data-production job, not a browser request: at native 250 m, Brazil contains roughly 136 million cells before multiplying by properties and quantiles. Generate reviewed regional tiles or exact-coordinate artifacts offline, verify hashes, then register and commit them in reviewable batches by UF. Do not substitute coarse resampling, municipality averages or a nearest pixel for a missing exact artifact.
 
 Run the reproducible WCS collector for a new approved point:
 

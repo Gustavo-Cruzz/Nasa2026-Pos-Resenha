@@ -1,5 +1,7 @@
 # Field Shift — revisão de UX, valor ao produtor e estratégia NASA Space Apps
 
+> Historical review. The current product scope is Brazil nationwide; Rio Verde remains a reproducible example rather than a product boundary.
+
 > Atualização de implementação (2026-11-12): os defeitos prioritários deste relatório foram tratados no sprint U1. A reavaliação visual está em `UI-REVIEW.md` e alcançou 23/24; o ponto restante depende de direção de arte e assets de terreno/estado, não de repetir sprites de culturas.
 
 Data: 2026-11-12  

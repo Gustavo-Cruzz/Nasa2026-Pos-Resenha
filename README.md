@@ -1,8 +1,8 @@
 # Field Shift
 
-Field Shift is a Space Apps 2026 MVP for comparing crop-rotation hypotheses using traceable historical climate data and explicitly scoped regional evidence.
+Field Shift is a Space Apps 2026 MVP for comparing crop-rotation hypotheses for Brazil using traceable historical climate data and explicitly scoped regional evidence.
 
-The product is global by coordinates and contextualized with Brazilian sources. In Brazil, coordinates are resolved against a versioned IBGE municipal mesh and matched to MAPA ZARC crop records plus IBGE PAM observations. PAM is statistical context only; neither source is a national suitability rule or field validation. The generator uses eight P0 crops, including common bean and rainfed upland rice.
+Brazil is the product scope. Brazilian coordinates are resolved against a versioned IBGE municipal mesh and matched to MAPA ZARC crop records plus IBGE PAM observations. PAM is statistical context only; neither source is a national suitability rule or field validation. The generator uses eight P0 crops, including common bean and rainfed upland rice. The Atlas can technically inspect global NASA climate, but that is outside the Brazilian product journey and never receives Brazilian agronomic context.
 
 ## Climate Risk Lab
 
@@ -42,4 +42,4 @@ Deploy requires an authenticated Vercel account and GitHub write credentials. Th
 
 ## Scope limits
 
-The app will not forecast weather, estimate precise yield/NPK/SOC changes, or present regional recommendations outside applicable evidence. See `fieldshift_codex/PROJECT_SPEC.md` for the source specification.
+The app will not forecast weather, estimate precise yield/NPK/SOC changes, or present regional recommendations outside applicable Brazilian evidence. See `fieldshift_codex/PROJECT_SPEC.md` for the source specification.

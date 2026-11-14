@@ -1,5 +1,7 @@
 # P0 scientific evidence audit
 
+> Historical evidence audit. Current product scope is Brazil nationwide; each location-specific record below retains its original applicability and is not generalized.
+
 P0 is soybean, maize, grain sorghum, sunflower, cowpea and *Urochloa ruziziensis*. Pearl millet and sunn hemp remain preserved in the catalog and art, but are excluded from MVP research and recommendation generation. Cotton and pigeon pea remain P1 and outside the regional engine.
 
 | Crop | Evidence recorded | Rio Verde ZARC 2026/2027 | Critical gap |

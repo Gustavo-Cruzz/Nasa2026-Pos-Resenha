@@ -1,5 +1,7 @@
 # Validation
 
+Product scope is Brazil nationwide. The checks below distinguish national municipality-level context from a demonstration artifact: coverage missing for a Brazilian coordinate is `unknown`, never borrowed from another municipality, UF or pilot point.
+
 - Any valid global coordinate still returns A/B/C; unavailable NASA data remains explicit and does not remove scenarios.
 - Brazilian coordinate → 2025 IBGE municipality code when the point intersects the committed municipal mesh.
 - Matching municipality + P0 crop in the MAPA 2026/2027 artifact → `regionally_contextualized` for that crop only.

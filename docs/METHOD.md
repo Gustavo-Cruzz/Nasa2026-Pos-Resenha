@@ -1,10 +1,14 @@
 # Method
 
+## Product scope: Brazil nationwide
+
+Field Shift's agronomic and regional-context scope is Brazil nationwide. The system resolves Brazilian coordinates through the versioned municipal mesh and evaluates available municipality/crop evidence; a missing record remains unknown rather than a negative finding. Rio Verde is a reproducible demonstration and artifact example, not the product boundary. Global NASA lookup is retained only as climate-only technical exploration and does not carry Brazilian regional claims outside Brazil.
+
 ## Versioned regional soil artifacts
 
 Regional soil context is only available from reviewed, preprocessed SoilGrids 2.0 WCS artifacts. An artifact records the exact coordinate, native 250 m support, 0–5 cm interval, source and license, conventional unit conversion, retrieval time, WCS query URLs and the Q0.05–Q0.95 90% prediction interval. The application classifies it as `estimated`, keeps it separate from farmer laboratory data and never treats it as a field measurement.
 
-The current Rio Verde artifact is exact-coordinate only. Elsewhere the soil context remains `unknown`; neither nearest-pixel transfer, municipal averaging nor a browser-side call to the paused SoilGrids REST API is allowed. A national rollout must be produced offline as reviewed tiles or exact-point artifacts with the same sidecars and integrity checks.
+The current Rio Verde artifact is exact-coordinate only. Elsewhere the soil context remains `unknown`; neither nearest-pixel transfer, municipal averaging nor a browser-side call to the paused SoilGrids REST API is allowed. Brazil-wide rollout is produced offline as reviewed tiles or exact-point artifacts organized by UF, with the same sidecars and integrity checks.
 
 NASA POWER Daily Point uses UTC data from 2011-01-01 to 2025-12-31: `T2M`, `T2M_MAX`, `T2M_MIN`, `PRECTOTCORR`, `RH2M`, `WS2M`, `ALLSKY_SFC_SW_DWN`, `IMERG_PRECTOT` and `GWETROOT`. Sentinels, missing values and implausible values become `null`; never zero. Monthly summaries and rain windows use valid daily values only and retain per-variable coverage/missing-day provenance.
 

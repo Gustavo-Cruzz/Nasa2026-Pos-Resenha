@@ -1,5 +1,7 @@
 # Field Shift — especificação de sprites e assets imersivos
 
+> Product scope: Brazil nationwide. Visual assets must not imply that a local example, municipality or UF represents the entire country.
+
 Versão: 1.0  
 Objetivo: completar a linguagem visual do produto sem representar adequação agrícola, produtividade ou condição de campo não observada.
 

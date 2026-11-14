@@ -7,11 +7,11 @@
 
 **Problema:** agricultores precisam comparar estratégias de rotação sob variações climáticas, limitações do solo e prioridades individuais.
 
-**Produto:** web app gamificado, responsivo e bilíngue (pt-BR/en) que recebe localização, de um a três cultivos recentes e dados opcionais do solo, consulta/sumariza dados históricos reais da NASA e compara **três estratégias de rotação** para os próximos 24 meses (incluindo linha de base), exibindo benefícios potenciais, limitações e evidências.
+**Produto:** web app gamificado, responsivo e bilíngue (pt-BR/en) para produtores no Brasil que recebe localização, de um a três cultivos recentes e dados opcionais do solo, consulta/sumariza dados históricos reais da NASA e compara **três estratégias de rotação** para os próximos 24 meses (incluindo linha de base), exibindo benefícios potenciais, limitações e evidências.
 
 **Proposta de valor:** “Built for the world. Contextualized with Brazilian sources. Powered by NASA.”
 
-**Regra geográfica (MVP Brasil 1):** análise por coordenadas globais sempre retorna três cenários exploratórios, sem alegação de recomendação agronômica. Coordenadas no Brasil são associadas à malha municipal versionada do IBGE e cruzadas com a Tábua de Risco ZARC da safra carregada. Somente uma cultura com registro no município identificado pode receber `regionally_contextualized`; ausência de registro permanece lacuna, nunca inadequação. `locally_validated` continua reservado a futura validação humana/campo rastreável. A coordenada não confirma propriedade, talhão nem uso agrícola do solo.
+**Regra geográfica (Brasil nacional):** toda coordenada brasileira é associada à malha municipal versionada do IBGE e cruzada com a Tábua de Risco ZARC da safra carregada. Somente uma cultura com registro no município identificado pode receber `regionally_contextualized`; ausência de registro permanece lacuna, nunca inadequação. `locally_validated` continua reservado a futura validação humana/campo rastreável. A coordenada não confirma propriedade, talhão nem uso agrícola do solo. A consulta climática global pode permanecer como diagnóstico técnico, mas não integra a promessa agronômica do produto.
 
 **O que a aplicação NÃO faz:** previsão meteorológica, previsão precisa de produtividade, cálculo quantitativo de variação de NPK/SOC, prescrição agronômica, recomendação fitossanitária universal, previsão de preço, identificação da condição real de cada talhão por uma grade climática regional.
 
@@ -84,7 +84,7 @@ lib/
 
 ### Jornada principal
 
-1. **Selecionar localização:** atalho “Piloto: Rio Verde (GO)”, além de formulário de latitude/longitude para análise global. Não usar geolocalização obrigatória; coordenadas válidas: lat [-90, 90], lon [-180, 180]. Se escolher coordenadas externas, bloquear apenas o motor **regional**, nunca os dados climáticos.
+1. **Selecionar localização:** atalho “Exemplo: Rio Verde (GO)”, além de formulário de latitude/longitude para qualquer ponto brasileiro. Não usar geolocalização obrigatória; coordenadas válidas: lat [-90, 90], lon [-180, 180]. Coordenadas externas podem consultar clima como diagnóstico técnico, mas não iniciam a jornada regional brasileira.
 2. **Histórico:** de 1 a 3 eventos anteriores `{cropId, startYearMonth, endYearMonth}` em ordem cronológica; ano/mês obrigatórios. O primeiro evento é obrigatório; eventos adicionais são opcionais e explícitos. Aceitar cultura não catalogada com `otherLabel`, mas marcar compatibilidade histórica como incompleta. Não confundir eventos com anos.
 3. **Solo (opcional):** pH (0–14), areia/silte/argila (% somando ≈100, apenas quando todas informadas), carbono orgânico (g/kg), profundidade de amostragem e data. Origem `farmer_lab | regional_estimate | unknown`. Nenhum SOC/pH estimado deve ser rotulado como medição local. Entradas parciais são permitidas.
 4. **Prioridades:** conservação de água, saúde do solo e adequação comercial/operacional. Usar pesos normalizados com presets “equilibrado”, “água”, “solo”, “operacional”; irrigação `rainfed | irrigated | unknown`; permitir restrição de culturas sem mercado local.
@@ -208,7 +208,7 @@ export interface RotationResult {
 ## 6. Contratos de API
 
 - `GET /api/climate?lat=<n>&lon=<n>` → `{status:'ok', origin:'live'|'verified_fixture', climateSummary, provenance, warnings}`; `400` entrada inválida, `503` NASA indisponível sem fallback autorizado. Implementar cache e limites básicos de requisições.
-- `POST /api/analyze` com `{location, lastThreeCrops, futureBaseline?, soil?, priorities, irrigation}` → `{scope:'pilot_recommendation'|'global_climate_only', strategies, climateSummary, warnings, provenance}`; `422` campos inconsistentes. A função pura do motor deve poder ser usada sem API para testes.
+- `POST /api/analyze` com `{location, lastThreeCrops, futureBaseline?, soil?, priorities, irrigation}` → `{scope:'brazil_regional_context'|'global_climate_only', strategies, climateSummary, warnings, provenance}`; `422` campos inconsistentes. A função pura do motor deve poder ser usada sem API para testes.
 - `GET /api/catalog` (opcional; ou import direto) → espécies e `parameterStatus`.
 - Todos os erros com código legível, mensagem traduzível e sem expor stack trace ou dados privados.
 
@@ -265,7 +265,7 @@ export interface RotationResult {
 - Toda estimativa separada de observação, unidades corretas, datas/períodos informados, método e fontes acessíveis.
 - `README.md` com execução/deploy, arquitetura, escopo, limitações, dados, licenças, decisões de design; `METHOD.md` com fórmulas/pesos/limiares; `SOURCES.md` com URLs; `VALIDATION.md` com cenários; `DEMO_SCRIPT.md` com apresentação de 2–3 minutos.
 
-**Roteiro de demo (2–3 minutos):** abrir Rio Verde → inserir histórico soja/milho/soja (datas plausíveis e explicitamente de exemplo) → solo opcional → alternar objetivo água/solo → comparar linha de base + alternativas → abrir “Por quê?” → mostrar NASA POWER e data do dado → finalizar com potencial de expansão global e limites locais.
+**Roteiro de demo (2–3 minutos):** abrir um município brasileiro (Rio Verde é exemplo reproduzível) → inserir histórico soja/milho/soja (datas plausíveis e explicitamente de exemplo) → solo opcional → alternar objetivo água/solo → comparar linha de base + alternativas → abrir “Por quê?” → mostrar NASA POWER e data do dado → finalizar com cobertura Brasil, evidências por município e limites locais.
 
 ## 10. Instruções obrigatórias para o GPT Codex
 

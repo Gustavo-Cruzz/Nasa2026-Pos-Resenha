@@ -4,15 +4,15 @@ Versão: 2.0 | 12/11/2026 | Status: design/implementação; não é validação 
 
 ## 0. Decisão de produto e mudança em relação ao projeto anterior
 
-**Substituir o wizard com 5 formulários sequenciais por uma experiência exploratória de mapa + cartas de culturas + linha do tempo agrícola + laboratório de rotações + comparação.** O usuário deve poder clicar **em qualquer coordenada terrestre do mapa mundial** e consultar as variáveis ambientais disponíveis para aquele local, com posição editável manualmente. Não impor bloqueio geográfico em Rio Verde ou Brasil. O país do usuário não determina acesso ao produto.
+**Substituir o wizard com 5 formulários sequenciais por uma experiência exploratória de mapa + cartas de culturas + linha do tempo agrícola + laboratório de rotações + comparação.** O produto atende o Brasil nacionalmente: o usuário deve poder clicar em qualquer coordenada brasileira e consultar o contexto disponível, com posição editável manualmente. Rio Verde é apenas um exemplo. O mapa pode manter inspeção ambiental global, mas fora do Brasil não há promessa de jornada agronômica ou contexto regional brasileiro.
 
-**Distinção científica obrigatória:** permitir análise climática global ≠ fornecer recomendação agronômica validada globalmente. O motor avalia a disponibilidade e aplicabilidade de cada evidência de cultura/regra **na coordenada, estação, tipo de solo e contexto de manejo selecionados**. Quando incompletos, apresentar carta informativa ou comparação parcial somente para indicadores sustentados; NÃO inventar adequação, classificação, Kc, janela de semeadura ou recomendação regional. Manter estados explícitos `supported`, `partial`, `insufficient_evidence`, `unavailable`. Não prometer funcionamento completo para todas as culturas em todos os países.
+**Distinção científica obrigatória:** escopo Brasil nacional ≠ fornecer recomendação agronômica validada para qualquer talhão brasileiro. O motor avalia a disponibilidade e aplicabilidade de cada evidência de cultura/regra **na coordenada, município, estação, tipo de solo e contexto de manejo selecionados**. Quando incompletos, apresentar carta informativa ou comparação parcial somente para indicadores sustentados; NÃO inventar adequação, classificação, Kc, janela de semeadura ou recomendação regional. Manter estados explícitos `supported`, `partial`, `insufficient_evidence`, `unavailable`.
 
 **Objetivo da demo:** usuário seleciona ponto no mapa → vê perfil climático verificado → abre painel de culturas com indicadores suportados e incerteza → monta histórico → explora três estratégias (inclui linha de base) → muda prioridades → compara resultados e evidências.
 
 ## 1. Não objetivos
 
-Não criar mundo 3D, personagens, loot, moedas, XP, rendimento de safra inventado, saúde do solo inferida diretamente de clima, ranking sem base, simulação NPK sem análise de solo, previsão de clima futuro, recomendação de fertilização/irrigação prescritiva, ranking agrícola global sem dados locais. Não insistir em drag-and-drop como única interação (touch/teclado precisam de alternativa).
+Não criar mundo 3D, personagens, loot, moedas, XP, rendimento de safra inventado, saúde do solo inferida diretamente de clima, ranking sem base, simulação NPK sem análise de solo, previsão de clima futuro, recomendação de fertilização/irrigação prescritiva, ranking agrícola brasileiro sem dados locais aplicáveis. Não insistir em drag-and-drop como única interação (touch/teclado precisam de alternativa).
 
 ## 2. Contexto do projeto existente
 
@@ -80,10 +80,10 @@ Não confundir `missingEvidence` com zero. Edição de históricos pode conter c
 - `POST /api/rotation-scenarios` com `{ session }` → `{ scenarios, comparisonStatus, caveats, evidenceRefs }`. Garantir linha de base, mais até 2 estratégias justificadas se viáveis. Se faltarem dados: preservar baseline e fornecer cartões de alternativas exploratórias sem nota, ou mensagem “não há evidência suficiente”; nunca preencher três recomendações fictícias.
 - Se existente motor no cliente, rotas são apenas adaptadores; evitar duplicação de lógica. Resposta deve identificar API offline, falta de parâmetros, janela não validada, e erro de dados.
 
-### 4.3 Cobertura global e níveis de avaliação
+### 4.3 Cobertura brasileira e níveis de avaliação
 
-1. **Clima global**: série NASA POWER para coordenadas cobertas; apresentar período, unidade, resolução/limitações; exceções para indisponibilidade/latitudes com cobertura específica.
-2. **Dados locais opcionais**: solo laboratório e histórico fornecidos pelo usuário; solo global estimado somente quando produto/arquivo confiável disponível. Nunca inventar propriedade do talhão.
+1. **Clima no Brasil**: série NASA POWER para coordenadas brasileiras; apresentar período, unidade, resolução/limitações. A consulta global pode permanecer como ferramenta técnica separada.
+2. **Dados locais opcionais**: solo laboratório e histórico fornecidos pelo usuário; solo regional brasileiro estimado somente quando produto/arquivo confiável disponível. Nunca inventar propriedade do talhão.
 3. **Viabilidade de cultura**: por cultura e local, verificar (a) evidência climática aplicável, (b) ciclo/fenologia e calendário aplicáveis, (c) limitações de solo relevantes, (d) compatibilidade entre cultivos e manejo, (e) fontes. Sem validação de calendário/região, exibir `partial`/`insufficient_evidence`.
 4. **Estratégias**: comparativo somente para dimensões com dados. Nunca normalizar ausência como zero ou gerar score agregado quando faltam dimensões críticas. Exibir “comparação parcial” e quais variáveis faltam.
 5. **Rótulos de interface**: “Compatibilidade com dados disponíveis”, não “Melhor cultura da região” sem base; “Condições históricas”, não “Previsão”; “Indicador relativo”, não “probabilidade”.
@@ -94,7 +94,7 @@ Não confundir `missingEvidence` com zero. Edição de históricos pode conter c
 
 Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades em drawer/abas), `/lab` (deck e montador), `/results` (comparador), `/methodology` (fontes, limitações). Preservar URLs atuais mediante redirecionamento ou link contextual. Navegação persistente `Explorar | Minha fazenda | Laboratório | Comparar | Metodologia` com indicação de progressão, mas sem bloqueio em wizard.
 
-### 5.2 Tela A — Atlas / mapa global
+### 5.2 Tela A — Atlas / mapa do Brasil
 
 - Mapa ocupa maioria da viewport e permite pan/zoom/click, pino movível.
 - Busca de cidade é opcional; entrada manual lat/lon sempre disponível; botão “Usar exemplo” seleciona Rio Verde **apenas como exemplo**, nunca filtro obrigatório.
@@ -141,7 +141,7 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 - Três estados dos cards: `Explorável`, `Análise parcial`, `Sem evidência local` (não confundir com inadequação real).
 - A satisfação vem de experimentar cenários, não de moedas, XP ou recompensas falsas.
 
-## 7. Acessibilidade, responsividade e comportamento global
+## 7. Acessibilidade, responsividade e comportamento nacional
 
 - Desktop ≥1024px: mapa ~65% + painel ~35%; tablet: drawer; mobile <768px: mapa topo e bottom sheet; controles sticky sem obstruir atribuição do mapa.
 - Teclado: pino por coordenadas, seleção das cartas por botões, edição por dialog, rotação sem DnD; foco visível, labels, contraste, aria-live para resultados sem excesso de anúncios.
@@ -151,7 +151,7 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 
 ## 8. Critérios de aceite verificáveis
 
-**Global:** clicar em pelo menos três pontos geograficamente distantes (Brasil, África, Ásia) salva coordenadas e tenta consultar NASA POWER; não há guard brasileiro; resposta informa cobertura e fonte. Não inventar adequação agrícola fora da cobertura.
+**Brasil nacional:** clicar em pelo menos três pontos geograficamente distantes em UFs diferentes salva coordenadas e consulta NASA POWER; a resposta informa cobertura, município e fonte. Não inventar adequação agrícola fora da evidência aplicável.
 
 **Atlas:** click/pin atualiza localização, mostra loading/erro, panel coerente, acessível sem mapa via coordenadas; mapas com atribuição e fallback.
 
@@ -171,7 +171,7 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 - Inspecionar repositório, componentes, dados, rotas e estrutura antiga. Mapear regras de Rio Verde hardcoded. Escrever ADR curta (map, navigation, coverage). Não quebrar lógica atual.
 - Aceite: diagnóstico de arquivos + plano de migração e testes atuais verdes.
 
-### Sprint G1 — Atlas global (5–7 h)
+### Sprint G1 — Atlas Brasil (5–7 h)
 - Implementar mapa client-only, pino click/drag, busca opcional, coordenadas, fallback, painel climático NASA e exemplo Rio Verde sem geofence.
 - Aceite: pontos em 3 continentes, eventos de clique e erro, fonte e período, testes de componentes/integração.
 
@@ -189,9 +189,9 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 
 ### Sprint G5 — Comparação e acabamento (5–7 h)
 - Comparação, rótulos de cobertura, fontes, prioridades, demo guiada, responsive, i18n, Playwright e build/deploy.
-- Aceite: fluxo completo ponta a ponta; estado global insuficiente é honesto e útil; sem quebra de navegação.
+- Aceite: fluxo completo ponta a ponta; estado regional brasileiro insuficiente é honesto e útil; sem quebra de navegação.
 
-**Prioridades de corte:** primeiro mapa + seleção global + cards contextualizados + timeline + baseline/2 alternativas + comparação honesta. Cortar em ordem: layers geoespaciais, geocoding, DnD, animações, modos de jogo, estilo avançado. Nunca cortar proveniência/validação.
+**Prioridades de corte:** primeiro mapa + seleção brasileira + cards contextualizados + timeline + baseline/2 alternativas + comparação honesta. Cortar em ordem: layers geoespaciais, geocoding, DnD, animações, modos de jogo, estilo avançado. Nunca cortar proveniência/validação.
 
 ## 10. Riscos e decisões de produto
 
@@ -204,4 +204,4 @@ Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades
 
 ## 11. Instrução pronta para o Codex
 
-> Leia `GAMIFICATION_SPEC.md`, `UX_WIREFRAMES.md`, `AGENTS.md` e os arquivos de especificação atuais. Preserve a implementação existente sempre que possível. O objetivo é transformar o wizard em um atlas interativo global com cartas pixel art, timeline agrícola, laboratório de três rotações e comparador explicável. Remova o geofence Rio Verde da seleção, mas NÃO trate evidências brasileiras como válidas globalmente. Comece **somente** pelo Sprint G0. Antes de codificar, reporte os componentes existentes, regras hardcoded e plano de migração. A cada sprint, implemente alterações mínimas, valide lint/typecheck/test/build e reporte arquivos alterados e lacunas. Não invente dados científicos, indicadores regionais ou notas.
+> Leia `GAMIFICATION_SPEC.md`, `UX_WIREFRAMES.md`, `AGENTS.md` e os arquivos de especificação atuais. Preserve a implementação existente sempre que possível. O objetivo é transformar o wizard em um atlas interativo do Brasil com cartas pixel art, timeline agrícola, laboratório de três rotações e comparador explicável. Remova o geofence Rio Verde da seleção, mas NÃO trate evidências de um município, UF ou lote de solo como válidas em outro. Comece **somente** pelo Sprint G0. Antes de codificar, reporte os componentes existentes, regras hardcoded e plano de migração. A cada sprint, implemente alterações mínimas, valide lint/typecheck/test/build e reporte arquivos alterados e lacunas. Não invente dados científicos, indicadores regionais ou notas.
