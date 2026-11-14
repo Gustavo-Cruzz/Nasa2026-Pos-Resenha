@@ -8,7 +8,7 @@ function median(values: number[]): number | null {
   if (values.length === 0) return null;
   const sorted = [...values].sort((a, b) => a - b);
   const center = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0 ? Number(((sorted[center - 1] + sorted[center]) / 2).toFixed(2)) : sorted[center];
+  return sorted.length % 2 === 0 ? Number(((sorted[center - 1] + sorted[center]) / 2).toFixed(2)) : Number(sorted[center].toFixed(2));
 }
 
 export function monthlyClimatology(daily: ClimateDay[]): MonthlyClimateSummary[] {

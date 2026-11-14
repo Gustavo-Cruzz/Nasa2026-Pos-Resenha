@@ -13,7 +13,7 @@ test('switches the decorative farm scene explicitly and persists the choice', as
 });
 async function installDraft(page: Page, futureBaseline?: { cropId: string; confirmed: true }) { await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), draft(futureBaseline)); }
 
-const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
+const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, waterContext: { month: 1, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
 test('navigates from home to the global atlas with its real MapLibre basemap', async ({ page }) => {
   await page.goto('/');
@@ -40,6 +40,28 @@ test('keeps coordinate entry available when MapLibre WebGL is unavailable', asyn
     await page.getByRole('button', { name: 'Ir ao ponto' }).click();
     await expect(page.getByText('Clima histórico observado')).toBeVisible();
   }
+});
+
+test('shows dated SMAP evidence, draws an exploratory area, and compares three NASA regions', async ({ page }) => {
+  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
+  await page.goto('/explore');
+  await page.getByRole('button', { name: 'Mostrar NASA SMAP' }).click();
+  await expect(page.getByText('NASA SMAP L4 · 2025-06-30')).toBeVisible();
+  await expect(page.getByLabel(/Escala NASA SMAP de umidade do solo/)).toBeVisible();
+  const canvas = page.locator('.atlas-map .maplibregl-canvas');
+  if (await canvas.count()) {
+    await page.getByRole('button', { name: 'Desenhar área exploratória' }).click();
+    await canvas.click({ position: { x: 220, y: 150 } });
+    await canvas.click({ position: { x: 260, y: 190 } });
+    await canvas.click({ position: { x: 190, y: 205 } });
+    await page.getByRole('button', { name: 'Encerrar área' }).click();
+    await expect(page.getByText(/não confirma propriedade/)).toBeVisible();
+  }
+  await page.getByRole('button', { name: 'Comparar sinais NASA' }).click();
+  await expect(page.getByRole('heading', { name: 'Rio Verde (GO), Brasil' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Acra, Gana' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nova Délhi, Índia' })).toBeVisible();
+  await expect(page.getByText('12', { exact: true })).toHaveCount(3);
 });
 
 test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {

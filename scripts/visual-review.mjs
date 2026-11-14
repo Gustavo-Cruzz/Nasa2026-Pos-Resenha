@@ -7,8 +7,14 @@ for (const viewport of [{ name: 'mobile', width: 390, height: 844 }, { name: 'de
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   await page.addInitScript((value) => window.localStorage.setItem('field-shift:draft', JSON.stringify(value)), draft);
-  for (const route of ['farm', 'results', 'methodology']) {
+  for (const route of ['explore', 'farm', 'results', 'methodology']) {
     await page.goto(`${baseUrl}/${route}`, { waitUntil: 'networkidle' });
+    if (route === 'explore') {
+      await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
+      await page.getByRole('button', { name: 'Mostrar NASA SMAP' }).click();
+      await page.getByRole('button', { name: 'Comparar sinais NASA' }).click();
+      await page.getByRole('heading', { name: 'Nova Délhi, Índia' }).waitFor();
+    }
     if (route === 'results') await page.getByRole('heading', { name: /Comparar critérios/ }).waitFor();
     await page.screenshot({ path: `/tmp/fieldshift-${route}-${viewport.name}.png`, fullPage: true });
   }

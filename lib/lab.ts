@@ -15,7 +15,7 @@ export function createLabPlan(input: AnalysisInput, cropIds: Array<string | unde
   return { scenarios: [
     { id: 'A', title: input.futureBaseline?.confirmed ? 'Plano do produtor' : 'Continuidade presumida — confirmar', slots: slots(valid(cropIds[0])) },
     { id: 'B', title: 'Saúde do solo', slots: slots(valid(cropIds[1])) },
-    { id: 'C', title: 'Resiliência hídrica', slots: slots(valid(cropIds[2])) },
+    { id: 'C', title: 'Contexto hídrico', slots: slots(valid(cropIds[2])) },
   ] };
 }
 

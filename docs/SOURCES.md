@@ -6,6 +6,8 @@
 - NASA POWER Daily API: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
 - NASA POWER meteorology sources and GPM IMERG parameters: https://power.larc.nasa.gov/docs/methodology/data/sources_meteorology/
 - NASA POWER hydrology sources and root-zone wetness parameters: https://power.larc.nasa.gov/docs/methodology/data/sources_hydrology/
+- NASA EOSDIS GIBS SMAP L4 root-zone layer metadata: https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Root_Zone_Soil_Moisture.json
+- NASA Worldview SMAP L4 root-zone soil moisture: https://worldview.earthdata.nasa.gov/?l=SMAP_L4_Analyzed_Root_Zone_Soil_Moisture
 - FAO-56: https://www.fao.org/4/X0490E/x0490e0b.htm — background only; ET0/ETc not calculated.
 - Local verified NASA Rio Verde fixture: `data/nasa-power-rio-verde.meta.json`.
 - Ferreira; Santos (2020), *Zoneamento Agrícola de Risco Climático para Grandes Culturas no Município de Rio Verde, Goiás*: local PDF `2021-Marco Antônio Alves Ferreira-ZONEAMENTO AGRÍCOLA DE RISCO CLIMÁTICO PARA GRANDES CULTURAS NO MUNICÍPIO DE RIO VERDE, GOIÁS.pdf`, tables 1, 2, 4, 5, pp. 4–7.

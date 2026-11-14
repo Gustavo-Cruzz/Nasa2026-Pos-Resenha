@@ -3,10 +3,17 @@ import { coordinatesSchema } from '@/lib/schema';
 
 export const atlasPointSchema = coordinatesSchema.extend({ label: z.string().min(1).optional() });
 export type AtlasPoint = z.infer<typeof atlasPointSchema>;
+export type AtlasPolygon = Array<[longitude: number, latitude: number]>;
+
+export const SMAP_GIBS_DATE = '2025-06-30';
+export const SMAP_GIBS_LAYER = 'SMAP_L4_Analyzed_Root_Zone_Soil_Moisture';
+export const SMAP_GIBS_TILE_URL = `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/${SMAP_GIBS_LAYER}/default/${SMAP_GIBS_DATE}/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png`;
+export const SMAP_GIBS_LEGEND_URL = 'https://gibs.earthdata.nasa.gov/legends/SMAP_Analyzed_Soil_Moisture_H.svg';
+export const SMAP_GIBS_METADATA_URL = `https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/${SMAP_GIBS_LAYER}.json`;
 
 const monthlyClimateSchema = z.object({ month: z.number().int().min(1).max(12), tmeanMedianC: z.number().nullable(), tminMedianC: z.number().nullable().optional(), tmaxMedianC: z.number().nullable().optional(), precipMedianMm: z.number().nullable(), validTemperatureDays: z.number().int().nonnegative(), validPrecipitationDays: z.number().int().nonnegative() });
 export const climateApiResponseSchema = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('ok'), origin: z.enum(['live', 'verified_fixture']), climateSummary: z.object({ monthly: z.array(monthlyClimateSchema), plantingMonthPrecipitation: z.object({ month: z.number().int(), medianTotalMm: z.number().nullable(), validYears: z.number().int(), expectedYears: z.number().int(), coveragePct: z.number() }).nullable(), historicalPrecipitationByMonth: z.array(z.object({ month: z.number().int().min(1).max(12), medianTotalMm: z.number().nullable(), validYears: z.number().int(), expectedYears: z.number().int(), coveragePct: z.number() })).default([]) }), provenance: z.object({ sourceUrl: z.string().url(), period: z.object({ start: z.string(), end: z.string() }), fetchedAt: z.string(), coveragePct: z.record(z.string(), z.number()), missingDays: z.array(z.string()) }), warnings: z.array(z.string()) }),
+  z.object({ status: z.literal('ok'), origin: z.enum(['live', 'verified_fixture']), climateSummary: z.object({ monthly: z.array(monthlyClimateSchema), plantingMonthPrecipitation: z.object({ month: z.number().int(), medianTotalMm: z.number().nullable(), validYears: z.number().int(), expectedYears: z.number().int(), coveragePct: z.number() }).nullable(), historicalPrecipitationByMonth: z.array(z.object({ month: z.number().int().min(1).max(12), medianTotalMm: z.number().nullable(), validYears: z.number().int(), expectedYears: z.number().int(), coveragePct: z.number() })).default([]), waterContext: z.object({ month: z.number().int().min(1).max(12), imergMedianTotalMm: z.number().nullable(), medianRainDays: z.number().nullable(), rootZoneWetnessMedian: z.number().nullable(), validImergYears: z.number().int(), expectedYears: z.number().int(), imergCoveragePct: z.number(), rootZoneCoveragePct: z.number() }).nullable().optional() }), provenance: z.object({ sourceUrl: z.string().url(), period: z.object({ start: z.string(), end: z.string() }), fetchedAt: z.string(), coveragePct: z.record(z.string(), z.number()), missingDays: z.array(z.string()) }), warnings: z.array(z.string()) }),
   z.object({ status: z.literal('error'), code: z.string(), message: z.string() }),
 ]);
 export type ClimateApiResponse = z.infer<typeof climateApiResponseSchema>;

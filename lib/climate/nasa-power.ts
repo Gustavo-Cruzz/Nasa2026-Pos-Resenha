@@ -114,7 +114,7 @@ export async function fetchNasaPower(coordinates: Coordinates, fetcher: FetchLik
   catch (error) { if (error instanceof ClimateDataError) throw error; throw new ClimateDataError('NASA_RESPONSE_INVALID', 'NASA POWER returned invalid JSON.'); }
 }
 
-const fixtureMetaSchema = z.object({ sourceUrl: z.string().url(), fetchedAt: z.string().datetime(), sha256: z.string().regex(/^[a-f0-9]{64}$/), requestedCoordinates: coordinatesSchema, period: z.object({ start: z.literal(NASA_POWER_PERIOD.start), end: z.literal(NASA_POWER_PERIOD.end) }), timezone: z.literal('UTC'), units: z.object({ T2M: z.literal('C'), T2M_MAX: z.literal('C'), T2M_MIN: z.literal('C'), PRECTOTCORR: z.literal('mm/day'), RH2M: z.literal('%'), WS2M: z.literal('m/s'), ALLSKY_SFC_SW_DWN: z.literal('MJ/m^2/day') }) });
+const fixtureMetaSchema = z.object({ sourceUrl: z.string().url(), fetchedAt: z.string().datetime(), sha256: z.string().regex(/^[a-f0-9]{64}$/), requestedCoordinates: coordinatesSchema, period: z.object({ start: z.literal(NASA_POWER_PERIOD.start), end: z.literal(NASA_POWER_PERIOD.end) }), timezone: z.literal('UTC'), units: z.object({ T2M: z.literal('C'), T2M_MAX: z.literal('C'), T2M_MIN: z.literal('C'), PRECTOTCORR: z.literal('mm/day'), RH2M: z.literal('%'), WS2M: z.literal('m/s'), ALLSKY_SFC_SW_DWN: z.literal('MJ/m^2/day'), IMERG_PRECTOT: z.literal('mm/day'), GWETROOT: z.literal('1') }) });
 
 export async function readVerifiedPilotFixture(coordinates: Coordinates): Promise<ClimateDataset | undefined> {
   if (!isPilotLocation(coordinates)) return undefined;

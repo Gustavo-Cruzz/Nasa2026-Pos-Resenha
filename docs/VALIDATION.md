@@ -11,5 +11,8 @@
 - NASA fixture tests SHA, units, coverage and exact pilot-only coordinate. The national ZARC expansion does not broaden NASA fixture fallback.
 - Live POWER parsing keeps `IMERG_PRECTOT` and `GWETROOT` coverage separate. Their absence remains `unknown`; no fixture is enriched or simulated.
 - GPM rain-day counts and root-zone wetness are historical regional context only. They never alter crop selection or become irrigation, drought tolerance, field moisture, or local validation.
+- Scenario C is labeled “Contexto hídrico”; neither UI nor engine calls it water resilience.
+- The SMAP GIBS raster is a dated visual overlay only. Drawing a polygon does not change analysis or claim a verified field.
+- Rio Verde, Accra and New Delhi comparison calls each coordinate independently and exposes unavailable values instead of substituting another location.
 
 Automated checks: `tests/unit/`, `tests/e2e/navigation.spec.ts`. National tests cover Rio Verde, São Paulo, Salvador, Boa Esperança do Norte and coordinates outside Brazil. No field validation claim.

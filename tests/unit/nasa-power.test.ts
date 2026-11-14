@@ -57,6 +57,9 @@ describe('NASA POWER adapter', () => {
     const fixture = await readVerifiedPilotFixture(RIO_VERDE_PILOT.coordinates);
     expect(fixture?.daily).toHaveLength(5479);
     expect(fixture?.provenance.coveragePct.PRECTOTCORR).toBe(100);
+    expect(fixture?.provenance.coveragePct.IMERG_PRECTOT).toBe(100);
+    expect(fixture?.provenance.coveragePct.GWETROOT).toBe(100);
+    expect(fixture?.provenance.rawParameterNames).toEqual(expect.arrayContaining(['IMERG_PRECTOT', 'GWETROOT']));
     expect(fixture?.provenance.warnings).toEqual([]);
   });
 });

@@ -14,6 +14,7 @@ a { text-underline-offset: 4px; }
 .atlas-layout { display: grid; gap: 1rem; }
 .atlas-map-frame { position: relative; min-height: 26rem; overflow: hidden; border: 1px solid #405840; border-radius: .9rem; background: #142018; }
 .atlas-map { min-height: 26rem; }
+.atlas-map-frame-error, .atlas-map-frame-error .atlas-map { min-height: 12rem; }
 .atlas-map-error { position: absolute; z-index: 3; top: 50%; right: 1rem; left: 1rem; margin: 0; transform: translateY(-50%); border: 1px solid #dca84e; border-radius: .5rem; background: rgb(47 31 11 / .92); padding: .75rem; text-align: center; color: #fff3c4; }
 .journey-progress { border-bottom: 1px solid #405840; background: #1a291c; }
 .journey-mobile-label { display: none; margin: 0; padding: .65rem 1rem; color: #d8efa0; font-size: .875rem; font-weight: 700; }

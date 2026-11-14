@@ -425,3 +425,19 @@ Implemented: added pure monthly water-context indicators: GPM monthly total, med
 Evidence (2026-11-13): the full nine-parameter live NASA request returned HTTP 200 with 809,637 bytes in 2.96 seconds. `npm run lint`, `npm run typecheck`, `npm run test` (60 unit tests), `npm run build`, and `npm run test:e2e` (19 Playwright tests) passed. New unit coverage verifies URL parameters, GPM rain-day calculation, root-zone median and absence-preserving fallback behavior.
 
 Limitations / next: `GWETROOT` is a POWER/MERRA-2 modeled relative wetness index, not SMAP volumetric soil moisture or a talhão measurement. Direct SMAP ingestion would require an authenticated/preprocessed Earthdata pipeline and is intentionally not simulated. ECOSTRESS/Landsat field-scale layers remain out of scope until the product has an explicit farm polygon and a defensible cloud/coverage workflow. No deployment or push was performed.
+
+## NASA-W2 — Atlas SMAP e demonstração global
+
+Status: complete.
+
+Implemented: recaptured the verified Rio Verde NASA POWER fixture with all nine runtime parameters. The new sidecar records the exact URL, UTC period, capture timestamp, units and SHA-256 `6d317f61771a84149464b9b0313aa3a2edc34900ac1502306434d0e779295142`; parsing proves 100% coverage for `IMERG_PRECTOT` and `GWETROOT`. The fixture remains exact-coordinate only.
+
+Implemented: renamed public scenario C from “Resiliência hídrica” / “Water resilience” to “Contexto hídrico” / “Water context” across engine, laboratory and presentation. Crop selection remains deterministic and unchanged; the new title avoids claiming lower water use, drought tolerance or superior performance.
+
+Implemented: added an on-demand global NASA comparison for Rio Verde, Accra and New Delhi. Each card calls the climate boundary for its own coordinate and compares the same January temperature, monthly rain, IMERG rain-day and root-zone-context fields. A failed location shows unavailable rather than receiving another location's value. Historical monthly totals are rounded to two decimals at the pure median boundary.
+
+Implemented: added an opt-in NASA SMAP L4 analyzed root-zone soil-moisture layer from public EOSDIS GIBS, pinned to 2025-06-30 with official metadata, 9 km/model-value-added labeling, source attribution and a compact accessible color scale. Added user-drawn exploratory polygons with three-or-more-point fill/outline and local-browser handoff. Polygon and raster are visual context only: neither enters analysis nor establishes ownership, agricultural land use, field identity or local validation.
+
+Evidence (2026-11-14): verified official GIBS layer metadata/capabilities and a live Rio Verde tile (`HTTP 200`, PNG). `npm run lint`, `npm run typecheck`, `npm run test` (62 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed during implementation. E2E covers SMAP disclosure, exploratory drawing when WebGL is available, and independent three-region comparison. Production-build screenshots were reviewed at 390×844 and 1440×900; the fallback remains usable where WebGL is unavailable.
+
+Limitations / next: GIBS supplies a dated visual raster, not a numeric field sample or current talhão condition. The exploratory polygon is not yet part of the validated farm-analysis contract and is intentionally ignored by the engine. A future numeric SMAP pipeline still requires authenticated/preprocessed Earthdata acquisition, uncertainty handling and temporal aggregation. No deployment or push was performed.

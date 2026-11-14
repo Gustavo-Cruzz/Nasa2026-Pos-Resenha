@@ -9,7 +9,7 @@ export function cropDisplayName(cropId: string | null | undefined, fallback: str
 export function scenarioDisplayTitle(strategy: Pick<Rotation, 'id' | 'title' | 'baselineAssumed'>, locale: Locale): string {
   if (locale === 'pt-BR') return strategy.title;
   if (strategy.id === 'A') return strategy.baselineAssumed ? 'Assumed continuity — confirm' : 'Producer plan';
-  return strategy.id === 'B' ? 'Soil health' : 'Water resilience';
+  return strategy.id === 'B' ? 'Soil health' : 'Water context';
 }
 
 export function indicatorDisplay(indicator: QualitativeIndicator, locale: Locale): { label: string; detail: string } {
