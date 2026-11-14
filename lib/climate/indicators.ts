@@ -3,6 +3,7 @@ import type { ClimateDay } from '@/lib/climate/nasa-power';
 export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; precipMedianMm: number | null; validTemperatureDays: number; validPrecipitationDays: number };
 export type HistoricalPrecipitationMonth = { month: number; medianTotalMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalWaterContextMonth = { month: number; imergMedianTotalMm: number | null; medianRainDays: number | null; rootZoneWetnessMedian: number | null; validImergYears: number; expectedYears: number; imergCoveragePct: number; rootZoneCoveragePct: number };
+export type HistoricalCalendarDay = { month: number; day: number; tmeanMedianC: number | null; precipMedianMm: number | null; imergPrecipMedianMm: number | null; rootZoneWetnessMedian: number | null; validYears: number; expectedYears: number };
 
 function median(values: number[]): number | null {
   if (values.length === 0) return null;
@@ -21,6 +22,22 @@ export function monthlyClimatology(daily: ClimateDay[]): MonthlyClimateSummary[]
     const precipitation = values.flatMap((day) => day.precipMm === null ? [] : [day.precipMm]);
     return { month, tmeanMedianC: median(temperatures), tminMedianC: median(minimums), tmaxMedianC: median(maximums), precipMedianMm: median(precipitation), validTemperatureDays: temperatures.length, validPrecipitationDays: precipitation.length };
   });
+}
+
+/** Same calendar day across complete historical years; this is climatology, not a current observation. */
+export function historicalContextForCalendarDay(daily: ClimateDay[], month: number, day: number): HistoricalCalendarDay {
+  const key = `${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
+  const selected = daily.filter((item) => item.date.slice(4) === key);
+  return {
+    month,
+    day,
+    tmeanMedianC: median(selected.flatMap((item) => item.tmeanC === null ? [] : [item.tmeanC])),
+    precipMedianMm: median(selected.flatMap((item) => item.precipMm === null ? [] : [item.precipMm])),
+    imergPrecipMedianMm: median(selected.flatMap((item) => item.imergPrecipMm === null || item.imergPrecipMm === undefined ? [] : [item.imergPrecipMm])),
+    rootZoneWetnessMedian: median(selected.flatMap((item) => item.rootZoneWetness === null || item.rootZoneWetness === undefined ? [] : [item.rootZoneWetness])),
+    validYears: selected.filter((item) => item.tmeanC !== null && item.precipMm !== null).length,
+    expectedYears: selected.length,
+  };
 }
 
 /** IMERG rainfall timing and POWER root-zone wetness are observations/context, never crop demand or field measurements. */

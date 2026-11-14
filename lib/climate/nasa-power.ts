@@ -4,7 +4,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { coordinatesSchema, type Coordinates } from '@/lib/schema';
 import { isPilotLocation } from '@/lib/region';
-import { historicalPrecipitationByMonth, historicalPrecipitationForMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary } from '@/lib/climate/indicators';
+import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalCalendarDay, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary } from '@/lib/climate/indicators';
 
 export const NASA_POWER_PERIOD = { start: '20110101', end: '20251231' } as const;
 export const NASA_POWER_PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN'] as const;
@@ -30,6 +30,7 @@ export type ClimateContext = {
   plantingMonthPrecipitation: HistoricalPrecipitationMonth | null;
   historicalPrecipitationByMonth: HistoricalPrecipitationMonth[];
   waterContext?: HistoricalWaterContextMonth | null;
+  calendarDayContext?: HistoricalCalendarDay | null;
   provenance: ClimateProvenance | null;
   gaps: string[];
 };
@@ -130,20 +131,20 @@ export async function readVerifiedPilotFixture(coordinates: Coordinates): Promis
 }
 
 /** Single climate acquisition path for both public routes. Fixture fallback is pilot-exact only. */
-export async function resolveClimateContext(coordinates: Coordinates, plantingMonth: number): Promise<ClimateContext> {
+export async function resolveClimateContext(coordinates: Coordinates, plantingMonth: number, calendarDay?: number): Promise<ClimateContext> {
   try {
     const dataset = await fetchNasaPower(coordinates);
-    return contextFromDataset(dataset, plantingMonth, 'live');
+    return contextFromDataset(dataset, plantingMonth, 'live', calendarDay);
   } catch (error) {
     const fixture = await readVerifiedPilotFixture(coordinates);
-    if (fixture) return contextFromDataset(fixture, plantingMonth, 'verified_fixture');
+    if (fixture) return contextFromDataset(fixture, plantingMonth, 'verified_fixture', calendarDay);
     const reason = error instanceof ClimateDataError ? error.code : 'NASA_REQUEST_FAILED';
     return { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], waterContext: null, provenance: null, gaps: [`Historical NASA POWER climate is unavailable (${reason}). No Rio Verde fixture was used for this coordinate.`] };
   }
 }
 
-function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture'): ClimateContext {
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture', calendarDay?: number): ClimateContext {
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }
 
 function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {

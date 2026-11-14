@@ -465,3 +465,13 @@ Implemented: the user-drawn Atlas polygon now enters the validated farm draft an
 Scientific boundary: the dated GIBS raster remains visual and is never decoded from colors. The official historical numeric product is SMAP L4 SPL4SMGP v8 (3-hourly, nominal 9 km, 31 March 2015 to present), but numeric polygon aggregation requires authenticated Earthdata preprocessing. Until a polygon-matched artifact exists, the value remains N/D; POWER/MERRA-2 root-zone wetness is not relabeled as SMAP.
 
 Evidence (2026-11-14): schema tests cover valid/invalid polygons; pure tests cover area, resolution interpretation, explicit SMAP preprocessing status, public-result integration and structured attention decisions. The browser flow carries a three-vertex polygon from Atlas into Farm. `npm run lint`, `npm run typecheck`, `npm run test` (66 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed.
+
+## UX-Atlas — Data corrente e densidade espacial
+
+Status: complete.
+
+Implemented: replaced the hard-coded January Atlas summary with a same-calendar-day historical context. The client sends the current month/day, and the server computes medians only from that calendar day across the complete NASA POWER period for temperature, precipitation, GPM IMERG and root-zone wetness. The panel explicitly labels the result as historical climatology, never a live measurement or forecast.
+
+Implemented: removed the Brazil-context block from the Atlas and stopped its redundant municipal request on that screen. Crop sprites are now passive compact catalog cards: they no longer open evidence dialogs. Regional evidence remains available later in analysis/results where it affects interpretation. Desktop Atlas allocation changed from 65/35 to 56/44, and the wider panel uses four compact crop columns at XL widths so the pixel-art catalog appears substantially earlier without harming the mobile two-column layout.
+
+Evidence (2026-11-14): unit coverage verifies same-day historical medians and missing-value preservation; browser coverage verifies the current-day panel, absence of the Brazil block, passive sprites and Atlas-to-Farm navigation. `npm run lint`, `npm run typecheck`, `npm run test` (67 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed.

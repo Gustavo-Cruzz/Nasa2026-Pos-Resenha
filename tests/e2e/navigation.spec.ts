@@ -13,7 +13,7 @@ test('switches the decorative farm scene explicitly and persists the choice', as
 });
 async function installDraft(page: Page, futureBaseline?: { cropId: string; confirmed: true }) { await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), draft(futureBaseline)); }
 
-const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, waterContext: { month: 1, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
+const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 11, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 450, validPrecipitationDays: 450 }], plantingMonthPrecipitation: { month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, waterContext: { month: 11, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 }, calendarDayContext: { month: 11, day: 14, tmeanMedianC: 25, precipMedianMm: 4, imergPrecipMedianMm: 3.5, rootZoneWetnessMedian: 0.64, validYears: 15, expectedYears: 15 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
 test('navigates from home to the global atlas with its real MapLibre basemap', async ({ page }) => {
   await page.goto('/');
@@ -39,7 +39,7 @@ test('keeps coordinate entry available when MapLibre WebGL is unavailable', asyn
     await page.getByLabel('Latitude').fill('5.6037');
     await page.getByLabel('Longitude').fill('-0.187');
     await page.getByRole('button', { name: 'Ir ao ponto' }).click();
-    await expect(page.getByText('Clima histórico observado')).toBeVisible();
+    await expect(page.getByText('Contexto histórico para hoje')).toBeVisible();
   }
 });
 
@@ -99,12 +99,9 @@ test('selects Brazil, Ghana, and India globally then transfers coordinates to fa
   await expect(page.getByLabel('Latitude')).toHaveValue('5.6037');
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
-  await expect(page.getByText('Clima histórico observado')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'soja' })).toBeVisible();
-  await page.getByRole('button', { name: 'soja' }).press('Enter');
-  await expect(page.getByRole('dialog', { name: 'Detalhes de soja' })).toBeVisible();
-  await expect(page.getByText('N/D: faixa térmica verificável não está disponível.')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Fechar' }).click();
+  await expect(page.getByText('Contexto histórico para hoje')).toBeVisible();
+  await expect(page.getByRole('article', { name: 'soja' })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Detalhes de soja' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
   await expect(page.getByRole('heading', { name: 'Localização' })).toBeVisible();
   await expect(page.getByText('Local do atlas aplicado. Complete a linha do tempo.')).toBeVisible();
@@ -118,18 +115,17 @@ test('shows retryable NASA failure without a fabricated climate metric', async (
   await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
 });
 
-test('resolves a Brazilian coordinate to municipality-wide ZARC context', async ({ page }) => {
+test('keeps Atlas crop sprites compact and passive without the Brazil context block', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
   await page.getByLabel('Latitude').fill('-23.5505');
   await page.getByLabel('Longitude').fill('-46.6333');
   await page.getByRole('button', { name: 'Ir ao ponto' }).click();
-  await expect(page.getByText(/São Paulo \(SP\), código IBGE 3550308/)).toBeVisible();
-  await expect(page.getByRole('button', { name: 'milho' })).toBeVisible();
-  await expect(page.getByRole('button', { name: /feijão-comum/i }).locator('img')).toHaveAttribute('src', /common-bean/);
-  await expect(page.getByRole('button', { name: /arroz de terras altas/i }).locator('img')).toHaveAttribute('src', /upland-rice/);
-  await page.getByRole('button', { name: 'milho' }).click();
-  await expect(page.getByRole('dialog', { name: 'Detalhes de milho' })).toContainText('ZARC 2026/2027 disponível para São Paulo');
+  await expect(page.getByText('Contexto Brasil')).toHaveCount(0);
+  await expect(page.getByRole('article', { name: 'milho' })).toBeVisible();
+  await expect(page.getByRole('article', { name: /feijão-comum/i }).locator('img')).toHaveAttribute('src', /common-bean/);
+  await expect(page.getByRole('article', { name: /arroz de terras altas/i }).locator('img')).toHaveAttribute('src', /upland-rice/);
+  await expect(page.getByRole('button', { name: 'milho' })).toHaveCount(0);
 });
 
 test('renders provenance and source drawers for pilot analysis', async ({ page }) => {

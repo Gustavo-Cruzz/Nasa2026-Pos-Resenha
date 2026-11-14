@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildNasaPowerUrl, parseNasaPowerPayload, readVerifiedPilotFixture } from '@/lib/climate/nasa-power';
-import { historicalPrecipitationByMonth, historicalWaterContextForMonth, precipitationForWindow } from '@/lib/climate/indicators';
+import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalWaterContextForMonth, precipitationForWindow } from '@/lib/climate/indicators';
 import { RIO_VERDE_PILOT } from '@/lib/region';
 
 const parameters = { T2M: { '20200101': 25, '20200102': -999 }, T2M_MAX: { '20200101': 30, '20200102': 31 }, T2M_MIN: { '20200101': 20, '20200102': 21 }, PRECTOTCORR: { '20200101': 10, '20200102': null }, RH2M: { '20200101': 60, '20200102': 61 }, WS2M: { '20200101': 2, '20200102': 3 }, ALLSKY_SFC_SW_DWN: { '20200101': 20, '20200102': 21 } };
@@ -26,6 +26,14 @@ describe('NASA POWER adapter', () => {
   it('does not invent enhanced water context when an older verified series lacks it', () => {
     const parsed = parseNasaPowerPayload({ properties: { parameter: parameters } }, RIO_VERDE_PILOT.coordinates, 'https://example.test');
     expect(historicalWaterContextForMonth(parsed.daily, 1)).toMatchObject({ imergMedianTotalMm: null, medianRainDays: null, rootZoneWetnessMedian: null });
+  });
+
+  it('summarizes the same calendar day across historical years instead of showing January by default', () => {
+    const summary = historicalContextForCalendarDay([
+      { date: '20201114', tmeanC: 24, tmaxC: 29, tminC: 19, precipMm: 2, rhPct: 60, windMps: 2, solarMjM2Day: 15, imergPrecipMm: 3, rootZoneWetness: 0.6 },
+      { date: '20211114', tmeanC: 28, tmaxC: 33, tminC: 23, precipMm: 6, rhPct: 62, windMps: 2, solarMjM2Day: 15, imergPrecipMm: 5, rootZoneWetness: 0.7 },
+    ], 11, 14);
+    expect(summary).toMatchObject({ month: 11, day: 14, tmeanMedianC: 26, precipMedianMm: 4, imergPrecipMedianMm: 4, rootZoneWetnessMedian: 0.65, validYears: 2, expectedYears: 2 });
   });
 
   it('builds twelve historical precipitation windows without inventing missing months', () => {
