@@ -20,3 +20,13 @@ npm run fetch:soilgrids-rio-verde
 ```
 
 The collector does not call the paused SoilGrids REST API. It fetches 21 WCS samples (seven properties × Q0.05/Q0.5/Q0.95) sequentially and fails rather than emitting partial data. Review the generated values, source URLs and sidecar hash before committing.
+
+## Batches by state
+
+`batches/<uf>.json` is an explicit, reviewable inventory of exact-point artifacts organized by Brazilian state. It reports `partial` unless every intended native-grid tile has been produced and independently reviewed. Run a manifest check with:
+
+```bash
+npm run fetch:soilgrids-state-batch -- --batch data/soilgrids/batches/go.json
+```
+
+Add `--execute` only when refreshing approved points; it overwrites the referenced artifacts and their hashes, so the resulting diff must be reviewed. State manifests are operational batches, never evidence that an entire UF shares a soil value.

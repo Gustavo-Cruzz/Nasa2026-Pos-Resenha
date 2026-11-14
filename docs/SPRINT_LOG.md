@@ -14,6 +14,16 @@ Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (146 
 
 Next: generate reviewable offline regional batches before enabling additional Brazilian coordinates; keep any unprocessed coordinate as unknown.
 
+## Soil artifacts F8 — batches organized by state
+
+Status: complete — batch orchestration only; no statewide coverage claim.
+
+Implemented: added the first state batch manifest for GO, registering the verified Rio Verde point under `partial` / `exact_points_only`. The new state-batch CLI validates every inventory entry and can sequentially regenerate approved WCS artifacts only with an explicit `--execute`; its safe default performs no download or overwrite.
+
+Guardrails: state organization is not state aggregation. The manifest prohibits nearest-point, municipal-average and state-statistic substitution, and cannot be marked broader coverage without a reviewed native-grid tile processor and completed artifacts.
+
+Evidence (2026-11-14): `npm run fetch:soilgrids-state-batch -- --batch data/soilgrids/batches/go.json` validated the inventory without network writes. `npm run lint`, `npm run typecheck`, `npm run test` (146 unit tests), and `npm run build` passed.
+
 ## Farmer-First F6 — solo regional verificável e incerteza
 
 Status: complete — no spatial estimate loaded.
