@@ -27,6 +27,17 @@ describe('catalog and wizard contracts', () => {
     expect(parsed.soil).toMatchObject({ origin: 'farmer_lab', ph: 6.1 });
   });
 
+  it('keeps farmer soil measurements and optional laboratory fields explicit', () => {
+    const parsed = analysisInputSchema.parse({ ...base, soil: { origin: 'farmer_lab', ph: 6.1, phMethod: 'CaCl2', sandPct: 40, siltPct: 30, clayPct: 30, organicCarbonGKg: 18, phosphorusMgDm3: 12, potassiumMgDm3: 90, depthCm: 20, observedAt: '2026-10-01', drainagePerception: 'good' } });
+    expect(parsed.soil).toMatchObject({ origin: 'farmer_lab', phMethod: 'CaCl2', phosphorusMgDm3: 12, drainagePerception: 'good' });
+  });
+
+  it('accepts farmer crop availability, preferences, blocks and custom crops without scientific defaults', () => {
+    const parsed = analysisInputSchema.parse({ ...base, farmerCrops: { availableCropIds: ['soybean', 'maize'], exploreCropIds: ['sorghum'], blockedCropIds: ['sunflower'], customCrops: [{ label: 'mandioca', purpose: 'grain' }] } });
+    expect(parsed.farmerCrops?.customCrops[0]).toEqual({ label: 'mandioca', purpose: 'grain' });
+    expect(analysisInputSchema.safeParse({ ...base, farmerCrops: { availableCropIds: ['maize'], exploreCropIds: [], blockedCropIds: ['maize'], customCrops: [] } }).success).toBe(false);
+  });
+
   it('accepts an explicit baseline crop without inventing dates', () => {
     const parsed = analysisInputSchema.parse({ ...base, futureBaseline: { cropId: 'sunflower', confirmed: true } });
     expect(parsed.futureBaseline).toEqual({ cropId: 'sunflower', confirmed: true });

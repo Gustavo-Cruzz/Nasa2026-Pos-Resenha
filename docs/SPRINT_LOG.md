@@ -1,5 +1,17 @@
 # Sprint log
 
+## Farmer-First F1 — culturas operacionais e Meu Solo
+
+Status: complete — regional-soil evidence intentionally unavailable.
+
+Implemented: added a validated farmer crop profile to the local draft: `Posso cultivar`, `Quero explorar`, `Não posso usar`, and named custom crops with stated purpose. The pure candidate engine preserves A/current strategy and filters B/C to catalog crops operationally available or accepted for exploration, excluding blocks. A custom crop stays explicit farmer context with no invented scientific parameters. The laboratory uses the same permitted catalog set.
+
+Implemented: expanded optional local soil input with pH method, sand/silt/clay, organic carbon/matter, P, K, depth, date, drainage and source classification. Local laboratory evidence remains separate from regional estimates. The UI reports SoilGrids/MapBiomas regional context as N/D because no verified compatible preprocessed artifact exists and the suspended SoilGrids REST API is deliberately not called.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (138 unit tests), and `npm run build` passed. Seven focused Playwright farm/laboratory flows passed. New tests cover profile validation, custom crops, local-soil fields, alternatives changing with operational availability, and preserving a blocked current baseline.
+
+Limitations / next: custom crops can be recorded but cannot enter catalog-derived B/C indicators until verified evidence exists. SoilGrids/MapBiomas integration requires licensed, preprocessed regional artifacts with depth/unit/uncertainty metadata; no estimates were created. Next sprint: derive qualitative soil-health deltas only from documented crop functions and complete sequence information.
+
 ## V5 — Mapa-base geográfico navegável
 
 Status: complete.

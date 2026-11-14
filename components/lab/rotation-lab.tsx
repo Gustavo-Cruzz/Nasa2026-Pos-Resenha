@@ -17,6 +17,7 @@ import { LabChangeFeedback } from '@/components/lab/lab-change-feedback';
 import { EvidenceCenterDrawer, EvidenceTriggerButton } from '@/components/evidence/evidence-center';
 import type { EvidenceFilter } from '@/lib/evidence/types';
 import { useLocale } from '@/components/locale-provider';
+import { permittedCatalogCrops } from '@/lib/farmer-profile';
 
 type Target = { scenario: 'A' | 'B' | 'C'; slot: number };
 const season = (slot: { year: number; season: string }, en: boolean) => en ? `Year ${slot.year} · Season ${slot.season}` : `Ano ${slot.year} · Temporada ${slot.season}`;
@@ -44,7 +45,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
       .catch((error: unknown) => setAnalysisError(error instanceof Error ? error.message : en ? 'Could not load the laboratory assessment.' : 'Não foi possível carregar a avaliação do laboratório.'));
   }, [en, loaded]);
   const regionalContext = analysis?.regionalContext;
-  const coverage = useMemo(() => draft ? p0Crops.map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext)) : [], [draft, regionalContext]);
+  const coverage = useMemo(() => draft ? permittedCatalogCrops(draft.data.farmerCrops).map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext)) : [], [draft, regionalContext]);
 
   if (!draft || !plan) return <section className="mt-6 rounded-xl border border-slate-700 p-5"><h1 className="text-3xl font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1><p className="mt-3 text-slate-300">{en ? 'Save the farm before assembling scenario hypotheses.' : 'Registre a fazenda antes de montar hipóteses de cenários.'}</p><Button asChild className="mt-5"><Link href="/farm">{en ? 'Go to my farm' : 'Ir para minha fazenda'}</Link></Button></section>;
 

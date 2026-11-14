@@ -42,6 +42,12 @@ MODIS NDVI (MOD13Q1 250 m, 16-day, collection v061) is read only from a pre-proc
 
 Not calculated: ETc, irrigation need, yield, NPK/SOC change, economics, pest diagnosis, forecast, or field diagnosis. Verified Kc is displayed as a source-specific response reference; FAO-56 `ETc = Kc × ET0` remains context only, not an active calculation.
 
+## Farmer-first crops and local soil
+
+The farm draft may include a producer-declared crop profile: crops already operationally available, catalog crops the producer accepts exploring, blocked catalog crops, and named custom crops with a stated purpose (grain, cover, forage, or other). This is operational context, not agronomic evidence. The current/baseline strategy remains visible even if later alternatives are blocked; B and C select only catalog crops that are available or accepted for exploration and never select a declared blocked crop. With no profile, the original global exploratory P0 behavior remains available. A custom crop is retained as farmer context but receives no inferred family, thermal, soil, water, calendar, Kc, yield, or suitability property.
+
+The optional local-soil record distinguishes origin (`farmer_lab`, separately supplied regional estimate, or unknown), pH and method, texture, organic carbon/matter, P, K, sample depth/date, and perceived drainage. All fields are optional. Farmer laboratory values remain the primary local evidence and are not averaged with spatial products. SoilGrids REST is not called because it is suspended; no SoilGrids or MapBiomas Solo regional value is displayed until a compatible, verified, preprocessed artifact with product, resolution, depth, units, uncertainty and provenance is available. Thus regional context currently remains N/D rather than being fabricated.
+
 ## Climate Risk Lab — forecast and dry-spell experiment
 
 The Climate Risk Lab is a separate predictive layer; it does not relabel NASA POWER historical observations as forecasts. `lib/climate/forecast.ts` requests Open-Meteo daily `precipitation_sum`, `et0_fao_evapotranspiration`, maximum and minimum temperature in UTC, with the provider's `best_match` model selection. The response must contain all requested arrays in the documented units (mm and °C). Its provenance exposes the source URL, fetch/issue time, location, model request, units and provider-calculated ET0 origin. A service failure remains a recoverable forecast-unavailable state; historical indicators and A/B/C scenarios remain visible.

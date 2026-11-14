@@ -17,4 +17,17 @@ describe('exploration engine', () => {
   it('adds municipal ZARC context without local validation', () => { const context = resolveBrazilRegionalContext(base.location); const result = analyze(base, unavailable, undefined, context); expect(result.strategies[0].validationLevel).toBe('regionally_contextualized'); expect(result.strategies[0].explanations.some((item) => item.ruleId === 'BRAZIL_MUNICIPAL_ZARC_CONTEXT')).toBe(true); expect(result.regionalContext.municipality?.code).toBe('5218805'); });
   it('keeps a crop without standalone ZARC at climate exploration', () => { const context = resolveBrazilRegionalContext(base.location); const result = analyze({ ...base, futureBaseline: { cropId: 'ruziziensis', confirmed: true } }, unavailable, undefined, context); expect(result.strategies[0].validationLevel).toBe('climate_exploration'); expect(result.strategies[0].regionalContextAvailable).toBe(false); });
   it('does not use PAM observations to select crops or raise evidence level', () => { const context = resolveBrazilRegionalContext(base.location); const withPam = analyze(base, unavailable, undefined, context); const withoutPam = analyze(base, unavailable, undefined, { ...context, pam: null }); expect(withPam.strategies.map((item) => [item.proposedCrop?.cropId, item.validationLevel])).toEqual(withoutPam.strategies.map((item) => [item.proposedCrop?.cropId, item.validationLevel])); });
+  it('uses farmer operational availability to change alternatives while preserving the current strategy', () => {
+    const result = analyze({ ...base, farmerCrops: { availableCropIds: ['soybean', 'sorghum'], exploreCropIds: [], blockedCropIds: [], customCrops: [] } }, unavailable);
+    expect(result.strategies[0].proposedCrop?.cropId).toBe('soybean');
+    expect(result.strategies[1].proposedCrop?.cropId).toBe('sorghum');
+    expect(result.strategies[2].proposedCrop).toBeNull();
+    expect(result.strategies[2].explanations[0].ruleId).toBe('SELECTION_GAP');
+  });
+  it('does not erase a current baseline when the farmer blocks it for future alternatives', () => {
+    const result = analyze({ ...base, farmerCrops: { availableCropIds: ['sorghum'], exploreCropIds: [], blockedCropIds: ['soybean'], customCrops: [{ label: 'mandioca', purpose: 'grain' }] } }, unavailable);
+    expect(result.strategies[0].proposedCrop?.cropId).toBe('soybean');
+    expect(result.strategies[0].explanations.some((item) => item.ruleId === 'SELECTION_GAP')).toBe(true);
+    expect(result.strategies[1].proposedCrop?.cropId).toBe('sorghum');
+  });
 });

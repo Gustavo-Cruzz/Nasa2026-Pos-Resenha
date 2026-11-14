@@ -12,10 +12,15 @@ export const yearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Use 
 
 export const soilProfileSchema = z.object({
   ph: z.number().min(0).max(14).optional(),
+  phMethod: z.string().trim().min(1).max(80).optional(),
   sandPct: z.number().min(0).max(100).optional(),
   siltPct: z.number().min(0).max(100).optional(),
   clayPct: z.number().min(0).max(100).optional(),
   organicCarbonGKg: z.number().min(0).optional(),
+  organicMatterGKg: z.number().min(0).optional(),
+  phosphorusMgDm3: z.number().min(0).optional(),
+  potassiumMgDm3: z.number().min(0).optional(),
+  drainagePerception: z.enum(['good', 'limited', 'unknown']).optional(),
   depthCm: z.number().positive().optional(),
   observedAt: z.string().date().optional(),
   origin: z.enum(['farmer_lab', 'regional_estimate', 'unknown']),
@@ -25,6 +30,17 @@ export const soilProfileSchema = z.object({
   if (texture.some((value) => value !== undefined) && texture.some((value) => value === undefined)) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'Texture must include sand, silt, and clay together.' });
   }
+});
+
+/** Farmer-declared operational context. It filters exploration; it is not agronomic evidence. */
+export const farmerCropProfileSchema = z.object({
+  availableCropIds: z.array(z.string().min(1)).max(12).default([]),
+  exploreCropIds: z.array(z.string().min(1)).max(12).default([]),
+  blockedCropIds: z.array(z.string().min(1)).max(12).default([]),
+  customCrops: z.array(z.object({ label: z.string().trim().min(1).max(80), purpose: z.enum(['grain', 'cover', 'forage', 'other']) })).max(10).default([]),
+}).superRefine((profile, context) => {
+  const usable = new Set([...profile.availableCropIds, ...profile.exploreCropIds]);
+  profile.blockedCropIds.forEach((cropId, index) => { if (usable.has(cropId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['blockedCropIds', index], message: 'A crop cannot be both available and blocked.' }); });
 });
 
 export const cropEventSchema = z.object({
@@ -56,6 +72,7 @@ export const analysisInputSchema = z.object({
   location: coordinatesSchema,
   fieldBoundary: fieldBoundarySchema.optional(),
   waterPoint: waterPointSchema.optional(),
+  farmerCrops: farmerCropProfileSchema.optional(),
   plantingMonth: z.number().int().min(1).max(12),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
@@ -72,4 +89,5 @@ export type Coordinates = z.infer<typeof coordinatesSchema>;
 export type FieldBoundary = z.infer<typeof fieldBoundarySchema>;
 export type WaterPoint = z.infer<typeof waterPointSchema>;
 export type SoilProfile = z.infer<typeof soilProfileSchema>;
+export type FarmerCropProfile = z.infer<typeof farmerCropProfileSchema>;
 export type AnalysisInput = z.infer<typeof analysisInputSchema>;
