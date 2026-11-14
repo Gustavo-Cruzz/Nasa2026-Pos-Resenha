@@ -1,0 +1,26 @@
+{
+  "artifact": "rio-verde-0-5cm.json",
+  "sha256": "f6761e92017bd795c194a089278a957ff4613d6ddf7ba45253d896d6f8ce27a5",
+  "generatedBy": "scripts/fetch-soilgrids-artifact.mjs",
+  "generatedAt": "2026-11-14T20:46:27.880Z",
+  "source": "https://maps.isric.org/mapserv",
+  "sourceProduct": "SoilGrids 2.0 WCS",
+  "sourceLicense": "CC BY 4.0",
+  "requestedLocation": {
+    "latitude": -17.798,
+    "longitude": -50.919
+  },
+  "properties": [
+    "phh2o",
+    "soc",
+    "clay",
+    "sand",
+    "silt",
+    "cec",
+    "bdod"
+  ],
+  "depthCm": "0-5",
+  "resolutionM": 250,
+  "uncertainty": "Q0.05 to Q0.95, documented 90% prediction interval",
+  "reproducibility": "Run npm run fetch:soilgrids-rio-verde; review both artifact and hash before committing."
+}

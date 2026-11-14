@@ -1,5 +1,19 @@
 # Sprint log
 
+## Soil artifacts F7 — versioned SoilGrids WCS extraction
+
+Status: complete for the exact Rio Verde demonstration coordinate; Brazil-wide coverage intentionally not claimed.
+
+Implemented: added a reproducible WCS collector that reads SoilGrids 2.0 Q0.05, Q0.5 and Q0.95 pixel samples without using the paused REST API, validates single signed-int16 GeoTIFF responses, applies documented conventional-unit conversions and writes a versioned JSON artifact plus SHA-256 sidecar. The committed 0–5 cm/250 m Rio Verde artifact includes pH, SOC, sand, silt, clay, CEC and bulk density, its source query for every quantile, license, citation, source resolution and 90% prediction interval.
+
+Implemented: the regional adapter now exposes this data only for the exact captured coordinate and labels it `estimated`; every other point remains `unknown`. Added a national production policy: Brazil-wide native-resolution coverage must be generated as reviewed offline batches because it contains roughly 136 million 250 m cells before properties and quantiles.
+
+Limitations: SoilGrids is a machine-learning spatial product and not suitable for assertions about an individual field. The artifact never replaces a local laboratory sample, does not add crop/irrigation calculations, and does not create nationwide coverage from a pilot point.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (146 unit tests), and `npm run build` passed. Unit tests verify the exact-coordinate gate, the retained unknown attributes, artifact SHA-256, source URLs, depth, resolution, units and prediction-interval ordering.
+
+Next: generate reviewable offline regional batches before enabling additional Brazilian coordinates; keep any unprocessed coordinate as unknown.
+
 ## Farmer-First F6 — solo regional verificável e incerteza
 
 Status: complete — no spatial estimate loaded.

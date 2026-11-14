@@ -20,6 +20,7 @@
     "update:brazil-pam": "node scripts/update-brazil-pam.mjs",
     "fetch:modis-ndvi": "node --experimental-strip-types scripts/fetch-modis-ndvi.ts",
     "fetch:nasa-fixture": "node --experimental-strip-types scripts/fetch-nasa-fixture.ts",
+    "fetch:soilgrids-rio-verde": "node scripts/fetch-soilgrids-artifact.mjs",
     "train:dry-spell": "node --experimental-strip-types scripts/train-dry-spell-model.ts"
   },
   "dependencies": {
