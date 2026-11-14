@@ -1,5 +1,17 @@
 # Sprint log
 
+## Farmer-First F3 — decisões, prioridades e jornada
+
+Status: complete — no numeric recommendation.
+
+Implemented: reframed farm preferences as “what do you most need to protect or improve?”, with an accessible primary-focus choice (water, soil, operations) plus secondary sliders and irrigation context. Objective crop restrictions remain farmer-declared availability/exploration/blocks from F1 and are called out where they affect alternatives. The journey labels now use farmer decision language: crops/land, possible futures, and plan.
+
+Guardrails: primary focus only highlights compatible trade-offs already present in the comparison. It does not score crops, bypass blocks, infer unavailable operational windows, or create a recommendation.
+
+Evidence (2026-11-14): `npm run typecheck`, `npm run test` (139 unit tests), and `npm run lint` passed. `npm run build` passed. Three focused navigation/farm Playwright flows passed; an accessible-name collision found during testing was corrected.
+
+Next: final requirement-by-requirement audit of farmer scenarios, data provenance classification and remaining scientific limits.
+
 ## Farmer-First F2 — contexto qualitativo de saúde do solo
 
 Status: complete — evidence-limited.

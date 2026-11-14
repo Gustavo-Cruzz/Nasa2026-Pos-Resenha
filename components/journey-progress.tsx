@@ -9,8 +9,8 @@ import { recordJourneyVisit } from '@/lib/journey-metrics';
 
 export function JourneyProgress() {
   const pathname = usePathname();
-  const { copy } = useLocale();
-  const steps = [{ href: '/explore', icon: 'explore', label: copy.explore }, { href: '/farm', icon: 'farm', label: copy.farm }, { href: '/lab', icon: 'lab', label: copy.lab }, { href: '/results', icon: 'compare', label: copy.compare }];
+  const { copy, locale } = useLocale();
+  const steps = [{ href: '/explore', icon: 'explore', label: copy.explore }, { href: '/farm', icon: 'farm', label: locale === 'en' ? 'My crops & land' : 'Minhas culturas e terra' }, { href: '/lab', icon: 'lab', label: locale === 'en' ? 'Future paths' : 'Futuros possíveis' }, { href: '/results', icon: 'compare', label: locale === 'en' ? 'My plan' : 'Meu plano' }];
   const active = steps.findIndex((step) => pathname === step.href);
   useEffect(() => { if (active >= 0) recordJourneyVisit(pathname); }, [active, pathname]);
   if (active < 0) return null;
