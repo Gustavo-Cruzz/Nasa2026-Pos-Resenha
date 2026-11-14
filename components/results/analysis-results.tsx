@@ -23,6 +23,7 @@ import { NasaInsightPanel } from '@/components/results/nasa-insight-panel';
 import { EvidenceCenterTrigger } from '@/components/evidence/evidence-center';
 import { ExportSummaryButton } from '@/components/results/export-summary-button';
 import { ClimateRiskLab } from '@/components/results/climate-risk-lab';
+import { SoilHealthComparison } from '@/components/results/soil-health-comparison';
 import { useLocale } from '@/components/locale-provider';
 import { recordJourneyCompletion } from '@/lib/journey-metrics';
 import { cropDisplayName, explanationDisplay, scenarioDisplayTitle } from '@/lib/presentation';
@@ -64,6 +65,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     {data.input.fieldBoundary ? <div className="mt-5"><h2 className="mb-2 font-bold">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><BoundarySummary boundary={data.input.fieldBoundary} waterPoint={data.input.waterPoint} /></div> : data.input.waterPoint ? <p className="mt-5 text-sm text-slate-300"><b>{en ? 'Water point declared by the producer' : 'Ponto de água informado pelo produtor'}:</b> {waterKindLabel(data.input.waterPoint.kind, en)}{data.input.waterPoint.label ? ` — ${data.input.waterPoint.label}` : ''}. {en ? 'Declared context only.' : 'Apenas contexto declarado.'}</p> : null}
     <SeasonPanel data={data} />
     <ClimateRiskLab location={data.input.location} />
+    <SoilHealthComparison strategies={data.strategies} />
     <TerrainPanel data={data} />
     <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <p className="mt-4 text-sm text-slate-300"><b>{en ? 'Highlighted priorities' : 'Prioridades em destaque'}:</b> {data.priorityHighlights.map((id) => priorityLabels[id] ?? id).join(', ')}.</p>

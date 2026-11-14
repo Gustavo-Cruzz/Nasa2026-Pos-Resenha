@@ -10,6 +10,7 @@ import { assessLabPlan } from '@/lib/lab/assessment';
 import { buildEvidenceManifest } from '@/lib/evidence/manifest';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
 import { isBlockedCrop, permittedCatalogCrops } from '@/lib/farmer-profile';
+import { assessSoilHealth } from '@/lib/engine/soil-health';
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
@@ -30,7 +31,8 @@ function strategy(id: 'A' | 'B' | 'C', title: string, crop: Crop | undefined, in
     ...(id === 'C' && crop?.kcStages && climate.waterContext && (climate.waterContext.rootZoneWetnessMedian !== null || climate.waterContext.medianRainDays !== null) ? [{ kind: 'limitation' as const, message: 'O contexto hídrico combina exposição histórica NASA com um perfil Kc documentado para a cultura. O perfil é específico da fonte e não calcula ETc, consumo, irrigação ou superioridade hídrica.', ruleId: 'NASA_EXPOSURE_WITH_DOCUMENTED_KC', sourceRefs: [climate.provenance?.sourceUrl, verifiedCropEvidence(crop.id, 'kcStages')?.source.url].filter((value): value is string => Boolean(value)), certainty: 'medium' as const, missingData: [] }] : []),
   ];
   const lastCrop = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined;
-  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
+  const history = input.history.flatMap((event) => event.cropId ? [getCrop(event.cropId)] : []).filter((item): item is Crop => Boolean(item));
+  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), soilHealth: assessSoilHealth(input, crop, history), slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
 }
 function baselineCrop(input: AnalysisInput): Crop | undefined { const cropId = input.futureBaseline?.confirmed ? input.futureBaseline.cropId : input.history.at(-1)?.cropId; return cropId ? getCrop(cropId) : undefined; }
 function selectable(input: AnalysisInput): Crop[] { return permittedCatalogCrops(input.farmerCrops); }

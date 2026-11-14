@@ -30,4 +30,13 @@ describe('exploration engine', () => {
     expect(result.strategies[0].explanations.some((item) => item.ruleId === 'SELECTION_GAP')).toBe(true);
     expect(result.strategies[1].proposedCrop?.cropId).toBe('sorghum');
   });
+  it('derives qualitative soil-health context without claiming carbon gain or nitrogen quantity', () => {
+    const result = analyze({ ...base, soil: { origin: 'farmer_lab', organicCarbonGKg: 18 }, farmerCrops: { availableCropIds: ['soybean', 'sorghum'], exploreCropIds: [], blockedCropIds: [], customCrops: [] } }, unavailable);
+    const health = result.strategies[1].soilHealth;
+    expect(health.find((item) => item.id === 'species_diversity')).toMatchObject({ state: 'observed', value: 3 });
+    expect(health.find((item) => item.id === 'cover_presence')).toMatchObject({ state: 'yes' });
+    expect(health.find((item) => item.id === 'organic_carbon_context')).toMatchObject({ state: 'observed', value: 18 });
+    expect(health.find((item) => item.id === 'bare_soil_interval')).toMatchObject({ state: 'unknown' });
+    expect(JSON.stringify(health)).not.toMatch(/gain|kg de N|fertilidade futura/i);
+  });
 });

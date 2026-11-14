@@ -1,5 +1,17 @@
 # Sprint log
 
+## Farmer-First F2 — contexto qualitativo de saúde do solo
+
+Status: complete — evidence-limited.
+
+Implemented: added a pure soil-health layer to A/B/C and an accessible result comparison. It reports catalogued species diversity, immediate family repetition, cover purpose, documented nitrogen-fixation potential, potential bare-soil interval, erosion-protection context, and an explicitly initial local organic-carbon/matter reading. B/C display the delta from A as a qualitative difference only.
+
+Guardrails: no carbon gain, fertility improvement, N quantity, soil-loss reduction, yield or irrigation claim is calculated. Bare-soil interval remains N/D without compatible dates, verified duration and management; erosion protection remains limited by management/terrain/field-cover evidence; nitrogen does not use family as a substitute for a documented potential.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (139 unit tests), and `npm run build` passed. Three focused Results Playwright flows passed. Unit coverage proves species/cover/carbon context, preserves unknown bare-soil periods, and rejects carbon/N-future claims.
+
+Next: reorganize the farmer journey and priorities/restrictions into decision language while preserving existing routes and draft migration.
+
 ## Farmer-First F1 — culturas operacionais e Meu Solo
 
 Status: complete — regional-soil evidence intentionally unavailable.
