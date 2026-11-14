@@ -1,0 +1,434 @@
+[
+  {
+    "id": "cassava",
+    "commonNames": {
+      "pt-BR": "mandioca / aipim / macaxeira",
+      "en": "cassava"
+    },
+    "scientificName": "Manihot esculenta",
+    "family": "Euphorbiaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/metodos-de-plantio"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "pumpkin",
+    "commonNames": {
+      "pt-BR": "abóbora / jerimum",
+      "en": "pumpkin / squash"
+    },
+    "scientificName": "Cucurbita spp.",
+    "family": "Cucurbitaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "sweet_potato",
+    "commonNames": {
+      "pt-BR": "batata-doce",
+      "en": "sweet potato"
+    },
+    "scientificName": "Ipomoea batatas",
+    "family": "Convolvulaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "peanut",
+    "commonNames": {
+      "pt-BR": "amendoim",
+      "en": "peanut"
+    },
+    "scientificName": "Arachis hypogaea",
+    "family": "Fabaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.embrapa.br/web/algodao/busca-de-solucoes-tecnologicas/-/produto-servico/972/amendoim-br-1"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "watermelon",
+    "commonNames": {
+      "pt-BR": "melancia",
+      "en": "watermelon"
+    },
+    "scientificName": "Citrullus lanatus",
+    "family": "Cucurbitaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "lettuce",
+    "commonNames": {
+      "pt-BR": "alface",
+      "en": "lettuce"
+    },
+    "scientificName": "Lactuca sativa",
+    "family": "Asteraceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "tomato",
+    "commonNames": {
+      "pt-BR": "tomate",
+      "en": "tomato"
+    },
+    "scientificName": "Solanum lycopersicum",
+    "family": "Solanaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "carrot",
+    "commonNames": {
+      "pt-BR": "cenoura",
+      "en": "carrot"
+    },
+    "scientificName": "Daucus carota subsp. sativus",
+    "family": "Apiaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "kale",
+    "commonNames": {
+      "pt-BR": "couve (couve-manteiga)",
+      "en": "collard greens"
+    },
+    "scientificName": "Brassica oleracea var. acephala",
+    "family": "Brassicaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "onion",
+    "commonNames": {
+      "pt-BR": "cebola",
+      "en": "onion"
+    },
+    "scientificName": "Allium cepa",
+    "family": "Amaryllidaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "bell_pepper",
+    "commonNames": {
+      "pt-BR": "pimentão",
+      "en": "bell pepper"
+    },
+    "scientificName": "Capsicum annuum",
+    "family": "Solanaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "okra",
+    "commonNames": {
+      "pt-BR": "quiabo",
+      "en": "okra"
+    },
+    "scientificName": "Abelmoschus esculentus",
+    "family": "Malvaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "coffee",
+    "commonNames": {
+      "pt-BR": "café",
+      "en": "coffee"
+    },
+    "scientificName": "Coffea spp.",
+    "family": "Rubiaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1006160/1/LivroAgricultoresquecultivamarvores.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "banana",
+    "commonNames": {
+      "pt-BR": "banana",
+      "en": "banana"
+    },
+    "scientificName": "Musa spp.",
+    "family": "Musaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1006160/1/LivroAgricultoresquecultivamarvores.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "cacao",
+    "commonNames": {
+      "pt-BR": "cacau",
+      "en": "cacao"
+    },
+    "scientificName": "Theobroma cacao",
+    "family": "Malvaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1006160/1/LivroAgricultoresquecultivamarvores.pdf"
+    ],
+    "parameterStatus": "missing"
+  },
+  {
+    "id": "acai",
+    "commonNames": {
+      "pt-BR": "açaí",
+      "en": "açaí palm"
+    },
+    "scientificName": "Euterpe oleracea",
+    "family": "Arecaceae",
+    "purposes": [
+      "commercial"
+    ],
+    "commercial": true,
+    "cycleDaysRange": null,
+    "idealTempC": null,
+    "viableTempC": null,
+    "soilPhRange": null,
+    "kcStages": null,
+    "residuePotential": null,
+    "nitrogenFixationPotential": null,
+    "rootingClass": null,
+    "regionalWindows": [],
+    "knownRisks": [],
+    "sourceRefs": [
+      "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1006160/1/LivroAgricultoresquecultivamarvores.pdf"
+    ],
+    "parameterStatus": "missing"
+  }
+]

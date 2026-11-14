@@ -1,5 +1,17 @@
 # Sprint log
 
+## Family farm F10 — catálogo e contratos de consórcios
+
+Status: complete — catálogo, escolha Farmer-First, consórcios e comparação.
+
+Implemented: merged the 16 supplied family-farm crops and 18 contextual evidence records without replacing existing crop IDs. Added aliases for existing maize, common bean, cowpea and upland rice; retained common bean and cowpea as distinct species. Metadata now keeps permanent crops registrable while excluding them from annual lab/rotation slots.
+
+Implemented: added a pure cropping-system contract for single and 2–3-crop intercrops, requiring overlapping dates, rejecting duplicate crop IDs, preserving long cassava alongside shorter companion crops, and exposing documented-example constraints, sources and competition risks without quantitative benefit claims. The Farm draft now lets the producer add up to three crops per plot and requires explicit dates; Results presents this declared context as a layer over A/B/C, never as a productivity, soil or water-use claim.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (151 unit tests), and `npm run build` passed. Tests cover idempotent crop merge, distinct bean species/aliases, contextual harvest evidence, overlapping cassava+cowpea, invalid non-overlapping intercrops, permanent crops excluded from annual slots, and A/B/C system context.
+
+Next: preserve these contracts when adding more agronomic evidence; do not turn library examples into automatic regional recommendations.
+
 ## Scope F9 — Brasil nacional
 
 Status: complete — documentation and product-contract scope updated.

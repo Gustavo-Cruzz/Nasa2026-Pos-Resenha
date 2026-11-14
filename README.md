@@ -43,3 +43,7 @@ Deploy requires an authenticated Vercel account and GitHub write credentials. Th
 ## Scope limits
 
 The app will not forecast weather, estimate precise yield/NPK/SOC changes, or present regional recommendations outside applicable Brazilian evidence. See `fieldshift_codex/PROJECT_SPEC.md` for the source specification.
+
+## Agricultura familiar e consórcios
+
+The catalog includes the supplied family-farm crops and contextual evidence without filling absent agronomic parameters. Harvest references are not assumed crop durations. Farmer-declared availability filters annual alternatives; permanent crops can be registered but are excluded from annual A/B/C slots. Documented intercrops are exploratory examples: simultaneous crops may add diversity and also competition risk, never an automatic productivity, soil, or water benefit.

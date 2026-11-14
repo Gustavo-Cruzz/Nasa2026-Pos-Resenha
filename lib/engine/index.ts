@@ -1,5 +1,5 @@
 import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
-import { cropById, verifiedCropEvidence, type Crop } from '@/lib/catalog';
+import { cropById, isAnnualRotationEligible, verifiedCropEvidence, type Crop } from '@/lib/catalog';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { AnalysisResult, Explanation, Rotation, ValidationLevel } from '@/lib/engine/types';
 import { labPrimaryCrop, type LabPlan } from '@/lib/lab';
@@ -12,6 +12,7 @@ import { analyzeBoundary } from '@/lib/engine/boundary-context';
 import { isBlockedCrop, permittedCatalogCrops } from '@/lib/farmer-profile';
 import { assessSoilHealth } from '@/lib/engine/soil-health';
 import { deriveDataQuality } from '@/lib/engine/data-quality';
+import { summarizeCroppingSystem } from '@/lib/intercrops';
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
@@ -33,9 +34,10 @@ function strategy(id: 'A' | 'B' | 'C', title: string, crop: Crop | undefined, in
   ];
   const lastCrop = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined;
   const history = input.history.flatMap((event) => event.cropId ? [getCrop(event.cropId)] : []).filter((item): item is Crop => Boolean(item));
-  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), soilHealth: assessSoilHealth(input, crop, history), slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
+  const croppingSystems = (input.croppingSystems ?? []).map((system) => ({ plotId: system.plotId, type: system.type, ...summarizeCroppingSystem(system) }));
+  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), soilHealth: assessSoilHealth(input, crop, history), croppingSystems, slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
 }
-function baselineCrop(input: AnalysisInput): Crop | undefined { const cropId = input.futureBaseline?.confirmed ? input.futureBaseline.cropId : input.history.at(-1)?.cropId; return cropId ? getCrop(cropId) : undefined; }
+function baselineCrop(input: AnalysisInput): Crop | undefined { const cropId = input.futureBaseline?.confirmed ? input.futureBaseline.cropId : input.history.at(-1)?.cropId; return cropId && isAnnualRotationEligible(cropId) ? getCrop(cropId) : undefined; }
 function selectable(input: AnalysisInput): Crop[] { return permittedCatalogCrops(input.farmerCrops); }
 function selectCover(input: AnalysisInput): Crop | undefined { const last = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined; const candidates = selectable(input).filter((crop) => crop.purposes.includes('cover')); return candidates.find((crop) => !last || crop.family !== last.family) ?? candidates[0]; }
 function selectResilience(input: AnalysisInput, excludedCropIds: string[]): Crop | undefined { const last = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined; const candidates = selectable(input).filter((crop) => !excludedCropIds.includes(crop.id) && (crop.commercial || crop.purposes.includes('cover')) && crop.viableTempC); return candidates.find((crop) => !last || crop.family !== last.family) ?? candidates[0]; }

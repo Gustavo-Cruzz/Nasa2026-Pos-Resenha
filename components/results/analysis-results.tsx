@@ -72,6 +72,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <p className="mt-4 text-sm text-slate-300"><b>{en ? 'Highlighted priorities' : 'Prioridades em destaque'}:</b> {data.priorityHighlights.map((id) => priorityLabels[id] ?? id).join(', ')}.</p>
     <ScenarioComparisonTable data={data} />
+    <CroppingSystemsSummary data={data} />
     <DecisionSummary data={data} />
     <section className="mt-6 grid gap-4 lg:grid-cols-3" aria-label="Estratégias exploratórias">{data.strategies.map((strategy) => {
       const cropName = cropDisplayName(strategy.proposedCrop?.cropId, strategy.proposedCrop?.name, locale);
@@ -79,6 +80,14 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     })}</section>
     <details className="mt-6 rounded-xl border border-slate-700 bg-slate-900 p-5"><summary className="cursor-pointer font-bold">{en ? 'Climate and regional technical details' : 'Detalhes técnicos de clima e contexto regional'}</summary><RegionalContextDetails data={data} /><ClimatePanel climate={data.climate} plantingMonth={data.input.plantingMonth} /></details>
   </>;
+}
+
+function CroppingSystemsSummary({ data }: { data: AnalysisResult }) {
+  const { locale } = useLocale();
+  const en = locale === 'en';
+  const systems = data.strategies[0]?.croppingSystems ?? [];
+  if (!systems.length) return null;
+  return <section className="mt-6 rounded-xl border border-cyan-300/50 bg-slate-900 p-5" aria-labelledby="cropping-systems-heading"><h2 className="text-xl font-bold" id="cropping-systems-heading">{en ? 'Declared cropping systems' : 'Sistemas de cultivo declarados'}</h2><p className="mt-2 text-sm text-slate-300">{en ? 'This is producer-declared context layered on top of A/B/C. It does not claim yield, soil improvement, lower water use, or a local recommendation.' : 'Este é contexto declarado pelo produtor, adicionado à comparação A/B/C. Ele não afirma produtividade, melhoria do solo, menor uso de água nem recomendação local.'}</p><div className="mt-4 grid gap-3 md:grid-cols-2">{systems.map((system) => <article className="rounded-lg border border-slate-700 bg-slate-800/60 p-4" key={system.plotId}><p className="font-semibold text-cyan-100">{system.plotId} · {system.type === 'intercrop' ? (en ? 'Simultaneous intercrop' : 'Consórcio simultâneo') : (en ? 'Single crop' : 'Cultivo solteiro')}</p><p className="mt-2 text-sm text-slate-200">{system.speciesCount} {en ? 'species' : 'espécies'} · {system.familyCount} {en ? 'families' : 'famílias'}{system.hasPermanentCrop ? ` · ${en ? 'perennial present' : 'perene presente'}` : ''}.</p><p className="mt-2 text-xs text-slate-300">{system.documentedExample ? (en ? 'Matches a documented exploratory example; it remains non-local advice.' : 'Corresponde a um exemplo exploratório documentado; ainda não é recomendação local.') : (en ? 'Producer-defined system: evidence is not inferred.' : 'Sistema definido pelo produtor: evidência não é inferida.')}</p>{system.risks.length ? <p className="mt-3 text-xs text-amber-100"><b>{en ? 'Risks / unknowns' : 'Riscos / desconhecidos'}:</b> {system.risks.join(' ')}</p> : null}{system.limitations.length ? <p className="mt-2 text-xs text-slate-300">{system.limitations.join(' ')}</p> : null}{system.sourceRefs.length ? <p className="mt-3 text-xs"><b>{en ? 'Sources' : 'Fontes'}:</b> {system.sourceRefs.map((source) => <a className="ml-2 underline" href={source} key={source} rel="noreferrer" target="_blank">{en ? 'Reference' : 'Referência'}</a>)}</p> : null}</article>)}</div></section>;
 }
 
 function RegionalContextDetails({ data }: { data: AnalysisResult }) {

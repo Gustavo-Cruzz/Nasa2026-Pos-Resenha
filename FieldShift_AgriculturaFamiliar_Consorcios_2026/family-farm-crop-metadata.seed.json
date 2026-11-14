@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "newCrops": [
+    {
+      "cropId": "cassava",
+      "catalogTier": "P0",
+      "lifeCycle": "annual_management_long_cycle",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "pumpkin",
+      "catalogTier": "P0",
+      "lifeCycle": "annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "genus_or_multi_species",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "sweet_potato",
+      "catalogTier": "P1",
+      "lifeCycle": "perennial_grown_as_annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "peanut",
+      "catalogTier": "P1",
+      "lifeCycle": "annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "watermelon",
+      "catalogTier": "P1",
+      "lifeCycle": "annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "lettuce",
+      "catalogTier": "P1",
+      "lifeCycle": "annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "tomato",
+      "catalogTier": "P1",
+      "lifeCycle": "annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "carrot",
+      "catalogTier": "P1",
+      "lifeCycle": "biennial_grown_as_annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "kale",
+      "catalogTier": "P1",
+      "lifeCycle": "biennial_often_perennial_management",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "onion",
+      "catalogTier": "P1",
+      "lifeCycle": "biennial_grown_as_annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "bell_pepper",
+      "catalogTier": "P1",
+      "lifeCycle": "perennial_grown_as_annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "okra",
+      "catalogTier": "P1",
+      "lifeCycle": "annual",
+      "rotationEngineEligible": true,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "exploratory_without_regional_validation",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Do not treat reference harvest times as locally verified planting windows"
+    },
+    {
+      "cropId": "coffee",
+      "catalogTier": "P2",
+      "lifeCycle": "perennial",
+      "rotationEngineEligible": false,
+      "taxonResolution": "genus_or_multi_species",
+      "profileStatus": "catalog_only",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Annual rotation evaluator should not treat this as a one-season slot"
+    },
+    {
+      "cropId": "banana",
+      "catalogTier": "P2",
+      "lifeCycle": "perennial",
+      "rotationEngineEligible": false,
+      "taxonResolution": "genus_or_multi_species",
+      "profileStatus": "catalog_only",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Annual rotation evaluator should not treat this as a one-season slot"
+    },
+    {
+      "cropId": "cacao",
+      "catalogTier": "P2",
+      "lifeCycle": "perennial",
+      "rotationEngineEligible": false,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "catalog_only",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Annual rotation evaluator should not treat this as a one-season slot"
+    },
+    {
+      "cropId": "acai",
+      "catalogTier": "P2",
+      "lifeCycle": "perennial",
+      "rotationEngineEligible": false,
+      "taxonResolution": "species_or_infraspecific",
+      "profileStatus": "catalog_only",
+      "origin": "catalog-curation",
+      "usageRestrictions": "Annual rotation evaluator should not treat this as a one-season slot"
+    }
+  ],
+  "existingCropAliases": [
+    {
+      "id": "maize",
+      "ptBRAliases": [
+        "milho em grão",
+        "milho verde",
+        "milho forrageiro"
+      ],
+      "taxonNote": "Zea mays; purpose and harvest stage differ and cannot be used as distinct crop species"
+    },
+    {
+      "id": "cowpea",
+      "ptBRAliases": [
+        "feijão-caupi",
+        "feijão-fradinho",
+        "feijão-de-corda",
+        "feijão-verde (quando for Vigna unguiculata)"
+      ],
+      "taxonNote": "Vigna unguiculata; harvest stage alone is not separate species"
+    },
+    {
+      "id": "common_bean",
+      "ptBRAliases": [
+        "feijão-comum",
+        "feijão-carioca",
+        "feijão-preto",
+        "feijão de cor"
+      ],
+      "taxonNote": "Phaseolus vulgaris; commercial classes are not distinct species"
+    },
+    {
+      "id": "upland_rice",
+      "ptBRAliases": [
+        "arroz de terras altas",
+        "arroz de sequeiro"
+      ],
+      "taxonNote": "Oryza sativa; do not confuse with irrigated lowland rice"
+    }
+  ]
+}

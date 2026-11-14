@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { croppingSystemSchema } from '@/lib/intercrops';
 
 export const coordinatesSchema = z.object({
   latitude: z.number().min(-90).max(90),
@@ -34,9 +35,9 @@ export const soilProfileSchema = z.object({
 
 /** Farmer-declared operational context. It filters exploration; it is not agronomic evidence. */
 export const farmerCropProfileSchema = z.object({
-  availableCropIds: z.array(z.string().min(1)).max(12).default([]),
-  exploreCropIds: z.array(z.string().min(1)).max(12).default([]),
-  blockedCropIds: z.array(z.string().min(1)).max(12).default([]),
+  availableCropIds: z.array(z.string().min(1)).max(40).default([]),
+  exploreCropIds: z.array(z.string().min(1)).max(40).default([]),
+  blockedCropIds: z.array(z.string().min(1)).max(40).default([]),
   customCrops: z.array(z.object({ label: z.string().trim().min(1).max(80), purpose: z.enum(['grain', 'cover', 'forage', 'other']) })).max(10).default([]),
 }).superRefine((profile, context) => {
   const usable = new Set([...profile.availableCropIds, ...profile.exploreCropIds]);
@@ -73,6 +74,7 @@ export const analysisInputSchema = z.object({
   fieldBoundary: fieldBoundarySchema.optional(),
   waterPoint: waterPointSchema.optional(),
   farmerCrops: farmerCropProfileSchema.optional(),
+  croppingSystems: z.array(croppingSystemSchema).max(3).optional(),
   plantingMonth: z.number().int().min(1).max(12),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),

@@ -4,6 +4,10 @@
 
 Field Shift's agronomic and regional-context scope is Brazil nationwide. The system resolves Brazilian coordinates through the versioned municipal mesh and evaluates available municipality/crop evidence; a missing record remains unknown rather than a negative finding. Rio Verde is a reproducible demonstration and artifact example, not the product boundary. Global NASA lookup is retained only as climate-only technical exploration and does not carry Brazilian regional claims outside Brazil.
 
+## Family-farm crops and intercropping
+
+Family-farm crop records and evidence are merged idempotently with the existing catalog. `harvestDaysReference` and harvest-window evidence remain contextual harvest references, never general crop occupancy, local calendar, Kc or water-demand inputs. An intercrop is a system of two or three events in the same plot with overlapping declared periods; succession is a non-overlapping sequence. Documented examples retain their source, constraints and competition warnings. A user-defined system remains qualitative/unknown where evidence is absent. Permanent crops are registrable but excluded from the annual A/B/C generator.
+
 ## Versioned regional soil artifacts
 
 Regional soil context is only available from reviewed, preprocessed SoilGrids 2.0 WCS artifacts. An artifact records the exact coordinate, native 250 m support, 0–5 cm interval, source and license, conventional unit conversion, retrieval time, WCS query URLs and the Q0.05–Q0.95 90% prediction interval. The application classifies it as `estimated`, keeps it separate from farmer laboratory data and never treats it as a field measurement.

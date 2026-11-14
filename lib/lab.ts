@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import type { AnalysisInput } from '@/lib/schema';
+import { cropById, isAnnualRotationEligible } from '@/lib/catalog';
 
-export const LAB_CROP_IDS = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
-export type LabCropId = typeof LAB_CROP_IDS[number];
-const slotSchema = z.object({ year: z.union([z.literal(1), z.literal(2)]), season: z.union([z.literal('A'), z.literal('B')]), cropId: z.enum(LAB_CROP_IDS).nullable() });
+export type LabCropId = string;
+const slotSchema = z.object({ year: z.union([z.literal(1), z.literal(2)]), season: z.union([z.literal('A'), z.literal('B')]), cropId: z.string().nullable() }).refine((slot) => !slot.cropId || (cropById.has(slot.cropId) && isAnnualRotationEligible(slot.cropId)), 'Annual rotation slots accept only catalogued annual-management crops.');
 const scenarioSchema = z.object({ id: z.union([z.literal('A'), z.literal('B'), z.literal('C')]), title: z.string().min(1), slots: z.array(slotSchema).length(4) });
 export const labPlanSchema = z.object({ scenarios: z.array(scenarioSchema).length(3) });
 export type LabPlan = z.infer<typeof labPlanSchema>;
@@ -11,7 +11,7 @@ const slots = (cropId: LabCropId | null) => [{ year: 1 as const, season: 'A' as 
 
 /** Creates hypotheses from the existing engine's first prospective crop only. Empty slots remain unknown. */
 export function createLabPlan(input: AnalysisInput, cropIds: Array<string | undefined>): LabPlan {
-  const valid = (cropId: string | undefined): LabCropId | null => LAB_CROP_IDS.includes(cropId as LabCropId) ? cropId as LabCropId : null;
+  const valid = (cropId: string | undefined): LabCropId | null => cropId && cropById.has(cropId) && isAnnualRotationEligible(cropId) ? cropId : null;
   return { scenarios: [
     { id: 'A', title: input.futureBaseline?.confirmed ? 'Plano do produtor' : 'Continuidade presumida — confirmar', slots: slots(valid(cropIds[0])) },
     { id: 'B', title: 'Saúde do solo', slots: slots(valid(cropIds[1])) },

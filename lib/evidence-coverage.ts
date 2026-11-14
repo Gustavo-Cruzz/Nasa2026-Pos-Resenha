@@ -15,7 +15,7 @@ export function evidenceCoverageAssessment(location: Coordinates | null, cropId:
   if (!crop) throw new Error(`Unknown crop: ${cropId}`);
   const p0 = (P0 as readonly string[]).includes(crop.id);
   const contextualZarc = Boolean(location && regionalContext?.zarc?.crops[crop.id]);
-  const status: EvidenceStatus = !p0 ? 'unavailable' : contextualZarc ? 'partial' : 'insufficient_evidence';
+  const status: EvidenceStatus = contextualZarc ? 'partial' : p0 ? 'insufficient_evidence' : crop.sourceRefs.length ? 'partial' : 'insufficient_evidence';
   const reference = crop.sourceRefs;
   const indicators: EvidenceIndicator[] = [
     { id: 'temperature', label: 'Faixa térmica documentada', value: range(crop.viableTempC, '°C') ?? range(crop.idealTempC, '°C'), status: crop.viableTempC || crop.idealTempC ? 'partial' : 'insufficient_evidence', sourceRefs: reference, explanation: crop.viableTempC || crop.idealTempC ? 'Parâmetro documentado fora de uma validação local automática.' : 'N/D: faixa térmica verificável não está disponível.' },

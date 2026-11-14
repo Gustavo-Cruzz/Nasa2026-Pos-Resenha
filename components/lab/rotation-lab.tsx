@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { p0Crops, evidenceCoverageAssessment, type CropCoverage } from '@/lib/evidence-coverage';
+import { evidenceCoverageAssessment, type CropCoverage } from '@/lib/evidence-coverage';
+import { crops as p0Crops } from '@/lib/catalog';
 import { changeLabSlot, createLabPlan, type LabCropId, type LabPlan } from '@/lib/lab';
 import { loadDraft, saveLabPlan } from '@/lib/storage';
 import { CropSprite } from '@/components/crops/crop-sprite';
