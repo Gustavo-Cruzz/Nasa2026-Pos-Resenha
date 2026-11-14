@@ -48,9 +48,14 @@ export const futureBaselineSchema = z.object({
   confirmed: z.literal(true),
 }).refine((baseline) => Boolean(baseline.cropId) !== Boolean(baseline.otherLabel), 'Select a catalog crop or describe another baseline crop.');
 
+/** Water source as declared by the producer. It is context only: no flow, autonomy or irrigation is derived from it. */
+export const waterPointKinds = ['well', 'river', 'reservoir', 'other'] as const;
+export const waterPointSchema = z.object({ kind: z.enum(waterPointKinds), label: z.string().trim().max(80).optional() });
+
 export const analysisInputSchema = z.object({
   location: coordinatesSchema,
   fieldBoundary: fieldBoundarySchema.optional(),
+  waterPoint: waterPointSchema.optional(),
   plantingMonth: z.number().int().min(1).max(12),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
@@ -65,5 +70,6 @@ export const analysisInputSchema = z.object({
 
 export type Coordinates = z.infer<typeof coordinatesSchema>;
 export type FieldBoundary = z.infer<typeof fieldBoundarySchema>;
+export type WaterPoint = z.infer<typeof waterPointSchema>;
 export type SoilProfile = z.infer<typeof soilProfileSchema>;
 export type AnalysisInput = z.infer<typeof analysisInputSchema>;

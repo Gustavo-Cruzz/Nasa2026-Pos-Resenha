@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle2, CircleHelp, ClipboardCheck } from 'lucide-react';
 import { loadDraft } from '@/lib/storage';
+import { loadLastAnalysis, saveLastAnalysis } from '@/lib/analysis-cache';
 import type { AnalysisResult, ValidationLevel } from '@/lib/engine/types';
 import { Button } from '@/components/ui/button';
 import { ClimatePanel } from '@/components/results/climate-panel';
@@ -14,6 +15,8 @@ import { DemoCharacter } from '@/components/pixel/demo-character';
 import { PixelAnimation } from '@/components/pixel/pixel-animation';
 import { ReviewTransition } from '@/components/pixel/review-transition';
 import { ReviewObjects } from '@/components/pixel/review-objects';
+import { BoundarySummary, waterKindLabel } from '@/components/boundary/boundary-summary';
+import { DecisionHero } from '@/components/results/decision-hero';
 import { NasaInsightPanel } from '@/components/results/nasa-insight-panel';
 import { EvidenceCenterTrigger } from '@/components/evidence/evidence-center';
 import { ExportSummaryButton } from '@/components/results/export-summary-button';
@@ -21,7 +24,7 @@ import { useLocale } from '@/components/locale-provider';
 import { recordJourneyCompletion } from '@/lib/journey-metrics';
 import { cropDisplayName, explanationDisplay, scenarioDisplayTitle } from '@/lib/presentation';
 
-type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult };
+type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult; cachedAt?: string };
 const validationLabel: Record<ValidationLevel, string> = { climate_exploration: 'Exploração climática', regionally_contextualized: 'Contexto regional disponível', locally_validated: 'Validação local rastreável' };
 const priorityLabel: Record<string, string> = { root_zone_wetness: 'contexto hídrico da zona radicular', cover_potential: 'potencial de cobertura', functional_diversity: 'diversidade funcional' };
 const missingLabel: Record<string, string> = { cycle_duration: 'duração documentada', eligible_crop: 'cultura com critérios mínimos', historical_climate: 'clima histórico', documented_temperature_range: 'faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'slots ainda não configurados', futureBaseline: 'plano futuro confirmado' };
@@ -35,8 +38,8 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     const draft = loadDraft();
     if (!draft) { void Promise.resolve().then(() => setState({ kind: 'empty' })); return; }
     void fetch('/api/analyze', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ input: draft.data, ...(draft.labPlan ? { labPlan: draft.labPlan } : {}) }) })
-      .then(async (response) => { const body: unknown = await response.json(); if (!response.ok) throw new Error(typeof body === 'object' && body && 'message' in body ? String(body.message) : 'Não foi possível analisar o rascunho.'); setState({ kind: 'ready', data: body as AnalysisResult }); })
-      .catch((error: unknown) => setState({ kind: 'error', message: error instanceof Error ? error.message : 'Não foi possível analisar o rascunho.' }));
+      .then(async (response) => { const body: unknown = await response.json(); if (!response.ok) throw new Error(typeof body === 'object' && body && 'message' in body ? String(body.message) : 'Não foi possível analisar o rascunho.'); const result = body as AnalysisResult; saveLastAnalysis(result); setState({ kind: 'ready', data: result }); })
+      .catch((error: unknown) => { const cached = loadLastAnalysis(); if (cached) setState({ kind: 'ready', data: cached.data, cachedAt: cached.savedAt }); else setState({ kind: 'error', message: error instanceof Error ? error.message : 'Não foi possível analisar o rascunho.' }); });
   }, []);
   useEffect(() => { if (state.kind === 'ready') recordJourneyCompletion(); }, [state.kind]);
   if (state.kind === 'loading') return <p role="status" className="mt-6 flex items-center gap-3 text-slate-300"><PixelAnimation fallback="/assets/interactions/analysis-loading-static.png" frames={8} loop sheet="/assets/interactions/analysis-loading-sheet.png" />{en ? 'Analyzing climate and scenarios…' : 'Analisando clima e cenários…'}</p>;
@@ -50,10 +53,12 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   return <>
     <ReviewTransition />
     {demo ? <aside className="mt-5 rounded-xl border border-lime-300 bg-lime-300/10 p-4"><p className="font-bold text-lime-200">{en ? 'Brazil demonstration' : 'Demonstração Brasil'}</p><p className="mt-1 text-sm text-slate-200">Rio Verde · NASA POWER + {en ? 'municipal ZARC context' : 'contexto ZARC municipal'}.</p></aside> : null}
+    {state.cachedAt ? <p className="mt-5 rounded-xl border border-amber-300 bg-amber-950/40 p-4 text-sm" role="status"><b>{en ? 'Offline or NASA unreachable.' : 'Sem rede ou NASA inacessível.'}</b> {en ? `Showing the last analysis saved on this device (${new Date(state.cachedAt).toLocaleString('en-US')}). It may not reflect later edits or newer data.` : `Mostrando a última análise salva neste dispositivo (${new Date(state.cachedAt).toLocaleString('pt-BR')}). Ela pode não refletir edições posteriores nem dados mais novos.`}</p> : null}
+    <DecisionHero data={data} />
     <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="secondary"><Link href="/lab">{en ? 'Back to laboratory' : 'Voltar ao laboratório'}</Link></Button><Button asChild variant="secondary"><Link href="/farm">{en ? 'Edit farm data' : 'Alterar dados da fazenda'}</Link></Button><ExportSummaryButton data={data} /></div>
     <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
     {data.evidenceManifest ? <div className="mt-4"><EvidenceCenterTrigger manifest={data.evidenceManifest} /></div> : null}
-    {data.boundaryAnalysis?.status === 'spatial_context' ? <section className="mt-5 rounded-xl border border-cyan-300/50 bg-cyan-500/10 p-4" aria-labelledby="boundary-analysis-heading"><h2 className="font-bold" id="boundary-analysis-heading">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><p className="mt-2 text-sm text-slate-200">{en ? `${data.boundaryAnalysis.vertexCount} vertices · approximately ${data.boundaryAnalysis.areaHa ?? 'N/D'} ha. The polygon defines spatial context; it does not prove a registered field.` : `${data.boundaryAnalysis.vertexCount} vértices · aproximadamente ${data.boundaryAnalysis.areaHa ?? 'N/D'} ha. O polígono delimita o contexto espacial; não comprova talhão cadastrado.`}</p><p className="mt-2 text-sm text-slate-200">{data.boundaryAnalysis.smapHistorical.spatialInterpretation === 'coarser_than_boundary' ? (en ? 'The boundary is smaller than one nominal 9 km SMAP L4 grid cell; SMAP must be interpreted as regional context, not field moisture.' : 'O limite é menor que uma célula nominal de 9 km do SMAP L4; o SMAP deve ser interpretado como contexto regional, não umidade do talhão.') : (en ? 'The boundary may intersect multiple nominal 9 km SMAP L4 cells; a numeric zonal series still requires Earthdata preprocessing.' : 'O limite pode intersectar múltiplas células nominais de 9 km do SMAP L4; a série zonal numérica ainda exige pré-processamento Earthdata.')}</p><p className="mt-2 text-xs text-slate-400">SMAP L4 SPL4SMGP v8 · 31/03/2015–presente · 3 h · {en ? 'numeric status' : 'estado numérico'}: N/D.</p><a className="mt-2 inline-block text-sm font-semibold underline" href={data.boundaryAnalysis.smapHistorical.sourceUrl} rel="noreferrer" target="_blank">{en ? 'Open official SMAP product' : 'Abrir produto SMAP oficial'}</a></section> : null}
+    {data.input.fieldBoundary ? <div className="mt-5"><h2 className="mb-2 font-bold">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><BoundarySummary boundary={data.input.fieldBoundary} waterPoint={data.input.waterPoint} /></div> : data.input.waterPoint ? <p className="mt-5 text-sm text-slate-300"><b>{en ? 'Water point declared by the producer' : 'Ponto de água informado pelo produtor'}:</b> {waterKindLabel(data.input.waterPoint.kind, en)}{data.input.waterPoint.label ? ` — ${data.input.waterPoint.label}` : ''}. {en ? 'Declared context only.' : 'Apenas contexto declarado.'}</p> : null}
     <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <p className="mt-4 text-sm text-slate-300"><b>{en ? 'Highlighted priorities' : 'Prioridades em destaque'}:</b> {data.priorityHighlights.map((id) => priorityLabels[id] ?? id).join(', ')}.</p>
     <ScenarioComparisonTable data={data} />

@@ -3,7 +3,7 @@ import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
 import { labPlanSchema, type LabPlan } from '@/lib/lab';
 
 const DRAFT_KEY = 'field-shift:draft';
-const v2DraftSchema = z.object({ version: z.literal(2), savedAt: z.string().datetime(), data: analysisInputSchema, labPlan: labPlanSchema.optional(), legacy: z.record(z.string(), z.unknown()).optional() });
+export const v2DraftSchema = z.object({ version: z.literal(2), savedAt: z.string().datetime(), data: analysisInputSchema, labPlan: labPlanSchema.optional(), legacy: z.record(z.string(), z.unknown()).optional() });
 export type Draft = z.infer<typeof v2DraftSchema>;
 
 /** Converts only validated V1 content. Unknown V1 fields stay in `legacy` until a V2 save succeeds. */

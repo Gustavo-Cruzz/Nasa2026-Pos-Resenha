@@ -7,9 +7,9 @@ export function PixelAnimation({ ariaLabel, fallback, frameHeight, frameMs = 100
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReduced(media.matches);
-    update(); media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
+    const update = () => setReduced(media.matches || document.documentElement.dataset.motion === 'reduced');
+    update(); media.addEventListener('change', update); window.addEventListener('field-shift:prefs', update);
+    return () => { media.removeEventListener('change', update); window.removeEventListener('field-shift:prefs', update); };
   }, []);
   useEffect(() => {
     if (reduced || frames <= 1) return;

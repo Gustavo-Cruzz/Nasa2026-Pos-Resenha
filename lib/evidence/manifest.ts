@@ -2,7 +2,8 @@ import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { EvidenceClaim, EvidenceGap, EvidenceManifest, EvidenceSource } from '@/lib/evidence/types';
 import type { Rotation, ValidationLevel } from '@/lib/engine/types';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
-import type { BoundaryAnalysis } from '@/lib/engine/boundary-context';
+import { analyzeBoundary, type BoundaryAnalysis } from '@/lib/engine/boundary-context';
+import { buildSourceHealth } from '@/lib/source-health';
 
 const gapLabels: Record<string, string> = { cycle_duration: 'Duração documentada', eligible_crop: 'Cultura com critérios mínimos', historical_climate: 'Clima histórico', documented_temperature_range: 'Faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'Slots ainda não configurados', crop: 'Cultura do slot', temperature: 'Faixa térmica', cycle: 'Duração documentada', soil_ph: 'Contexto de pH', previous_crop_family: 'Família da cultura anterior' };
 
@@ -47,5 +48,5 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
     else if (!existing) gapsById.set(gap, { id: gap, label: gapLabels[gap] ?? gap, scenarioIds: [strategy.id] });
   }
   if (boundary?.status === 'spatial_context') gapsById.set('smap_numeric_polygon_history', { id: 'smap_numeric_polygon_history', label: 'Série histórica SMAP numérica agregada ao polígono', scenarioIds: [] });
-  return { sources, claims, gaps: [...gapsById.values()], guardrails: ['Não é previsão meteorológica.', 'Precipitação observada não é demanda hídrica.', 'Contexto municipal não é validação do talhão.', 'Cenários exploratórios não são recomendação agronômica.'] };
+  return { sources, claims, gaps: [...gapsById.values()], guardrails: ['Não é previsão meteorológica.', 'Precipitação observada não é demanda hídrica.', 'Contexto municipal não é validação do talhão.', 'Cenários exploratórios não são recomendação agronômica.'], sourceHealth: buildSourceHealth({ climate, regionalContext, boundaryAnalysis: boundary ?? analyzeBoundary() }) };
 }

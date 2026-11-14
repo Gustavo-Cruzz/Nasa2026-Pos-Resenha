@@ -7,9 +7,9 @@ import { useLocale } from '@/components/locale-provider';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export function SiteHeader() {
-  const { copy } = useLocale();
+  const { copy, locale } = useLocale();
   const pathname = usePathname();
-  const links = [{ href: '/explore', label: copy.explore }, { href: '/farm', label: copy.farm }, { href: '/lab', label: copy.lab }, { href: '/results', label: copy.compare }, { href: '/methodology', label: copy.methodology }];
+  const links = [{ href: '/explore', label: copy.explore }, { href: '/farm', label: copy.farm }, { href: '/lab', label: copy.lab }, { href: '/results', label: copy.compare }, { href: '/methodology', label: copy.methodology }, { href: '/demo', label: locale === 'en' ? 'Demo' : 'Demo' }, { href: '/settings', label: locale === 'en' ? 'Settings' : 'Ajustes' }];
   const menuLinks = links.map((link) => <Link aria-current={pathname === link.href ? 'page' : undefined} className={pathname === link.href ? 'font-bold text-lime-200 underline' : 'hover:text-lime-200 hover:underline'} href={link.href} key={link.href}>{link.label}</Link>);
   return <header className="border-b border-slate-800"><nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4" aria-label="Navegação principal"><Link className="flex items-center gap-2 font-bold text-lime-300" href="/"><Sprout aria-hidden="true" size={22} />{copy.productName}</Link><div className="hidden items-center gap-4 text-sm md:flex">{menuLinks}</div><div className="flex items-center gap-2"><LocaleSwitcher /><details className="site-menu md:hidden"><summary>{copy.menu}</summary><div>{menuLinks}</div></details></div></nav></header>;
 }

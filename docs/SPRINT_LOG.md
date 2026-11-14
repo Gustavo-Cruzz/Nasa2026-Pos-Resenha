@@ -475,3 +475,31 @@ Implemented: replaced the hard-coded January Atlas summary with a same-calendar-
 Implemented: removed the Brazil-context block from the Atlas and stopped its redundant municipal request on that screen. Crop sprites are now passive compact catalog cards: they no longer open evidence dialogs. Regional evidence remains available later in analysis/results where it affects interpretation. Desktop Atlas allocation changed from 65/35 to 56/44, and the wider panel uses four compact crop columns at XL widths so the pixel-art catalog appears substantially earlier without harming the mobile two-column layout.
 
 Evidence (2026-11-14): unit coverage verifies same-day historical medians and missing-value preservation; browser coverage verifies the current-day panel, absence of the Brazil block, passive sprites and Atlas-to-Farm navigation. `npm run lint`, `npm run typecheck`, `npm run test` (67 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed.
+
+## Sprint 1 — Decisão clara + estados de evidência
+
+Status: complete.
+
+Implemented: `DecisionHero` at the top of Results (month, hypothesis/crop, NASA signal, documented range, state attention | compatible | N/D, rule, source link and next human check), driven by the pure `lib/engine/decision-hero.ts`. `compatible` requires every hypothesis to have a documented range containing the NASA value; a scenario without a range is listed as N/D and never counted as compatible. Compact data-state chips (historical available, verified cache, partial coverage, N/D) come from `lib/source-health.ts`. Inline pixel-art `StatusCharacter` shows calm / alert / no-reading. Repeated technical text (NASA Insight intro, duplicate attention banner, limitation and temporary-month notes, the long boundary block) was removed from Results; detail lives in the Evidence Center. The Markdown export now has "Decisão concreta" and "Estado das fontes".
+
+Scope held: no score, automatic recommendation, forecast, yield or irrigation.
+
+Evidence (2026-11-14): `tests/unit/decision-hero.test.ts` covers attention with month/value/range/rule/source/next step, compatible only when all are readable, N/D for unavailable climate, missing thermal data and precipitation-only, export content, source states and no Brazilian context outside Brazil. Verified in the browser with real NASA POWER data for Rio Verde (compatible), Accra (compatible) and New Delhi (attention).
+
+## Sprint 2 — Polígono útil + entrada rural simples
+
+Status: complete.
+
+Implemented: `lib/geojson.ts` imports Polygon / Feature / FeatureCollection / single-polygon MultiPolygon, drops the closing vertex, ignores altitude, and fails with clear pt-BR/en messages for invalid JSON, non-polygons, several polygons, holes, bad coordinates, <3 distinct vertices, >64 vertices, self-intersection, zero area and files over 200k characters. `GeoJsonImport` is available in the Atlas (also sets the point to the centroid) and Farm; the boundary persists in the local draft. `BoundarySummary` shows area, centroid, vertices and the relation to the nominal 9 km SMAP cell in Atlas, Farm, Results and the export. Optional producer-declared water point (well, river, reservoir, other, plus a note) is stored in the draft as declared context only. SMAP historical stays "N/D — requer pré-processamento Earthdata"; GIBS colors are never converted to numbers.
+
+Evidence (2026-11-14): `tests/unit/geojson.test.ts` covers valid shapes, every error code, persistence of boundary and water point in the draft, rejection of an unknown water kind, and that adding a water point leaves the whole analysis (crops, indicators, evidence, NASA insight) unchanged.
+
+## Sprint 3 — Operação, acessibilidade e demo global
+
+Status: complete, with the limitations below.
+
+Implemented: PWA manifest, generated icons (`scripts/generate-pwa-icons.mjs`), and `public/sw.js` (network-first pages, cache-first static assets, never `/api` or cross-origin), registered in production only. The last server analysis is kept in `localStorage` and shown with a clear saved-at banner when the request fails; an offline banner appears when the browser is offline. `/settings` has text size, high contrast and reduced animations (applied before hydration; `PixelAnimation` honors it) and JSON export/import of the draft, validated against the draft schema (invalid files change nothing). "Saúde das fontes" in the Evidence Center lists NASA POWER, GPM IMERG, SMAP, ZARC, PAM and IBGE with origin, period, coverage, cache and gap. `/demo` is a 90 s, six-step guided demo (location, polygon, NASA decision, hypothesis under attention, evidence, human next step) for Brazil, Ghana and India; Brazilian sources appear as N/D outside Brazil. Skip link, visible focus ring and keyboard-operable controls were added.
+
+Evidence (2026-11-14): unit tests for draft export/import, the analysis cache and preferences; browser checks of the demo for all three places with real data, settings applying attributes and persisting, and the source-health drawer. A hydration mismatch introduced in Settings was found in the browser and fixed.
+
+Limitations / next: (1) the in-app browser could not register a service worker, so offline reload through `sw.js` is not verified; the fallback to the saved analysis is covered by unit tests only. Pages work offline only after being opened once online. (2) Playwright's Chromium is not installed, so the e2e suite was not run and no e2e was added. (3) Desktop/mobile screenshot capture and the final visual review were not done; checks were at the narrow pane width. (4) `/lab` and `/farm` still read `localStorage` during render (pre-existing hydration warning on `/lab`). (5) The Atlas map worker issue seen in dev is unchanged.
