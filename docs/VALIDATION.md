@@ -12,7 +12,8 @@
 - Live POWER parsing keeps `IMERG_PRECTOT` and `GWETROOT` coverage separate. Their absence remains `unknown`; no fixture is enriched or simulated.
 - GPM rain-day counts and root-zone wetness are historical regional context only. They never alter crop selection or become irrigation, drought tolerance, field moisture, or local validation.
 - Scenario C is labeled “Contexto hídrico”; neither UI nor engine calls it water resilience.
-- The SMAP GIBS raster is a dated visual overlay only. Drawing a polygon does not change analysis or claim a verified field.
+- The SMAP GIBS raster is a dated visual overlay only and its colors never become numeric measurements. A polygon enters analysis as user-supplied spatial context, approximate area and a 9 km resolution warning; it does not claim a verified field. Historical numeric SMAP remains unknown without a polygon-matched, authenticated Earthdata preprocessing artifact.
+- A concrete NASA Insight attention decision must contain month, scenario, observed NASA value, documented crop range, rule ID and sources. Missing evidence cannot generate attention.
 - Rio Verde, Accra and New Delhi comparison calls each coordinate independently and exposes unavailable values instead of substituting another location.
 - Verified Kc profiles may appear only beside available NASA water exposure. They do not change crop selection, produce ET0/ETc, rank crops/studies, or claim irrigation need.
 - Common-bean Kc values retain the ANA irrigated-national-reference context; they are not projected to cowpea, upland rice, ruziziensis or a local calendar.

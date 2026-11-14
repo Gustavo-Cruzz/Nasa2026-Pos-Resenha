@@ -5,6 +5,9 @@ export const coordinatesSchema = z.object({
   longitude: z.number().min(-180).max(180),
 });
 
+const polygonPositionSchema = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)]);
+export const fieldBoundarySchema = z.array(polygonPositionSchema).min(3).max(64);
+
 export const yearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Use YYYY-MM.');
 
 export const soilProfileSchema = z.object({
@@ -47,6 +50,7 @@ export const futureBaselineSchema = z.object({
 
 export const analysisInputSchema = z.object({
   location: coordinatesSchema,
+  fieldBoundary: fieldBoundarySchema.optional(),
   plantingMonth: z.number().int().min(1).max(12),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
@@ -60,5 +64,6 @@ export const analysisInputSchema = z.object({
 });
 
 export type Coordinates = z.infer<typeof coordinatesSchema>;
+export type FieldBoundary = z.infer<typeof fieldBoundarySchema>;
 export type SoilProfile = z.infer<typeof soilProfileSchema>;
 export type AnalysisInput = z.infer<typeof analysisInputSchema>;

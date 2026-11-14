@@ -1,10 +1,10 @@
 # Demo
 
 1. Open Atlas and select **Rio Verde**. Show POWER temperature/rain, GPM IMERG rain days and root-zone context.
-2. Enable **NASA SMAP**. State: dated 2025-06-30, 9 km, model value-added visual evidence—not field measurement.
-3. Draw an exploratory boundary. State: user sketch only; it does not prove ownership or agricultural use.
+2. Enable **NASA SMAP**. State: dated 2025-06-30, 9 km, model value-added visual evidence—not field measurement; historical numeric SMAP needs authenticated Earthdata preprocessing.
+3. Draw an exploratory boundary and carry it into the farm. Show its approximate area and whether the 9 km SMAP grid is coarser than the boundary; the sketch still does not prove ownership or agricultural use.
 4. Run **Same NASA lens, three regions**. Compare Rio Verde, Accra and New Delhi; emphasize independent coordinate requests and explicit N/D.
-5. Continue to A/B/C. Present C as **Contexto hídrico**, not a drought-resilience claim. Show “Resposta hídrica documentada”: NASA describes historical rain days and root-zone context, while the crop catalog contributes the verified Kc peak and stage. The app does not calculate ETc, water demand or irrigation.
+5. Continue to A/B/C. First show the concrete attention sentence: month + hypothesis + NASA value outside the documented crop range. Present C as **Contexto hídrico**, not a drought-resilience claim. Show “Resposta hídrica documentada”: NASA describes historical rain days and root-zone context, while the crop catalog contributes the verified Kc peak and stage. The app does not calculate ETc, water demand or irrigation.
 
 1. On the home page, use “Ver demonstração do Brasil”; explain that the prefilled farm is fictional and exists only to shorten the demo.
 2. Show the compact journey menu and the prefilled historical crops, priorities and common planting month.

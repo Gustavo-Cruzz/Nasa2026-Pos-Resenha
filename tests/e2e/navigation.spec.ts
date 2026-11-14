@@ -28,6 +28,7 @@ test('navigates from home to the global atlas with its real MapLibre basemap', a
 test('keeps coordinate entry available when MapLibre WebGL is unavailable', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
+  await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
   const canvas = page.locator('.atlas-map .maplibregl-canvas');
   if (await canvas.count()) {
     await canvas.click({ position: { x: 240, y: 150 } });
@@ -62,6 +63,10 @@ test('shows dated SMAP evidence, draws an exploratory area, and compares three N
   await expect(page.getByRole('heading', { name: 'Acra, Gana' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Nova Délhi, Índia' })).toBeVisible();
   await expect(page.getByText('12', { exact: true })).toHaveCount(3);
+  if (await canvas.count()) {
+    await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
+    await expect(page.getByText(/Limite exploratório com 3 vértices incluído na análise/)).toBeVisible();
+  }
 });
 
 test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {

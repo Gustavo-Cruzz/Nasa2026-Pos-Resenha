@@ -15,6 +15,7 @@ describe('NASA causal insight', () => {
     expect(result.nasaInsight.status).toBe('contrast');
     expect(result.nasaInsight.observedValue).toBe(35);
     expect(result.nasaInsight.effects.map((effect) => effect.state)).toEqual(['attention', 'compatible', 'attention']);
+    expect(result.nasaInsight.attentionDecision).toMatchObject({ scenarioId: 'A', observedValue: 35, ruleId: 'DOCUMENTED_THERMAL_RANGE' });
     expect(result.nasaInsight.effects.every((effect) => effect.sourceRefs.some((source) => source.includes('power.larc.nasa.gov')))).toBe(true);
     expect(result.nasaInsightByMonth).toHaveLength(12);
     expect(result.strategies.map((strategy) => strategy.proposedCrop?.cropId)).toEqual(['soybean', 'sorghum', 'cowpea']);
@@ -26,6 +27,7 @@ describe('NASA causal insight', () => {
     expect(result.nasaInsight.status).toBe('observational');
     expect(result.nasaInsight.metric).toBe('precipitation');
     expect(result.nasaInsight.changesComparison).toBe(false);
+    expect(result.nasaInsight.attentionDecision).toBeNull();
     expect(result.nasaInsight.limitations[0]).toMatch(/não representa demanda hídrica/i);
   });
 
@@ -33,5 +35,6 @@ describe('NASA causal insight', () => {
     const result = analyze(input, { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['NASA down'] });
     expect(result.nasaInsight.status).toBe('unknown');
     expect(result.nasaInsight.effects.every((effect) => effect.state === 'unknown')).toBe(true);
+    expect(result.nasaInsight.attentionDecision).toBeNull();
   });
 });

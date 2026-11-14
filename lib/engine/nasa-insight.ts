@@ -26,15 +26,19 @@ export function deriveNasaInsight(strategies: Rotation[], climate: ClimateContex
     const comparableStates = new Set(effects.filter((effect) => effect.state !== 'unknown').map((effect) => effect.state));
     const comparableCount = effects.filter((effect) => effect.state !== 'unknown').length;
     const changesComparison = comparableStates.size > 1;
-    if (comparableCount > 0) return { status: changesComparison ? 'contrast' : 'shared_signal', month, metric: 'temperature', observedValue: temperature, unit: '°C', period, coveragePct: provenance?.coveragePct.T2M ?? null, changesComparison, effects, limitations: ['Comparação exploratória com faixas térmicas documentadas; não é recomendação agronômica.'], sourceUrl };
+    if (comparableCount > 0) {
+      const attention = effects.find((effect) => effect.state === 'attention' && effect.documentedRangeC);
+      const attentionDecision = attention?.documentedRangeC ? { scenarioId: attention.scenarioId, cropId: attention.cropId, cropName: attention.cropName, observedValue: temperature, documentedRangeC: attention.documentedRangeC, ruleId: 'DOCUMENTED_THERMAL_RANGE' as const, sourceRefs: attention.sourceRefs } : null;
+      return { status: changesComparison ? 'contrast' : 'shared_signal', month, metric: 'temperature', observedValue: temperature, unit: '°C', period, coveragePct: provenance?.coveragePct.T2M ?? null, changesComparison, effects, attentionDecision, limitations: ['Comparação exploratória com faixas térmicas documentadas; não é recomendação agronômica.'], sourceUrl };
+    }
   }
 
   if (climate.status === 'available' && precipitation?.medianTotalMm !== null && precipitation) {
     const effects = strategies.map<NasaInsightEffect>((strategy) => ({ scenarioId: strategy.id, cropId: strategy.proposedCrop?.cropId ?? null, cropName: strategy.proposedCrop?.name ?? null, state: 'observed', ruleId: 'HISTORICAL_PRECIPITATION_ONLY', documentedRangeC: null, sourceRefs: sourceUrl ? [sourceUrl] : [] }));
-    return { status: 'observational', month, metric: 'precipitation', observedValue: precipitation.medianTotalMm, unit: 'mm', period, coveragePct: precipitation.coveragePct, changesComparison: false, effects, limitations: [PRECIP_LIMIT], sourceUrl };
+    return { status: 'observational', month, metric: 'precipitation', observedValue: precipitation.medianTotalMm, unit: 'mm', period, coveragePct: precipitation.coveragePct, changesComparison: false, effects, attentionDecision: null, limitations: [PRECIP_LIMIT], sourceUrl };
   }
 
-  return { status: 'unknown', month, metric: 'unavailable', observedValue: null, unit: null, period, coveragePct: null, changesComparison: false, effects: unknownEffects(strategies), limitations: [UNKNOWN_LIMIT], sourceUrl };
+  return { status: 'unknown', month, metric: 'unavailable', observedValue: null, unit: null, period, coveragePct: null, changesComparison: false, effects: unknownEffects(strategies), attentionDecision: null, limitations: [UNKNOWN_LIMIT], sourceUrl };
 }
 
 export function deriveNasaInsights(strategies: Rotation[], climate: ClimateContext): NasaInsight[] {

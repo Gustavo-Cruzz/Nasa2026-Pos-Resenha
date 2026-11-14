@@ -2,18 +2,20 @@ import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { EvidenceClaim, EvidenceGap, EvidenceManifest, EvidenceSource } from '@/lib/evidence/types';
 import type { Rotation, ValidationLevel } from '@/lib/engine/types';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
+import type { BoundaryAnalysis } from '@/lib/engine/boundary-context';
 
 const gapLabels: Record<string, string> = { cycle_duration: 'Duração documentada', eligible_crop: 'Cultura com critérios mínimos', historical_climate: 'Clima histórico', documented_temperature_range: 'Faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'Slots ainda não configurados', crop: 'Cultura do slot', temperature: 'Faixa térmica', cycle: 'Duração documentada', soil_ph: 'Contexto de pH', previous_crop_family: 'Família da cultura anterior' };
 
 function claimStatus(state: string): EvidenceClaim['status'] { return state === 'unknown' ? 'missing' : state === 'attention' || state === 'no' ? 'partial' : 'supported'; }
 
-export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateContext, regionalContext: BrazilRegionalContext): EvidenceManifest {
+export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateContext, regionalContext: BrazilRegionalContext, boundary?: BoundaryAnalysis): EvidenceManifest {
   const sources: EvidenceSource[] = [{ id: 'farmer-input', kind: 'farmer', title: 'Dados informados pelo produtor', status: 'available', scope: 'user_supplied', url: null, period: null, coveragePct: null }];
   const sourceByUrl = new Map<string, string>();
   if (climate.provenance) {
     sources.push({ id: 'nasa-power', kind: 'nasa', title: climate.provenance.rawParameterNames.includes('IMERG_PRECTOT') ? 'NASA POWER · MERRA-2 + GPM IMERG' : 'NASA POWER Daily Point', status: climate.status === 'available' ? 'available' : 'unavailable', scope: 'global', url: climate.provenance.sourceUrl, period: `${climate.provenance.period.start}–${climate.provenance.period.end}`, coveragePct: climate.provenance.coveragePct.T2M });
     sourceByUrl.set(climate.provenance.sourceUrl, 'nasa-power');
   } else sources.push({ id: 'nasa-power', kind: 'nasa', title: 'NASA POWER Daily Point', status: 'unavailable', scope: 'global', url: null, period: null, coveragePct: null });
+  if (boundary?.status === 'spatial_context') sources.push({ id: 'nasa-smap-history', kind: 'nasa', title: 'NASA SMAP L4 SPL4SMGP v8', status: 'partial', scope: 'global', url: boundary.smapHistorical.sourceUrl, period: boundary.smapHistorical.temporalCoverage, coveragePct: null });
   if (regionalContext.zarc) {
     sources.push({ id: 'regional-zarc', kind: 'regional', title: `ZARC ${regionalContext.zarc.safra}`, status: 'available', scope: 'municipal', url: regionalContext.zarc.sourceUrl, period: regionalContext.zarc.safra, coveragePct: null });
     sourceByUrl.set(regionalContext.zarc.sourceUrl, 'regional-zarc');
@@ -44,5 +46,6 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
     if (existing && !existing.scenarioIds.includes(strategy.id)) existing.scenarioIds.push(strategy.id);
     else if (!existing) gapsById.set(gap, { id: gap, label: gapLabels[gap] ?? gap, scenarioIds: [strategy.id] });
   }
+  if (boundary?.status === 'spatial_context') gapsById.set('smap_numeric_polygon_history', { id: 'smap_numeric_polygon_history', label: 'Série histórica SMAP numérica agregada ao polígono', scenarioIds: [] });
   return { sources, claims, gaps: [...gapsById.values()], guardrails: ['Não é previsão meteorológica.', 'Precipitação observada não é demanda hídrica.', 'Contexto municipal não é validação do talhão.', 'Cenários exploratórios não são recomendação agronômica.'] };
 }

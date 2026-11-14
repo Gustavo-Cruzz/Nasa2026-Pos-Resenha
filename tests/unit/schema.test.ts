@@ -22,4 +22,10 @@ describe('foundation domain schemas', () => {
     expect(analysisInputSchema.safeParse({ ...base, history: [event, { ...event, startYearMonth: '2024-07', endYearMonth: '2024-08' }, { ...event, startYearMonth: '2024-09', endYearMonth: '2024-10' }] }).success).toBe(true);
     expect(analysisInputSchema.safeParse({ ...base, history: [event, event, event, event] }).success).toBe(false);
   });
+
+  it('validates an optional exploratory field boundary', () => {
+    const base = { location: { latitude: -17.8, longitude: -50.9 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
+    expect(analysisInputSchema.safeParse({ ...base, fieldBoundary: [[-50.92, -17.81], [-50.90, -17.81], [-50.91, -17.79]] }).success).toBe(true);
+    expect(analysisInputSchema.safeParse({ ...base, fieldBoundary: [[-50.92, -17.81], [-50.90, -17.81]] }).success).toBe(false);
+  });
 });

@@ -453,3 +453,15 @@ Guardrails: the feature does not calculate ET0, ETc, crop water demand, irrigati
 Evidence (2026-11-14): catalog projection and engine tests verify the common-bean ANA record, observed/unknown behavior, exact source traceability, peak Kc display and absence of ETc/irrigation-score outputs. Browser coverage verifies the hydric row and its limitation in Results. `npm run lint`, `npm run typecheck`, `npm run test` (63 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed.
 
 Limitations / next: Kc is a dimensionless crop-stage coefficient, not a measured water requirement. A defensible quantitative balance would additionally require verified ET0, stage durations and locally appropriate calendars; those inputs are intentionally absent rather than inferred. No deployment or push was performed.
+
+## NASA-W4 — Decisão concreta e polígono analisável
+
+Status: complete.
+
+Implemented: NASA Insight now emits a structured attention decision whenever a monthly NASA temperature signal falls outside a proposed crop's documented range. Results name the month, hypothesis and crop, then show the observed value, documented interval, rule and source trail. Unknown evidence cannot create an attention decision, and month exploration still does not change crops.
+
+Implemented: the user-drawn Atlas polygon now enters the validated farm draft and public analysis contract. The pure boundary analysis reports vertex count, approximate geodesic area, centroid and whether the nominal 9 km SMAP grid is coarser than the boundary. Results, technical export and Evidence Center expose the spatial context and its SMAP gap.
+
+Scientific boundary: the dated GIBS raster remains visual and is never decoded from colors. The official historical numeric product is SMAP L4 SPL4SMGP v8 (3-hourly, nominal 9 km, 31 March 2015 to present), but numeric polygon aggregation requires authenticated Earthdata preprocessing. Until a polygon-matched artifact exists, the value remains N/D; POWER/MERRA-2 root-zone wetness is not relabeled as SMAP.
+
+Evidence (2026-11-14): schema tests cover valid/invalid polygons; pure tests cover area, resolution interpretation, explicit SMAP preprocessing status, public-result integration and structured attention decisions. The browser flow carries a three-vertex polygon from Atlas into Farm. `npm run lint`, `npm run typecheck`, `npm run test` (66 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed.

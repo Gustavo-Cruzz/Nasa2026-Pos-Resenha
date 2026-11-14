@@ -1,9 +1,10 @@
 import { z } from 'zod';
-import { coordinatesSchema } from '@/lib/schema';
+import { coordinatesSchema, fieldBoundarySchema, type FieldBoundary } from '@/lib/schema';
 
 export const atlasPointSchema = coordinatesSchema.extend({ label: z.string().min(1).optional() });
 export type AtlasPoint = z.infer<typeof atlasPointSchema>;
-export type AtlasPolygon = Array<[longitude: number, latitude: number]>;
+export const atlasPolygonSchema = fieldBoundarySchema;
+export type AtlasPolygon = FieldBoundary;
 
 export const SMAP_GIBS_DATE = '2025-06-30';
 export const SMAP_GIBS_LAYER = 'SMAP_L4_Analyzed_Root_Zone_Soil_Moisture';
