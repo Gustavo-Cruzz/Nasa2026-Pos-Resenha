@@ -1,5 +1,17 @@
 # Sprint log
 
+## Farmer-First F6 — solo regional verificável e incerteza
+
+Status: complete — no spatial estimate loaded.
+
+Implemented: introduced an isolated regional-soil adapter with SoilGrids and MapBiomas Solo provenance. It currently returns an explicit unavailable/unknown context with every spatial attribute, unit, depth, resolution and uncertainty as `null`; it does not call the suspended SoilGrids REST API. The Farm UI uses this boundary to state the N/D status, while preserving local laboratory values as the primary, separate source.
+
+Implemented: expanded every analysis data-quality record with uncertainty and exposes it in Results alongside its classification, method, unit, inputs and limitations.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (144 unit tests), and `npm run build` passed. Focused Playwright checks for the crops-first opening and English end-to-end farm/laboratory/results flow passed.
+
+Next: run the complete quality gate, focused browser checks, then perform the final requirement audit. A regional estimate can only become available after a compatible, versioned preprocessed artifact documents its source, depth, unit, resolution and uncertainty.
+
 ## Farmer-First F5 — abertura pelas culturas
 
 Status: complete.
