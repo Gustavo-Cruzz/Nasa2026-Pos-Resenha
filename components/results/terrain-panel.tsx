@@ -33,10 +33,10 @@ function TerrainBody({ terrain, polygon, en, num, locale }: { terrain: TerrainCo
   const shares = terrain.classShares.filter((item) => item.sharePct > 0);
   return <div className="mt-4">
     <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
-      <div><dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{en ? 'Elevation' : 'Elevação'}</dt><dd className="font-bold">{terrain.elevationM ? `${terrain.elevationM.min}–${terrain.elevationM.max} m` : 'N/D'}</dd></div>
+      <div><dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{en ? 'Elevation' : 'Elevação'}</dt><dd className="font-bold">{terrain.elevationM ? (terrain.elevationM.min === terrain.elevationM.max ? `${terrain.elevationM.min} m` : `${terrain.elevationM.min}–${terrain.elevationM.max} m`) : 'N/D'}</dd></div>
       <div><dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{en ? 'Slope (mean / max)' : 'Declividade (média / máx.)'}</dt><dd className="font-bold">{terrain.slopePct ? `${num(terrain.slopePct.mean)}% / ${num(terrain.slopePct.max)}%` : 'N/D'}</dd></div>
       <div><dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{en ? `Relief hotspots (≥ ${HOTSPOT_MIN_SLOPE_PCT}%)` : `Hotspots de relevo (≥ ${HOTSPOT_MIN_SLOPE_PCT}%)`}</dt><dd className="font-bold">{terrain.hotspots.count} {en ? 'cells' : 'células'} · {num(terrain.hotspots.sharePct)}%</dd></div>
-      <div><dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{en ? 'Sample grid' : 'Malha de amostra'}</dt><dd className="font-bold">{terrain.gridSpacingM} m · {terrain.sampledCells} {en ? 'cells' : 'células'}</dd></div>
+      <div><dt className="text-xs font-semibold uppercase tracking-wide text-slate-400">{en ? 'Sample grid' : 'Malha de amostra'}</dt><dd className="font-bold">{terrain.gridSpacingM} m · {terrain.sampledCells} {terrain.sampledCells === 1 ? (en ? 'cell' : 'célula') : (en ? 'cells' : 'células')}</dd></div>
     </dl>
     <div className="mt-4 grid gap-4 md:grid-cols-[auto_1fr] md:items-start">
       {terrain.mode === 'polygon' && polygon ? <HotspotMap en={en} polygon={polygon} terrain={terrain} /> : <p className="max-w-xs rounded-lg border border-slate-600 p-3 text-xs text-slate-300">{en ? 'No boundary: slope is the local value around the point (about 180 m). Draw or import a boundary to see a hotspot map.' : 'Sem polígono: a declividade é o valor local em torno do ponto (cerca de 180 m). Desenhe ou importe um polígono para ver o mapa de hotspots.'}</p>}

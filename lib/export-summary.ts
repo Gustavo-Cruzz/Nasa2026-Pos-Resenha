@@ -39,6 +39,13 @@ function decisionLines(data: AnalysisResult, locale: Locale): string[] {
   return lines;
 }
 
+function soilLines(data: AnalysisResult, en: boolean): string[] {
+  const soil = data.input.soilObservation;
+  if (!soil) return [];
+  const labels = { waterlogging: en ? 'standing water / waterlogging' : 'água empoçada / encharcamento', compaction: en ? 'hard or compacted soil' : 'solo duro ou compactado', erosion: en ? 'erosion' : 'erosão', dry_cracked: en ? 'very dry or cracked soil' : 'solo muito seco ou rachado', salt_crust: en ? 'whitish or salty crust' : 'crosta esbranquiçada ou salina', discoloration: en ? 'stains or odd color' : 'manchas ou cor estranha', other: en ? 'other' : 'outro' };
+  return [`${en ? 'Soil observation reported by the producer' : 'Observação do produtor sobre o solo'}: ${soil.kinds.map((kind) => labels[kind]).join(', ')}${soil.note ? ` — "${soil.note}"` : ''} (${en ? 'declared context only; not used in any reading; take it to a local technician' : 'apenas contexto declarado; não usado em nenhuma leitura; leve a um técnico local'})`];
+}
+
 function seasonLines(data: AnalysisResult, locale: Locale): string[] {
   const en = locale === 'en';
   const calendar = deriveRotationCalendar(data.nasaInsightByMonth);
@@ -87,7 +94,7 @@ function sourceLines(data: AnalysisResult, locale: Locale): string[] {
 export function buildAnalysisSummary(data: AnalysisResult, locale: Locale): string {
   const en = locale === 'en';
   const evidenceLevel = (level: string) => ({ climate_exploration: en ? 'Climate exploration' : 'Exploração climática', regionally_contextualized: en ? 'Regional context' : 'Contexto regional', locally_validated: en ? 'Traceable local validation' : 'Validação local rastreável' }[level] ?? level);
-  const lines = [`# Field Shift — ${en ? 'Exploratory comparison' : 'Comparação exploratória'}`, '', `${en ? 'Location' : 'Local'}: ${data.input.location.latitude}, ${data.input.location.longitude}`, `${en ? 'Exploratory boundary' : 'Polígono exploratório'}: ${boundaryText(data, en)}`, ...waterLines(data, en), `${en ? 'Planting-month climate window' : 'Mês da janela climática'}: ${data.input.plantingMonth}`, `${en ? 'Climate source' : 'Fonte climática'}: ${data.climate.provenance?.source ?? 'N/D'} (${data.climate.provenance?.period.start ?? 'N/D'}–${data.climate.provenance?.period.end ?? 'N/D'})`, ...decisionLines(data, locale), ...seasonLines(data, locale), ...terrainLines(data, locale), ...sourceLines(data, locale), '', `## ${en ? 'Scenarios' : 'Cenários'}`];
+  const lines = [`# Field Shift — ${en ? 'Exploratory comparison' : 'Comparação exploratória'}`, '', `${en ? 'Location' : 'Local'}: ${data.input.location.latitude}, ${data.input.location.longitude}`, `${en ? 'Exploratory boundary' : 'Polígono exploratório'}: ${boundaryText(data, en)}`, ...waterLines(data, en), ...soilLines(data, en), `${en ? 'Planting-month climate window' : 'Mês da janela climática'}: ${data.input.plantingMonth}`, `${en ? 'Climate source' : 'Fonte climática'}: ${data.climate.provenance?.source ?? 'N/D'} (${data.climate.provenance?.period.start ?? 'N/D'}–${data.climate.provenance?.period.end ?? 'N/D'})`, ...decisionLines(data, locale), ...seasonLines(data, locale), ...terrainLines(data, locale), ...sourceLines(data, locale), '', `## ${en ? 'Scenarios' : 'Cenários'}`];
   for (const strategy of data.strategies) {
     lines.push('', `### ${strategy.id}. ${strategy.title}`, `${en ? 'Primary hypothesis' : 'Hipótese principal'}: ${strategy.proposedCrop?.name ?? 'N/D'}`, `${en ? 'Evidence level' : 'Nível de evidência'}: ${evidenceLevel(strategy.validationLevel)}`);
     for (const indicator of strategy.indicators) lines.push(`- ${indicator.label}: ${indicator.state} — ${indicator.detail}`);

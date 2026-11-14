@@ -9,7 +9,7 @@ Fontes consultadas: [Judging & Awards Guide 2026](https://www.spaceappschallenge
 ## 1. Veredito
 
 - O projeto responde ao desafio de ponta a ponta e é **tecnicamente raro** no que importa para "Validity" e "Relevance": quatro conjuntos de dados NASA entram como números (POWER, GPM IMERG, MODIS NDVI, SRTM), mais um quinto como camada visual (SMAP). Tem rigor de fonte, N/D explícito e testes (129).
-- O maior risco **não é científico: é operacional.** A URL pública (`nasa-2026-one.vercel.app`) está em **404 DEPLOYMENT_NOT_FOUND**, o prazo de submissão é **amanhã, domingo 15/11, 23:59 (horário local do seu evento)**, e a página de submissão e os materiais precisam estar **em inglês**.
+- O maior risco **não é científico: é operacional.** A URL antiga (`nasa-2026-one.vercel.app`) está em 404, mas a URL atual, **`https://nasa2026-field-shift.vercel.app/`, está no ar** (verificada em 2026-11-14: `/demo`, `/settings`, manifest, service worker e worker do mapa respondem 200). O prazo de submissão é **amanhã, domingo 15/11, 23:59 (horário local do seu evento)**, e a página de submissão e os materiais precisam estar **em inglês**.
 - Realismo estatístico: em 2025 houve **18.860 equipes e 10 prêmios globais**; a chance base de qualquer equipe ganhar um prêmio é inferior a 0,1%. A meta realista e valiosa é **vencer o julgamento local → Global Nominee (3/12) → Finalist (17/12)**. Abaixo, o ranking dos prêmios onde o Field Shift tem mais chance *se chegar à rodada executiva*.
 
 ## 2. Prazos e exigências de submissão (crítico)
@@ -22,7 +22,7 @@ Fontes consultadas: [Judging & Awards Guide 2026](https://www.spaceappschallenge
 | Referências | todos os recursos externos (código, texto, imagens, dados) listados no campo *References* | lista pronta abaixo (§7) |
 | Originalidade | declarar trabalho original; sem material com copyright sem permissão | assets pixel-art têm registro de proveniência no repositório |
 | Equipe | 1–6 pessoas, todas registradas no mesmo evento local | verificar |
-| Link funcional | juízes precisam abrir o projeto | **Vercel 404: redeployar** |
+| Link funcional | juízes precisam abrir o projeto | no ar em `nasa2026-field-shift.vercel.app`; **confirmar que o deploy tem o último commit** |
 | Cronograma | Nominees 3/12 · Finalists 17/12 · Winners 26/01/2027 | — |
 
 Critérios (cada um de 1 a 5 em todos os níveis de julgamento): **Impact, Creativity, Validity, Relevance, Presentation**. A guia destaca Presentation como o critério que as equipes mais negligenciam.
@@ -99,7 +99,7 @@ Os 10 prêmios (descrições oficiais) e a leitura de fit. "Chance relativa" com
 
 ## 8. Plano de 24 horas (ordem de valor)
 
-1. **Redeployar** na Vercel e abrir a URL em janela anônima (pt e en). *(só você consegue: exige sua conta Vercel.)*
+1. **Confirmar o deploy** em `nasa2026-field-shift.vercel.app` (último commit na `main`) e abrir a URL em janela anônima (pt e en). *(só você consegue: exige sua conta Vercel.)*
 2. **Abrir em inglês por padrão** (ou detectar `navigator.language`) para os juízes. Hoje é pt-BR.
 3. **Vídeo de 30 s ou 7 slides**, roteiro: (1) problema do agricultor, (2) um ponto → 4 dados NASA, (3) calendário mês a mês + "soja fora da faixa em jul", (4) relevo/hotspots no polígono, (5) "N/D em vez de chute", (6) agrônomo valida, (7) o que vem depois (SMAP, ECOSTRESS).
 4. **Uma validação humana**: uma frase de um técnico/produtor (mesmo informal) citada no vídeo e na página.

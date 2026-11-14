@@ -4,10 +4,10 @@ import pamData from '@/data/brazil-pam-index.json';
 import type { Coordinates } from '@/lib/schema';
 import type { BrazilRegionalContext, MunicipalityContext, PamProductContext, ZarcCropContext } from '@/lib/brazil/types';
 
-type Position = [number, number];
+export type Position = [number, number];
 type Ring = Position[];
 type PolygonCoordinates = Ring[];
-type Geometry = { type: 'Polygon'; coordinates: PolygonCoordinates } | { type: 'MultiPolygon'; coordinates: PolygonCoordinates[] };
+export type Geometry = { type: 'Polygon'; coordinates: PolygonCoordinates } | { type: 'MultiPolygon'; coordinates: PolygonCoordinates[] };
 type MunicipalityRecord = MunicipalityContext & { bbox: [number, number, number, number]; geometry: Geometry };
 type ZarcIndexEntry = ZarcCropContext & { municipalityCode: string };
 const municipalityDocument = municipalitiesData as unknown as { source: { geometryUrl: string; officialMeshUrl: string; officialMeshSha256: string; accessedAt: string; referenceSystem: string }; municipalities: MunicipalityRecord[] };
@@ -47,7 +47,7 @@ function inPolygon(point: Position, polygon: PolygonCoordinates): boolean {
   return Boolean(polygon[0] && inRing(point, polygon[0]) && !polygon.slice(1).some((hole) => inRing(point, hole)));
 }
 
-function contains(point: Position, geometry: Geometry): boolean {
+export function contains(point: Position, geometry: Geometry): boolean {
   return geometry.type === 'Polygon' ? inPolygon(point, geometry.coordinates) : geometry.coordinates.some((polygon) => inPolygon(point, polygon));
 }
 

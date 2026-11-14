@@ -18,6 +18,7 @@ import { ReviewObjects } from '@/components/pixel/review-objects';
 import { BoundarySummary, waterKindLabel } from '@/components/boundary/boundary-summary';
 import { TerrainPanel } from '@/components/results/terrain-panel';
 import { SeasonPanel } from '@/components/results/season-panel';
+import { SoilObservationNote } from '@/components/results/soil-observation-note';
 import { DecisionHero } from '@/components/results/decision-hero';
 import { NasaInsightPanel } from '@/components/results/nasa-insight-panel';
 import { EvidenceCenterTrigger } from '@/components/evidence/evidence-center';
@@ -58,6 +59,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     {state.cachedAt ? <p className="mt-5 rounded-xl border border-amber-300 bg-amber-950/40 p-4 text-sm" role="status"><b>{en ? 'Offline or NASA unreachable.' : 'Sem rede ou NASA inacessível.'}</b> {en ? `Showing the last analysis saved on this device (${new Date(state.cachedAt).toLocaleString('en-US')}). It may not reflect later edits or newer data.` : `Mostrando a última análise salva neste dispositivo (${new Date(state.cachedAt).toLocaleString('pt-BR')}). Ela pode não refletir edições posteriores nem dados mais novos.`}</p> : null}
     <DecisionHero data={data} />
     <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="secondary"><Link href="/lab">{en ? 'Back to laboratory' : 'Voltar ao laboratório'}</Link></Button><Button asChild variant="secondary"><Link href="/farm">{en ? 'Edit farm data' : 'Alterar dados da fazenda'}</Link></Button><ExportSummaryButton data={data} /></div>
+    {data.input.soilObservation ? <SoilObservationNote observation={data.input.soilObservation} /> : null}
     <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
     {data.evidenceManifest ? <div className="mt-4"><EvidenceCenterTrigger manifest={data.evidenceManifest} /></div> : null}
     {data.input.fieldBoundary ? <div className="mt-5"><h2 className="mb-2 font-bold">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><BoundarySummary boundary={data.input.fieldBoundary} waterPoint={data.input.waterPoint} /></div> : data.input.waterPoint ? <p className="mt-5 text-sm text-slate-300"><b>{en ? 'Water point declared by the producer' : 'Ponto de água informado pelo produtor'}:</b> {waterKindLabel(data.input.waterPoint.kind, en)}{data.input.waterPoint.label ? ` — ${data.input.waterPoint.label}` : ''}. {en ? 'Declared context only.' : 'Apenas contexto declarado.'}</p> : null}

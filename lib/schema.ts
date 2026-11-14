@@ -52,10 +52,15 @@ export const futureBaselineSchema = z.object({
 export const waterPointKinds = ['well', 'river', 'reservoir', 'other'] as const;
 export const waterPointSchema = z.object({ kind: z.enum(waterPointKinds), label: z.string().trim().max(80).optional() });
 
+/** What the producer says they noticed in the soil. It is context only: the app does not diagnose the soil and uses it in no calculation. */
+export const soilObservationKinds = ['waterlogging', 'compaction', 'erosion', 'dry_cracked', 'salt_crust', 'discoloration', 'other'] as const;
+export const soilObservationSchema = z.object({ kinds: z.array(z.enum(soilObservationKinds)).min(1).max(7), note: z.string().trim().max(200).optional() });
+
 export const analysisInputSchema = z.object({
   location: coordinatesSchema,
   fieldBoundary: fieldBoundarySchema.optional(),
   waterPoint: waterPointSchema.optional(),
+  soilObservation: soilObservationSchema.optional(),
   plantingMonth: z.number().int().min(1).max(12),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
@@ -71,5 +76,6 @@ export const analysisInputSchema = z.object({
 export type Coordinates = z.infer<typeof coordinatesSchema>;
 export type FieldBoundary = z.infer<typeof fieldBoundarySchema>;
 export type WaterPoint = z.infer<typeof waterPointSchema>;
+export type SoilObservation = z.infer<typeof soilObservationSchema>;
 export type SoilProfile = z.infer<typeof soilProfileSchema>;
 export type AnalysisInput = z.infer<typeof analysisInputSchema>;
