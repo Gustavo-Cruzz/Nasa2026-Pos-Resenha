@@ -12,7 +12,7 @@ import { analyzeBoundary } from '@/lib/engine/boundary-context';
 import { isBlockedCrop, permittedCatalogCrops } from '@/lib/farmer-profile';
 import { assessSoilHealth } from '@/lib/engine/soil-health';
 import { deriveDataQuality } from '@/lib/engine/data-quality';
-import { summarizeCroppingSystem } from '@/lib/intercrops';
+import { cropsInSystem, summarizeCroppingSystem } from '@/lib/intercrops';
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
@@ -26,16 +26,20 @@ function level(context: BrazilRegionalContext, cropId: string | undefined): Vali
 function strategy(id: 'A' | 'B' | 'C', title: string, crop: Crop | undefined, input: AnalysisInput, climate: ClimateContext, regionalContext: BrazilRegionalContext, baseline = false, assumed = false, reason?: string): Rotation {
   const missing = [...new Set([...(crop ? ['cycle_duration'] : ['eligible_crop']), ...(climate.status === 'available' ? [] : ['historical_climate']), ...(crop?.viableTempC ? [] : ['documented_temperature_range']), ...(input.soil?.ph === undefined || !crop?.soilPhRange ? ['soil_ph_or_verified_range'] : [])])];
   const cropId = crop?.id; const regional = zarcHas(regionalContext, cropId);
+  const croppingSystems = (input.croppingSystems ?? []).map((system) => ({ plotId: system.plotId, type: system.type, ...summarizeCroppingSystem(system, cropId) }));
+  const applicableSystems = croppingSystems.filter((system) => system.appliesToStrategy);
+  const declaredCompanions = (input.croppingSystems ?? []).filter((system) => cropId && system.events.some((event) => event.cropId === cropId)).flatMap(cropsInSystem);
   const explanations: Explanation[] = [
     ...(assumed ? [{ kind: 'limitation' as const, message: 'Continuação presumida baseada no último evento; confirme ou edite o plano.', ruleId: 'BASELINE_PRESUMED', sourceRefs: [], certainty: 'low' as const, missingData: ['futureBaseline'] }] : []),
     ...(reason ? [{ kind: 'limitation' as const, message: reason, ruleId: 'SELECTION_GAP', sourceRefs: [], certainty: 'high' as const, missingData: ['documented_criteria'] }] : []),
     ...(regional ? [{ kind: 'benefit' as const, message: `Contexto regional ZARC ${regionalContext.zarc?.safra} disponível para ${regionalContext.municipality?.name} (${regionalContext.municipality?.uf}); códigos brutos são preservados sem interpretação.`, ruleId: 'BRAZIL_MUNICIPAL_ZARC_CONTEXT', sourceRefs: regionalContext.zarc ? [regionalContext.zarc.sourceUrl] : [], certainty: 'high' as const, missingData: [] }] : []),
     ...(id === 'C' && crop?.kcStages && climate.waterContext && (climate.waterContext.rootZoneWetnessMedian !== null || climate.waterContext.medianRainDays !== null) ? [{ kind: 'limitation' as const, message: 'O contexto hídrico combina exposição histórica NASA com um perfil Kc documentado para a cultura. O perfil é específico da fonte e não calcula ETc, consumo, irrigação ou superioridade hídrica.', ruleId: 'NASA_EXPOSURE_WITH_DOCUMENTED_KC', sourceRefs: [climate.provenance?.sourceUrl, verifiedCropEvidence(crop.id, 'kcStages')?.source.url].filter((value): value is string => Boolean(value)), certainty: 'medium' as const, missingData: [] }] : []),
+    ...applicableSystems.map((system): Explanation => ({ kind: system.type === 'intercrop' ? 'risk' : 'limitation', message: system.type === 'intercrop' ? `A hipótese participa do consórcio declarado “${system.plotId}”. ${system.risks.join(' ') || 'Competição e efeitos permanecem desconhecidos.'}` : `A hipótese participa do sistema declarado “${system.plotId}” (${system.type}); as datas informadas descrevem ordem, sem presumir benefício agronômico.`, ruleId: system.type === 'intercrop' ? 'DECLARED_INTERCROP_EXPOSURE' : 'DECLARED_SEQUENCE_CONTEXT', sourceRefs: system.sourceRefs, certainty: system.documentedExample ? 'medium' : 'low', missingData: system.documentedExample ? ['local_validation'] : ['compatible_system_evidence', 'local_validation'] })),
+    ...(croppingSystems.length && !applicableSystems.length ? [{ kind: 'limitation' as const, message: 'Os sistemas declarados não incluem a cultura principal desta hipótese; nenhuma diferença agronômica foi atribuída.', ruleId: 'DECLARED_SYSTEM_NOT_APPLICABLE', sourceRefs: [], certainty: 'high' as const, missingData: [] }] : []),
   ];
   const lastCrop = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined;
   const history = input.history.flatMap((event) => event.cropId ? [getCrop(event.cropId)] : []).filter((item): item is Crop => Boolean(item));
-  const croppingSystems = (input.croppingSystems ?? []).map((system) => ({ plotId: system.plotId, type: system.type, ...summarizeCroppingSystem(system) }));
-  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), soilHealth: assessSoilHealth(input, crop, history), croppingSystems, slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
+  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), soilHealth: assessSoilHealth(input, crop, history, declaredCompanions), croppingSystems, slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
 }
 function baselineCrop(input: AnalysisInput): Crop | undefined { const cropId = input.futureBaseline?.confirmed ? input.futureBaseline.cropId : input.history.at(-1)?.cropId; return cropId && isAnnualRotationEligible(cropId) ? getCrop(cropId) : undefined; }
 function selectable(input: AnalysisInput): Crop[] { return permittedCatalogCrops(input.farmerCrops); }

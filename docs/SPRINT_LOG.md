@@ -1,5 +1,19 @@
 # Sprint log
 
+## Family farm F11 — correções da auditoria de consórcios
+
+Status: complete — contratos, motor, UI e validação corrigidos.
+
+Implemented: expanded cropping-system types to single crop, simultaneous intercrop, succession, and rotation; added catalog-ID, unique-plot, Farmer-First restriction, overlap/order, and exact documented-example validation. Unknown crops remain rejected instead of disappearing from summaries. Permanent crops remain registrable but cannot enter annual baseline or laboratory slots.
+
+Implemented: A/B/C now marks whether each declared system applies to its main crop, adds sourced competition/sequence limitations only to applicable hypotheses, and includes declared companions in qualitative species/cover context without claiming productivity, water savings, nutrient gains, or local suitability. Results show crop periods and scenario applicability.
+
+Implemented: Farm now provides accessible selectors plus draggable crop cards for 2–3-crop systems, visible field-level validation, all four system labels, and corrected catalog-wide copy. Evidence coverage no longer treats a generic source URL as regional applicability.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (154 unit tests), and `npm run build` passed. Three focused Playwright flows passed: V1 draft migration, bilingual Farm/Lab/Results continuity, and 2–3-crop drag/drop with chronological validation and persistence.
+
+Limitations: documented library examples remain exploratory and are not auto-selected. User-defined custom crops stay registered as unknown profile context but cannot enter catalog-dependent system calculations.
+
 ## Family farm F10 — catálogo e contratos de consórcios
 
 Status: complete — catálogo, escolha Farmer-First, consórcios e comparação.

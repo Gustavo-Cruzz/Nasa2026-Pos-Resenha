@@ -288,7 +288,7 @@ test('keeps the core farm, laboratory, and results flow in English', async ({ pa
   await expect(page.getByRole('button', { name: 'Save and open laboratory' })).toBeVisible();
   await page.goto('/lab');
   await expect(page.getByRole('heading', { name: 'Rotation laboratory' })).toBeVisible();
-  await expect(page.getByText('P0 crop deck')).toBeVisible();
+  await expect(page.getByText('Crops accepted for alternatives')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Review comparison' })).toBeVisible();
   await page.goto('/results');
   await expect(page.getByRole('heading', { name: 'Strategy comparison' })).toBeVisible();
@@ -320,4 +320,31 @@ test('compares scenarios with mobile tabs on a 375px viewport', async ({ page })
   await expect(page.getByRole('tab', { name: 'Cenário B' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('tabpanel').getByRole('heading', { name: /B\./ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Voltar ao laboratório' })).toBeVisible();
+});
+
+test('builds a 2–3 crop system with drag, validates chronology, and persists it', async ({ page }) => {
+  await installDraft(page);
+  await page.goto('/farm');
+  const systems = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Sistemas de cultivo (opcional)' }) });
+  await systems.getByRole('button', { name: 'Adicionar sistema composto' }).click();
+  const card = systems.getByRole('button', { name: /mandioca.*Arraste para um sistema/i });
+  const system = systems.locator('article').first();
+  const transfer = await page.evaluateHandle(() => new DataTransfer());
+  await card.dispatchEvent('dragstart', { dataTransfer: transfer });
+  await system.dispatchEvent('dragover', { dataTransfer: transfer });
+  await system.dispatchEvent('drop', { dataTransfer: transfer });
+  await expect(system.getByLabel('Cultura')).toHaveCount(3);
+  await system.getByLabel('Tipo de sistema').selectOption('succession');
+  const starts = system.getByLabel('Início');
+  const ends = system.getByLabel('Fim');
+  await starts.nth(0).fill('2026-01'); await ends.nth(0).fill('2026-04');
+  await starts.nth(1).fill('2026-03'); await ends.nth(1).fill('2026-06');
+  await starts.nth(2).fill('2026-07'); await ends.nth(2).fill('2027-06');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByText('Os eventos devem ser cronológicos e sem sobreposição.')).toBeVisible();
+  await starts.nth(1).fill('2026-05');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo');
+  const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').data.croppingSystems[0]);
+  expect(stored).toMatchObject({ type: 'succession', events: [{ startYearMonth: '2026-01' }, { startYearMonth: '2026-05' }, { cropId: 'cassava' }] });
 });

@@ -47,3 +47,5 @@ The app will not forecast weather, estimate precise yield/NPK/SOC changes, or pr
 ## Agricultura familiar e consórcios
 
 The catalog includes the supplied family-farm crops and contextual evidence without filling absent agronomic parameters. Harvest references are not assumed crop durations. Farmer-declared availability filters annual alternatives; permanent crops can be registered but are excluded from annual A/B/C slots. Documented intercrops are exploratory examples: simultaneous crops may add diversity and also competition risk, never an automatic productivity, soil, or water benefit.
+
+Farm drafts can represent single crops, simultaneous intercrops, chronological succession, and rotation with explicit dates. Two or three catalog crop cards can be dragged into a system. Boundary validation rejects unknown or blocked crops, invalid overlap/order, duplicate plots, and unsupported claims of documented examples.

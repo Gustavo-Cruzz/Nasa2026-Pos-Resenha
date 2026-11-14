@@ -85,6 +85,19 @@ export const analysisInputSchema = z.object({
   input.history.slice(1).forEach((event, index) => {
     if (event.startYearMonth < input.history[index].endYearMonth) context.addIssue({ code: z.ZodIssueCode.custom, path: ['history', index + 1], message: 'History events must be chronological and cannot overlap.' });
   });
+  const systems = input.croppingSystems ?? [];
+  const plotIds = new Set<string>();
+  systems.forEach((system, systemIndex) => {
+    if (plotIds.has(system.plotId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['croppingSystems', systemIndex, 'plotId'], message: 'Each cropping system needs a distinct plot ID.' });
+    plotIds.add(system.plotId);
+    const blocked = new Set(input.farmerCrops?.blockedCropIds ?? []);
+    const configured = Boolean(input.farmerCrops && (input.farmerCrops.availableCropIds.length || input.farmerCrops.exploreCropIds.length));
+    const permitted = new Set([...(input.farmerCrops?.availableCropIds ?? []), ...(input.farmerCrops?.exploreCropIds ?? [])]);
+    system.events.forEach((event, eventIndex) => {
+      if (blocked.has(event.cropId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['croppingSystems', systemIndex, 'events', eventIndex, 'cropId'], message: 'A blocked crop cannot remain in a declared cropping system.' });
+      if (configured && !permitted.has(event.cropId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['croppingSystems', systemIndex, 'events', eventIndex, 'cropId'], message: 'Cropping-system crops must be available or accepted for exploration.' });
+    });
+  });
 });
 
 export type Coordinates = z.infer<typeof coordinatesSchema>;

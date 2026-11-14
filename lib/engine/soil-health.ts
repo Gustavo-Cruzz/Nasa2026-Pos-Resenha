@@ -6,14 +6,14 @@ import type { SoilHealthIndicator } from '@/lib/engine/types';
  * Qualitative soil-health context. It intentionally does not estimate carbon gain,
  * N supply, fertility, erosion loss, or uncovered periods without compatible inputs.
  */
-export function assessSoilHealth(input: AnalysisInput, candidate: Crop | undefined, history: Crop[]): SoilHealthIndicator[] {
-  const sequence = [...history, ...(candidate ? [candidate] : [])];
+export function assessSoilHealth(input: AnalysisInput, candidate: Crop | undefined, history: Crop[], declaredCompanions: Crop[] = []): SoilHealthIndicator[] {
+  const sequence = [...history, ...(candidate ? [candidate] : []), ...declaredCompanions.filter((crop) => crop.id !== candidate?.id)];
   const cropIds = new Set(sequence.map((crop) => crop.id));
   const familyRepeat = candidate && history.at(-1) ? candidate.family === history.at(-1)!.family : undefined;
-  const hasCover = candidate?.purposes.includes('cover');
+  const hasCover = candidate ? [candidate, ...declaredCompanions].some((crop) => crop.purposes.includes('cover')) : undefined;
   const carbon = input.soil?.organicCarbonGKg ?? input.soil?.organicMatterGKg;
   return [
-    { id: 'species_diversity', label: 'Diversidade de espécies', state: sequence.length ? 'observed' : 'unknown', value: sequence.length ? cropIds.size : null, detail: sequence.length ? `${cropIds.size} espécie(s) catalogada(s) na sequência observada + hipótese; não é previsão de desempenho.` : 'A cultura proposta não possui perfil catalogado.', sourceRefs: sequence.flatMap((crop) => crop.sourceRefs), missingData: candidate ? [] : ['catalogued_crop'] },
+    { id: 'species_diversity', label: 'Diversidade de espécies', state: sequence.length ? 'observed' : 'unknown', value: sequence.length ? cropIds.size : null, detail: sequence.length ? `${cropIds.size} espécie(s) catalogada(s) na sequência observada + hipótese${declaredCompanions.length ? ' + sistema composto declarado' : ''}; não é previsão de desempenho.` : 'A cultura proposta não possui perfil catalogado.', sourceRefs: sequence.flatMap((crop) => crop.sourceRefs), missingData: candidate ? [] : ['catalogued_crop'] },
     { id: 'family_repetition', label: 'Repetição de família', state: familyRepeat === undefined ? 'unknown' : familyRepeat ? 'attention' : 'yes', value: null, detail: familyRepeat === undefined ? 'Família da hipótese ou da cultura imediatamente anterior é desconhecida.' : familyRepeat ? 'A hipótese repete a família da cultura imediatamente anterior.' : 'A hipótese muda a família em relação à cultura imediatamente anterior.', sourceRefs: sequence.flatMap((crop) => crop.sourceRefs), missingData: familyRepeat === undefined ? ['previous_crop_family'] : [] },
     { id: 'cover_presence', label: 'Presença de cobertura', state: hasCover === undefined ? 'unknown' : hasCover ? 'yes' : 'no', value: null, detail: hasCover === undefined ? 'Sem cultura catalogada para avaliar a finalidade.' : hasCover ? 'Finalidade de cobertura catalogada. Não quantifica biomassa, carbono ou proteção efetiva.' : 'A finalidade de cobertura não está catalogada para esta hipótese.', sourceRefs: candidate?.sourceRefs ?? [], missingData: hasCover === undefined ? ['catalogued_crop'] : [] },
     { id: 'nitrogen_fixation_potential', label: 'Fixação biológica de nitrogênio', state: candidate?.nitrogenFixationPotential ? 'yes' : 'unknown', value: null, detail: candidate?.nitrogenFixationPotential ? `${candidate.nitrogenFixationPotential}. Potencial qualitativo; não estima kg de N.` : 'Potencial documentado indisponível para esta hipótese; a família botânica não é usada como substituto.', sourceRefs: candidate?.sourceRefs ?? [], missingData: candidate?.nitrogenFixationPotential ? [] : ['documented_nitrogen_fixation'] },
