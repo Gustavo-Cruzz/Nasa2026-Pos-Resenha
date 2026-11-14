@@ -22,7 +22,6 @@ const crop = (id: string | undefined | null, locale: Locale) => cropDisplayName(
 /** Every crop the app knows, named in the chat language, so each suggestion is a valid answer. */
 const CHIP_ORDER = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 export const cropChips = (locale: Locale) => CHIP_ORDER.map((id) => crop(id, locale));
-const supportedCrops = (locale: Locale) => cropChips(locale).join(', ');
 const reply = (text: string, chips?: string[], multi?: Reply['multi']): Reply => ({ text, ...(chips ? { chips } : {}), ...(multi ? { multi } : {}) });
 
 const SOIL_LABEL = { 'pt-BR': { waterlogging: 'água empoçada', compaction: 'solo duro ou compactado', erosion: 'erosão', dry_cracked: 'solo muito seco ou rachado', salt_crust: 'crosta esbranquiçada', discoloration: 'manchas ou cor estranha', other: 'outro' }, en: { waterlogging: 'standing water', compaction: 'hard or compacted soil', erosion: 'erosion', dry_cracked: 'very dry or cracked soil', salt_crust: 'whitish crust', discoloration: 'stains or odd color', other: 'other' } } as const;
@@ -55,21 +54,28 @@ function nextStep(draft: ChatDraft): Step {
 export function stepNumber(step: Step): number { return { location: 1, current: 2, previous: 3, soil: 4, confirm: 4 }[step]; }
 
 export function greeting(locale: Locale): Reply[] {
-  return [reply(pick(locale, 'Oi! Eu sou o assistente do Field Shift. Vou fazer 4 perguntas rápidas para cadastrar a sua fazenda e, depois, levo você para a análise com dados da NASA.', 'Hi! I am the Field Shift assistant. I will ask 4 quick questions to register your farm and then take you to the analysis with NASA data.')), ...prompt('location', {}, locale)];
+  return [reply(pick(locale, 'Oi! Eu sou o João.\nQuero te ajudar a proteger a sua colheita.', 'Hi! I am João.\nI want to help you protect your harvest.')), ...prompt('location', {}, locale)];
+}
+
+/** Chat opened from the explorer with the place already chosen: the city question is skipped. */
+export function startWithLocation(place: PlaceResult, locale: Locale): Turn {
+  const draft: ChatDraft = { location: place };
+  const where = place.label ?? `${place.latitude}, ${place.longitude}`;
+  return { state: { step: nextStep(draft), draft }, replies: [greeting(locale)[0], reply(pick(locale, `Anotado: ${where}.`, `Noted: ${where}.`)), ...prompt(nextStep(draft), draft, locale)], effects: [] };
 }
 
 export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
   switch (step) {
-    case 'location': return [reply(pick(locale, 'Em que cidade fica a sua fazenda? Comece a digitar e escolha na lista (ex.: Rio Verde). Fora do Brasil? Envie latitude e longitude (ex.: 5.6037, -0.187).', 'In which city is your farm? Start typing and pick from the list (e.g. Rio Verde). Outside Brazil? Send latitude and longitude (e.g. 5.6037, -0.187).'), ['Rio Verde, GO', 'Sorriso, MT', 'Cascavel, PR'])];
-    case 'current': return [reply(pick(locale, 'Qual cultura você está plantando agora (ou colheu por último)?', 'Which crop are you growing now (or harvested last)?'), cropChips(locale))];
-    case 'previous': return [reply(pick(locale, 'E qual foi a cultura anterior a essa? Se foi a primeira ou você não lembra, diga "pular".', 'And which crop came before that? If it was the first one or you do not remember, say "skip".'), [...cropChips(locale), pick(locale, 'pular', 'skip')])];
+    case 'location': return [reply(pick(locale, 'Em que cidade fica a sua fazenda?\nComece a digitar e escolha na lista. Fora do Brasil, envie latitude e longitude.', 'Which city is your farm in?\nStart typing and pick from the list. Outside Brazil, send latitude and longitude.'))];
+    case 'current': return [reply(pick(locale, 'O que você está plantando agora?', 'What are you growing now?'), cropChips(locale))];
+    case 'previous': return [reply(pick(locale, 'E o que você plantou antes?\nSe não lembra, toque em "pular".', 'And what did you grow before?\nIf you do not remember, tap "skip".'), [...cropChips(locale), pick(locale, 'pular', 'skip')])];
     case 'soil': {
       const { chips, multi } = soilChips(locale, draft.soil);
       return draft.soil
-        ? [reply(pick(locale, `Anotei: ${soilList(draft.soil, locale)}. Quer relatar mais algum problema no solo? Marque outros e toque em continuar, conte com as suas palavras ou diga "só isso".`, `Noted: ${soilList(draft.soil, locale)}. Want to report another soil problem? Tick others and tap continue, tell me in your own words, or say "that's all".`), chips, multi)]
-        : [reply(pick(locale, 'Você notou alguma coisa estranha no solo? Marque todas as opções que valem e toque em continuar, ou conte com as suas palavras (ex.: "empoça água depois da chuva").', 'Have you noticed anything unusual in the soil? Tick every option that applies and tap continue, or tell me in your own words (e.g. "water pools after rain").'), chips, multi)];
+        ? [reply(pick(locale, `Anotei: ${soilList(draft.soil, locale)}.\nMais alguma coisa no solo?`, `Noted: ${soilList(draft.soil, locale)}.\nAnything else in the soil?`), chips, multi)]
+        : [reply(pick(locale, 'Você notou alguma coisa estranha no solo?\nMarque o que valer, ou escreva do seu jeito.', 'Have you noticed anything unusual in the soil?\nTick what applies, or write it your way.'), chips, multi)];
     }
-    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${pick(locale, 'Tudo certo? Posso levar você para a análise.', 'All good? I can take you to the analysis.')}`, [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')])];
+    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${pick(locale, 'Tudo certo?', 'All good?')}`, [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')])];
   }
 }
 
@@ -80,7 +86,7 @@ function soilList(soil: SoilObservation, locale: Locale): string {
 export function summarize(draft: ChatDraft, locale: Locale): string {
   const soil = draft.soil ? soilList(draft.soil, locale) : pick(locale, 'nada de estranho', 'nothing unusual');
   return [
-    pick(locale, 'Resumo do cadastro:', 'Registration summary:'),
+    pick(locale, 'Sua fazenda:', 'Your farm:'),
     `• ${pick(locale, 'Local', 'Location')}: ${draft.location ? (draft.location.label ?? `${draft.location.latitude}, ${draft.location.longitude}`) : 'N/D'}`,
     `• ${pick(locale, 'Cultura atual', 'Current crop')}: ${draft.current ? crop(draft.current, locale) : 'N/D'}`,
     `• ${pick(locale, 'Cultura anterior', 'Previous crop')}: ${draft.previous ? crop(draft.previous, locale) : pick(locale, 'não informada', 'not informed')}`,
@@ -101,7 +107,7 @@ export function buildAnalysisInput(draft: ChatDraft, year = new Date().getFullYe
 }
 
 export function helpText(locale: Locale): string {
-  return pick(locale, 'Eu só cadastro a sua fazenda: cidade, cultura atual, cultura anterior e o que você notou no solo. Depois levo você à análise. Diga "recomeçar" para começar de novo ou "mudar" uma resposta, como "mudar a cidade".', 'I only register your farm: city, current crop, previous crop and what you noticed in the soil. Then I take you to the analysis. Say "restart" to start over, or change an answer, like "change the city".');
+  return pick(locale, 'Eu só cadastro a sua fazenda: cidade, o que planta, o que plantou antes e o solo.\nDiga "recomeçar" para começar de novo ou "mudar a cidade" para corrigir uma resposta.', 'I only register your farm: city, current crop, previous crop and soil.\nSay "restart" to start over, or "change the city" to fix an answer.');
 }
 
 const CHANGE_TARGETS: Array<[RegExp, Step]> = [[/\b(local|location|cidade|city|lugar)\b/, 'location'], [/\b(anterior|previous|before)\b/, 'previous'], [/\b(solo|soil|observacao|observation)\b/, 'soil'], [/\b(atual|current|agora|now|cultura|crop)\b/, 'current']];
@@ -122,37 +128,39 @@ export function advance(state: ChatState, rawText: string, locale: Locale): Turn
   const keep = (replies: Reply[], effects: Effect[] = []): Turn => ({ state, replies, effects });
   if (!text) return keep([]);
   const command = detectCommand(text);
-  if (command === 'restart') return { state: initialState(), replies: [reply(pick(locale, 'Certo, vamos recomeçar.', 'Sure, let us start over.')), ...prompt('location', {}, locale)], effects: [{ type: 'restart' }] };
+  if (command === 'restart') return { state: initialState(), replies: [reply(pick(locale, 'Vamos recomeçar.', 'Let us start over.')), ...prompt('location', {}, locale)], effects: [{ type: 'restart' }] };
   if (command === 'help') return keep([reply(helpText(locale))]);
 
   if (state.step === 'confirm') {
     const target = changeTarget(text);
     if (target) { const draft = target === 'soil' ? { ...state.draft, soil: undefined, soilDone: false } : state.draft; return { state: { step: target, draft }, replies: prompt(target, draft, locale), effects: [] }; }
-    if (parseYesNo(text) === 'yes') return { state, replies: [reply(pick(locale, 'Perfeito! Abrindo a sua análise…', 'Great! Opening your analysis…'))], effects: [{ type: 'go' }] };
-    if (/\b(mudar|change|algo|something|nao|no)\b/.test(normalize(text))) return keep([reply(pick(locale, 'O que você quer mudar? A cidade, a cultura atual, a cultura anterior ou o solo?', 'What do you want to change? The city, the current crop, the previous crop or the soil?'), [pick(locale, 'Mudar a cidade', 'Change the city'), pick(locale, 'Mudar a cultura atual', 'Change the current crop'), pick(locale, 'Mudar a cultura anterior', 'Change the previous crop'), pick(locale, 'Mudar o solo', 'Change the soil')])]);
-    return keep([reply(pick(locale, 'Diga "ver minha análise" para continuar, ou o que mudar: cidade, cultura atual, cultura anterior ou solo.', 'Say "see my analysis" to continue, or what to change: city, current crop, previous crop or soil.'))]);
+    if (parseYesNo(text) === 'yes') return { state, replies: [reply(pick(locale, 'Pronto! Abrindo a sua análise…', 'Done! Opening your analysis…'))], effects: [{ type: 'go' }] };
+    if (/\b(mudar|change|algo|something|nao|no)\b/.test(normalize(text))) return keep([reply(pick(locale, 'O que você quer mudar?', 'What do you want to change?'), [pick(locale, 'Mudar a cidade', 'Change the city'), pick(locale, 'Mudar a cultura atual', 'Change the current crop'), pick(locale, 'Mudar a cultura anterior', 'Change the previous crop'), pick(locale, 'Mudar o solo', 'Change the soil')])]);
+    const ok = [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')];
+    if (/\b(plantar|adicionar|incluir|quero|want|plant|add)\b/.test(normalize(text))) return keep([reply(pick(locale, 'Por enquanto eu só registro o que você já plantou.\nNa análise você compara as opções de cultura.', 'For now I only register what you have already grown.\nIn the analysis you compare crop options.'), ok)]);
+    return keep([reply(pick(locale, 'Não entendi.\nToque em "Ver minha análise" ou diga o que mudar.', 'I did not understand.\nTap "See my analysis" or tell me what to change.'), ok)]);
   }
 
   switch (state.step) {
     case 'location': {
       const known = parseLocation(text);
       if (known) return goTo({ ...state.draft, location: known }, locale, reply(pick(locale, `Anotado: ${known.label ?? `${known.latitude}, ${known.longitude}`}.`, `Noted: ${known.label ?? `${known.latitude}, ${known.longitude}`}.`)));
-      if (/^[\d\s.,;+\-−–°nsewNSEW]+$/.test(text)) return keep([reply(pick(locale, 'Essas coordenadas não parecem válidas. Use latitude entre −90 e 90 e longitude entre −180 e 180 (ex.: -17.798, -50.919), ou diga cidade e estado.', 'Those coordinates do not look valid. Use latitude from −90 to 90 and longitude from −180 to 180 (e.g. -17.798, -50.919), or say city and state.'))]);
+      if (/^[\d\s.,;+\-−–°nsewNSEW]+$/.test(text)) return keep([reply(pick(locale, 'Essas coordenadas não parecem válidas.\nExemplo: -17.798, -50.919. Ou digite a cidade.', 'Those coordinates do not look valid.\nExample: -17.798, -50.919. Or type the city.'))]);
       return keep([], [{ type: 'lookup', query: text }]);
     }
     case 'current': {
       const id = findCrop(text);
-      if (!id) return keep([reply(pick(locale, `Não reconheci a cultura. Aceito: ${supportedCrops(locale)}.`, `I did not recognize the crop. I accept: ${supportedCrops(locale)}.`), cropChips(locale))]);
+      if (!id) return keep([reply(pick(locale, 'Não reconheci essa cultura.\nEscolha uma da lista.', 'I did not recognize that crop.\nPick one from the list.'), cropChips(locale))]);
       return goTo({ ...state.draft, current: id }, locale, reply(pick(locale, `Anotado: ${crop(id, locale)}.`, `Noted: ${crop(id, locale)}.`)));
     }
     case 'previous': {
       const id = findCrop(text);
-      if (id) return goTo({ ...state.draft, previous: id }, locale, reply(pick(locale, `Anotado: antes foi ${crop(id, locale)}.`, `Noted: before that was ${crop(id, locale)}.`)));
-      if (isSkip(text)) return goTo({ ...state.draft, previous: null }, locale, reply(pick(locale, 'Tudo bem, sigo sem a cultura anterior.', 'Fine, I will go without the previous crop.')));
-      return keep([reply(pick(locale, `Não reconheci a cultura. Aceito: ${supportedCrops(locale)}. Ou diga "pular".`, `I did not recognize the crop. I accept: ${supportedCrops(locale)}. Or say "skip".`), [...cropChips(locale), pick(locale, 'pular', 'skip')])]);
+      if (id) return goTo({ ...state.draft, previous: id }, locale, reply(pick(locale, `Anotado: ${crop(id, locale)}.`, `Noted: ${crop(id, locale)}.`)));
+      if (isSkip(text)) return goTo({ ...state.draft, previous: null }, locale, reply(pick(locale, 'Tudo bem, sigo sem essa.', 'Fine, I will go without it.')));
+      return keep([reply(pick(locale, 'Não reconheci essa cultura.\nEscolha uma da lista ou toque em "pular".', 'I did not recognize that crop.\nPick one from the list or tap "skip".'), [...cropChips(locale), pick(locale, 'pular', 'skip')])]);
     }
     case 'soil': {
-      if (state.draft.soil && isDone(text)) return goTo({ ...state.draft, soilDone: true }, locale, reply(pick(locale, 'Combinado. Eu não diagnostico o solo: vou repetir o que você contou na análise, para você levar ao técnico.', 'Agreed. I do not diagnose the soil: I will repeat what you told me in the analysis so you can take it to a technician.')));
+      if (state.draft.soil && isDone(text)) return goTo({ ...state.draft, soilDone: true }, locale);
       const answer = parseSoilAnswer(text);
       if (!answer) return keep([]);
       if (answer.kind === 'none') return state.draft.soil ? goTo({ ...state.draft, soilDone: true }, locale) : goTo({ ...state.draft, soil: null }, locale, reply(pick(locale, 'Ótimo, nada de estranho no solo.', 'Good, nothing unusual in the soil.')));
@@ -167,19 +175,19 @@ export function chooseSoil(state: ChatState, labels: string[], locale: Locale): 
   let soil = state.draft.soil ?? undefined;
   for (const label of labels) { const answer = parseSoilAnswer(label); if (answer?.kind === 'observed') soil = mergeSoil(soil, answer.observation); }
   if (!soil) return advance(state, pick(locale, 'Nada de estranho', 'Nothing unusual'), locale);
-  return goTo({ ...state.draft, soil, soilDone: true }, locale, reply(pick(locale, 'Combinado. Eu não diagnostico o solo: vou repetir o que você contou na análise, para você levar ao técnico.', 'Agreed. I do not diagnose the soil: I will repeat what you told me in the analysis so you can take it to a technician.')));
+  return goTo({ ...state.draft, soil, soilDone: true }, locale);
 }
 
 /** Result of the city lookup (done by the app through /api/places). */
 export function provideLocation(state: ChatState, matches: PlaceMatch[], query: string, locale: Locale): Turn {
   if (state.step !== 'location') return { state, replies: [], effects: [] };
   const label = (item: PlaceMatch) => `${item.name} (${item.uf})`;
-  if (matches.length === 0) return { state, replies: [reply(pick(locale, `Não encontrei "${query}" no Brasil. Confira a grafia e diga cidade e estado (ex.: Rio Verde, GO). Fora do Brasil, envie latitude e longitude.`, `I could not find "${query}" in Brazil. Check the spelling and say city and state (e.g. Rio Verde, GO). Outside Brazil, send latitude and longitude.`), ['Rio Verde, GO', 'Sorriso, MT'])], effects: [] };
-  if (matches.length > 1) return { state, replies: [reply(pick(locale, 'Encontrei mais de uma cidade com esse nome. Qual delas é a sua?', 'I found more than one city with that name. Which one is yours?'), matches.map(label))], effects: [] };
+  if (matches.length === 0) return { state, replies: [reply(pick(locale, `Não encontrei "${query}".\nConfira a grafia ou digite cidade e estado, como Rio Verde, GO.`, `I could not find "${query}".\nCheck the spelling or type city and state, like Rio Verde, GO.`))], effects: [] };
+  if (matches.length > 1) return { state, replies: [reply(pick(locale, 'Achei mais de uma. Qual é a sua?', 'I found more than one. Which is yours?'), matches.map(label))], effects: [] };
   const [place] = matches;
-  return goTo({ ...state.draft, location: { latitude: place.latitude, longitude: place.longitude, label: label(place) } }, locale, reply(pick(locale, `Encontrei ${label(place)}.`, `Found ${label(place)}.`)));
+  return goTo({ ...state.draft, location: { latitude: place.latitude, longitude: place.longitude, label: label(place) } }, locale, reply(pick(locale, `Anotado: ${label(place)}.`, `Noted: ${label(place)}.`)));
 }
 
 export function lookupFailed(state: ChatState, locale: Locale): Turn {
-  return { state, replies: [reply(pick(locale, 'Não consegui buscar a cidade agora. Tente de novo ou envie latitude e longitude (ex.: -17.798, -50.919).', 'I could not look up the city right now. Try again or send latitude and longitude (e.g. -17.798, -50.919).'))], effects: [] };
+  return { state, replies: [reply(pick(locale, 'Não consegui buscar agora. Tente de novo.', 'I could not look it up right now. Try again.'))], effects: [] };
 }

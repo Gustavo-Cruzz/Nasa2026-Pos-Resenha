@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Field Shift',
-    short_name: 'Field Shift',
-    description: 'Compare crop-rotation hypotheses with NASA historical climate data and explicit limits.',
+    name: 'Plantaê',
+    short_name: 'Plantaê',
+    description: 'Explore possibilidades. Entenda os limites. Compare hipóteses de rotação de cultura com o clima histórico da NASA.',
     start_url: '/',
     display: 'standalone',
     background_color: '#142018',

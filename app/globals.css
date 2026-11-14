@@ -1,39 +1,29 @@
-@import 'maplibre-gl/dist/maplibre-gl.css';
+@import 'leaflet/dist/leaflet.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root { color-scheme: dark; }
 * { box-sizing: border-box; }
-body { margin: 0; background: #142018; color: #e2e7dc; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 1rem; line-height: 1.5; }
+body { margin: 0; background: #142018; color: #e2e7dc; font-family: var(--font-sans), "Nunito Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 1rem; line-height: 1.5; }
 a { text-underline-offset: 4px; }
 .text-xs { font-size: .8125rem; line-height: 1.25rem; }
 .text-sm { font-size: .9375rem; line-height: 1.45rem; }
 .atlas-shell { margin-top: 1.5rem; display: grid; gap: 1rem; }
 .atlas-toolbar, .atlas-panel { border: 1px solid #405840; border-radius: .9rem; background: #1e2d20; padding: 1.25rem; box-shadow: 0 10px 30px rgb(0 0 0 / .12); }
 .atlas-layout { display: grid; gap: 1rem; }
-.atlas-map-frame { position: relative; min-height: 26rem; overflow: hidden; border: 1px solid #405840; border-radius: .9rem; background: #142018; }
-.atlas-map { min-height: 26rem; }
+.atlas-map-frame { position: relative; z-index: 0; min-height: 32rem; overflow: hidden; border: 1px solid #405840; border-radius: .9rem; background: #142018; }
+.atlas-map { min-height: 32rem; height: 100%; }
+.atlas-pin { background: none; border: 0; }
+.atlas-pin svg { display: block; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .5)); }
+.atlas-pin-label { border: 0; border-radius: .5rem; background: #fdf6e3; color: #142018; font-weight: 700; font-size: .75rem; box-shadow: 0 2px 6px rgb(0 0 0 / .35); }
+.atlas-pin-label::before { display: none; }
+.atlas-map.leaflet-container { background: #142018; font: inherit; }
 .atlas-map-frame-error, .atlas-map-frame-error .atlas-map { min-height: 12rem; }
 .atlas-map-error { position: absolute; z-index: 3; top: 50%; right: 1rem; left: 1rem; margin: 0; transform: translateY(-50%); border: 1px solid #dca84e; border-radius: .5rem; background: rgb(47 31 11 / .92); padding: .75rem; text-align: center; color: #fff3c4; }
-.journey-progress { border-bottom: 1px solid #405840; background: #1a291c; }
-.journey-mobile-label { display: none; margin: 0; padding: .65rem 1rem; color: #d8efa0; font-size: .875rem; font-weight: 700; }
-.journey-progress ol { display: flex; max-width: 72rem; margin: 0 auto; padding: .65rem 1rem; gap: .35rem; overflow-x: auto; list-style: none; }
-.journey-step { flex: 1 0 auto; min-width: 7.25rem; }
-.journey-step a { display: flex; align-items: center; justify-content: center; gap: .45rem; border-radius: .5rem; padding: .4rem .55rem; color: #c8d0c3; font-size: .8125rem; text-decoration: none; }
-.journey-step a:hover { background: rgb(182 220 99 / .1); color: #d8efa0; }
-.journey-step span { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid #61755f; border-radius: .45rem; overflow: hidden; }
-.journey-step-icon img { width: 2rem; height: 2rem; image-rendering: pixelated; }
-.journey-step-current a { background: rgb(182 220 99 / .14); color: #d8efa0; }
-.journey-step-current span { border-color: #b6dc63; background: #b6dc63; color: #142018; }
-.site-menu { position: relative; }
-.site-menu summary { cursor: pointer; list-style: none; border: 1px solid #61755f; border-radius: .5rem; padding: .5rem .7rem; font-size: .875rem; font-weight: 700; }
-.site-menu summary::-webkit-details-marker { display: none; }
-.site-menu > div { position: absolute; z-index: 40; top: calc(100% + .55rem); right: 0; display: grid; min-width: 13rem; gap: .75rem; border: 1px solid #405840; border-radius: .75rem; background: #1e2d20; padding: 1rem; box-shadow: 0 1rem 2rem rgb(0 0 0 / .3); }
 .field-slot-updated { animation: field-slot-updated 220ms ease-out both; }
 @keyframes field-slot-updated { from { transform: translateY(3px); box-shadow: 0 0 0 0 rgb(182 220 99 / .55); } to { transform: translateY(0); box-shadow: 0 0 0 .55rem rgb(182 220 99 / 0); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
-@media (max-width: 767px) { .journey-mobile-label { display: block; }.journey-progress ol { display: none; } }
 @media (min-width: 1024px) { .atlas-layout { grid-template-columns: minmax(0, 56fr) minmax(31rem, 44fr); } }
 .status-character { flex: none; image-rendering: pixelated; }
 @media (prefers-reduced-motion: no-preference) { .status-character-alert { animation: status-bob 1.2s steps(2, end) infinite; } }
@@ -46,7 +36,7 @@ a { text-underline-offset: 4px; }
 html[data-text="large"] { font-size: 125%; }
 html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 html[data-contrast="high"] body { background: #000; color: #fff; }
-html[data-contrast="high"] :is(.bg-slate-900, .bg-slate-900\/75, .bg-slate-950, .bg-slate-800, .atlas-toolbar, .atlas-panel, .journey-progress) { background: #000 !important; }
+html[data-contrast="high"] :is(.bg-slate-900, .bg-slate-900\/75, .bg-slate-950, .bg-slate-800, .atlas-toolbar, .atlas-panel) { background: #000 !important; }
 html[data-contrast="high"] :is(.text-slate-300, .text-slate-400, .text-slate-200, .text-lime-200, .text-cyan-100, .text-cyan-200) { color: #fff !important; }
 html[data-contrast="high"] :is([class*="border-slate-"], [class*="border-cyan-"], [class*="border-lime-"], [class*="border-amber-"], .atlas-toolbar, .atlas-panel) { border-color: #fff !important; }
 html[data-contrast="high"] a { text-decoration: underline; }
@@ -54,3 +44,8 @@ html[data-contrast="high"] a { text-decoration: underline; }
 .chat-typing i { width: .4rem; height: .4rem; border-radius: 9999px; background: #b9c7b5; }
 @media (prefers-reduced-motion: no-preference) { .chat-typing i { animation: chat-dot 1s infinite ease-in-out; } .chat-typing i:nth-child(2) { animation-delay: .15s; } .chat-typing i:nth-child(3) { animation-delay: .3s; } }
 @keyframes chat-dot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+/* Plantaê type scale: page titles 32-40 px, readable body, technical details in IBM Plex Mono. */
+h1.page-title { font-size: clamp(2rem, 1.6rem + 1.6vw, 2.5rem); line-height: 1.15; letter-spacing: -0.01em; }
+.font-mono, code, kbd { font-feature-settings: 'zero' 1; }
+button, input, select, textarea { font-family: inherit; }

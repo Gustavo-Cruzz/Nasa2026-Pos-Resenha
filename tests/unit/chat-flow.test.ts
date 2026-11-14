@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { advance, buildAnalysisInput, chooseSoil, cropChips, greeting, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, type ChatState } from '@/lib/chat/flow';
+import { advance, buildAnalysisInput, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, type ChatState } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 
 const rioVerde: PlaceMatch = { code: '5218805', name: 'Rio Verde', uf: 'GO', latitude: -17.798, longitude: -50.919 };
@@ -10,10 +10,10 @@ const confirm = (): ChatState => ['soja', 'milho', 'Água empoçada', 'só isso'
 describe('chat registration: the questions', () => {
   it('greets, promises 4 quick questions and asks for the city first, with typing suggestions', () => {
     const replies = greeting('pt-BR');
-    expect(replies[0].text).toContain('4 perguntas rápidas');
+    expect(replies[0].text).toContain('proteger a sua colheita');
     expect(replies[1].text).toContain('Comece a digitar');
-    expect(replies[1].chips).toEqual(['Rio Verde, GO', 'Sorriso, MT', 'Cascavel, PR']);
-    expect(greeting('en')[0].text).toContain('4 quick questions');
+    expect(replies[1].chips).toBeUndefined();
+    expect(greeting('en')[0].text).toContain('protect your harvest');
   });
   it('asks exactly: city, current crop, previous crop, soil, then confirms', () => {
     const steps = [initialState().step];
@@ -54,8 +54,8 @@ describe('chat registration: city lookup', () => {
   it('moves on with a single match and labels the city with its state', () => {
     const turn = provideLocation(initialState(), [rioVerde], 'rio verde', 'pt-BR');
     expect(turn.state.step).toBe('current');
-    expect(turn.replies[0].text).toBe('Encontrei Rio Verde (GO).');
-    expect(turn.replies[1].text).toContain('Qual cultura');
+    expect(turn.replies[0].text).toBe('Anotado: Rio Verde (GO).');
+    expect(turn.replies[1].text).toContain('plantando agora');
   });
   it('asks which one when several cities match, offering "Name (UF)" chips', () => {
     const matches: PlaceMatch[] = [{ code: '2201200', name: 'Bom Jesus', uf: 'PI', latitude: -9.07, longitude: -44.36 }, { code: '4302105', name: 'Bom Jesus', uf: 'RS', latitude: -28.67, longitude: -50.42 }];
@@ -82,7 +82,7 @@ describe('chat registration: crops and soil', () => {
   it('keeps asking, with the crop list, when a crop is not recognized', () => {
     const turn = say(located(), 'trigo');
     expect(turn.state.step).toBe('current');
-    expect(turn.replies[0].text).toContain('Não reconheci a cultura');
+    expect(turn.replies[0].text).toContain('Não reconheci essa cultura');
     expect(turn.replies[0].chips).toEqual(cropChips('pt-BR'));
   });
   it('lets the previous crop be skipped and keeps the order of the two crops', () => {
@@ -99,7 +99,7 @@ describe('chat registration: crops and soil', () => {
     expect(turn.replies.at(-1)?.text).toContain('Você notou alguma coisa estranha no solo?');
     expect(turn.replies.at(-1)?.chips).toEqual(['Água empoçada', 'Solo duro', 'Erosão', 'Solo rachado', 'Crosta branca', 'Manchas']);
     expect(turn.replies.at(-1)?.multi).toEqual({ finishLabel: 'Nada de estranho' });
-    expect(turn.replies.at(-1)?.text).toContain('Marque todas as opções que valem');
+    expect(turn.replies.at(-1)?.text).toContain('Marque o que valer');
   });
   it('records what the producer says without diagnosing, and "nothing unusual" as no observation', () => {
     const atSoil = say(say(located(), 'soja').state, 'milho').state;
@@ -111,14 +111,14 @@ describe('chat registration: crops and soil', () => {
     const other = say(atSoil, 'tem um cheiro esquisito');
     expect(other.state.draft.soil).toEqual({ kinds: ['other'], note: 'tem um cheiro esquisito' });
     expect(say(atSoil, '   ').replies).toEqual([]);
-    expect(say(say(atSoil, 'Água empoçada').state, 'só isso').replies[0].text).toContain('Eu não diagnostico o solo');
+    expect(say(say(atSoil, 'Água empoçada').state, 'só isso').replies[0].text).toContain('Sua fazenda');
   });
   it('lets the producer report more than one soil problem, one at a time, until "só isso"', () => {
     const atSoil = say(say(located(), 'soja').state, 'milho').state;
     const first = say(atSoil, 'Água empoçada');
     expect(first.state.step).toBe('soil');
     expect(first.state.draft.soil).toEqual({ kinds: ['waterlogging'] });
-    expect(first.replies.at(-1)?.text).toContain('Quer relatar mais algum problema no solo?');
+    expect(first.replies.at(-1)?.text).toContain('Mais alguma coisa no solo?');
     expect(first.replies.at(-1)?.chips).toEqual(['Solo duro', 'Erosão', 'Solo rachado', 'Crosta branca', 'Manchas']);
     expect(first.replies.at(-1)?.multi).toEqual({ finishLabel: 'Só isso' });
     const second = say(first.state, 'Solo duro');
@@ -156,7 +156,7 @@ describe('chat registration: crops and soil', () => {
     expect(turn.state.step).toBe('confirm');
     expect(turn.state.draft).toMatchObject({ soil: { kinds: ['waterlogging', 'erosion', 'discoloration'] }, soilDone: true });
     expect(turn.state.draft.soil?.note).toBeUndefined();
-    expect(turn.replies[0].text).toContain('Eu não diagnostico o solo');
+    expect(turn.replies[0].text).toContain('Sua fazenda');
     expect(summarize(turn.state.draft, 'pt-BR')).toContain('Solo: água empoçada, erosão, manchas');
     expect(buildAnalysisInput(turn.state.draft, 2026, 5)?.soilObservation).toEqual({ kinds: ['waterlogging', 'erosion', 'discoloration'] });
   });
@@ -182,7 +182,7 @@ describe('chat registration: crops and soil', () => {
   it('answers in English when asked to', () => {
     const turn = advance(located(), 'soybean', 'en');
     expect(turn.replies[0].text).toBe('Noted: soybean.');
-    expect(turn.replies[1].text).toContain('which crop came before');
+    expect(turn.replies[1].text).toContain('what did you grow before');
   });
 });
 
@@ -242,5 +242,15 @@ describe('analysis input from the registration', () => {
     expect(input?.soilObservation).toBeUndefined();
     expect(buildAnalysisInput({}, 2026, 3)).toBeUndefined();
     expect(buildAnalysisInput({ location: { latitude: 1, longitude: 2 } }, 2026, 3)).toBeUndefined();
+  });
+});
+
+describe('chat opened from the explorer', () => {
+  it('skips the city question and asks for the current crop', () => {
+    const turn = startWithLocation({ latitude: -12.737, longitude: -55.6807, label: 'Sorriso (MT)' }, 'pt-BR');
+    expect(turn.state.step).toBe('current');
+    expect(turn.state.draft.location).toMatchObject({ label: 'Sorriso (MT)' });
+    expect(turn.replies.map((reply) => reply.text).join(' ')).toContain('Anotado: Sorriso (MT).');
+    expect(turn.replies.at(-1)?.text).toContain('plantando agora');
   });
 });

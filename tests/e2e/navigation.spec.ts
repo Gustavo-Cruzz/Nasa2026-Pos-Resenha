@@ -19,17 +19,17 @@ test('navigates from home to the global atlas with its real MapLibre basemap', a
   await page.goto('/');
   await expect(page.locator('.field-atmosphere')).toBeVisible();
   await page.getByRole('link', { name: 'Começar exploração' }).click();
-  await expect(page.getByRole('heading', { name: 'Atlas climático global' })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Jornada de exploração' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'step');
+  await expect(page.getByRole('heading', { name: 'Explore a sua região' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Navegação principal' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('.atlas-map')).toBeVisible();
   await expect(page.locator('.atlas-map-frame')).toBeVisible();
 });
 
-test('keeps coordinate entry available when MapLibre WebGL is unavailable', async ({ page }) => {
+test('keeps coordinate entry available when the map is unavailable', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
   await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
-  const canvas = page.locator('.atlas-map .maplibregl-canvas');
+  const canvas = page.locator('.atlas-map.leaflet-container');
   if (await canvas.count()) {
     await canvas.click({ position: { x: 240, y: 150 } });
     await expect(page.getByLabel('Latitude')).not.toHaveValue('');
@@ -49,7 +49,7 @@ test('shows dated SMAP evidence, draws an exploratory area, and compares three N
   await page.getByRole('button', { name: 'Mostrar NASA SMAP' }).click();
   await expect(page.getByText('NASA SMAP L4 · 2025-06-30')).toBeVisible();
   await expect(page.getByLabel(/Escala NASA SMAP de umidade do solo/)).toBeVisible();
-  const canvas = page.locator('.atlas-map .maplibregl-canvas');
+  const canvas = page.locator('.atlas-map.leaflet-container');
   if (await canvas.count()) {
     await page.getByRole('button', { name: 'Desenhar área exploratória' }).click();
     await canvas.click({ position: { x: 220, y: 150 } });

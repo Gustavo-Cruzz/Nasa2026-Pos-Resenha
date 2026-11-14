@@ -5,8 +5,8 @@ export type DraftImportError = 'too_large' | 'invalid_json' | 'not_a_draft';
 export type DraftImportResult = { ok: true; draft: Draft } | { ok: false; code: DraftImportError };
 
 const messages = {
-  'pt-BR': { too_large: 'Arquivo grande demais para ser um rascunho do Field Shift.', invalid_json: 'O arquivo não é um JSON válido.', not_a_draft: 'O arquivo não é um rascunho válido do Field Shift. Nada foi alterado.' },
-  en: { too_large: 'File too large to be a Field Shift draft.', invalid_json: 'The file is not valid JSON.', not_a_draft: 'The file is not a valid Field Shift draft. Nothing was changed.' },
+  'pt-BR': { too_large: 'Arquivo grande demais para ser um rascunho do Plantaê.', invalid_json: 'O arquivo não é um JSON válido.', not_a_draft: 'O arquivo não é um rascunho válido do Plantaê. Nada foi alterado.' },
+  en: { too_large: 'File too large to be a Plantaê draft.', invalid_json: 'The file is not valid JSON.', not_a_draft: 'The file is not a valid Plantaê draft. Nothing was changed.' },
 } as const;
 export const draftImportMessage = (code: DraftImportError, locale: 'pt-BR' | 'en') => messages[locale][code];
 

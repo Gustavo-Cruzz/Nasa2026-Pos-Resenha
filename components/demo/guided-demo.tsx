@@ -56,7 +56,7 @@ export function GuidedDemo() {
   const openFull = () => { saveDraft(scenario.input); router.push('/results'); };
 
   return <section className="mx-auto max-w-4xl">
-    <h1 className="text-3xl font-bold">{en ? '90-second guided demo' : 'Demo guiada de 90 segundos'}</h1>
+    <h1 className="page-title font-bold">{en ? '90-second guided demo' : 'Demo guiada de 90 segundos'}</h1>
     <p className="mt-2 max-w-2xl text-slate-300">{en ? 'Six steps, 15 seconds each, using real NASA POWER history. The polygon is a demonstration outline, not a real field. Brazilian context applies only inside Brazil.' : 'Seis passos de 15 segundos com histórico real do NASA POWER. O polígono é um contorno de demonstração, não um talhão real. O contexto brasileiro só se aplica dentro do Brasil.'}</p>
     <div className="mt-5 flex flex-wrap gap-2" role="radiogroup" aria-label={en ? 'Demo location' : 'Local da demo'}>{demoScenarios.map((item) => <button aria-checked={item.id === place} className={`min-h-11 rounded-lg border px-4 text-sm font-semibold ${item.id === place ? 'border-lime-300 bg-lime-300/15' : 'border-slate-600 hover:border-lime-300'}`} key={item.id} role="radio" type="button" onClick={() => choose(item.id)}>{item.label[locale]}</button>)}</div>
     <div className="mt-5 flex flex-wrap items-center gap-2">

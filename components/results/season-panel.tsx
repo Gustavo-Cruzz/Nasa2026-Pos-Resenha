@@ -8,7 +8,7 @@ import { applyRainChange, formatMonths, deriveRotationCalendar, deriveSeasonInsi
 import { cropDisplayName } from '@/lib/presentation';
 import { useLocale } from '@/components/locale-provider';
 
-const cellTone: Record<CalendarCell['state'], string> = { compatible: 'border-lime-300/60 bg-lime-300/10', attention: 'border-amber-300 bg-amber-950/50', unknown: 'border-slate-600 bg-slate-900' };
+const cellTone: Record<CalendarCell['state'], string> = { compatible: 'border-cyan-300/60 bg-cyan-500/10', attention: 'border-amber-300 bg-amber-950/50', unknown: 'border-slate-600 bg-slate-900' };
 const cellMark: Record<CalendarCell['state'], string> = { compatible: '✓', attention: '!', unknown: 'N/D' };
 
 export function SeasonPanel({ data }: { data: AnalysisResult }) {
@@ -65,12 +65,12 @@ function WaterBalanceChart({ balance, en, locale, planting }: { balance: WaterBa
   return <div className="mt-5"><h3 className="text-sm font-bold">{en ? 'Monthly precipitation vs. FAO-56 ET0 (medians, mm)' : 'Chuva × ET0 FAO-56 por mês (medianas, mm)'}</h3>
     <svg aria-label={en ? 'Bars: median monthly precipitation. Line: median monthly ET0. See the table below for the values.' : 'Barras: chuva mediana mensal. Linha: ET0 mediana mensal. Veja a tabela abaixo para os valores.'} className="mt-2 w-full" role="img" viewBox={`0 0 ${width} ${height}`}>
       {[0, 0.5, 1].map((fraction) => <g key={fraction}><line stroke="#405840" strokeDasharray="3 3" x1={left} x2={width - 8} y1={y(max * fraction)} y2={y(max * fraction)} /><text fill="#b9c7b5" fontSize="10" textAnchor="end" x={left - 4} y={y(max * fraction) + 3}>{Math.round(max * fraction)}</text></g>)}
-      {balance.map((month, index) => month.precipMedianMm === null ? null : <rect fill={month.month === planting ? '#7fd1e8' : '#3b9fc0'} height={Math.max(0, height - bottom - y(month.precipMedianMm))} key={month.month} width={slot * 0.6} x={left + slot * index + slot * 0.2} y={y(month.precipMedianMm)} />)}
-      <polyline fill="none" points={line} stroke="#f5c542" strokeWidth="2.5" />
-      {balance.map((month, index) => month.et0MedianMm === null ? null : <circle cx={left + slot * index + slot / 2} cy={y(month.et0MedianMm)} fill="#f5c542" key={month.month} r="3" />)}
+      {balance.map((month, index) => month.precipMedianMm === null ? null : <rect fill={month.month === planting ? '#b6dc63' : '#8dc8cf'} height={Math.max(0, height - bottom - y(month.precipMedianMm))} key={month.month} width={slot * 0.6} x={left + slot * index + slot * 0.2} y={y(month.precipMedianMm)} />)}
+      <polyline fill="none" points={line} stroke="#e7bf62" strokeWidth="2.5" />
+      {balance.map((month, index) => month.et0MedianMm === null ? null : <circle cx={left + slot * index + slot / 2} cy={y(month.et0MedianMm)} fill="#e7bf62" key={month.month} r="3" />)}
       {balance.map((month, index) => <text fill={month.month === planting ? '#d8efa0' : '#b9c7b5'} fontSize="10" key={month.month} textAnchor="middle" x={left + slot * index + slot / 2} y={height - 8}>{monthLabel(month.month, locale)}</text>)}
     </svg>
-    <p className="mt-1 text-xs text-slate-300"><span aria-hidden="true" className="text-cyan-300">■</span> {en ? 'Precipitation' : 'Chuva'} · <span aria-hidden="true" className="text-amber-300">●</span> ET0 · {en ? 'Planting month highlighted.' : 'Mês de plantio destacado.'}</p>
+    <p className="mt-1 text-xs text-slate-300"><span aria-hidden="true" className="text-cyan-300">■</span> {en ? 'Precipitation' : 'Chuva'} · <span aria-hidden="true" className="text-amber-300">●</span> ET0 · <span aria-hidden="true" className="text-lime-300">■</span> {en ? 'Selected planting month.' : 'Mês de plantio selecionado.'}</p>
     <details className="mt-2"><summary className="cursor-pointer text-sm font-semibold">{en ? 'Data table' : 'Tabela de dados'}</summary><div className="mt-2 overflow-x-auto"><table className="w-full min-w-[32rem] text-left text-xs"><thead><tr><th scope="col">{en ? 'Month' : 'Mês'}</th><th scope="col">{en ? 'Precipitation (mm)' : 'Chuva (mm)'}</th><th scope="col">ET0 (mm)</th><th scope="col">{en ? 'Balance (mm)' : 'Balanço (mm)'}</th><th scope="col">{en ? 'Complete years' : 'Anos completos'}</th></tr></thead><tbody>{balance.map((month) => <tr key={month.month}><th scope="row">{monthLabel(month.month, locale)}</th><td>{fmt(month.precipMedianMm)}</td><td>{fmt(month.et0MedianMm)}</td><td>{fmt(month.balanceMedianMm)}</td><td>{month.validYears}/{month.expectedYears}</td></tr>)}</tbody></table></div></details>
   </div>;
 }

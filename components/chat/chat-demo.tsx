@@ -1,16 +1,15 @@
 'use client';
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, MapPin, RotateCcw, SendHorizontal } from 'lucide-react';
-import { advance, buildAnalysisInput, chooseSoil, greeting, initialState, lookupFailed, provideLocation, stepNumber, TOTAL_STEPS, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
+import { advance, buildAnalysisInput, chooseSoil, greeting, initialState, startWithLocation, lookupFailed, provideLocation, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { saveDraft } from '@/lib/storage';
 import { useLocale } from '@/components/locale-provider';
-import { StatusCharacter } from '@/components/pixel/status-character';
+import { ASSISTANT_NAME, ChatAvatar } from '@/components/chat/chat-avatar';
 
 type Message = { id: number; role: 'bot' | 'user'; text: string };
-const STEP_LABEL = { 'pt-BR': { location: 'Cidade', current: 'Cultura atual', previous: 'Cultura anterior', soil: 'Solo', confirm: 'Confirmar' }, en: { location: 'City', current: 'Current crop', previous: 'Previous crop', soil: 'Soil', confirm: 'Confirm' } } as const;
 const DELAY_MS = 350;
 const SUGGEST_DELAY_MS = 180;
 const COORDINATES = /^[\d\s.,;+\-−–°nsewNSEW]+$/;
@@ -21,15 +20,18 @@ const placeLabel = (place: PlaceMatch) => `${place.name} (${place.uf})`;
 
 /** Chat that only registers the farm (city, current crop, previous crop, soil) and then opens the results page. */
 export function ChatDemo() {
-  const { locale } = useLocale();
+  const { locale, copy } = useLocale();
   const en = locale === 'en';
   const router = useRouter();
   const logRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<Message[]>(() => asMessages(greeting(locale)));
-  const [chips, setChips] = useState<string[]>(() => greeting(locale).at(-1)?.chips ?? []);
+  // Opened from the explorer with ?lat&lon&label: the city is already known.
+  const searchParams = useSearchParams();
+  const [boot] = useState<Turn | undefined>(() => readPrefill(searchParams, locale));
+  const [messages, setMessages] = useState<Message[]>(() => asMessages(boot ? boot.replies : greeting(locale)));
+  const [chips, setChips] = useState<string[]>(() => (boot ? boot.replies : greeting(locale)).at(-1)?.chips ?? []);
   const [multi, setMulti] = useState<Reply['multi']>();
   const [picked, setPicked] = useState<string[]>([]);
-  const [state, setState] = useState<ChatState>(initialState);
+  const [state, setState] = useState<ChatState>(() => boot?.state ?? initialState());
   const [busy, setBusy] = useState(false);
   const [text, setText] = useState('');
   const [suggest, setSuggest] = useState<{ query: string; results: PlaceMatch[] }>();
@@ -127,20 +129,19 @@ export function ChatDemo() {
     else if (event.key === 'Enter' && activeIndex >= 0) { event.preventDefault(); choosePlace(suggestions[activeIndex]); }
     else if (event.key === 'Escape') { event.preventDefault(); setDismissed(query); }
   };
-  const step = stepNumber(state.step);
 
   return <section aria-label={en ? 'Register your farm' : 'Cadastro da fazenda'} className="mx-auto -mt-6 flex h-[calc(100dvh-7rem)] min-h-[30rem] max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80 sm:mt-0 sm:h-[78vh]">
     <header className="flex items-center gap-3 border-b border-slate-700 bg-slate-900 px-4 py-3">
-      <StatusCharacter locale={locale} size={40} state="compatible" />
-      <div className="min-w-0 flex-1"><h1 className="truncate text-base font-bold leading-tight">{en ? 'Register your farm' : 'Cadastre sua fazenda'}</h1><p className="truncate text-xs text-slate-400" aria-live="polite">{state.step === 'confirm' ? STEP_LABEL[locale].confirm : `${en ? 'Question' : 'Pergunta'} ${step}/${TOTAL_STEPS} · ${STEP_LABEL[locale][state.step]}`}</p></div>
+      <ChatAvatar size={44} />
+      <div className="min-w-0 flex-1"><h1 className="truncate text-base font-bold leading-tight">{ASSISTANT_NAME}</h1><p className="truncate text-xs text-slate-400">{en ? 'Plantaê assistant' : 'Assistente do Plantaê'}</p></div>
       <button className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-600 px-3 text-sm font-semibold hover:border-lime-300" disabled={busy} type="button" onClick={() => send(en ? 'restart' : 'recomeçar')}><RotateCcw aria-hidden="true" size={15} /><span className="sr-only sm:not-sr-only">{en ? 'Restart' : 'Recomeçar'}</span></button>
     </header>
     <div aria-label={en ? 'Conversation' : 'Conversa'} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto px-4 py-4" ref={logRef} role="log">
       {messages.map((message) => <div className={`flex ${message.role === 'user' ? 'justify-end' : 'items-end gap-2'}`} key={message.id}>
-        {message.role === 'bot' ? <span aria-hidden="true" className="shrink-0"><StatusCharacter locale={locale} size={28} state="compatible" /></span> : null}
-        <p className={`max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${message.role === 'user' ? 'rounded-br-sm bg-lime-300 text-slate-950' : 'rounded-bl-sm border border-slate-700 bg-slate-800 text-slate-100'}`}>{message.text}</p>
+        {message.role === 'bot' ? <span aria-hidden="true" className="shrink-0"><ChatAvatar size={32} /></span> : null}
+        <p className={`max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${message.role === 'user' ? 'rounded-br-sm bg-lime-300 text-slate-950' : 'rounded-bl-sm border border-slate-700 bg-slate-800 text-slate-100'}`}><BubbleText bot={message.role === 'bot'} text={message.text} /></p>
       </div>)}
-      {busy ? <div className="flex items-end gap-2" role="status"><span aria-hidden="true" className="shrink-0"><StatusCharacter locale={locale} size={28} state="compatible" /></span><span className="chat-typing rounded-2xl rounded-bl-sm border border-slate-700 bg-slate-800 px-4 py-3"><span className="sr-only">{en ? 'Typing…' : 'Digitando…'}</span><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" /></span></div> : null}
+      {busy ? <div className="flex items-end gap-2" role="status"><span aria-hidden="true" className="shrink-0"><ChatAvatar size={32} /></span><span className="chat-typing rounded-2xl rounded-bl-sm border border-slate-700 bg-slate-800 px-4 py-3"><span className="sr-only">{en ? 'Typing…' : 'Digitando…'}</span><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" /></span></div> : null}
     </div>
     {suggestions.length ? <ul aria-label={en ? 'City suggestions' : 'Sugestões de cidades'} className="max-h-56 overflow-y-auto border-t border-slate-700 bg-slate-900 py-1" id="place-suggestions" role="listbox">
       {suggestions.map((place, index) => <li aria-selected={index === activeIndex} id={`place-${place.code}`} key={place.code} role="option">
@@ -154,8 +155,23 @@ export function ChatDemo() {
     </div> : null}
     <form className="flex items-center gap-2 border-t border-slate-700 p-3" onSubmit={onSubmit}>
       <label className="sr-only" htmlFor="chat-input">{en ? 'Your message' : 'Sua mensagem'}</label>
-      <input aria-activedescendant={activeIndex >= 0 ? `place-${suggestions[activeIndex].code}` : undefined} aria-autocomplete={state.step === 'location' ? 'list' : undefined} aria-controls={suggestions.length ? 'place-suggestions' : undefined} aria-expanded={state.step === 'location' ? suggestions.length > 0 : undefined} autoComplete="off" className="min-h-11 flex-1 rounded-lg border border-slate-600 bg-slate-800 px-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/30" disabled={busy} id="chat-input" onChange={(event) => setText(event.target.value)} onKeyDown={onKeyDown} placeholder={state.step === 'location' ? (en ? 'Type your city…' : 'Digite sua cidade…') : (en ? 'Type your answer…' : 'Digite sua resposta…')} role={state.step === 'location' ? 'combobox' : undefined} value={text} />
+      <input aria-activedescendant={activeIndex >= 0 ? `place-${suggestions[activeIndex].code}` : undefined} aria-autocomplete={state.step === 'location' ? 'list' : undefined} aria-controls={suggestions.length ? 'place-suggestions' : undefined} aria-expanded={state.step === 'location' ? suggestions.length > 0 : undefined} autoComplete="off" className="min-h-11 flex-1 rounded-lg border border-slate-600 bg-slate-950 px-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/30" disabled={busy} id="chat-input" onChange={(event) => setText(event.target.value)} onKeyDown={onKeyDown} placeholder={state.step === 'location' ? (en ? 'Type your city…' : 'Digite sua cidade…') : (en ? 'Type your answer…' : 'Digite sua resposta…')} role={state.step === 'location' ? 'combobox' : undefined} value={text} />
       <button aria-label={en ? 'Send' : 'Enviar'} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-lime-300 text-slate-950 hover:bg-lime-200 disabled:opacity-50" disabled={busy || !text.trim()} type="submit"><SendHorizontal aria-hidden="true" size={18} /></button>
     </form>
   </section>;
+}
+
+/** Bot messages: the first line is the question, the rest is a softer hint. Summaries (bullet lists) stay uniform. */
+function BubbleText({ text, bot }: { text: string; bot: boolean }) {
+  const [head, ...rest] = text.split('\n');
+  if (!bot || rest.length === 0 || text.includes('•')) return <>{text}</>;
+  return <>{head}<span className="mt-1 block opacity-65">{rest.join('\n')}</span></>;
+}
+
+function readPrefill(params: URLSearchParams, locale: 'pt-BR' | 'en'): Turn | undefined {
+  const latitude = Number(params.get('lat'));
+  const longitude = Number(params.get('lon'));
+  if (!params.has('lat') || !params.has('lon') || !Number.isFinite(latitude) || !Number.isFinite(longitude) || Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return undefined;
+  const label = params.get('label')?.slice(0, 80) || undefined;
+  return startWithLocation({ latitude, longitude, ...(label ? { label } : {}) }, locale);
 }

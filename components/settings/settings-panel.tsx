@@ -51,7 +51,7 @@ export function SettingsPanel() {
   const forgetAnalysis = () => { clearLastAnalysis(); window.dispatchEvent(new Event(SYNC_EVENT)); setMessage({ kind: 'ok', text: en ? 'Saved analysis removed.' : 'Análise salva removida.' }); };
 
   return <section className="mx-auto max-w-3xl">
-    <h1 className="text-3xl font-bold">{en ? 'Settings and local data' : 'Ajustes e dados locais'}</h1>
+    <h1 className="page-title font-bold">{en ? 'Settings and local data' : 'Ajustes e dados locais'}</h1>
     <section className="mt-6 rounded-xl border border-slate-700 bg-slate-900/75 p-5" aria-labelledby="prefs-heading"><h2 className="text-xl font-bold" id="prefs-heading">{en ? 'Reading preferences' : 'Preferências de leitura'}</h2>
       <Segmented legend={en ? 'Text size' : 'Tamanho do texto'} value={prefs.textSize} choices={[{ value: 'normal', label: en ? 'Normal' : 'Normal' }, { value: 'large', label: en ? 'Large' : 'Grande' }]} onChange={(textSize) => set({ textSize })} />
       <Segmented legend={en ? 'Contrast' : 'Contraste'} value={prefs.contrast} choices={[{ value: 'normal', label: 'Normal' }, { value: 'high', label: en ? 'High contrast' : 'Alto contraste' }]} onChange={(contrast) => set({ contrast })} />

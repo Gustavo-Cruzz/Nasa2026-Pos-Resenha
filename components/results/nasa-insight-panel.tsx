@@ -13,7 +13,7 @@ const monthNames = {
 } as const;
 
 const tone: Record<NasaInsightEffect['state'], string> = {
-  compatible: 'border-lime-300/60 bg-lime-300/10 text-lime-100',
+  compatible: 'border-cyan-300/60 bg-cyan-500/10 text-cyan-100',
   attention: 'border-amber-300/60 bg-amber-950/40 text-amber-100',
   observed: 'border-cyan-300/60 bg-cyan-500/10 text-cyan-100',
   unknown: 'border-slate-600 bg-slate-950/40 text-slate-300',

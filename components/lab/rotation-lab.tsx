@@ -46,7 +46,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
   const regionalContext = analysis?.regionalContext;
   const coverage = useMemo(() => draft ? p0Crops.map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext)) : [], [draft, regionalContext]);
 
-  if (!draft || !plan) return <section className="mt-6 rounded-xl border border-slate-700 p-5"><h1 className="text-3xl font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1><p className="mt-3 text-slate-300">{en ? 'Save the farm before assembling scenario hypotheses.' : 'Registre a fazenda antes de montar hipóteses de cenários.'}</p><Button asChild className="mt-5"><Link href="/farm">{en ? 'Go to my farm' : 'Ir para minha fazenda'}</Link></Button></section>;
+  if (!draft || !plan) return <section className="mt-6 rounded-xl border border-slate-700 p-5"><h1 className="page-title font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1><p className="mt-3 text-slate-300">{en ? 'Save the farm before assembling scenario hypotheses.' : 'Registre a fazenda antes de montar hipóteses de cenários.'}</p><Button asChild className="mt-5"><Link href="/farm">{en ? 'Go to my farm' : 'Ir para minha fazenda'}</Link></Button></section>;
 
   const pick = (cropId: LabCropId | null) => {
     if (!target) return;
@@ -74,7 +74,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
   const save = () => { saveLabPlan(draft, plan); setMessage(en ? 'Laboratory scenarios saved in this browser.' : 'Cenários do laboratório salvos neste navegador.'); };
 
   return <section className="mx-auto max-w-7xl">
-    <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm text-lime-200">{en ? 'Your area' : 'Sua área'}: {draft.data.location.latitude}, {draft.data.location.longitude}</p><h1 className="text-3xl font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1></div><Link className="text-sm underline" href="/farm">{en ? 'Edit farm' : 'Editar fazenda'}</Link></div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm text-lime-200">{en ? 'Your area' : 'Sua área'}: {draft.data.location.latitude}, {draft.data.location.longitude}</p><h1 className="page-title font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1></div><Link className="text-sm underline" href="/farm">{en ? 'Edit farm' : 'Editar fazenda'}</Link></div>
     <p className="mt-3 max-w-3xl text-slate-300">{en ? 'Compare first; edit the four slots only when needed. Seasons A/B are neutral labels, not an assumed agricultural calendar.' : 'Compare primeiro; edite os quatro slots apenas quando precisar. Temporadas A/B são rótulos neutros, não um calendário agrícola presumido.'}</p>
     <div className="mt-5"><BrazilContextNote context={regionalContext} /></div>
     {analysis?.evidenceManifest ? <div className="mt-4"><EvidenceTriggerButton manifest={analysis.evidenceManifest} onClick={() => { setEvidenceFilter(undefined); setEvidenceOpen(true); }} /></div> : analysisError ? <p className="mt-4 rounded border border-amber-300/50 p-3 text-sm text-amber-100" role="status">{analysisError} {en ? 'The laboratory remains editable.' : 'O laboratório continua editável.'}</p> : <p className="mt-4 text-sm text-slate-300" role="status">{en ? 'Loading climate, rules, and evidence…' : 'Carregando clima, regras e evidências…'}</p>}

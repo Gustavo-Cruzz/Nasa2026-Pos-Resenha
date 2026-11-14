@@ -4,9 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "copy:maplibre-worker": "cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs public/maplibre-gl-worker.mjs",
-    "predev": "npm run copy:maplibre-worker",
-    "prebuild": "npm run copy:maplibre-worker",
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
@@ -25,8 +22,8 @@
     "@radix-ui/react-slot": "1.2.3",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "0.468.0",
-    "maplibre-gl": "^6.18.0",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -36,6 +33,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@playwright/test": "1.59.1",
+    "@types/leaflet": "^1.9.12",
     "@types/node": "22.13.4",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",

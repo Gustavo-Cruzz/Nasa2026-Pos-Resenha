@@ -1,0 +1,22 @@
+{
+  "name": "Plantaê symbol (pixel art, 16x16)",
+  "palette": { "D": "#0e1711", "G": "#b6dc63", "g": "#6fa83f", "L": "#d8efa0", "S": "#8a5a34", "s": "#5f3b20", "Y": "#e7bf62", "y": "#c99a3a" },
+  "rows": [
+    "................",
+    ".........DDDD...",
+    "........DYYYYD..",
+    ".DDDD...DYYLYD..",
+    "DGGGGDD.DYYYYD..",
+    "DGLGGGD..DDDD...",
+    "DGGGgGGD...DDD..",
+    ".DGGgGGDD.DGGGD.",
+    "..DDGgGGGDGGLGD.",
+    "....DDGgGGGGGgD.",
+    ".....DDDGgGGgDD.",
+    ".......DDgGDD...",
+    "...DDDDDDgDDDDD.",
+    "..DSSSSSSgSSSSSD",
+    ".DSSsSSSSSSSsSSD",
+    ".DsssssssssssssD"
+  ]
+}
