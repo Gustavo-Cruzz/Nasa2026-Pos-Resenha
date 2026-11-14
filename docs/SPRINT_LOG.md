@@ -1,5 +1,17 @@
 # Sprint log
 
+## Farmer-First F4 — proveniência e cenários de aceite
+
+Status: complete.
+
+Implemented: added the `DataQualityRecord` contract to every analysis and Results: measured, observed, estimated, derived, scenario, or unknown, with method/formula, unit, inputs, source references and limitations. NASA historical climate is observed only when available; local lab soil is measured; separately declared regional soil is estimated; A/B/C are scenarios; qualitative soil-health comparison is derived.
+
+Implemented: added four acceptance tests for (1) Rio Verde soybean/maize with lab soil and irrigation; (2) same crop context, rainfed, water-first; (3) global point without ZARC; and (4) custom crop plus unavailable regional soil. They verify that the flow stays operational without inventing evidence.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (143 unit tests), and `npm run build` passed. The Results provenance/Evidence Center Playwright flow passed after resolving an accessible-name collision.
+
+Next: run final lint/build/browser validation and document the completion audit. No SoilGrids or MapBiomas values may be added without verified compatible artifacts.
+
 ## Farmer-First F3 — decisões, prioridades e jornada
 
 Status: complete — no numeric recommendation.

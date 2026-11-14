@@ -24,6 +24,7 @@ import { EvidenceCenterTrigger } from '@/components/evidence/evidence-center';
 import { ExportSummaryButton } from '@/components/results/export-summary-button';
 import { ClimateRiskLab } from '@/components/results/climate-risk-lab';
 import { SoilHealthComparison } from '@/components/results/soil-health-comparison';
+import { DataQualityPanel } from '@/components/results/data-quality-panel';
 import { useLocale } from '@/components/locale-provider';
 import { recordJourneyCompletion } from '@/lib/journey-metrics';
 import { cropDisplayName, explanationDisplay, scenarioDisplayTitle } from '@/lib/presentation';
@@ -66,6 +67,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     <SeasonPanel data={data} />
     <ClimateRiskLab location={data.input.location} />
     <SoilHealthComparison strategies={data.strategies} />
+    <DataQualityPanel records={data.dataQuality} />
     <TerrainPanel data={data} />
     <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <p className="mt-4 text-sm text-slate-300"><b>{en ? 'Highlighted priorities' : 'Prioridades em destaque'}:</b> {data.priorityHighlights.map((id) => priorityLabels[id] ?? id).join(', ')}.</p>

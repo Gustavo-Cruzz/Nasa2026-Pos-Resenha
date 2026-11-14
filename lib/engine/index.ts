@@ -11,6 +11,7 @@ import { buildEvidenceManifest } from '@/lib/evidence/manifest';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
 import { isBlockedCrop, permittedCatalogCrops } from '@/lib/farmer-profile';
 import { assessSoilHealth } from '@/lib/engine/soil-health';
+import { deriveDataQuality } from '@/lib/engine/data-quality';
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
@@ -60,5 +61,5 @@ export function analyze(input: unknown, climate: ClimateContext = EMPTY_CLIMATE,
   const boundaryAnalysis = analyzeBoundary(parsed.data.fieldBoundary);
   const evidenceManifest = buildEvidenceManifest(strategies, climate, regionalContext, boundaryAnalysis);
   const boundaryWarnings = boundaryAnalysis.status === 'spatial_context' ? ['O polígono entra como contexto espacial. SMAP L4 histórico numérico exige pré-processamento autenticado Earthdata e não foi inferido da camada visual GIBS.'] : [];
-  return { strategies, climate, regionalContext, boundaryAnalysis, warnings: [...evaluateConstraints(regionalContext).map((item) => item.message), ...regionalContext.gaps, ...climate.gaps, ...boundaryWarnings], input: parsed.data, regionalContextAvailable: Boolean(regionalContext.zarc), disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights, nasaInsight: nasaInsightByMonth[parsed.data.plantingMonth - 1], nasaInsightByMonth, evidenceManifest };
+  return { strategies, climate, regionalContext, boundaryAnalysis, warnings: [...evaluateConstraints(regionalContext).map((item) => item.message), ...regionalContext.gaps, ...climate.gaps, ...boundaryWarnings], input: parsed.data, regionalContextAvailable: Boolean(regionalContext.zarc), disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights, nasaInsight: nasaInsightByMonth[parsed.data.plantingMonth - 1], nasaInsightByMonth, dataQuality: deriveDataQuality(parsed.data, climate), evidenceManifest };
 }
