@@ -15,10 +15,12 @@ async function installDraft(page: Page, futureBaseline?: { cropId: string; confi
 
 const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 11, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 450, validPrecipitationDays: 450 }], plantingMonthPrecipitation: { month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, waterContext: { month: 11, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 }, calendarDayContext: { month: 11, day: 14, tmeanMedianC: 25, precipMedianMm: 4, imergPrecipMedianMm: 3.5, rootZoneWetnessMedian: 0.64, validYears: 15, expectedYears: 15 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
-test('navigates from home to the global atlas with its real MapLibre basemap', async ({ page }) => {
+test('starts from farmer crops, then opens the global atlas with its real MapLibre basemap', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.field-atmosphere')).toBeVisible();
-  await page.getByRole('link', { name: 'Começar exploração' }).click();
+  await page.getByRole('link', { name: 'Conhecer minha fazenda' }).click();
+  await expect(page.getByRole('heading', { name: 'Com quais culturas você trabalha?' })).toBeVisible();
+  await page.getByRole('link', { name: 'Trocar local no atlas' }).click();
   await expect(page.getByRole('heading', { name: 'Atlas climático global' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Jornada de exploração' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'step');
   await expect(page.locator('.atlas-map')).toBeVisible();
@@ -83,7 +85,7 @@ test('opens a consistent mobile menu and starts the Brazil demonstration in one 
 test('persists a real English language selection for landing and methodology', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Idioma').selectOption('en');
-  await expect(page.getByRole('link', { name: 'Start exploring' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Meet my farm' })).toBeVisible();
   await page.getByRole('link', { name: 'Methodology' }).click();
   await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();
   await page.reload();

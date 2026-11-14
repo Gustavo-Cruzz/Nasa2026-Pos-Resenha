@@ -2,7 +2,7 @@ export const dictionaries = {
   'pt-BR': {
     productName: 'Field Shift',
     tagline: 'Comparação de rotações com clima histórico e limites explícitos.',
-    start: 'Começar exploração',
+    start: 'Conhecer minha fazenda',
     methodology: 'Metodologia',
     explore: 'Explorar',
     farm: 'Minha fazenda',
@@ -51,7 +51,7 @@ export const dictionaries = {
   en: {
     productName: 'Field Shift',
     tagline: 'Compare rotations with historical climate and explicit limits.',
-    start: 'Start exploring',
+    start: 'Meet my farm',
     methodology: 'Methodology',
     explore: 'Explore',
     farm: 'My farm',

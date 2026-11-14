@@ -1,5 +1,15 @@
 # Sprint log
 
+## Farmer-First F5 — abertura pelas culturas
+
+Status: complete.
+
+Implemented: changed the primary landing CTA from Atlas-first to `Conhecer minha fazenda` / `Meet my farm`. The Farm route now opens with farmer crop choices before location, soil and history; the Atlas remains an explicit “change location” step for climate context. This lets a producer express operational crops and goals before interacting with a map.
+
+Evidence (2026-11-14): `npm run typecheck`, `npm run test` (143 unit tests), and `npm run lint` passed. Focused bilingual landing/Atlas Playwright coverage passed.
+
+Next: final build and completion audit; retain all scientific gaps as unknown rather than extending the scope with unverified soil, crop-cycle or water-demand data.
+
 ## Farmer-First F4 — proveniência e cenários de aceite
 
 Status: complete.
