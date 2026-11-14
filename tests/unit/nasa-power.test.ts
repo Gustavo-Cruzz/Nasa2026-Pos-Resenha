@@ -15,6 +15,7 @@ describe('NASA POWER adapter', () => {
     expect(url.searchParams.get('parameters')).toContain('PRECTOTCORR');
     expect(url.searchParams.get('parameters')).toContain('IMERG_PRECTOT');
     expect(url.searchParams.get('parameters')).toContain('GWETROOT');
+    expect(url.searchParams.get('parameters')).toContain('TSOIL1');
   });
 
   it('keeps GPM rainfall distribution and modeled root-zone wetness observational', () => {

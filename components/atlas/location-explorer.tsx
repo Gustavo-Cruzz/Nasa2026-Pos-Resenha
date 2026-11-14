@@ -13,6 +13,7 @@ import { LiveStrip, LiveWeatherPanel } from '@/components/atlas/live-weather';
 import { useLiveWeather } from '@/components/atlas/use-live-weather';
 import { PlaceSearch } from '@/components/atlas/place-search';
 import { MonthlyChart, type MonthPoint } from '@/components/atlas/monthly-chart';
+import { PlantingPanels } from '@/components/atlas/planting-panels';
 import { BoundarySummary } from '@/components/boundary/boundary-summary';
 import { GeoJsonImport } from '@/components/boundary/geojson-import';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
@@ -79,6 +80,7 @@ export function LocationExplorer() {
           {state.kind === 'loading' ? <p className="mt-5 text-slate-300" role="status">{en ? 'Loading NASA climate history…' : 'Buscando o histórico climático da NASA…'}</p> : null}
           {state.kind === 'error' ? <div className="mt-5 rounded-lg border border-amber-300/50 bg-amber-950/30 p-3"><p className="flex gap-2 text-amber-100"><AlertCircle aria-hidden="true" className="mt-0.5 shrink-0" size={18} />{state.message}</p><Button className="mt-3" type="button" variant="secondary" onClick={() => void fetchClimate(point)}><RefreshCw aria-hidden="true" size={16} />{en ? 'Try again' : 'Tentar novamente'}</Button></div> : null}
           {state.kind === 'ready' ? <ClimateView data={state.data} en={en} /> : null}
+          {state.kind === 'ready' ? <PlantingPanels data={state.data} en={en} point={point} /> : null}
           <LiveWeatherPanel state={live} />
           <Button className="mt-6 w-full justify-center" type="button" onClick={registerFarm}>{en ? 'Register my farm here' : 'Cadastrar minha fazenda aqui'}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Button>
         </>}

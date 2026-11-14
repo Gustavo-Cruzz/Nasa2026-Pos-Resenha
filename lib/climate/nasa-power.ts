@@ -9,11 +9,12 @@ import { dayOfYear, et0Daily } from '@/lib/climate/et0';
 import type { NdviContext } from '@/lib/climate/ndvi';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
 import { historicalErosivity, type Erosivity } from '@/lib/climate/erosivity';
+import { drySpellsInRainySeason, rainySeasonFromBalance, rootZoneByMonth, type DrySpellSummary, type RainySeason, type RootZoneMonth } from '@/lib/climate/seasonality';
 
 export const NASA_POWER_PERIOD = { start: '20110101', end: '20251231' } as const;
 export const NASA_POWER_PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN'] as const;
 export type NasaParameter = (typeof NASA_POWER_PARAMETERS)[number];
-export const NASA_POWER_ENHANCED_PARAMETERS = ['IMERG_PRECTOT', 'GWETROOT', 'PS'] as const;
+export const NASA_POWER_ENHANCED_PARAMETERS = ['IMERG_PRECTOT', 'GWETROOT', 'PS', 'TSOIL1'] as const;
 export type EnhancedNasaParameter = (typeof NASA_POWER_ENHANCED_PARAMETERS)[number];
 
 const expectedUnits: Record<NasaParameter, string> = {
@@ -24,7 +25,7 @@ const physicalRanges: Record<NasaParameter, readonly [number, number]> = {
   T2M: [-90, 70], T2M_MAX: [-90, 75], T2M_MIN: [-100, 65], PRECTOTCORR: [0, 2000], RH2M: [0, 100], WS2M: [0, 150], ALLSKY_SFC_SW_DWN: [0, 50],
 };
 
-export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null; imergPrecipMm?: number | null; rootZoneWetness?: number | null; pressureKpa?: number | null; /** FAO-56 ET0, climate context only; null when any input is missing. */ et0Mm?: number | null };
+export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null; imergPrecipMm?: number | null; rootZoneWetness?: number | null; pressureKpa?: number | null; /** POWER soil temperature, layer 1 (MERRA-2, near-surface soil); modelled for the grid cell, not a probe reading. */ soilTempC?: number | null; /** FAO-56 ET0, climate context only; null when any input is missing. */ et0Mm?: number | null };
 export type ClimateProvenance = { source: 'NASA_POWER'; requestedCoordinates: Coordinates; period: typeof NASA_POWER_PERIOD; fetchedAt: string; rawParameterNames: string[]; sourceUrl: string; timezone: 'UTC'; coveragePct: Record<NasaParameter, number> & Partial<Record<EnhancedNasaParameter, number>>; missingDays: string[]; warnings: string[] };
 export type ClimateDataset = { daily: ClimateDay[]; provenance: ClimateProvenance };
 export type ClimateContext = {
@@ -43,6 +44,10 @@ export type ClimateContext = {
   /** MODIS NDVI monthly medians; only present for points with a hash-verified pre-processed fixture, otherwise N/D. */
   ndvi?: NdviContext;
   calendarDayContext?: HistoricalCalendarDay | null;
+  /** Rainy-season months and in-season dry spells (veranicos) from the same daily series. Historical context, not a forecast. */
+  seasonality?: { rainySeason: RainySeason | null; drySpells: DrySpellSummary | null };
+  /** Monthly root-zone wetness (0–1): median of 2011–2025 next to the last year. */
+  rootZoneByMonth?: RootZoneMonth[];
   provenance: ClimateProvenance | null;
   gaps: string[];
 };
@@ -83,7 +88,7 @@ export function parseNasaPowerPayload(payload: unknown, coordinates: Coordinates
     if (reportedUnit && reportedUnit !== expectedUnits[parameter]) warnings.push(`Unexpected unit for ${parameter}: ${reportedUnit}. Expected ${expectedUnits[parameter]}.`);
     if (!reportedUnit) warnings.push(`NASA POWER did not expose unit metadata for ${parameter}; values are preserved only in the documented request unit.`);
   }
-  const enhancedUnits: Record<EnhancedNasaParameter, string> = { IMERG_PRECTOT: 'mm/day', GWETROOT: '1', PS: 'kPa' };
+  const enhancedUnits: Record<EnhancedNasaParameter, string> = { IMERG_PRECTOT: 'mm/day', GWETROOT: '1', PS: 'kPa', TSOIL1: 'C' };
   for (const parameter of NASA_POWER_ENHANCED_PARAMETERS) {
     if (!parameterData[parameter]) continue;
     const reportedUnit = data.parameters?.[parameter]?.units ?? data.parameters?.[parameter]?.unit;
@@ -105,12 +110,14 @@ export function parseNasaPowerPayload(payload: unknown, coordinates: Coordinates
     imergPrecipMm: normalizedOptionalValue(parameterData.IMERG_PRECTOT?.[date], [0, 2000], fillValue),
     rootZoneWetness: normalizedOptionalValue(parameterData.GWETROOT?.[date], [0, 1], fillValue),
     pressureKpa: normalizedOptionalValue(parameterData.PS?.[date], [30, 110], fillValue),
+    soilTempC: normalizedOptionalValue(parameterData.TSOIL1?.[date], [-50, 80], fillValue),
   })).map((day) => ({ ...day, et0Mm: et0Daily({ tmaxC: day.tmaxC, tminC: day.tminC, rhPct: day.rhPct, windMps2m: day.windMps, solarMjM2Day: day.solarMjM2Day, pressureKPa: day.pressureKpa, latitudeDeg: validCoordinates.latitude, dayOfYear: dayOfYear(day.date) }) }));
   const keyByParameter: Record<NasaParameter, keyof ClimateDay> = { T2M: 'tmeanC', T2M_MAX: 'tmaxC', T2M_MIN: 'tminC', PRECTOTCORR: 'precipMm', RH2M: 'rhPct', WS2M: 'windMps', ALLSKY_SFC_SW_DWN: 'solarMjM2Day' };
   const coveragePct = Object.fromEntries(NASA_POWER_PARAMETERS.map((parameter) => [parameter, Number((daily.filter((day) => day[keyByParameter[parameter]] !== null).length / daily.length * 100).toFixed(2))])) as ClimateProvenance['coveragePct'];
   if (parameterData.IMERG_PRECTOT) coveragePct.IMERG_PRECTOT = coverage(daily, 'imergPrecipMm');
   if (parameterData.GWETROOT) coveragePct.GWETROOT = coverage(daily, 'rootZoneWetness');
   if (parameterData.PS) coveragePct.PS = coverage(daily, 'pressureKpa');
+  if (parameterData.TSOIL1) coveragePct.TSOIL1 = coverage(daily, 'soilTempC');
   const missingDays = daily.filter((day) => {
     const requiredMissing = [day.tmeanC, day.tmaxC, day.tminC, day.precipMm, day.rhPct, day.windMps, day.solarMjM2Day].some((value) => value === null);
     const enhancedMissing = (parameterData.IMERG_PRECTOT && day.imergPrecipMm === null) || (parameterData.GWETROOT && day.rootZoneWetness === null) || (parameterData.PS && day.pressureKpa === null);
@@ -163,7 +170,10 @@ async function withNdvi(context: ClimateContext, coordinates: Coordinates): Prom
 }
 
 function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture', calendarDay?: number): ClimateContext {
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), lastYear: { year: Number(NASA_POWER_PERIOD.end.slice(0, 4)), months: monthlyForYear(dataset.daily, Number(NASA_POWER_PERIOD.end.slice(0, 4))) }, waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: historicalWaterBalanceByMonth(dataset.daily), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+  const waterBalance = historicalWaterBalanceByMonth(dataset.daily);
+  const rainySeason = rainySeasonFromBalance(waterBalance);
+  const lastYear = Number(NASA_POWER_PERIOD.end.slice(0, 4));
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), lastYear: { year: Number(NASA_POWER_PERIOD.end.slice(0, 4)), months: monthlyForYear(dataset.daily, Number(NASA_POWER_PERIOD.end.slice(0, 4))) }, waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: waterBalance, seasonality: { rainySeason, drySpells: drySpellsInRainySeason(dataset.daily, rainySeason) }, rootZoneByMonth: rootZoneByMonth(dataset.daily, lastYear), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }
 
 function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {
@@ -171,6 +181,6 @@ function normalizedOptionalValue(value: number | null | undefined, range: readon
   return value >= range[0] && value <= range[1] ? value : null;
 }
 
-function coverage(daily: ClimateDay[], key: 'imergPrecipMm' | 'rootZoneWetness' | 'pressureKpa'): number {
+function coverage(daily: ClimateDay[], key: 'imergPrecipMm' | 'rootZoneWetness' | 'pressureKpa' | 'soilTempC'): number {
   return Number((daily.filter((day) => day[key] !== null && day[key] !== undefined).length / daily.length * 100).toFixed(2));
 }

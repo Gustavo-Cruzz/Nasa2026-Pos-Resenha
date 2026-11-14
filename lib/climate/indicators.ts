@@ -1,6 +1,6 @@
 import type { ClimateDay } from '@/lib/climate/nasa-power';
 
-export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; precipMedianMm: number | null; validTemperatureDays: number; validPrecipitationDays: number };
+export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; tsoilMedianC?: number | null; precipMedianMm: number | null; validTemperatureDays: number; validPrecipitationDays: number };
 export type HistoricalPrecipitationMonth = { month: number; medianTotalMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalWaterContextMonth = { month: number; imergMedianTotalMm: number | null; medianRainDays: number | null; rootZoneWetnessMedian: number | null; validImergYears: number; expectedYears: number; imergCoveragePct: number; rootZoneCoveragePct: number };
 /** Median monthly precipitation, FAO-56 ET0 and their difference across complete years only. Climate context; not crop demand. */
@@ -22,7 +22,8 @@ export function monthlyClimatology(daily: ClimateDay[]): MonthlyClimateSummary[]
     const minimums = values.flatMap((day) => day.tminC === null ? [] : [day.tminC]);
     const maximums = values.flatMap((day) => day.tmaxC === null ? [] : [day.tmaxC]);
     const precipitation = values.flatMap((day) => day.precipMm === null ? [] : [day.precipMm]);
-    return { month, tmeanMedianC: median(temperatures), tminMedianC: median(minimums), tmaxMedianC: median(maximums), precipMedianMm: median(precipitation), validTemperatureDays: temperatures.length, validPrecipitationDays: precipitation.length };
+    const soil = values.flatMap((day) => day.soilTempC === null || day.soilTempC === undefined ? [] : [day.soilTempC]);
+    return { month, tmeanMedianC: median(temperatures), tminMedianC: median(minimums), tmaxMedianC: median(maximums), tsoilMedianC: median(soil), precipMedianMm: median(precipitation), validTemperatureDays: temperatures.length, validPrecipitationDays: precipitation.length };
   });
 }
 
