@@ -1,6 +1,6 @@
 'use client';
 
-import { Ban, Database, FileCheck2, Mountain, Satellite, Sprout, UserRound } from 'lucide-react';
+import { Ban, CloudSun, Database, FileCheck2, Mountain, Satellite, Sprout, UserRound } from 'lucide-react';
 import { useLocale } from '@/components/locale-provider';
 
 type Source = { icon: typeof Satellite; title: string; gives: string; limit: string };
@@ -10,6 +10,7 @@ export default function MethodologyPage() {
   const en = locale === 'en';
   const sources: Source[] = en ? [
     { icon: Satellite, title: 'NASA POWER · GPM IMERG', gives: 'Daily temperature, rain, humidity, wind and solar radiation (2011–2025). From them: FAO-56 ET0 and the monthly rain − ET0 balance.', limit: 'Not a forecast, crop demand or irrigation need.' },
+    { icon: CloudSun, title: 'Open-Meteo · live weather', gives: 'Temperature, humidity, rain, wind, pressure and cloud cover right now at the chosen point, refreshed every 15 minutes.', limit: 'Not NASA data; a weather-model analysis, not a measurement of your farm. No forecasts.' },
     { icon: Sprout, title: 'NASA MODIS · NDVI', gives: 'Vegetation greenness (MOD13Q1) for pilot points, via Planetary Computer.', limit: 'Shown only where a verified file exists; otherwise N/D.' },
     { icon: Mountain, title: 'SRTM · Embrapa · Fournier index', gives: 'Slope, relief classes, slope hotspots (≥ 8%) and rain erosivity (Modified Fournier Index).', limit: 'Soil loss (RUSLE) stays N/D: soil, cover and slope-length data are missing.' },
     { icon: Database, title: 'IBGE · ZARC · PAM', gives: 'Municipality lookup, local ZARC crop records and municipal production history.', limit: 'PAM never picks crops; municipal data is not field validation.' },
@@ -17,6 +18,7 @@ export default function MethodologyPage() {
     { icon: UserRound, title: 'Your input', gives: 'Place, past crops and soil notes you report.', limit: 'Not verified, and not used in any calculation.' },
   ] : [
     { icon: Satellite, title: 'NASA POWER · GPM IMERG', gives: 'Temperatura, chuva, umidade, vento e radiação solar diários (2011–2025). Deles saem a ET0 FAO-56 e o balanço mensal chuva − ET0.', limit: 'Não é previsão, demanda da cultura nem necessidade de irrigação.' },
+    { icon: CloudSun, title: 'Open-Meteo · tempo real', gives: 'Temperatura, umidade, chuva, vento, pressão e nuvens de agora no ponto escolhido, atualizados a cada 15 minutos.', limit: 'Não são dados da NASA; é análise de modelo meteorológico, não medição da sua fazenda. Sem previsões.' },
     { icon: Sprout, title: 'NASA MODIS · NDVI', gives: 'Verdor da vegetação (MOD13Q1) em pontos piloto, via Planetary Computer.', limit: 'Aparece só onde há arquivo verificado; fora disso, N/D.' },
     { icon: Mountain, title: 'SRTM · Embrapa · Índice de Fournier', gives: 'Declividade, classes de relevo, pontos críticos (≥ 8%) e erosividade da chuva (Índice de Fournier Modificado).', limit: 'A perda de solo (RUSLE) segue N/D: faltam solo, cobertura e comprimento de rampa.' },
     { icon: Database, title: 'IBGE · ZARC · PAM', gives: 'Município, registros locais do ZARC e histórico municipal de produção.', limit: 'O PAM nunca escolhe culturas; dado municipal não valida o talhão.' },

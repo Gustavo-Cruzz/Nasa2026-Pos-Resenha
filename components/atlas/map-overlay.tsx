@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { CloudRain, Droplets, MapPin, Satellite } from 'lucide-react';
 import { latestNrtDate, SMAP_GIBS_DATE, type MapLayers } from '@/lib/atlas';
 import { ClientOnly } from '@/components/client-only';
@@ -9,7 +10,7 @@ const SHORT_MONTHS = { 'pt-BR': ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul'
 const shortDate = (iso: string, locale: 'pt-BR' | 'en') => `${Number(iso.slice(8, 10))} ${SHORT_MONTHS[locale][Number(iso.slice(5, 7)) - 1]}`;
 
 /** Floating layer over the map: place name, NASA layer toggles and a caption naming the date of each active layer. */
-export function MapOverlay({ name, coordinates, layers, onToggle }: { name: string; coordinates: string; layers: MapLayers; onToggle: (layer: keyof MapLayers) => void }) {
+export function MapOverlay({ name, coordinates, layers, onToggle, live }: { name: string; coordinates: string; layers: MapLayers; onToggle: (layer: keyof MapLayers) => void; live?: ReactNode }) {
   const { locale } = useLocale();
   return <div className="pointer-events-none absolute inset-3 z-10">
     <div className="flex flex-col items-start gap-2">
@@ -19,6 +20,7 @@ export function MapOverlay({ name, coordinates, layers, onToggle }: { name: stri
       </div>
       <ClientOnly fallback={null}><Chips layers={layers} locale={locale} onToggle={onToggle} /></ClientOnly>
     </div>
+    {live ? <div className="absolute right-0 top-0">{live}</div> : null}
     <ClientOnly fallback={null}><Caption layers={layers} locale={locale} /></ClientOnly>
   </div>;
 }
