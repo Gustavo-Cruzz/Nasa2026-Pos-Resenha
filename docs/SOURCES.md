@@ -28,3 +28,8 @@ Field Shift's product scope is Brazil nationwide. Sources with Rio Verde/GO scop
 - Embrapa relief classes: Weber, E. et al., *Indicação Geográfica Campanha Gaúcha*, Embrapa Uva e Vinho, cap. 5 (Relevo), Tabela 5.3: https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1186394/1/Cap05-IGCampanha-Weberetal.pdf
 - Modified Fournier Index and its classes: Arnoldus (1980) as quoted with CEC (1992) by Khentouche, A. & Bella, N., Acta Geographica Lodziensia: https://journals.ltn.lodz.pl/Acta-Geographica-Lodziensia/article/download/2022/1789
 - Crop parameters added on 2026-11-14 (each with page and verbatim excerpt in `data/crop-evidence.json`): Embrapa Milho e Sorgo, *Cultivo do Sorgo* (Clima, 6ª ed. 2010; Ecofisiologia, 9ª ed. 2015); Embrapa Milho e Sorgo, *Manejo da cultura do milho* (Circular Técnica 87, 2006); Embrapa Soja, *Tecnologias de produção de soja* (Sistemas de Produção 17, 2020); Embrapa-CNPSO, *A cultura do girassol* (Circular Técnica 13, 1996); Embrapa CPATSA, *Recomendações técnicas para o cultivo do feijoeiro comum* (1996); Embrapa Acre, *Recomendações para a cultura do feijão no Estado do Acre* (Circular Técnica 24, 1998).
+
+## Open-Meteo — live weather (added 2026-11-14)
+- Used for: current temperature, apparent temperature, humidity, rain, wind, gusts, pressure and cloud cover at the chosen point (`/api/weather`, server-side, cached 5 min; refreshed every 5 min in the page).
+- Provider: https://open-meteo.com/ (CC BY 4.0, free for non-commercial use). Weather-model analysis refreshed every 15 min; **not NASA data** and not a farm measurement.
+- Limits: current conditions only (no forecast), any missing field stays N/D, shown apart from NASA historical data. Must be cited in the submission references.
