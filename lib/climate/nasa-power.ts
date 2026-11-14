@@ -8,6 +8,7 @@ import { historicalContextForCalendarDay, historicalPrecipitationByMonth, histor
 import { dayOfYear, et0Daily } from '@/lib/climate/et0';
 import type { NdviContext } from '@/lib/climate/ndvi';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
+import { historicalErosivity, type Erosivity } from '@/lib/climate/erosivity';
 
 export const NASA_POWER_PERIOD = { start: '20110101', end: '20251231' } as const;
 export const NASA_POWER_PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN'] as const;
@@ -35,6 +36,8 @@ export type ClimateContext = {
   waterContext?: HistoricalWaterContextMonth | null;
   /** Monthly median of precipitation minus FAO-56 ET0: a climate indicator, not crop demand or an irrigation need. */
   waterBalanceByMonth?: WaterBalanceMonth[];
+  /** Arnoldus Modified Fournier Index of rainfall aggressiveness; not soil loss. */
+  erosivity?: Erosivity;
   /** MODIS NDVI monthly medians; only present for points with a hash-verified pre-processed fixture, otherwise N/D. */
   ndvi?: NdviContext;
   calendarDayContext?: HistoricalCalendarDay | null;
@@ -158,7 +161,7 @@ async function withNdvi(context: ClimateContext, coordinates: Coordinates): Prom
 }
 
 function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture', calendarDay?: number): ClimateContext {
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: historicalWaterBalanceByMonth(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: historicalWaterBalanceByMonth(dataset.daily), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }
 
 function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {

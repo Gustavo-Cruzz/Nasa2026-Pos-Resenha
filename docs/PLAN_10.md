@@ -35,3 +35,8 @@ Base: avaliação externa (a NASA não diferencia os cenários, leitura só qual
 - ET0 bate com o FAO-56 Exemplo 18 (±0,06 mm/dia); dado ausente → N/D, nunca zero.
 - Nenhum texto afirma previsão, recomendação, irrigação ou produtividade.
 - Sliders mudam calendário e balanço, e resetam.
+
+## Atualização (2026-11-14, segunda rodada)
+- **NDVI:** coletado via Microsoft Planetary Computer (cópias COG do MOD13Q1 v061 da NASA LP DAAC) para Rio Verde, Accra e Nova Délhi (335 composites válidos cada). O serviço do ORNL continuou fora do ar.
+- **Relevo e erosão:** SRTM GL1 v003 (via OpenTopoData), classes de relevo da Embrapa, hotspots de relevo (declividade ≥ 8%) e erosividade (Índice de Fournier Modificado, Arnoldus). Perda de solo (RUSLE) segue N/D por falta de K, C, P e comprimento de rampa.
+- **Culturas:** 7 registros verificados adicionados (sorgo, milho, soja, girassol, feijão). Ainda abertos: viabilidade térmica do feijão-comum, arroz de terras altas, pH do feijão-caupi e ciclo da soja.

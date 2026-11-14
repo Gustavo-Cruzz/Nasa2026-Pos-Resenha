@@ -20,6 +20,12 @@
 ## Plan 10 — 2026-11-14
 
 - ET0 (FAO-56 Penman–Monteith) and the monthly P − ET0 balance are allowed as a climate indicator. ETc, crop water use, irrigation need and forecasts stay out of scope. Surface pressure `PS` was added to the POWER request and the Rio Verde fixture was recaptured with it (new SHA-256).
-- NDVI is read from pre-processed, hash-verified fixtures for exact demonstration points. The ORNL DAAC subset service allows ten dates per request and returned HTTP 502/503 during development, so it is never called at request time. Without a fixture the app shows N/D. No NDVI fixture is committed yet.
+- NDVI is read from pre-processed, hash-verified fixtures for exact demonstration points. The ORNL DAAC subset service (ten dates per request) returned HTTP 502/503, so the collection script uses the Microsoft Planetary Computer STAC catalog (NASA LP DAAC MOD13Q1 v061 copies) and fixtures for Rio Verde, Accra and New Delhi are committed. Nothing is fetched at request time.
 - SRTM relief and erosion/hotspot maps were not added: there is no verified soil/relief source integrated, so those layers stay N/D rather than inferred.
 - PAM check: for Rio Verde the regional context returns 5 PAM products and no gap; the "no positive PAM observation" gap is emitted only when a municipality has no PAM entry, so the reported inconsistency is not reproducible in code.
+
+## Plan 10b — 2026-11-14
+
+- SRTM relief is fetched per analysis from the public OpenTopoData `srtm30m` endpoint (NASA SRTM GL1 v003) and degrades to N/D on any failure; at most one request of at most 100 points, with a 24 h in-memory cache and a 7-day fetch cache. Slope grid spacing is never below 60 m because SRTM vertical error makes finer slopes unreliable.
+- A relief hotspot means slope ≥ 8% (start of Embrapa's "moderadamente ondulado"); soil-loss hotspots are not claimed because K, C, P and slope length are unavailable. Erosivity uses the Arnoldus Modified Fournier Index with its published classes.
+- Crop evidence: seven verified records were added (sorghum pH and ideal temperature, maize viable temperature, soybean pH, sunflower viable temperature, common bean ideal temperature and pH), each checked programmatically against the extracted PDF text. Maize and sunflower now have a documented viable range, so the engine's scenario C selection changed from cowpea to maize (a different family from soybean, the last crop); tests were updated for that. Cowpea pH ("em torno de 5,5") and upland-rice pH ("em torno de 5,5") are single values, not ranges, and were not promoted. Common bean still has no documented viable range.

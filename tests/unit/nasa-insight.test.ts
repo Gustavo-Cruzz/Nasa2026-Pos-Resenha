@@ -18,11 +18,11 @@ describe('NASA causal insight', () => {
     expect(result.nasaInsight.attentionDecision).toMatchObject({ scenarioId: 'A', observedValue: 35, ruleId: 'DOCUMENTED_THERMAL_RANGE' });
     expect(result.nasaInsight.effects.every((effect) => effect.sourceRefs.some((source) => source.includes('power.larc.nasa.gov')))).toBe(true);
     expect(result.nasaInsightByMonth).toHaveLength(12);
-    expect(result.strategies.map((strategy) => strategy.proposedCrop?.cropId)).toEqual(['soybean', 'sorghum', 'cowpea']);
+    expect(result.strategies.map((strategy) => strategy.proposedCrop?.cropId)).toEqual(['soybean', 'sorghum', 'maize']);
   });
 
   it('keeps precipitation observational when thermal evidence is absent', () => {
-    const plan = createLabPlan(input, ['maize', 'sunflower', 'common_bean']);
+    const plan = createLabPlan(input, ['common_bean', 'upland_rice', 'ruziziensis']);
     const result = analyze(input, climate, plan);
     expect(result.nasaInsight.status).toBe('observational');
     expect(result.nasaInsight.metric).toBe('precipitation');

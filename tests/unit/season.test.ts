@@ -17,12 +17,12 @@ describe('rotation calendar', () => {
     expect(rows.map((row) => row.scenarioId)).toEqual(['A', 'B', 'C']);
     const april = rows.map((row) => row.cells[3]);
     expect(april.map((cell) => cell.state)).toEqual(['attention', 'compatible', 'attention']);
-    expect(april.map((cell) => cell.marginC)).toEqual([-5, 3, -1]);
+    expect(april.map((cell) => cell.marginC)).toEqual([-5, 3, -5]);
     expect(rows[0].cells[0]).toMatchObject({ state: 'compatible', marginC: 5, valueC: 25 });
   });
   it('shifts every month by a hypothetical offset without mutating the history', () => {
     const insights = insightsOf(() => 25);
-    expect(deriveRotationCalendar(insights, 6).map((row) => row.cells[0].state)).toEqual(['attention', 'compatible', 'compatible']);
+    expect(deriveRotationCalendar(insights, 6).map((row) => row.cells[0].state)).toEqual(['attention', 'compatible', 'attention']);
     expect(deriveRotationCalendar(insights, 0).every((row) => row.cells.every((cell) => cell.state === 'compatible'))).toBe(true);
   });
   it('keeps months without a reading unknown, never compatible', () => {

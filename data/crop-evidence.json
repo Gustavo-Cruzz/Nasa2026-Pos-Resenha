@@ -842,10 +842,10 @@
         "title": "Cultivar de feijão-caupi BRS Guariba",
         "year": null,
         "url": "https://www.embrapa.br/en/busca-de-solucoes-tecnologicas/-/produto-servico/12197/cultivar-de-feijao-caupi-brs-guariba",
-      "pageOrSection": "Product description",
-      "snippet": "Apresenta ciclo de 65 a 70 dias.",
+        "pageOrSection": "Product description",
+        "snippet": "Apresenta ciclo de 65 a 70 dias.",
         "accessedAt": "2026-11-12",
-      "verification": "verified"
+        "verification": "verified"
       }
     },
     {
@@ -869,10 +869,10 @@
         "title": "Cultivar de feijão-caupi BRS Guariba",
         "year": null,
         "url": "https://www.embrapa.br/en/busca-de-solucoes-tecnologicas/-/produto-servico/12197/cultivar-de-feijao-caupi-brs-guariba",
-      "pageOrSection": "Product description",
-      "snippet": "Resistente ao mosaico transmitido por pulgão e mosaico dourado; moderadamente resistente ao oídio e mancha café.",
+        "pageOrSection": "Product description",
+        "snippet": "Resistente ao mosaico transmitido por pulgão e mosaico dourado; moderadamente resistente ao oídio e mancha café.",
         "accessedAt": "2026-11-12",
-      "verification": "verified"
+        "verification": "verified"
       }
     },
     {
@@ -940,9 +940,18 @@
       "cropId": "common_bean",
       "field": "kcStages",
       "value": [
-        { "stage": "initial", "kc": 0.4 },
-        { "stage": "mid", "kc": 1.15 },
-        { "stage": "end", "kc": 0.35 }
+        {
+          "stage": "initial",
+          "kc": 0.4
+        },
+        {
+          "stage": "mid",
+          "kc": 1.15
+        },
+        {
+          "stage": "end",
+          "kc": 0.35
+        }
       ],
       "unit": "dimensionless",
       "context": "national technical reference for irrigated common colored bean; stage durations and local ET0 are not supplied by this record",
@@ -957,6 +966,160 @@
         "snippet": "Kc inicial 0,4; médio 1,15; final 0,35.",
         "accessedAt": "2026-11-14",
         "verification": "verified"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH (method not stated)",
+      "context": "soil acidity preference stated for grain sorghum; acidity corrected, flat topography",
+      "cultivar": null,
+      "location": "Brazilian cultivation guidance; not Rio Verde validation",
+      "source": {
+        "title": "Cultivo do Sorgo — Clima (Sistemas de Produção, 2, 6ª edição)",
+        "year": 2010,
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/item/27070/1/Clima.pdf",
+        "pageOrSection": "PDF p. 2, soil preferences",
+        "snippet": "tem preferência por solos bem preparados, com acidez corrigida, ricos em matéria orgânica, pH entre 5,5 e 6,5, topografia plana e sem excesso de umidade.",
+        "verification": "verified",
+        "institution": "Embrapa Milho e Sorgo",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "idealTempC",
+      "value": {
+        "min": 33,
+        "max": 34
+      },
+      "unit": "°C",
+      "context": "air temperature; optimum for growth (\"por volta de\")",
+      "cultivar": null,
+      "location": "Brazilian cultivation guidance; not Rio Verde validation",
+      "source": {
+        "title": "Cultivo do Sorgo — Ecofisiologia (Sistema de Produção, 2, 9ª edição)",
+        "year": 2015,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/748779/1/Sorgo-Ecofisiologia.pdf",
+        "pageOrSection": "PDF p. 17, Temperatura",
+        "snippet": "A temperatura ótima para crescimento está por volta de 33 ºC-34 ºC.",
+        "verification": "verified",
+        "institution": "Embrapa Milho e Sorgo",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "viableTempC",
+      "value": {
+        "min": 10,
+        "max": 30
+      },
+      "unit": "°C",
+      "context": "air temperature; extreme limits tolerated by the plant; the same text notes long periods below 10 °C stall growth and long warm nights above 30 °C reduce grain yield",
+      "cultivar": null,
+      "location": "Brazilian cultivation guidance; not Rio Verde validation",
+      "source": {
+        "title": "Manejo da cultura do milho (Circular Técnica 87)",
+        "year": 2006,
+        "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/490419/1/Circ87.pdf",
+        "pageOrSection": "PDF p. 1, climate and metabolism",
+        "snippet": "dentro dos limites extremos tolerados pela planta de milho, compreendidos entre 10ºC e 30ºC.",
+        "verification": "verified",
+        "institution": "Embrapa Milho e Sorgo",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.0
+      },
+      "unit": "pH in water",
+      "context": "suitable water pH for soybean; \"de forma geral\"; the same text sets liming triggers by tillage system",
+      "cultivar": null,
+      "location": "Brazil-wide production guidance citing the RS/SC liming manual (2016); not Cerrado or Rio Verde validation",
+      "source": {
+        "title": "Tecnologias de produção de soja (Sistemas de Produção, 17), cap. 7",
+        "year": 2020,
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1128401/1/cap-7-SP-17-2020.pdf",
+        "pageOrSection": "Chapter 7 (soil sampling and liming), PDF p. 12",
+        "snippet": "De forma geral, o pH em água adequado para a cultura da soja situa-se entre 5,5 e 6,0.",
+        "verification": "verified",
+        "institution": "Embrapa Soja",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "viableTempC",
+      "value": {
+        "min": 10,
+        "max": 34
+      },
+      "unit": "°C",
+      "context": "air temperature tolerated without significant yield reduction",
+      "cultivar": null,
+      "location": "Brazilian cultivation guidance; not Rio Verde validation",
+      "source": {
+        "title": "A cultura do girassol (Circular Técnica 13)",
+        "year": 1996,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/951393/1/CNPSOCIR.TEC.1396.pdf",
+        "pageOrSection": "PDF p. 11, 2. Exigências climáticas",
+        "snippet": "A faixa de temperatura entre 10°C a 34°C é tolerada pelo girassol sem redução significativa da produção, indicando adaptação a regiões com dias quentes e noites frias.",
+        "verification": "verified",
+        "institution": "Embrapa Soja (CNPSO)",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "idealTempC",
+      "value": {
+        "min": 15,
+        "max": 27
+      },
+      "unit": "°C",
+      "context": "air temperature range stated as favorable to development and production, citing Bulisani et al. (1987)",
+      "cultivar": null,
+      "location": "semi-arid tropics recommendation (CPATSA); not Rio Verde validation",
+      "source": {
+        "title": "Recomendações técnicas para o cultivo do feijoeiro comum",
+        "year": 1996,
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/145851/1/FeijaoComum.pdf",
+        "pageOrSection": "PDF p. 3, climate",
+        "snippet": "o desenvolvimento e produção do feijoeiro são favorecidos quando a temperatura se situa numa faixa de 15° a 27° C",
+        "verification": "verified",
+        "institution": "Embrapa Trópico Semi-Árido (CPATSA)",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH (method not stated)",
+      "context": "soil preference stated for common bean in Acre",
+      "cultivar": null,
+      "location": "Acre state, Brazil; not Rio Verde validation",
+      "source": {
+        "title": "Recomendações para a cultura do feijão no Estado do Acre (Circular Técnica 24)",
+        "year": 1998,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/511249/1/21003.pdf",
+        "pageOrSection": "PDF p. 7, Solo",
+        "snippet": "desenvolvendo-se melhor em solos franco-argilosos ou argilo-arenosos, permeáveis, bem drenados, com menor declividade possível e pH entre 5,5 até 6,5.",
+        "verification": "verified",
+        "institution": "Embrapa Acre",
+        "accessedAt": "2026-11-14"
       }
     }
   ]

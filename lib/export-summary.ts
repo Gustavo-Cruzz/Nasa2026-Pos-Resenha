@@ -4,6 +4,8 @@ import { cropDisplayName } from '@/lib/presentation';
 import { deriveDecisionHero } from '@/lib/engine/decision-hero';
 import { deriveRotationCalendar, deriveSeasonInsights, describeSeasonInsight, monthLabel, seasonCaveat } from '@/lib/engine/season';
 import { relativeLowVegetationMonths } from '@/lib/climate/ndvi';
+import { RELIEF_CLASSES, reliefLabel, HOTSPOT_MIN_SLOPE_PCT } from '@/lib/terrain/terrain';
+import { erosivityLabel } from '@/lib/climate/erosivity';
 import { buildSourceHealth, sourceGapLabel, sourceStateLabel, sourceTitle } from '@/lib/source-health';
 
 const monthNames = { 'pt-BR': ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] } as const;
@@ -60,6 +62,18 @@ function seasonLines(data: AnalysisResult, locale: Locale): string[] {
   return lines;
 }
 
+function terrainLines(data: AnalysisResult, locale: Locale): string[] {
+  const en = locale === 'en';
+  const terrain = data.terrain;
+  const erosivity = data.climate.erosivity;
+  const lines = ['', `## ${en ? 'Relief and erosion context' : 'Relevo e contexto de erosão'}`, ''];
+  if (terrain?.status === 'available' && terrain.slopePct) {
+    lines.push(`- ${en ? 'Elevation (NASA SRTM)' : 'Elevação (NASA SRTM)'}: ${terrain.elevationM ? `${terrain.elevationM.min}–${terrain.elevationM.max} m` : 'N/D'}`, `- ${en ? 'Slope mean / max' : 'Declividade média / máx.'}: ${terrain.slopePct.mean}% / ${terrain.slopePct.max}% (${terrain.mode === 'polygon' ? (en ? 'boundary' : 'polígono') : en ? 'local value around the point, about 180 m' : 'valor local em torno do ponto, cerca de 180 m'}; ${en ? 'grid' : 'malha'} ${terrain.gridSpacingM} m, ${terrain.sampledCells} ${en ? 'cells' : 'células'})`, `- ${en ? `Relief hotspots (slope ≥ ${HOTSPOT_MIN_SLOPE_PCT}%)` : `Hotspots de relevo (declividade ≥ ${HOTSPOT_MIN_SLOPE_PCT}%)`}: ${terrain.hotspots.count} ${en ? 'cells' : 'células'} (${terrain.hotspots.sharePct}%)`, `- ${en ? 'Relief classes (Embrapa)' : 'Classes de relevo (Embrapa)'}: ${RELIEF_CLASSES.map((item) => `${reliefLabel(item.id, locale)} ${terrain.classShares.find((entry) => entry.classId === item.id)?.sharePct ?? 0}%`).join('; ')}`);
+  } else lines.push(`- ${en ? 'Relief (NASA SRTM)' : 'Relevo (NASA SRTM)'}: N/D`);
+  lines.push(`- ${en ? 'Rainfall erosivity (Arnoldus Modified Fournier Index)' : 'Erosividade da chuva (Índice de Fournier Modificado, Arnoldus)'}: ${erosivity?.mfi !== null && erosivity?.mfi !== undefined && erosivity.classId ? `${erosivity.mfi} — ${erosivityLabel(erosivity.classId, locale)}` : 'N/D'}`, `- ${en ? 'Soil loss (RUSLE)' : 'Perda de solo (RUSLE)'}: N/D — ${en ? 'needs soil erodibility, cover/management and slope length; hotspots are relief hotspots, not soil-loss hotspots' : 'exige erodibilidade do solo, cobertura/manejo e comprimento de rampa; hotspots são de relevo, não de perda de solo'}`);
+  return lines;
+}
+
 function sourceLines(data: AnalysisResult, locale: Locale): string[] {
   const en = locale === 'en';
   const lines = ['', `## ${en ? 'Source status' : 'Estado das fontes'}`, ''];
@@ -73,7 +87,7 @@ function sourceLines(data: AnalysisResult, locale: Locale): string[] {
 export function buildAnalysisSummary(data: AnalysisResult, locale: Locale): string {
   const en = locale === 'en';
   const evidenceLevel = (level: string) => ({ climate_exploration: en ? 'Climate exploration' : 'Exploração climática', regionally_contextualized: en ? 'Regional context' : 'Contexto regional', locally_validated: en ? 'Traceable local validation' : 'Validação local rastreável' }[level] ?? level);
-  const lines = [`# Field Shift — ${en ? 'Exploratory comparison' : 'Comparação exploratória'}`, '', `${en ? 'Location' : 'Local'}: ${data.input.location.latitude}, ${data.input.location.longitude}`, `${en ? 'Exploratory boundary' : 'Polígono exploratório'}: ${boundaryText(data, en)}`, ...waterLines(data, en), `${en ? 'Planting-month climate window' : 'Mês da janela climática'}: ${data.input.plantingMonth}`, `${en ? 'Climate source' : 'Fonte climática'}: ${data.climate.provenance?.source ?? 'N/D'} (${data.climate.provenance?.period.start ?? 'N/D'}–${data.climate.provenance?.period.end ?? 'N/D'})`, ...decisionLines(data, locale), ...seasonLines(data, locale), ...sourceLines(data, locale), '', `## ${en ? 'Scenarios' : 'Cenários'}`];
+  const lines = [`# Field Shift — ${en ? 'Exploratory comparison' : 'Comparação exploratória'}`, '', `${en ? 'Location' : 'Local'}: ${data.input.location.latitude}, ${data.input.location.longitude}`, `${en ? 'Exploratory boundary' : 'Polígono exploratório'}: ${boundaryText(data, en)}`, ...waterLines(data, en), `${en ? 'Planting-month climate window' : 'Mês da janela climática'}: ${data.input.plantingMonth}`, `${en ? 'Climate source' : 'Fonte climática'}: ${data.climate.provenance?.source ?? 'N/D'} (${data.climate.provenance?.period.start ?? 'N/D'}–${data.climate.provenance?.period.end ?? 'N/D'})`, ...decisionLines(data, locale), ...seasonLines(data, locale), ...terrainLines(data, locale), ...sourceLines(data, locale), '', `## ${en ? 'Scenarios' : 'Cenários'}`];
   for (const strategy of data.strategies) {
     lines.push('', `### ${strategy.id}. ${strategy.title}`, `${en ? 'Primary hypothesis' : 'Hipótese principal'}: ${strategy.proposedCrop?.name ?? 'N/D'}`, `${en ? 'Evidence level' : 'Nível de evidência'}: ${evidenceLevel(strategy.validationLevel)}`);
     for (const indicator of strategy.indicators) lines.push(`- ${indicator.label}: ${indicator.state} — ${indicator.detail}`);

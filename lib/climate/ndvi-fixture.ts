@@ -6,7 +6,7 @@ import type { Coordinates } from '@/lib/schema';
 import { NDVI_FIXTURE_SITES, monthlyNdvi, type NdviContext } from '@/lib/climate/ndvi';
 
 /** Server-only: reads a pre-processed NDVI series, accepting it only when the SHA-256 and the exact coordinates match. */
-const metaSchema = z.object({ sourceUrl: z.string().url(), fetchedAt: z.string().datetime(), sha256: z.string().regex(/^[a-f0-9]{64}$/), requestedCoordinates: z.object({ latitude: z.number(), longitude: z.number() }), product: z.literal('MOD13Q1'), band: z.literal('250m_16_days_NDVI') });
+const metaSchema = z.object({ sourceUrl: z.string().url(), provider: z.string().optional(), fetchedAt: z.string().datetime(), sha256: z.string().regex(/^[a-f0-9]{64}$/), requestedCoordinates: z.object({ latitude: z.number(), longitude: z.number() }), product: z.literal('MOD13Q1'), band: z.literal('250m_16_days_NDVI') });
 
 export async function readNdviFixture(coordinates: Coordinates, directory = path.join(process.cwd(), 'data/ndvi')): Promise<NdviContext | undefined> {
   const site = NDVI_FIXTURE_SITES.find((item) => item.latitude === coordinates.latitude && item.longitude === coordinates.longitude);

@@ -35,7 +35,7 @@ describe('decision hero', () => {
   it('never turns missing evidence into compatible', () => {
     expect(deriveDecisionHero(analyze(input, unavailable))).toMatchObject({ state: 'unknown', observedValue: null, nextCheck: 'provide_data' });
     expect(deriveDecisionHero(analyze(input, climate(null))).state).toBe('unknown');
-    const precipitationOnly = deriveDecisionHero(analyze(input, climate(25), createLabPlan(input, ['maize', 'sunflower', 'common_bean'])));
+    const precipitationOnly = deriveDecisionHero(analyze(input, climate(25), createLabPlan(input, ['common_bean', 'upland_rice', 'ruziziensis'])));
     expect(precipitationOnly.state).toBe('unknown');
     expect(precipitationOnly.observedValue).toBeNull();
   });
@@ -85,5 +85,22 @@ describe('season content in the export', () => {
     expect(md).toMatch(/not a forecast/);
     expect(md).toContain('Climate water balance: N/D');
     expect(buildAnalysisSummary(analyze(input, unavailable), 'pt-BR')).toContain('Balanço hídrico climático: N/D');
+  });
+});
+
+describe('terrain content in the export', () => {
+  it('lists relief, hotspots, erosivity and the soil-loss N/D guardrail; and N/D when SRTM is missing', async () => {
+    const { buildSampleGrid, analyzeTerrain } = await import('@/lib/terrain/terrain');
+    const grid = buildSampleGrid(undefined, input.location);
+    const terrain = analyzeTerrain(grid, grid.points.map((point) => 700 + 0.1 * point.row * grid.dyM), '2026-11-14T00:00:00.000Z');
+    const withTerrain = { ...analyze(input, climate(25)), terrain };
+    const md = buildAnalysisSummary(withTerrain, 'en');
+    expect(md).toContain('## Relief and erosion context');
+    expect(md).toMatch(/Slope mean \/ max: 10% \/ 10%/);
+    expect(md).toMatch(/Relief hotspots \(slope ≥ 8%\): 1 cells/);
+    expect(md).toContain('Soil loss (RUSLE): N/D');
+    expect(buildSourceHealth(withTerrain).find((item) => item.id === 'srtm')).toMatchObject({ state: 'available', gap: null });
+    expect(buildAnalysisSummary(analyze(input, climate(25)), 'pt-BR')).toContain('Relevo (NASA SRTM): N/D');
+    expect(buildSourceHealth(analyze(input, climate(25))).find((item) => item.id === 'srtm')).toMatchObject({ state: 'nd', gap: 'terrain_unavailable' });
   });
 });

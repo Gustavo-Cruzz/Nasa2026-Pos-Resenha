@@ -7,7 +7,9 @@ describe('crop scientific guards', () => {
   it('offers exactly eight P0 crops and preserves unknown scientific parameters', () => {
     const p0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'];
     expect(crops.filter((crop) => p0.includes(crop.id))).toHaveLength(8);
-    for (const id of ['common_bean', 'upland_rice']) expect(crops.find((item) => item.id === id)).toMatchObject({ cycleDaysRange: null, idealTempC: null, viableTempC: null, soilPhRange: null, parameterStatus: 'missing' });
+    expect(crops.find((item) => item.id === 'upland_rice')).toMatchObject({ cycleDaysRange: null, idealTempC: null, viableTempC: null, soilPhRange: null, parameterStatus: 'missing' });
+    // Common bean gained two verified ranges (Embrapa CPATSA and Embrapa Acre); the thermal viability range and cycle stay unknown.
+    expect(crops.find((item) => item.id === 'common_bean')).toMatchObject({ cycleDaysRange: null, viableTempC: null, idealTempC: { min: 15, max: 27 }, soilPhRange: { min: 5.5, max: 6.5 }, parameterStatus: 'missing' });
   });
   it('does not make a crop eligible when its evidence status is missing', () => {
     expect(crops.every((crop) => !isRecommendationEligible(crop))).toBe(true);

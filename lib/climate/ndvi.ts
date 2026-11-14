@@ -1,6 +1,4 @@
-import { z } from 'zod';
-
-/** MOD13Q1 250m 16-day NDVI: integers scaled by 0.0001, fill -3000, valid range -2000..10000 (LP DAAC product guide). */
+/** MOD13Q1 250m 16-day NDVI: int16 scaled by 0.0001 (STAC raster:bands scale), fill -3000, valid range -2000..10000 (LP DAAC product guide). */
 export const NDVI_SCALE = 0.0001;
 export const NDVI_FILL = -3000;
 export const NDVI_VALID: readonly [number, number] = [-2000, 10_000];
@@ -23,27 +21,10 @@ const median = (values: number[]): number | null => {
   return Number((sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2).toFixed(4));
 };
 
-/** MODIS date AYYYYDDD to YYYY-MM-DD (UTC). */
-export function modisDateToIso(modisDate: string): string | null {
-  const match = /^A(\d{4})(\d{3})$/.exec(modisDate);
-  if (!match) return null;
-  const year = Number(match[1]); const doy = Number(match[2]);
-  if (doy < 1 || doy > 366) return null;
-  return new Date(Date.UTC(year, 0, doy)).toISOString().slice(0, 10);
-}
-
-const subsetSchema = z.object({ subset: z.array(z.object({ band: z.string(), modis_date: z.string(), data: z.array(z.number()).min(1) })).min(1) });
-
-/** Parses an ORNL DAAC MODIS web-service subset response for one pixel. Anything unexpected throws; nothing is guessed. */
-export function parseModisSubset(payload: unknown): NdviObservation[] {
-  const parsed = subsetSchema.parse(payload);
-  return parsed.subset.filter((item) => item.band === '250m_16_days_NDVI').map((item) => {
-    const date = modisDateToIso(item.modis_date);
-    if (!date) throw new Error(`Unexpected MODIS date ${item.modis_date}.`);
-    const raw = item.data[0];
-    const valid = raw !== NDVI_FILL && raw >= NDVI_VALID[0] && raw <= NDVI_VALID[1];
-    return { date, ndvi: valid ? Number((raw * NDVI_SCALE).toFixed(4)) : null };
-  });
+/** Converts a raw MOD13Q1 250m_16_days_NDVI integer: fill and out-of-range values become null, never zero. */
+export function ndviFromRaw(raw: number | null | undefined): number | null {
+  if (raw === null || raw === undefined || !Number.isFinite(raw) || raw === NDVI_FILL || raw < NDVI_VALID[0] || raw > NDVI_VALID[1]) return null;
+  return Number((raw * NDVI_SCALE).toFixed(4));
 }
 
 /** Median NDVI per calendar month across years; only valid composites count. */

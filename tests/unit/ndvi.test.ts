@@ -3,30 +3,23 @@ import { createHash } from 'node:crypto';
 import { mkdtemp, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { modisDateToIso, monthlyNdvi, parseModisSubset, relativeLowVegetationMonths } from '@/lib/climate/ndvi';
+import { monthlyNdvi, ndviFromRaw, relativeLowVegetationMonths } from '@/lib/climate/ndvi';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
 import { buildSourceHealth } from '@/lib/source-health';
 import { analyze } from '@/lib/engine';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { AnalysisInput } from '@/lib/schema';
 
-const subset = (items: Array<[string, number, string?]>) => ({ band: 'all', subset: items.map(([date, value, band]) => ({ band: band ?? '250m_16_days_NDVI', modis_date: date, proc_date: '2018066165607', title: 'h11v05', version: '006', data: [value] })) });
-
 describe('MODIS NDVI', () => {
-  it('converts MODIS dates', () => {
-    expect(modisDateToIso('A2018049')).toBe('2018-02-18');
-    expect(modisDateToIso('A2020001')).toBe('2020-01-01');
-    expect(modisDateToIso('2018049')).toBeNull();
-    expect(modisDateToIso('A2018400')).toBeNull();
-  });
-  it('scales NDVI and turns fill/out-of-range values into null, never zero', () => {
-    const rows = parseModisSubset(subset([['A2018049', 4581], ['A2018065', -3000], ['A2018081', 12000], ['A2018097', 0], ['A2018113', 5000, 'other_band']]));
-    expect(rows).toEqual([{ date: '2018-02-18', ndvi: 0.4581 }, { date: '2018-03-06', ndvi: null }, { date: '2018-03-22', ndvi: null }, { date: '2018-04-07', ndvi: 0 }]);
-  });
-  it('rejects unexpected response shapes instead of guessing', () => {
-    expect(() => parseModisSubset({ nope: true })).toThrow();
-    expect(() => parseModisSubset({ subset: [{ band: '250m_16_days_NDVI', modis_date: 'bad', data: [1] }] })).toThrow();
-    expect(() => parseModisSubset({ subset: [] })).toThrow();
+  it('scales raw NDVI and turns fill/out-of-range/missing values into null, never zero', () => {
+    expect(ndviFromRaw(3159)).toBe(0.3159);
+    expect(ndviFromRaw(0)).toBe(0);
+    expect(ndviFromRaw(-3000)).toBeNull();
+    expect(ndviFromRaw(12000)).toBeNull();
+    expect(ndviFromRaw(-2500)).toBeNull();
+    expect(ndviFromRaw(Number.NaN)).toBeNull();
+    expect(ndviFromRaw(null)).toBeNull();
+    expect(ndviFromRaw(undefined)).toBeNull();
   });
   it('takes monthly medians over valid composites and finds relative low months', () => {
     const observations = Array.from({ length: 12 }, (_, index) => [{ date: `2020-${String(index + 1).padStart(2, '0')}-10`, ndvi: index === 6 ? 0.2 : index === 7 ? null : 0.3 + index * 0.04 }, { date: `2021-${String(index + 1).padStart(2, '0')}-10`, ndvi: index === 6 ? 0.22 : 0.3 + index * 0.04 }]).flat();
@@ -65,5 +58,21 @@ describe('NDVI fixture reader', () => {
     expect(buildSourceHealth(analyze(input, climate)).find((item) => item.id === 'modis_ndvi')).toMatchObject({ state: 'nd', gap: 'ndvi_not_preprocessed' });
     const withNdvi = { ...climate, ndvi: { origin: 'verified_fixture' as const, product: 'MOD13Q1' as const, band: '250m_16_days_NDVI' as const, period: { start: '2011-01-01', end: '2025-12-19' }, fetchedAt: '2026-11-14T10:00:00.000Z', sourceUrl: 'https://modis.ornl.gov/', observations: 10, validObservations: 10, coveragePct: 100, months: monthlyNdvi([]) } };
     expect(buildSourceHealth(analyze(input, withNdvi)).find((item) => item.id === 'modis_ndvi')).toMatchObject({ state: 'cache_verified', gap: null });
+  });
+});
+
+describe('committed NDVI fixtures', () => {
+  it('load, verify their hashes and cover the full 2011-2025 series for every demonstration point', async () => {
+    for (const site of [{ latitude: -17.798, longitude: -50.919 }, { latitude: 5.6037, longitude: -0.187 }, { latitude: 28.6139, longitude: 77.209 }]) {
+      const context = await readNdviFixture(site);
+      expect(context).toBeDefined();
+      expect(context).toMatchObject({ origin: 'verified_fixture', product: 'MOD13Q1', band: '250m_16_days_NDVI', coveragePct: 100 });
+      expect(context!.observations).toBeGreaterThanOrEqual(310);
+      expect(context!.months).toHaveLength(12);
+      expect(context!.months.every((month) => month.medianNdvi !== null && month.medianNdvi > 0 && month.medianNdvi < 1)).toBe(true);
+    }
+  });
+  it('does not serve a nearby coordinate', async () => {
+    expect(await readNdviFixture({ latitude: -17.7981, longitude: -50.919 })).toBeUndefined();
   });
 });
