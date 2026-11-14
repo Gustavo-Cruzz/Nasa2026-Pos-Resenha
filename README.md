@@ -4,6 +4,12 @@ Field Shift is a Space Apps 2026 MVP for comparing crop-rotation hypotheses usin
 
 The product is global by coordinates and contextualized with Brazilian sources. In Brazil, coordinates are resolved against a versioned IBGE municipal mesh and matched to MAPA ZARC crop records plus IBGE PAM observations. PAM is statistical context only; neither source is a national suitability rule or field validation. The generator uses eight P0 crops, including common bean and rainfed upland rice.
 
+## Climate Risk Lab
+
+Results include an optional, failure-tolerant Climate Risk Lab. It calls the Open-Meteo Forecast API independently of NASA POWER and labels its source, issue time, `best_match` model selection, UTC time zone and units. It reports forecast precipitation, provider-calculated FAO reference ET0 and `P − ET0` for 7 and 15 days, plus a same-calendar-window NASA historical climate comparison when complete coverage is available. This balance is a climate indicator only — never soil moisture, ETc, crop water use, irrigation need or field deficit.
+
+The dry-spell experiment defines an event as at least seven consecutive days below 1 mm/day. Reproduce its offline NASA-fixture training with `npm run train:dry-spell`. The committed Rio Verde artifacts use chronological train/validation/test partitions with embargoes, Brier score and calibration. Both 7-day and 15-day logistic models currently lose to climatology on held-out test data; therefore the app does not release an ML probability and shows only its qualified climatological reference at that exact pilot coordinate. Other coordinates have no location-compatible ML artifact.
+
 ## Status
 
 The current flow is Explore → Farm → Laboratory → Compare → Methodology. It remains exploratory: it does not make agricultural recommendations, calculate aggregate scores, or turn missing evidence into zero.

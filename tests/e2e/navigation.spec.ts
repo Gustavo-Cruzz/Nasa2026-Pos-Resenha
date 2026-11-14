@@ -159,6 +159,17 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await expect(page.getByRole('link', { name: 'Editar linha de base' })).toBeVisible();
 });
 
+test('shows forecast provenance and never turns an unvalidated ML experiment into a probability', async ({ page }) => {
+  await installDraft(page);
+  await page.route('**/api/climate-risk*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ status: 'ok', forecast: { source: 'Open-Meteo Forecast API', sourceUrl: 'https://example.test/forecast', issuedAt: '2026-11-14T00:00:00.000Z', model: 'best_match', timezone: 'UTC', horizonDays: 16, limitations: [] }, waterPressure: { sevenDays: { horizonDays: 7, precipitationTotalMm: 12, et0TotalMm: 24, climateBalanceMm: -12, negativeBalanceDays: 5, validDays: 7, expectedDays: 7, historicalEquivalentBalanceMm: -8, historicalComparison: 'drier_than_historical', limitations: [] }, fifteenDays: { horizonDays: 15, precipitationTotalMm: 20, et0TotalMm: 50, climateBalanceMm: -30, negativeBalanceDays: 11, validDays: 15, expectedDays: 15, historicalEquivalentBalanceMm: -18, historicalComparison: 'drier_than_historical', limitations: [] } }, drySpell: [{ horizonDays: 7, validationStatus: 'not_validated', climatologyReference: 0.4, probability: null, evaluation: { baseline: { brierScore: 0.1 }, model: { brierScore: 0.11 } }, limitations: [] }], strategyExposure: { status: 'not_applicable', reason: 'Sem calendário.' } }) }));
+  await page.goto('/results');
+  await expect(page.getByRole('heading', { name: 'Climate Risk Lab' })).toBeVisible();
+  await expect(page.getByText('Open-Meteo Forecast API')).toBeVisible();
+  await expect(page.getByText('probabilidade de IA não divulgada')).toBeVisible();
+  await expect(page.getByText('12 mm', { exact: true })).toBeVisible();
+  await expect(page.getByText('Não há inferência de exposição futura específica por estratégia.')).toBeVisible();
+});
+
 test('uses static review art when reduced motion is requested', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await installDraft(page);
