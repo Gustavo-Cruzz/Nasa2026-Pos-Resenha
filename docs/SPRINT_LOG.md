@@ -1,5 +1,51 @@
 # Sprint log
 
+## Soil Brazil SQ4 — resumo de solo em 30 segundos
+
+Status: complete — quatro indicadores essenciais e detalhes sob demanda.
+
+Implemented: Results now presents exactly four regional indicators — texture, pH in water, organic carbon and root-zone wetness — through a pure presentation adapter. Missing SoilGrids properties remain `N/D`; an available NASA moisture snapshot can still be shown independently when the static profile is missing.
+
+Implemented: source, method, depth, reference point, sand/silt/clay, CEC, bulk density, water retention, NASA period, percentile, climatology and limitations remain available in an accessible disclosure. The home page now exposes the existing `Ver demonstração Brasil` action, so the hackathon flow reaches the preloaded Rio Verde analysis without manual entry.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (231 unit tests), and `npm run build` passed. The focused mobile Playwright flow passed, covering menu operation, one-click Brazil demo, all four summary indicators and the technical-details disclosure.
+
+Limitations: all regional values remain modelled context, not field measurements. The summary does not calculate fertiliser, liming, ETc, irrigation need, crop water use, yield or forecasts; local laboratory evidence remains separate and primary.
+
+## Soil Brazil SQ3 — contrato automático unificado
+
+Status: complete — composição server-side única para solo estático e umidade.
+
+Implemented: replaced the two independent API fields with `soilContext`, containing `staticProfile` and `moistureSnapshot` under one municipality and status (`available`, `partial`, or `unavailable`). The resolver rejects any cross-artifact municipality mismatch and runs automatically from the analysis coordinates without producer soil input or runtime data downloads.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (229 unit tests), and `npm run build` passed. Tests cover complete Rio Verde context, partial São Paulo context, outside-Brazil behavior, municipal identity consistency and API serialization.
+
+Limitations / next: the contract exposes evidence; it does not insert regional estimates into farmer laboratory fields or crop constraints. SQ4 reduces presentation to four demo indicators and moves technical detail/provenance behind an accessible disclosure.
+
+## Soil Brazil SQ2 — umidade radicular NASA pré-processada
+
+Status: complete — climatologia e último mês válido para 5.571 municípios.
+
+Implemented: added a reproducible offline NASA POWER Monthly Regional builder using `GWETROOT` over 25 cached 10° Brazilian tiles. The 1.8 MB artifact stores monthly 2015–2025 medians, the latest valid value through the build year, same-calendar-month percentile, native grid coordinate, request URLs and SHA-256 hashes. Coverage is 5,571/5,571 municipalities.
+
+Implemented: `/api/analyze` now attaches the dated moisture context without a runtime NASA call. The automatic Results soil panel shows SoilGrids retention separately from NASA relative root-zone wetness, month/year and historical percentile. Labels explicitly reject volumetric field-moisture, sensor, forecast, ETc, crop-water-use, irrigation-need and yield interpretations.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (226 unit tests), and `npm run build` passed. Tests verify national coverage, bounded 12-month climatology, dated Rio Verde context, outside-Brazil unknown behavior and API composition.
+
+Limitations: `GWETROOT` is a modelled regional relative index on the NASA POWER meteorology grid; it is not SMAP field moisture or a current farm measurement. Latest period varies by grid cell and is shown explicitly. No scenario-specific water conclusion is derived from it.
+
+## Soil Brazil SQ1 — perfil municipal estático pré-processado
+
+Status: complete — pacote nacional parcial, lookup automático e UI.
+
+Implemented: added a reproducible offline builder over official SoilGrids 2.0 aggregated 5 km GeoTIFFs. It uses PROJ `cs2cs` for the native Interrupted Goode Homolosine grid, combines 0–5, 5–15 and 15–30 cm by depth, preserves source hashes and produces pH in water, SOC, sand/silt/clay, CEC, bulk density and water retention at 33/1500 kPa for all 5,571 IBGE municipality records. Interior fallback points remain inside the same municipality; no nearest municipality or pixel substitution occurs.
+
+Implemented: the 3.0 MB server-only artifact has complete profiles for 5,456/5,571 municipalities (97.9%); the remaining 115 stay unknown. `/api/analyze` now performs an automatic municipal lookup and Results displays pH, texture, organic carbon and water retention without manual soil entry. Retention is explicitly separate from current moisture and no value drives fertiliser, liming, irrigation, yield or local-validation claims.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (223 unit tests), and `npm run build` passed. Tests verify national count/coverage, Rio Verde values, outside-Brazil behavior, municipal no-data preservation and API exposure. The builder configuration also validates without network writes unless `--execute` is supplied.
+
+Limitations / next: this is a modelled value at a verified interior municipal reference point, not a municipal zonal statistic or field measurement. Source resolution is 5 km and only mean layers are used; no per-pixel prediction interval is claimed. SQ2 adds separately dated NASA moisture context.
+
 ## Family farm F11 — correções da auditoria de consórcios
 
 Status: complete — contratos, motor, UI e validação corrigidos.

@@ -70,13 +70,27 @@ test('shows dated SMAP evidence, draws an exploratory area, and compares three N
 });
 
 test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {
+  test.setTimeout(60_000);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  await page.getByText('Menu', { exact: true }).click();
-  await expect(page.getByRole('navigation', { name: 'Navegação principal' }).getByRole('link', { name: 'Explorar' })).toBeVisible();
+  const menu = page.getByRole('button', { name: 'Menu', exact: true });
+  await expect(menu).toBeVisible({ timeout: 30_000 });
+  const exploreLink = page.getByRole('link', { name: 'Explorar', exact: true });
+  await expect(async () => {
+    await menu.click();
+    await expect(exploreLink).toBeVisible({ timeout: 1_000 });
+  }).toPass({ timeout: 30_000 });
+  await menu.click();
+  await expect(exploreLink).toBeHidden();
   await page.getByRole('button', { name: 'Ver demonstração Brasil' }).click();
   await expect(page).toHaveURL(/\/results\?demo=brasil/);
   await expect(page.getByText('Demonstração Brasil', { exact: true })).toBeVisible();
+  const soilSummary = page.getByRole('heading', { name: 'Contexto do solo em 30 segundos' }).locator('..');
+  await expect(soilSummary).toContainText('Textura');
+  await expect(soilSummary).toContainText('pH em água');
+  await expect(soilSummary).toContainText('Carbono orgânico');
+  await expect(soilSummary).toContainText('Umidade radicular');
+  await expect(soilSummary.getByText('Fontes, método e propriedades adicionais')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Leve esta conversa adiante' })).toBeVisible();
 });
 

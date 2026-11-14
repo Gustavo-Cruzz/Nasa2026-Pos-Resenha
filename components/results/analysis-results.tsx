@@ -26,6 +26,7 @@ import { ExportSummaryButton } from '@/components/results/export-summary-button'
 import { ClimateRiskLab } from '@/components/results/climate-risk-lab';
 import { SoilHealthComparison } from '@/components/results/soil-health-comparison';
 import { DataQualityPanel } from '@/components/results/data-quality-panel';
+import { RegionalSoilPanel } from '@/components/results/regional-soil-panel';
 import { useLocale } from '@/components/locale-provider';
 import { recordJourneyCompletion } from '@/lib/journey-metrics';
 import { cropDisplayName, explanationDisplay, scenarioDisplayTitle } from '@/lib/presentation';
@@ -64,6 +65,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     <div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="secondary"><Link href="/lab">{en ? 'Back to laboratory' : 'Voltar ao laboratório'}</Link></Button><Button asChild variant="secondary"><Link href="/farm">{en ? 'Edit farm data' : 'Alterar dados da fazenda'}</Link></Button><ExportSummaryButton data={data} /></div>
     {data.input.soilObservation ? <SoilObservationNote observation={data.input.soilObservation} /> : null}
     <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
+    <RegionalSoilPanel context={data.soilContext} />
     {data.evidenceManifest ? <div className="mt-4"><EvidenceCenterTrigger manifest={data.evidenceManifest} /></div> : null}
     {data.input.fieldBoundary ? <div className="mt-5"><h2 className="mb-2 font-bold">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><BoundarySummary boundary={data.input.fieldBoundary} waterPoint={data.input.waterPoint} /></div> : data.input.waterPoint ? <p className="mt-5 text-sm text-slate-300"><b>{en ? 'Water point declared by the producer' : 'Ponto de água informado pelo produtor'}:</b> {waterKindLabel(data.input.waterPoint.kind, en)}{data.input.waterPoint.label ? ` — ${data.input.waterPoint.label}` : ''}. {en ? 'Declared context only.' : 'Apenas contexto declarado.'}</p> : null}
     <SeasonPanel data={data} />
