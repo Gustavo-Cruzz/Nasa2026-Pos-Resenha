@@ -324,6 +324,7 @@ test('builds a 2–3 crop system with drag, validates chronology, and persists i
   await installDraft(page);
   await page.goto('/farm');
   const systems = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Sistemas de cultivo (opcional)' }) });
+  await expect(systems.locator('img[alt*="mandioca" i]').first()).toHaveAttribute('src', /cassava\.png/);
   await systems.getByRole('button', { name: 'Adicionar sistema composto' }).click();
   const card = systems.getByRole('button', { name: /mandioca.*Arraste para um sistema/i });
   const system = systems.locator('article').first();

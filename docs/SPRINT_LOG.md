@@ -669,3 +669,12 @@ Implemented: integrated an accessible bilingual Climate Risk Lab into Results. I
 Evidence (2026-11-14): `npm run train:dry-spell`; `npm run typecheck`; `npm run test` (134 unit tests); `npm run lint`; and `npm run build` passed. Playwright: 19 existing navigation flows plus the new forecast-provenance/no-unvalidated-probability flow passed when run within the environment time window. The remaining legacy incomplete-analysis mock exceeds the sandbox's 30-second command window; it was not changed by this sprint.
 
 Limitations / next: Open-Meteo free access is for non-commercial/evaluation use and requires attribution; production use needs a licence/plan review. Provider `best_match` is a model-selection request, not field validation. Forecast ET0 is provider-calculated reference ET0 and is not recomputed locally. The dry-spell artifact only covers the exact Rio Verde fixture, excludes root-zone wetness pending complete compatible features, and is intentionally not released as a predictive probability. ETc, crop water use, soil water, irrigation, yield and strategy-specific forecast claims remain out of scope.
+## Sprint F12 — Sprites para 16 culturas da agricultura familiar
+
+Status: complete.
+
+Implemented: integrated the supplied, versioned 64×64 RGBA PNG sprites for cassava, pumpkin, sweet potato, peanut, watermelon, lettuce, tomato, carrot, kale, onion, bell pepper, okra, coffee, banana, cacao and açaí into `public/assets/crops`. `CropSprite` now has an explicit canonical-ID mapping (while preserving legacy filenames), catalog-name alt text, fixed contained/pixelated rendering, and retains an error/unknown-ID fallback. The shared component is used in the catalog/deck and A/B/C result cards already, and now also in farmer crop selection and draggable intercrop cards.
+
+Evidence (2026-11-14): asset tests validate the 16 unique manifest IDs, physical files, 64×64 RGBA headers, transparent corners/background pixels, exact runtime URLs and fallback. The intercropping Playwright flow asserts the catalog-name sprite and Cassava URL before drag-and-drop. `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, and the focused intercropping browser flow pass.
+
+Scope / limitations: sprites are visual identifiers only; growth habit, annual/perennial treatment, evidence and agronomic interpretation continue to come exclusively from the crop catalog. The supplied IDs exactly match the catalog; no persisted IDs or translations were changed.

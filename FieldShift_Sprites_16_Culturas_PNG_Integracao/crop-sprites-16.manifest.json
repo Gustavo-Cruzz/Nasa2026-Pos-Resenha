@@ -1,0 +1,162 @@
+{
+  "version": "1.0",
+  "usage": "crop_identity_only",
+  "globalStyle": {
+    "width": 64,
+    "height": 64,
+    "format": "PNG",
+    "channels": "RGBA",
+    "transparentBackground": true,
+    "view": "soft_3_4_front",
+    "outlinePx": "1-2",
+    "minPaddingPx": 4,
+    "antialias": false,
+    "style": "clean contemporary rural pixel art"
+  },
+  "sprites": [
+    {
+      "id": "cassava",
+      "labelPtBR": "Mandioca",
+      "taxon": "Manihot esculenta",
+      "visualGrowthHabit": "annual_long",
+      "priority": "P0",
+      "assetPath": "public/assets/crops/cassava.png",
+      "distinguishingSilhouette": "arbusto com folhas palmadas e raízes tuberosas"
+    },
+    {
+      "id": "pumpkin",
+      "labelPtBR": "Abóbora / jerimum",
+      "taxon": "Cucurbita spp.",
+      "visualGrowthHabit": "annual",
+      "priority": "P0",
+      "assetPath": "public/assets/crops/pumpkin.png",
+      "distinguishingSilhouette": "rama e abóbora laranja sulcada"
+    },
+    {
+      "id": "sweet_potato",
+      "labelPtBR": "Batata-doce",
+      "taxon": "Ipomoea batatas",
+      "visualGrowthHabit": "annual_long",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/sweet_potato.png",
+      "distinguishingSilhouette": "rama e tubérculos alongados arroxeados"
+    },
+    {
+      "id": "peanut",
+      "labelPtBR": "Amendoim",
+      "taxon": "Arachis hypogaea",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/peanut.png",
+      "distinguishingSilhouette": "planta baixa com vagens subterrâneas"
+    },
+    {
+      "id": "watermelon",
+      "labelPtBR": "Melancia",
+      "taxon": "Citrullus lanatus",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/watermelon.png",
+      "distinguishingSilhouette": "rama com melancia verde listrada"
+    },
+    {
+      "id": "lettuce",
+      "labelPtBR": "Alface",
+      "taxon": "Lactuca sativa",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/lettuce.png",
+      "distinguishingSilhouette": "roseta de folhas verde-claras"
+    },
+    {
+      "id": "tomato",
+      "labelPtBR": "Tomate",
+      "taxon": "Solanum lycopersicum",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/tomato.png",
+      "distinguishingSilhouette": "cacho de frutos vermelhos no pé"
+    },
+    {
+      "id": "carrot",
+      "labelPtBR": "Cenoura",
+      "taxon": "Daucus carota subsp. sativus",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/carrot.png",
+      "distinguishingSilhouette": "folhas finas e raiz laranja cônica"
+    },
+    {
+      "id": "kale",
+      "labelPtBR": "Couve",
+      "taxon": "Brassica oleracea (grupo acephala)",
+      "visualGrowthHabit": "annual_or_perennial_management",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/kale.png",
+      "distinguishingSilhouette": "folhas largas onduladas sobre haste"
+    },
+    {
+      "id": "onion",
+      "labelPtBR": "Cebola",
+      "taxon": "Allium cepa",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/onion.png",
+      "distinguishingSilhouette": "bulbo dourado e folhas tubulares"
+    },
+    {
+      "id": "bell_pepper",
+      "labelPtBR": "Pimentão",
+      "taxon": "Capsicum annuum (grupo bell)",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/bell_pepper.png",
+      "distinguishingSilhouette": "frutos pendentes blocados verdes/vermelhos"
+    },
+    {
+      "id": "okra",
+      "labelPtBR": "Quiabo",
+      "taxon": "Abelmoschus esculentus",
+      "visualGrowthHabit": "annual",
+      "priority": "P1",
+      "assetPath": "public/assets/crops/okra.png",
+      "distinguishingSilhouette": "vagens longas eretas e flor creme"
+    },
+    {
+      "id": "coffee",
+      "labelPtBR": "Café",
+      "taxon": "Coffea spp.",
+      "visualGrowthHabit": "perennial",
+      "priority": "P2",
+      "assetPath": "public/assets/crops/coffee.png",
+      "distinguishingSilhouette": "arbusto e cerejas vermelhas pequenas"
+    },
+    {
+      "id": "banana",
+      "labelPtBR": "Banana",
+      "taxon": "Musa spp.",
+      "visualGrowthHabit": "perennial",
+      "priority": "P2",
+      "assetPath": "public/assets/crops/banana.png",
+      "distinguishingSilhouette": "pseudocaule e cacho de bananas"
+    },
+    {
+      "id": "cacao",
+      "labelPtBR": "Cacau",
+      "taxon": "Theobroma cacao",
+      "visualGrowthHabit": "perennial",
+      "priority": "P2",
+      "assetPath": "public/assets/crops/cacao.png",
+      "distinguishingSilhouette": "frutos sulcados nascendo no tronco"
+    },
+    {
+      "id": "acai",
+      "labelPtBR": "Açaí",
+      "taxon": "Euterpe oleracea",
+      "visualGrowthHabit": "perennial",
+      "priority": "P2",
+      "assetPath": "public/assets/crops/acai.png",
+      "distinguishingSilhouette": "touceira de palmeiras e cachos roxos"
+    }
+  ]
+}
