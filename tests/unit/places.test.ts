@@ -84,3 +84,12 @@ describe('suggestions while typing', () => {
     expect(searchMunicipalities('zzzzqq')).toEqual([]);
   });
 });
+
+describe('municipalityAt', () => {
+  it('names the municipality that contains a point, and nothing outside the mesh', async () => {
+    const { municipalityAt } = await import('@/lib/brazil/places');
+    expect(municipalityAt(-17.798, -50.919)).toMatchObject({ name: 'Rio Verde', uf: 'GO' });
+    expect(municipalityAt(-9.9581, -38.5785)?.uf).toBe('BA');
+    expect(municipalityAt(5.6037, -0.187)).toBeUndefined();
+  });
+});

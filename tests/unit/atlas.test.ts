@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ATLAS_EXAMPLES, atlasPointSchema, climateApiResponseSchema, SMAP_GIBS_DATE, SMAP_GIBS_LAYER, SMAP_GIBS_TILE_URL } from '@/lib/atlas';
+import { IMERG_GIBS_TILE_URL, latestNrtDate, ATLAS_EXAMPLES, atlasPointSchema, climateApiResponseSchema, SMAP_GIBS_DATE, SMAP_GIBS_LAYER, SMAP_GIBS_TILE_URL } from '@/lib/atlas';
 import { satelliteAttribution, satelliteTileUrl } from '@/lib/atlas-map-style';
 
 describe('atlas contracts', () => {
@@ -17,5 +17,11 @@ describe('atlas contracts', () => {
     const valid = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 1, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 31, validPrecipitationDays: 31 }], plantingMonthPrecipitation: { month: 1, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
     expect(climateApiResponseSchema.safeParse(valid).success).toBe(true);
     expect(climateApiResponseSchema.safeParse({ status: 'ok' }).success).toBe(false);
+  });
+  it('picks the newest reliably published near-real-time day', () => {
+    expect(latestNrtDate(new Date('2026-11-14T15:00:00Z'))).toBe('2026-11-13');
+    expect(latestNrtDate(new Date('2026-11-14T03:00:00Z'))).toBe('2026-11-12');
+    expect(latestNrtDate(new Date('2026-03-01T12:00:00Z'))).toBe('2026-02-28');
+    expect(IMERG_GIBS_TILE_URL('2026-11-13')).toContain('/IMERG_Precipitation_Rate/default/2026-11-13/');
   });
 });

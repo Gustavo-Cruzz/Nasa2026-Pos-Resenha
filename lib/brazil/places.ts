@@ -100,3 +100,10 @@ function lookup(name: string, uf: string | undefined, limit: number, ufPrefix?: 
     return point ? [{ code: record.code, name: record.name, uf: record.uf, latitude: point[1], longitude: point[0] }] : [];
   });
 }
+
+/** The municipality that contains a point (bounding box first, then exact polygon test); undefined outside the IBGE mesh. */
+export function municipalityAt(latitude: number, longitude: number): { code: string; name: string; uf: string } | undefined {
+  const point: Position = [longitude, latitude];
+  const record = records.find((item) => longitude >= item.bbox[0] && latitude >= item.bbox[1] && longitude <= item.bbox[2] && latitude <= item.bbox[3] && contains(point, item.geometry));
+  return record ? { code: record.code, name: record.name, uf: record.uf } : undefined;
+}

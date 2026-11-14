@@ -2,17 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type * as Leaflet from 'leaflet';
-import { SMAP_GIBS_TILE_URL, type AtlasPoint, type AtlasPolygon } from '@/lib/atlas';
-import { satelliteAttribution, satelliteTileUrl } from '@/lib/atlas-map-style';
+import { IMERG_GIBS_TILE_URL, latestNrtDate, MODIS_GIBS_TILE_URL, SMAP_GIBS_TILE_URL, type AtlasPoint, type AtlasPolygon, type MapLayers } from '@/lib/atlas';
+import { labelsTileUrl, satelliteAttribution, satelliteTileUrl } from '@/lib/atlas-map-style';
 import { useLocale } from '@/components/locale-provider';
 
-type WorldMapProps = { point: AtlasPoint | null; onPointChange: (point: AtlasPoint) => void; polygon: AtlasPolygon; drawingPolygon: boolean; onPolygonChange: (polygon: AtlasPolygon) => void; smapVisible: boolean };
+type WorldMapProps = { point: AtlasPoint | null; onPointChange: (point: AtlasPoint) => void; polygon: AtlasPolygon; drawingPolygon: boolean; onPolygonChange: (polygon: AtlasPolygon) => void; layers: MapLayers };
 
 /** Drop-shaped pin (inline SVG: no default Leaflet marker images to bundle). */
 const pinHtml = (color: string) => `<svg width="34" height="44" viewBox="0 0 34 44" aria-hidden="true"><path d="M17 43C17 43 2 27 2 16a15 15 0 0 1 30 0c0 11-15 27-15 27Z" fill="${color}" stroke="#fdf6e3" stroke-width="2.5"/><circle cx="17" cy="16" r="5.5" fill="#fdf6e3"/></svg>`;
-const PILOT = { latitude: -17.798, longitude: -50.919 };
 
-export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPolygonChange, smapVisible }: WorldMapProps) {
+export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPolygonChange, layers }: WorldMapProps) {
   const { locale } = useLocale();
   const en = locale === 'en';
   const [mapError, setMapError] = useState<string>();
@@ -20,7 +19,7 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
   const lib = useRef<typeof Leaflet | null>(null);
   const map = useRef<Leaflet.Map | null>(null);
   const marker = useRef<Leaflet.Marker | null>(null);
-  const smapLayer = useRef<Leaflet.TileLayer | null>(null);
+  const tileLayers = useRef<Partial<Record<keyof MapLayers, Leaflet.TileLayer>>>({});
   const areaLayer = useRef<Leaflet.LayerGroup | null>(null);
   const onPointChangeRef = useRef(onPointChange);
   const onPolygonChangeRef = useRef(onPolygonChange);
@@ -39,10 +38,9 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
       lib.current = L;
       const instance = L.map(container.current, { center: [-15, -50], zoom: 4, zoomControl: false, worldCopyJump: true });
       L.tileLayer(satelliteTileUrl, { attribution: satelliteAttribution, maxZoom: 18 }).addTo(instance);
+      // Borders and place names stay above the NASA layers (their zIndex is lower).
+      L.tileLayer(labelsTileUrl, { maxZoom: 18, zIndex: 10 }).addTo(instance);
       L.control.zoom({ position: 'bottomright' }).addTo(instance);
-      L.marker([PILOT.latitude, PILOT.longitude], { icon: L.divIcon({ className: 'atlas-pin', html: pinHtml('#4a9d2e'), iconSize: [34, 44], iconAnchor: [17, 43] }), keyboard: false, title: 'Rio Verde (GO)' })
-        .bindTooltip(en ? 'Rio Verde (demo)' : 'Rio Verde (demonstração)', { permanent: true, direction: 'right', offset: [14, -22], className: 'atlas-pin-label' })
-        .on('click', () => onPointChangeRef.current(PILOT)).addTo(instance);
       instance.on('click', (event: Leaflet.LeafletMouseEvent) => {
         const next = { latitude: Number(event.latlng.lat.toFixed(6)), longitude: Number(event.latlng.lng.toFixed(6)) };
         if (drawingRef.current) { onPolygonChangeRef.current([...polygonRef.current, [next.longitude, next.latitude]]); return; }
@@ -52,7 +50,7 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
       map.current = instance;
       setReady(true);
     }).catch((error: unknown) => setMapError(error instanceof Error ? error.message : en ? 'Could not start the map.' : 'Não foi possível iniciar o mapa.'));
-    return () => { disposed = true; map.current?.remove(); map.current = null; marker.current = null; smapLayer.current = null; areaLayer.current = null; setReady(false); };
+    return () => { disposed = true; map.current?.remove(); map.current = null; marker.current = null; tileLayers.current = {}; areaLayer.current = null; setReady(false); };
   }, [en]);
 
   useEffect(() => {
@@ -71,9 +69,18 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
   useEffect(() => {
     const L = lib.current; const instance = map.current;
     if (!ready || !L || !instance) return;
-    if (smapVisible && !smapLayer.current) smapLayer.current = L.tileLayer(SMAP_GIBS_TILE_URL, { maxNativeZoom: 6, maxZoom: 18, opacity: 0.62, attribution: 'NASA EOSDIS GIBS · SMAP L4' });
-    if (smapVisible) smapLayer.current?.addTo(instance); else smapLayer.current?.remove();
-  }, [smapVisible, ready]);
+    const nrt = latestNrtDate();
+    const make: Record<keyof MapLayers, () => Leaflet.TileLayer> = {
+      smap: () => L.tileLayer(SMAP_GIBS_TILE_URL, { maxNativeZoom: 6, maxZoom: 18, opacity: 0.62, zIndex: 3, attribution: 'NASA EOSDIS GIBS · SMAP L4' }),
+      rain: () => L.tileLayer(IMERG_GIBS_TILE_URL(nrt), { maxNativeZoom: 6, maxZoom: 18, opacity: 0.75, zIndex: 4, attribution: 'NASA EOSDIS GIBS · GPM IMERG' }),
+      modis: () => L.tileLayer(MODIS_GIBS_TILE_URL(nrt), { maxNativeZoom: 9, maxZoom: 18, opacity: 0.9, zIndex: 2, attribution: 'NASA EOSDIS GIBS · MODIS Terra' }),
+    };
+    for (const key of ['modis', 'smap', 'rain'] as const) {
+      if (layers[key] && !tileLayers.current[key]) tileLayers.current[key] = make[key]();
+      const layer = tileLayers.current[key];
+      if (layers[key]) layer?.addTo(instance); else layer?.remove();
+    }
+  }, [layers, ready]);
 
   useEffect(() => {
     polygonRef.current = polygon;

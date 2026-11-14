@@ -3,17 +3,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, ArrowRight, RefreshCw, Satellite, Pentagon, SlidersHorizontal } from 'lucide-react';
-import { atlasPointSchema, ATLAS_EXAMPLES, climateApiResponseSchema, SMAP_GIBS_DATE, SMAP_GIBS_METADATA_URL, type AtlasPoint, type AtlasPolygon, type ClimateApiResponse } from '@/lib/atlas';
+import { AlertCircle, ArrowRight, RefreshCw, Pentagon, SlidersHorizontal } from 'lucide-react';
+import { atlasPointSchema, ATLAS_EXAMPLES, climateApiResponseSchema, type AtlasPoint, type AtlasPolygon, type ClimateApiResponse, type MapLayers } from '@/lib/atlas';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { Button } from '@/components/ui/button';
 import { WorldMap } from '@/components/atlas/world-map';
+import { MapOverlay } from '@/components/atlas/map-overlay';
 import { PlaceSearch } from '@/components/atlas/place-search';
 import { MonthlyChart, type MonthPoint } from '@/components/atlas/monthly-chart';
 import { BoundarySummary } from '@/components/boundary/boundary-summary';
 import { GeoJsonImport } from '@/components/boundary/geojson-import';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
-import { CropDeck } from '@/components/crops/crop-deck';
 import { useLocale } from '@/components/locale-provider';
 
 type Climate = Extract<ClimateApiResponse, { status: 'ok' }>;
@@ -33,7 +33,7 @@ export function LocationExplorer() {
   const [state, setState] = useState<ClimateState>({ kind: 'loading' });
   const [polygon, setPolygon] = useState<AtlasPolygon>([]);
   const [drawingPolygon, setDrawingPolygon] = useState(false);
-  const [smapVisible, setSmapVisible] = useState(false);
+  const [layers, setLayers] = useState<MapLayers>({ smap: false, rain: false, modis: false });
   const requestId = useRef(0);
 
   const settle = useCallback((next: AtlasPoint) => {
@@ -44,7 +44,14 @@ export function LocationExplorer() {
   // Opening view: Bahia is already selected (state starts as "loading") and its climate loads right away.
   useEffect(() => { void settle(BAHIA); }, [settle]);
 
-  const setSelectedPoint = useCallback((next: AtlasPoint) => { setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next); }, [fetchClimate]);
+  const setSelectedPoint = useCallback((next: AtlasPoint) => {
+    setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next);
+    // A point picked on the map has no name yet: ask which municipality contains it.
+    if (!next.label) void fetch(`/api/places?lat=${next.latitude}&lon=${next.longitude}`).then((response) => response.json() as Promise<{ status: string; municipality?: { name: string; uf: string } | null }>).then((body) => {
+      const found = body.status === 'ok' ? body.municipality : null;
+      if (found) setPoint((current) => current && current.latitude === next.latitude && current.longitude === next.longitude ? { ...current, label: `${found.name} (${found.uf})` } : current);
+    }).catch(() => { /* the point simply keeps showing coordinates */ });
+  }, [fetchClimate]);
   const pickPlace = (place: PlaceMatch) => setSelectedPoint({ latitude: place.latitude, longitude: place.longitude, label: `${place.name} (${place.uf})` });
   const importBoundary = (boundary: AtlasPolygon) => { setPolygon(boundary); setDrawingPolygon(false); const center = analyzeBoundary(boundary).centroid; if (center) setSelectedPoint({ latitude: Number(center.latitude.toFixed(6)), longitude: Number(center.longitude.toFixed(6)) }); };
   const submitCoordinates = () => { const parsed = atlasPointSchema.safeParse({ latitude: Number(latitude), longitude: Number(longitude) }); if (!parsed.success) { setState({ kind: 'error', message: en ? 'Enter latitude between −90 and 90 and longitude between −180 and 180.' : 'Informe latitude entre −90 e 90 e longitude entre −180 e 180.' }); return; } setSelectedPoint(parsed.data); };
@@ -58,7 +65,10 @@ export function LocationExplorer() {
   return <section className="grid gap-4">
     <PlaceSearch onPick={pickPlace} />
     <div className="atlas-layout">
-      <WorldMap point={point} polygon={polygon} drawingPolygon={drawingPolygon} smapVisible={smapVisible} onPointChange={setSelectedPoint} onPolygonChange={setPolygon} />
+      <div className="relative">
+        <WorldMap point={point} polygon={polygon} drawingPolygon={drawingPolygon} layers={layers} onPointChange={setSelectedPoint} onPolygonChange={setPolygon} />
+        {point ? <MapOverlay coordinates={coordinateLabel(point)} layers={layers} name={point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')} onToggle={(layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }))} /> : null}
+      </div>
       <aside aria-live="polite" className="atlas-panel">
         {!point ? <p className="text-slate-300">{en ? 'Search a city or tap the map.' : 'Busque uma cidade ou toque no mapa.'}</p> : <>
           <h2 className="text-2xl font-bold leading-tight">{point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')}</h2>
@@ -67,7 +77,6 @@ export function LocationExplorer() {
           {state.kind === 'error' ? <div className="mt-5 rounded-lg border border-amber-300/50 bg-amber-950/30 p-3"><p className="flex gap-2 text-amber-100"><AlertCircle aria-hidden="true" className="mt-0.5 shrink-0" size={18} />{state.message}</p><Button className="mt-3" type="button" variant="secondary" onClick={() => void fetchClimate(point)}><RefreshCw aria-hidden="true" size={16} />{en ? 'Try again' : 'Tentar novamente'}</Button></div> : null}
           {state.kind === 'ready' ? <ClimateView data={state.data} en={en} /> : null}
           <Button className="mt-6 w-full justify-center" type="button" onClick={registerFarm}>{en ? 'Register my farm here' : 'Cadastrar minha fazenda aqui'}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Button>
-          <details className="mt-4"><summary className="cursor-pointer text-sm font-semibold text-slate-300">{en ? 'Crops to explore here' : 'Culturas para explorar aqui'}</summary><CropDeck location={point} /></details>
         </>}
       </aside>
     </div>
@@ -75,10 +84,9 @@ export function LocationExplorer() {
       <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold"><SlidersHorizontal aria-hidden="true" size={16} />{en ? 'More options' : 'Mais opções'}</summary>
       <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"><label className="text-sm">Latitude<input aria-label="Latitude" className="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2.5" inputMode="decimal" value={latitude} onChange={(event) => setLatitude(event.target.value)} /></label><label className="text-sm">Longitude<input aria-label="Longitude" className="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2.5" inputMode="decimal" value={longitude} onChange={(event) => setLongitude(event.target.value)} /></label><Button className="self-end" type="button" onClick={submitCoordinates}>{en ? 'Go to point' : 'Ir ao ponto'}</Button></div>
       <div aria-label={en ? 'Location examples' : 'Exemplos de localidade'} className="mt-3 flex flex-wrap gap-2">{ATLAS_EXAMPLES.map((example) => <Button key={example.label} type="button" variant="secondary" onClick={() => setSelectedPoint(example)}>{example.label}</Button>)}</div>
-      <div className="mt-4 flex flex-wrap gap-2"><Button aria-pressed={smapVisible} type="button" variant="secondary" onClick={() => setSmapVisible((visible) => !visible)}><Satellite aria-hidden="true" size={16} />{smapVisible ? (en ? 'Hide NASA SMAP' : 'Ocultar NASA SMAP') : (en ? 'Show NASA SMAP' : 'Mostrar NASA SMAP')}</Button><Button aria-pressed={drawingPolygon} type="button" variant="secondary" onClick={() => setDrawingPolygon((drawing) => !drawing)}><Pentagon aria-hidden="true" size={16} />{drawingPolygon ? (en ? 'Finish area' : 'Encerrar área') : (en ? 'Draw exploratory area' : 'Desenhar área exploratória')}</Button>{polygon.length ? <Button type="button" variant="secondary" onClick={() => { setPolygon([]); setDrawingPolygon(false); }}>{en ? 'Clear area' : 'Limpar área'}</Button> : null}<GeoJsonImport onImport={importBoundary} /></div>
+      <div className="mt-4 flex flex-wrap gap-2"><Button aria-pressed={drawingPolygon} type="button" variant="secondary" onClick={() => setDrawingPolygon((drawing) => !drawing)}><Pentagon aria-hidden="true" size={16} />{drawingPolygon ? (en ? 'Finish area' : 'Encerrar área') : (en ? 'Draw exploratory area' : 'Desenhar área exploratória')}</Button>{polygon.length ? <Button type="button" variant="secondary" onClick={() => { setPolygon([]); setDrawingPolygon(false); }}>{en ? 'Clear area' : 'Limpar área'}</Button> : null}<GeoJsonImport onImport={importBoundary} /></div>
       {drawingPolygon ? <p className="mt-3 text-sm text-lime-100" role="status">{en ? `Click the map to add vertices (${polygon.length}). Finish after at least 3.` : `Clique no mapa para adicionar vértices (${polygon.length}). Encerre após pelo menos 3.`}</p> : null}
       {polygon.length >= 3 ? <div className="mt-3"><BoundarySummary boundary={polygon} compact /><p className="mt-2 text-xs text-slate-400">{en ? 'Exploratory boundary (drawn or imported); it does not confirm ownership, land use, or a registered field.' : 'Limite exploratório (desenhado ou importado); não confirma propriedade, uso agrícola ou talhão cadastrado.'}</p></div> : null}
-      {smapVisible ? <SmapLegend en={en} /> : null}
     </details>
     <p className="text-xs text-slate-400">{en ? 'Historical NASA POWER climate. Not a forecast or an agronomic recommendation.' : 'Clima histórico NASA POWER. Não é previsão nem recomendação agronômica.'} <Link className="underline" href="/methodology">{en ? 'How it works' : 'Como funciona'}</Link></p>
   </section>;
@@ -88,7 +96,9 @@ function ClimateView({ data, en }: { data: Climate; en: boolean }) {
   const names = MONTHS[en ? 'en' : 'pt-BR'];
   const currentMonth = new Date().getMonth() + 1;
   const rain = new Map(data.climateSummary.historicalPrecipitationByMonth.map((item) => [item.month, item.medianTotalMm]));
-  const points: MonthPoint[] = Array.from({ length: 12 }, (_, index) => { const month = index + 1; const item = data.climateSummary.monthly.find((entry) => entry.month === month); return { month, rainMm: rain.get(month) ?? null, tempC: item?.tmeanMedianC ?? null }; });
+  const points: MonthPoint[] = Array.from({ length: 12 }, (_, index) => { const month = index + 1; const item = data.climateSummary.monthly.find((entry) => entry.month === month); const prev = data.climateSummary.lastYear?.months.find((entry) => entry.month === month); return { month, rainMm: rain.get(month) ?? null, tempC: item?.tmeanMedianC ?? null, prevRainMm: prev?.rainTotalMm ?? null, prevTempC: prev?.tmeanMedianC ?? null }; });
+  const previousYear = data.climateSummary.lastYear?.year;
+  const history = `${data.provenance.period.start.slice(0, 4)}–${data.provenance.period.end.slice(0, 4)}`;
   const now = points[currentMonth - 1];
   const wet = points.filter((p) => p.rainMm !== null).sort((a, b) => (b.rainMm ?? 0) - (a.rainMm ?? 0));
   const hot = points.filter((p) => p.tempC !== null).sort((a, b) => (b.tempC ?? 0) - (a.tempC ?? 0));
@@ -99,7 +109,7 @@ function ClimateView({ data, en }: { data: Climate; en: boolean }) {
       <div className="rounded-lg border border-cyan-300/30 bg-slate-950/60 p-3"><dt className="text-xs text-slate-400">{en ? 'Temperature' : 'Temperatura'}</dt><dd className="mt-0.5 text-2xl font-bold text-cyan-200">{now.tempC === null ? 'N/D' : `${now.tempC.toFixed(1)} °C`}</dd></div>
       <div className="rounded-lg border border-cyan-300/30 bg-slate-950/60 p-3"><dt className="text-xs text-slate-400">{en ? 'Rain in the month' : 'Chuva no mês'}</dt><dd className="mt-0.5 text-2xl font-bold text-cyan-200">{now.rainMm === null ? 'N/D' : `${Math.round(now.rainMm)} mm`}</dd></div>
     </dl>
-    <div className="mt-5"><MonthlyChart currentMonth={currentMonth} points={points} /></div>
+    <div className="mt-5"><MonthlyChart currentMonth={currentMonth} history={en ? `median ${history}` : `mediana ${history}`} points={points} previousYear={previousYear} /></div>
     {wet.length >= 2 || hot.length >= 2 ? <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
       {wet.length >= 2 ? fact(en ? 'Rainiest month' : 'Mês mais chuvoso', `${names[wet[0].month - 1]} · ${Math.round(wet[0].rainMm ?? 0)} mm`) : null}
       {wet.length >= 2 ? fact(en ? 'Driest month' : 'Mês mais seco', `${names[wet[wet.length - 1].month - 1]} · ${Math.round(wet[wet.length - 1].rainMm ?? 0)} mm`) : null}
@@ -110,7 +120,6 @@ function ClimateView({ data, en }: { data: Climate; en: boolean }) {
   </div>;
 }
 
-function SmapLegend({ en }: { en: boolean }) { return <div className="mt-3 rounded-lg border border-cyan-300/30 bg-slate-950/60 p-3 text-xs"><b>NASA SMAP L4 · {SMAP_GIBS_DATE}</b><p className="mt-1 text-slate-300">{en ? 'Root-zone soil moisture, 9 km, model value-added. Visual layer; not a field measurement or current farm condition.' : 'Umidade do solo na zona radicular, 9 km, produto com modelagem. Camada visual; não é medição do talhão nem condição atual da fazenda.'}</p><div aria-label={en ? 'NASA SMAP soil-moisture color scale: 0 to at least 0.70 cubic meters per cubic meter' : 'Escala NASA SMAP de umidade do solo: 0 a pelo menos 0,70 metro cúbico por metro cúbico'} className="mt-3"><div aria-hidden="true" className="h-4 rounded" style={{ background: 'linear-gradient(90deg, #ffa200, #fff000, #00d48a, #00a7ff, #00176e, #342742)' }} /><div className="mt-1 flex justify-between text-[10px] text-slate-400"><span>0.00</span><span>0.35</span><span>≥ 0.70 m³/m³</span></div></div><a className="mt-2 inline-block underline" href={SMAP_GIBS_METADATA_URL} rel="noreferrer" target="_blank">{en ? 'Open NASA layer metadata' : 'Abrir metadados da camada NASA'}</a></div>; }
 
 async function requestClimate(next: AtlasPoint, en: boolean): Promise<Climate> {
   const today = new Date();

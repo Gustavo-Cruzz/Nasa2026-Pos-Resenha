@@ -117,3 +117,16 @@ export function historicalWaterBalanceByMonth(daily: ClimateDay[]): WaterBalance
     return { month, precipMedianMm: median(complete.map((year) => year.precip)), et0MedianMm: median(complete.map((year) => year.et0)), balanceMedianMm: median(complete.map((year) => year.balance)), validYears: complete.length, expectedYears, coveragePct: expectedYears ? Number((complete.length / expectedYears * 100).toFixed(2)) : 0 };
   });
 }
+
+export type YearMonth = { month: number; rainTotalMm: number | null; tmeanMedianC: number | null };
+/** One calendar year, month by month, for comparison with the multi-year medians. A month with any missing day stays N/D: nothing is filled in. */
+export function monthlyForYear(daily: ClimateDay[], year: number): YearMonth[] {
+  return Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    const days = daily.filter((day) => Number(day.date.slice(0, 4)) === year && Number(day.date.slice(4, 6)) === month);
+    const rain = days.flatMap((day) => day.precipMm === null ? [] : [day.precipMm]);
+    const temperature = days.flatMap((day) => day.tmeanC === null ? [] : [day.tmeanC]);
+    const complete = (values: number[]) => days.length > 0 && values.length === days.length;
+    return { month, rainTotalMm: complete(rain) ? Number(rain.reduce((sum, value) => sum + value, 0).toFixed(1)) : null, tmeanMedianC: complete(temperature) ? median(temperature) : null };
+  });
+}

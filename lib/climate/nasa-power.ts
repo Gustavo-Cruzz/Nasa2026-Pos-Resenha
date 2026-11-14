@@ -4,7 +4,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { coordinatesSchema, type Coordinates } from '@/lib/schema';
 import { isPilotLocation } from '@/lib/region';
-import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, historicalWaterBalanceByMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalCalendarDay, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth } from '@/lib/climate/indicators';
+import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, monthlyForYear, historicalWaterBalanceByMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalCalendarDay, type YearMonth, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth } from '@/lib/climate/indicators';
 import { dayOfYear, et0Daily } from '@/lib/climate/et0';
 import type { NdviContext } from '@/lib/climate/ndvi';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
@@ -33,6 +33,8 @@ export type ClimateContext = {
   monthly: MonthlyClimateSummary[];
   plantingMonthPrecipitation: HistoricalPrecipitationMonth | null;
   historicalPrecipitationByMonth: HistoricalPrecipitationMonth[];
+  /** Last complete year of the NASA POWER window, month by month (N/D where any day is missing). */
+  lastYear?: { year: number; months: YearMonth[] };
   waterContext?: HistoricalWaterContextMonth | null;
   /** Monthly median of precipitation minus FAO-56 ET0: a climate indicator, not crop demand or an irrigation need. */
   waterBalanceByMonth?: WaterBalanceMonth[];
@@ -161,7 +163,7 @@ async function withNdvi(context: ClimateContext, coordinates: Coordinates): Prom
 }
 
 function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture', calendarDay?: number): ClimateContext {
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: historicalWaterBalanceByMonth(dataset.daily), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), lastYear: { year: Number(NASA_POWER_PERIOD.end.slice(0, 4)), months: monthlyForYear(dataset.daily, Number(NASA_POWER_PERIOD.end.slice(0, 4))) }, waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: historicalWaterBalanceByMonth(dataset.daily), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }
 
 function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {

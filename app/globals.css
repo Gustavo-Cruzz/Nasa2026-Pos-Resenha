@@ -19,6 +19,7 @@ a { text-underline-offset: 4px; }
 .atlas-pin-label { border: 0; border-radius: .5rem; background: #fdf6e3; color: #142018; font-weight: 700; font-size: .75rem; box-shadow: 0 2px 6px rgb(0 0 0 / .35); }
 .atlas-pin-label::before { display: none; }
 .atlas-map.leaflet-container { background: #142018; font: inherit; }
+.atlas-map .leaflet-control-attribution { font-size: 10px; }
 .atlas-map-frame-error, .atlas-map-frame-error .atlas-map { min-height: 12rem; }
 .atlas-map-error { position: absolute; z-index: 3; top: 50%; right: 1rem; left: 1rem; margin: 0; transform: translateY(-50%); border: 1px solid #dca84e; border-radius: .5rem; background: rgb(47 31 11 / .92); padding: .75rem; text-align: center; color: #fff3c4; }
 .field-slot-updated { animation: field-slot-updated 220ms ease-out both; }
