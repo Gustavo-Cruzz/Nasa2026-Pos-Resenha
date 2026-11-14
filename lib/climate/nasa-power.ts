@@ -4,12 +4,15 @@ import path from 'node:path';
 import { z } from 'zod';
 import { coordinatesSchema, type Coordinates } from '@/lib/schema';
 import { isPilotLocation } from '@/lib/region';
-import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalCalendarDay, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary } from '@/lib/climate/indicators';
+import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, historicalWaterBalanceByMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalCalendarDay, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth } from '@/lib/climate/indicators';
+import { dayOfYear, et0Daily } from '@/lib/climate/et0';
+import type { NdviContext } from '@/lib/climate/ndvi';
+import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
 
 export const NASA_POWER_PERIOD = { start: '20110101', end: '20251231' } as const;
 export const NASA_POWER_PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN'] as const;
 export type NasaParameter = (typeof NASA_POWER_PARAMETERS)[number];
-export const NASA_POWER_ENHANCED_PARAMETERS = ['IMERG_PRECTOT', 'GWETROOT'] as const;
+export const NASA_POWER_ENHANCED_PARAMETERS = ['IMERG_PRECTOT', 'GWETROOT', 'PS'] as const;
 export type EnhancedNasaParameter = (typeof NASA_POWER_ENHANCED_PARAMETERS)[number];
 
 const expectedUnits: Record<NasaParameter, string> = {
@@ -20,7 +23,7 @@ const physicalRanges: Record<NasaParameter, readonly [number, number]> = {
   T2M: [-90, 70], T2M_MAX: [-90, 75], T2M_MIN: [-100, 65], PRECTOTCORR: [0, 2000], RH2M: [0, 100], WS2M: [0, 150], ALLSKY_SFC_SW_DWN: [0, 50],
 };
 
-export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null; imergPrecipMm?: number | null; rootZoneWetness?: number | null };
+export type ClimateDay = { date: string; tmeanC: number | null; tmaxC: number | null; tminC: number | null; precipMm: number | null; rhPct: number | null; windMps: number | null; solarMjM2Day: number | null; imergPrecipMm?: number | null; rootZoneWetness?: number | null; pressureKpa?: number | null; /** FAO-56 ET0, climate context only; null when any input is missing. */ et0Mm?: number | null };
 export type ClimateProvenance = { source: 'NASA_POWER'; requestedCoordinates: Coordinates; period: typeof NASA_POWER_PERIOD; fetchedAt: string; rawParameterNames: string[]; sourceUrl: string; timezone: 'UTC'; coveragePct: Record<NasaParameter, number> & Partial<Record<EnhancedNasaParameter, number>>; missingDays: string[]; warnings: string[] };
 export type ClimateDataset = { daily: ClimateDay[]; provenance: ClimateProvenance };
 export type ClimateContext = {
@@ -30,6 +33,10 @@ export type ClimateContext = {
   plantingMonthPrecipitation: HistoricalPrecipitationMonth | null;
   historicalPrecipitationByMonth: HistoricalPrecipitationMonth[];
   waterContext?: HistoricalWaterContextMonth | null;
+  /** Monthly median of precipitation minus FAO-56 ET0: a climate indicator, not crop demand or an irrigation need. */
+  waterBalanceByMonth?: WaterBalanceMonth[];
+  /** MODIS NDVI monthly medians; only present for points with a hash-verified pre-processed fixture, otherwise N/D. */
+  ndvi?: NdviContext;
   calendarDayContext?: HistoricalCalendarDay | null;
   provenance: ClimateProvenance | null;
   gaps: string[];
@@ -71,7 +78,7 @@ export function parseNasaPowerPayload(payload: unknown, coordinates: Coordinates
     if (reportedUnit && reportedUnit !== expectedUnits[parameter]) warnings.push(`Unexpected unit for ${parameter}: ${reportedUnit}. Expected ${expectedUnits[parameter]}.`);
     if (!reportedUnit) warnings.push(`NASA POWER did not expose unit metadata for ${parameter}; values are preserved only in the documented request unit.`);
   }
-  const enhancedUnits: Record<EnhancedNasaParameter, string> = { IMERG_PRECTOT: 'mm/day', GWETROOT: '1' };
+  const enhancedUnits: Record<EnhancedNasaParameter, string> = { IMERG_PRECTOT: 'mm/day', GWETROOT: '1', PS: 'kPa' };
   for (const parameter of NASA_POWER_ENHANCED_PARAMETERS) {
     if (!parameterData[parameter]) continue;
     const reportedUnit = data.parameters?.[parameter]?.units ?? data.parameters?.[parameter]?.unit;
@@ -92,14 +99,16 @@ export function parseNasaPowerPayload(payload: unknown, coordinates: Coordinates
     solarMjM2Day: normalizedValue(parameterData.ALLSKY_SFC_SW_DWN[date], 'ALLSKY_SFC_SW_DWN', fillValue),
     imergPrecipMm: normalizedOptionalValue(parameterData.IMERG_PRECTOT?.[date], [0, 2000], fillValue),
     rootZoneWetness: normalizedOptionalValue(parameterData.GWETROOT?.[date], [0, 1], fillValue),
-  }));
+    pressureKpa: normalizedOptionalValue(parameterData.PS?.[date], [30, 110], fillValue),
+  })).map((day) => ({ ...day, et0Mm: et0Daily({ tmaxC: day.tmaxC, tminC: day.tminC, rhPct: day.rhPct, windMps2m: day.windMps, solarMjM2Day: day.solarMjM2Day, pressureKPa: day.pressureKpa, latitudeDeg: validCoordinates.latitude, dayOfYear: dayOfYear(day.date) }) }));
   const keyByParameter: Record<NasaParameter, keyof ClimateDay> = { T2M: 'tmeanC', T2M_MAX: 'tmaxC', T2M_MIN: 'tminC', PRECTOTCORR: 'precipMm', RH2M: 'rhPct', WS2M: 'windMps', ALLSKY_SFC_SW_DWN: 'solarMjM2Day' };
   const coveragePct = Object.fromEntries(NASA_POWER_PARAMETERS.map((parameter) => [parameter, Number((daily.filter((day) => day[keyByParameter[parameter]] !== null).length / daily.length * 100).toFixed(2))])) as ClimateProvenance['coveragePct'];
   if (parameterData.IMERG_PRECTOT) coveragePct.IMERG_PRECTOT = coverage(daily, 'imergPrecipMm');
   if (parameterData.GWETROOT) coveragePct.GWETROOT = coverage(daily, 'rootZoneWetness');
+  if (parameterData.PS) coveragePct.PS = coverage(daily, 'pressureKpa');
   const missingDays = daily.filter((day) => {
     const requiredMissing = [day.tmeanC, day.tmaxC, day.tminC, day.precipMm, day.rhPct, day.windMps, day.solarMjM2Day].some((value) => value === null);
-    const enhancedMissing = (parameterData.IMERG_PRECTOT && day.imergPrecipMm === null) || (parameterData.GWETROOT && day.rootZoneWetness === null);
+    const enhancedMissing = (parameterData.IMERG_PRECTOT && day.imergPrecipMm === null) || (parameterData.GWETROOT && day.rootZoneWetness === null) || (parameterData.PS && day.pressureKpa === null);
     return requiredMissing || Boolean(enhancedMissing);
   }).map((day) => day.date);
   return { daily, provenance: { source: 'NASA_POWER', requestedCoordinates: validCoordinates, period: NASA_POWER_PERIOD, fetchedAt, rawParameterNames: Object.keys(parameterData), sourceUrl, timezone: 'UTC', coveragePct, missingDays, warnings } };
@@ -115,7 +124,7 @@ export async function fetchNasaPower(coordinates: Coordinates, fetcher: FetchLik
   catch (error) { if (error instanceof ClimateDataError) throw error; throw new ClimateDataError('NASA_RESPONSE_INVALID', 'NASA POWER returned invalid JSON.'); }
 }
 
-const fixtureMetaSchema = z.object({ sourceUrl: z.string().url(), fetchedAt: z.string().datetime(), sha256: z.string().regex(/^[a-f0-9]{64}$/), requestedCoordinates: coordinatesSchema, period: z.object({ start: z.literal(NASA_POWER_PERIOD.start), end: z.literal(NASA_POWER_PERIOD.end) }), timezone: z.literal('UTC'), units: z.object({ T2M: z.literal('C'), T2M_MAX: z.literal('C'), T2M_MIN: z.literal('C'), PRECTOTCORR: z.literal('mm/day'), RH2M: z.literal('%'), WS2M: z.literal('m/s'), ALLSKY_SFC_SW_DWN: z.literal('MJ/m^2/day'), IMERG_PRECTOT: z.literal('mm/day'), GWETROOT: z.literal('1') }) });
+const fixtureMetaSchema = z.object({ sourceUrl: z.string().url(), fetchedAt: z.string().datetime(), sha256: z.string().regex(/^[a-f0-9]{64}$/), requestedCoordinates: coordinatesSchema, period: z.object({ start: z.literal(NASA_POWER_PERIOD.start), end: z.literal(NASA_POWER_PERIOD.end) }), timezone: z.literal('UTC'), units: z.object({ T2M: z.literal('C'), T2M_MAX: z.literal('C'), T2M_MIN: z.literal('C'), PRECTOTCORR: z.literal('mm/day'), RH2M: z.literal('%'), WS2M: z.literal('m/s'), ALLSKY_SFC_SW_DWN: z.literal('MJ/m^2/day'), IMERG_PRECTOT: z.literal('mm/day'), GWETROOT: z.literal('1'), PS: z.literal('kPa').optional() }) });
 
 export async function readVerifiedPilotFixture(coordinates: Coordinates): Promise<ClimateDataset | undefined> {
   if (!isPilotLocation(coordinates)) return undefined;
@@ -134,17 +143,22 @@ export async function readVerifiedPilotFixture(coordinates: Coordinates): Promis
 export async function resolveClimateContext(coordinates: Coordinates, plantingMonth: number, calendarDay?: number): Promise<ClimateContext> {
   try {
     const dataset = await fetchNasaPower(coordinates);
-    return contextFromDataset(dataset, plantingMonth, 'live', calendarDay);
+    return withNdvi(contextFromDataset(dataset, plantingMonth, 'live', calendarDay), coordinates);
   } catch (error) {
     const fixture = await readVerifiedPilotFixture(coordinates);
-    if (fixture) return contextFromDataset(fixture, plantingMonth, 'verified_fixture', calendarDay);
+    if (fixture) return withNdvi(contextFromDataset(fixture, plantingMonth, 'verified_fixture', calendarDay), coordinates);
     const reason = error instanceof ClimateDataError ? error.code : 'NASA_REQUEST_FAILED';
     return { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], waterContext: null, provenance: null, gaps: [`Historical NASA POWER climate is unavailable (${reason}). No Rio Verde fixture was used for this coordinate.`] };
   }
 }
 
+async function withNdvi(context: ClimateContext, coordinates: Coordinates): Promise<ClimateContext> {
+  const ndvi = await readNdviFixture(coordinates);
+  return ndvi ? { ...context, ndvi } : context;
+}
+
 function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture', calendarDay?: number): ClimateContext {
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: historicalWaterBalanceByMonth(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }
 
 function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {
@@ -152,6 +166,6 @@ function normalizedOptionalValue(value: number | null | undefined, range: readon
   return value >= range[0] && value <= range[1] ? value : null;
 }
 
-function coverage(daily: ClimateDay[], key: 'imergPrecipMm' | 'rootZoneWetness'): number {
+function coverage(daily: ClimateDay[], key: 'imergPrecipMm' | 'rootZoneWetness' | 'pressureKpa'): number {
   return Number((daily.filter((day) => day[key] !== null && day[key] !== undefined).length / daily.length * 100).toFixed(2));
 }

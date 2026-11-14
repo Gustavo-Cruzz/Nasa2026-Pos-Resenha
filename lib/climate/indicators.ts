@@ -3,6 +3,8 @@ import type { ClimateDay } from '@/lib/climate/nasa-power';
 export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; precipMedianMm: number | null; validTemperatureDays: number; validPrecipitationDays: number };
 export type HistoricalPrecipitationMonth = { month: number; medianTotalMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalWaterContextMonth = { month: number; imergMedianTotalMm: number | null; medianRainDays: number | null; rootZoneWetnessMedian: number | null; validImergYears: number; expectedYears: number; imergCoveragePct: number; rootZoneCoveragePct: number };
+/** Median monthly precipitation, FAO-56 ET0 and their difference across complete years only. Climate context; not crop demand. */
+export type WaterBalanceMonth = { month: number; precipMedianMm: number | null; et0MedianMm: number | null; balanceMedianMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalCalendarDay = { month: number; day: number; tmeanMedianC: number | null; precipMedianMm: number | null; imergPrecipMedianMm: number | null; rootZoneWetnessMedian: number | null; validYears: number; expectedYears: number };
 
 function median(values: number[]): number | null {
@@ -93,4 +95,25 @@ export function historicalPrecipitationForMonth(daily: ClimateDay[], month: numb
 /** Complete monthly lookup used by exploratory month comparisons. */
 export function historicalPrecipitationByMonth(daily: ClimateDay[]): HistoricalPrecipitationMonth[] {
   return Array.from({ length: 12 }, (_, index) => historicalPrecipitationForMonth(daily, index + 1));
+}
+
+/** Per month: for each year with every day carrying both precipitation and ET0, total P and ET0; then take medians across years. */
+export function historicalWaterBalanceByMonth(daily: ClimateDay[]): WaterBalanceMonth[] {
+  return Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    const byYear = new Map<string, ClimateDay[]>();
+    for (const day of daily) {
+      if (Number(day.date.slice(4, 6)) !== month) continue;
+      const year = day.date.slice(0, 4);
+      byYear.set(year, [...(byYear.get(year) ?? []), day]);
+    }
+    const complete = [...byYear.values()].flatMap((days) => {
+      if (days.length === 0 || days.some((day) => day.precipMm === null || day.et0Mm === null || day.et0Mm === undefined)) return [];
+      const precip = days.reduce((sum, day) => sum + (day.precipMm as number), 0);
+      const et0 = days.reduce((sum, day) => sum + (day.et0Mm as number), 0);
+      return [{ precip, et0, balance: precip - et0 }];
+    });
+    const expectedYears = byYear.size;
+    return { month, precipMedianMm: median(complete.map((year) => year.precip)), et0MedianMm: median(complete.map((year) => year.et0)), balanceMedianMm: median(complete.map((year) => year.balance)), validYears: complete.length, expectedYears, coveragePct: expectedYears ? Number((complete.length / expectedYears * 100).toFixed(2)) : 0 };
+  });
 }

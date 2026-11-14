@@ -16,6 +16,7 @@ import { PixelAnimation } from '@/components/pixel/pixel-animation';
 import { ReviewTransition } from '@/components/pixel/review-transition';
 import { ReviewObjects } from '@/components/pixel/review-objects';
 import { BoundarySummary, waterKindLabel } from '@/components/boundary/boundary-summary';
+import { SeasonPanel } from '@/components/results/season-panel';
 import { DecisionHero } from '@/components/results/decision-hero';
 import { NasaInsightPanel } from '@/components/results/nasa-insight-panel';
 import { EvidenceCenterTrigger } from '@/components/evidence/evidence-center';
@@ -59,6 +60,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     <div className="mt-5"><BrazilContextNote context={data.regionalContext} /></div>
     {data.evidenceManifest ? <div className="mt-4"><EvidenceCenterTrigger manifest={data.evidenceManifest} /></div> : null}
     {data.input.fieldBoundary ? <div className="mt-5"><h2 className="mb-2 font-bold">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><BoundarySummary boundary={data.input.fieldBoundary} waterPoint={data.input.waterPoint} /></div> : data.input.waterPoint ? <p className="mt-5 text-sm text-slate-300"><b>{en ? 'Water point declared by the producer' : 'Ponto de água informado pelo produtor'}:</b> {waterKindLabel(data.input.waterPoint.kind, en)}{data.input.waterPoint.label ? ` — ${data.input.waterPoint.label}` : ''}. {en ? 'Declared context only.' : 'Apenas contexto declarado.'}</p> : null}
+    <SeasonPanel data={data} />
     <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <p className="mt-4 text-sm text-slate-300"><b>{en ? 'Highlighted priorities' : 'Prioridades em destaque'}:</b> {data.priorityHighlights.map((id) => priorityLabels[id] ?? id).join(', ')}.</p>
     <ScenarioComparisonTable data={data} />

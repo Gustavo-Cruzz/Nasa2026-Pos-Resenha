@@ -32,6 +32,8 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
     let disposed = false;
     void import('maplibre-gl').then((maplibregl) => {
       if (disposed || !container.current) return;
+      // MapLibre 6 spawns a module worker from a file URL the Next bundler does not emit; serve it from /public (copied by `copy:maplibre-worker`).
+      maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
       const initial = pointRef.current;
       const instance = new maplibregl.Map({ container: container.current, style: fieldShiftMapStyleUrl, center: initial ? [initial.longitude, initial.latitude] : [0, 15], zoom: initial ? 5 : 1.35, attributionControl: false });
       map.current = instance;

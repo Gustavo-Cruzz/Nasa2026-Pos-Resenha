@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "copy:maplibre-worker": "cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs public/maplibre-gl-worker.mjs",
+    "predev": "npm run copy:maplibre-worker",
+    "prebuild": "npm run copy:maplibre-worker",
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
@@ -15,6 +18,7 @@
     "build:brazil-context": "node scripts/build-brazil-context.mjs",
     "update:brazil-context": "node scripts/update-brazil-context.mjs",
     "update:brazil-pam": "node scripts/update-brazil-pam.mjs",
+    "fetch:modis-ndvi": "node --experimental-strip-types scripts/fetch-modis-ndvi.ts",
     "fetch:nasa-fixture": "node --experimental-strip-types scripts/fetch-nasa-fixture.ts"
   },
   "dependencies": {

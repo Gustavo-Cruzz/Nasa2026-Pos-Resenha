@@ -4,7 +4,7 @@ import path from 'node:path';
 
 const coordinates = { latitude: -17.798, longitude: -50.919 };
 const period = { start: '20110101', end: '20251231' };
-const parameters = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN', 'IMERG_PRECTOT', 'GWETROOT'];
+const parameters = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'RH2M', 'WS2M', 'ALLSKY_SFC_SW_DWN', 'IMERG_PRECTOT', 'GWETROOT', 'PS'];
 const query = new URLSearchParams({ community: 'AG', format: 'JSON', 'time-standard': 'UTC', ...period, latitude: String(coordinates.latitude), longitude: String(coordinates.longitude), parameters: parameters.join(',') });
 const sourceUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?${query.toString()}`;
 const response = await fetch(sourceUrl, { signal: AbortSignal.timeout(30_000) });

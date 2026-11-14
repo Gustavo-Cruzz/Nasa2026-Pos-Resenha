@@ -76,3 +76,14 @@ describe('source health', () => {
     for (const id of ['zarc', 'pam', 'ibge'] as const) expect(health.find((item) => item.id === id)).toMatchObject({ state: 'nd', gap: 'outside_brazil' });
   });
 });
+
+describe('season content in the export', () => {
+  it('adds the monthly window, calendar and water-balance status without inventing values', () => {
+    const md = buildAnalysisSummary(analyze(input, climate(35)), 'en');
+    expect(md).toContain('## Climate window by month');
+    expect(md).toContain('Thermal calendar');
+    expect(md).toMatch(/not a forecast/);
+    expect(md).toContain('Climate water balance: N/D');
+    expect(buildAnalysisSummary(analyze(input, unavailable), 'pt-BR')).toContain('Balanço hídrico climático: N/D');
+  });
+});

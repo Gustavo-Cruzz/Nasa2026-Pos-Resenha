@@ -10,7 +10,9 @@
 - NASA Worldview SMAP L4 root-zone soil moisture: https://worldview.earthdata.nasa.gov/?l=SMAP_L4_Analyzed_Root_Zone_Soil_Moisture
 - NSIDC SMAP L4 SPL4SMGP Version 8 (historical numeric product; Earthdata Login required): https://nsidc.org/data/spl4smgp/versions/8
 - ANA/SNIRH, *Coeficientes Técnicos de Uso da Água para a Agricultura Irrigada*: https://www.snirh.gov.br/portal/centrais-de-conteudos/central-de-publicacoes/ana_coeficientes_agricultura_irrigada_vf.pdf — Kc references are source-specific and are not irrigation prescriptions.
-- FAO-56: https://www.fao.org/4/X0490E/x0490e0b.htm — background only; ET0/ETc not calculated.
+- FAO-56: https://www.fao.org/4/X0490E/x0490e0b.htm — Penman–Monteith ET0 (eq. 6, 7, 19, 21, 37–39) implemented as a climate indicator; ETc is not calculated.
+- NASA POWER daily `PS` (surface pressure, kPa), used for ET0 and the elevation inferred from it.
+- ORNL DAAC MODIS web service: https://modis.ornl.gov/data/modis_webservice.html — MOD13Q1 250m_16_days_NDVI, pre-processed offline into `data/ndvi/` (ten dates per request; scale 0.0001, fill −3000, valid −2000..10000 per the LP DAAC product guide).
 - Local verified NASA Rio Verde fixture: `data/nasa-power-rio-verde.meta.json`.
 - Ferreira; Santos (2020), *Zoneamento Agrícola de Risco Climático para Grandes Culturas no Município de Rio Verde, Goiás*: local PDF `2021-Marco Antônio Alves Ferreira-ZONEAMENTO AGRÍCOLA DE RISCO CLIMÁTICO PARA GRANDES CULTURAS NO MUNICÍPIO DE RIO VERDE, GOIÁS.pdf`, tables 1, 2, 4, 5, pp. 4–7.
 - MAPA ZARC Goiás: https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/goias-go

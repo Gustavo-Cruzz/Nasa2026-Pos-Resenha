@@ -1,7 +1,7 @@
 {
-  "sourceUrl": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&format=JSON&time-standard=UTC&start=20110101&end=20251231&latitude=-17.798&longitude=-50.919&parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CRH2M%2CWS2M%2CALLSKY_SFC_SW_DWN%2CIMERG_PRECTOT%2CGWETROOT",
-  "fetchedAt": "2026-11-13T23:21:47.826Z",
-  "sha256": "6d317f61771a84149464b9b0313aa3a2edc34900ac1502306434d0e779295142",
+  "sourceUrl": "https://power.larc.nasa.gov/api/temporal/daily/point?community=AG&format=JSON&time-standard=UTC&start=20110101&end=20251231&latitude=-17.798&longitude=-50.919&parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CRH2M%2CWS2M%2CALLSKY_SFC_SW_DWN%2CIMERG_PRECTOT%2CGWETROOT%2CPS",
+  "fetchedAt": "2026-11-14T15:12:54.505Z",
+  "sha256": "41bac89f6e096906b607b989f191fcef0a5b53c95058c587cc81a2eb1ea7f1e2",
   "requestedCoordinates": {
     "latitude": -17.798,
     "longitude": -50.919
@@ -20,6 +20,7 @@
     "WS2M": "m/s",
     "ALLSKY_SFC_SW_DWN": "MJ/m^2/day",
     "IMERG_PRECTOT": "mm/day",
-    "GWETROOT": "1"
+    "GWETROOT": "1",
+    "PS": "kPa"
   }
 }

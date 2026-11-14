@@ -2,6 +2,8 @@ import type { AnalysisResult } from '@/lib/engine/types';
 import type { Locale } from '@/lib/i18n';
 import { cropDisplayName } from '@/lib/presentation';
 import { deriveDecisionHero } from '@/lib/engine/decision-hero';
+import { deriveRotationCalendar, deriveSeasonInsights, describeSeasonInsight, monthLabel, seasonCaveat } from '@/lib/engine/season';
+import { relativeLowVegetationMonths } from '@/lib/climate/ndvi';
 import { buildSourceHealth, sourceGapLabel, sourceStateLabel, sourceTitle } from '@/lib/source-health';
 
 const monthNames = { 'pt-BR': ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] } as const;
@@ -35,6 +37,29 @@ function decisionLines(data: AnalysisResult, locale: Locale): string[] {
   return lines;
 }
 
+function seasonLines(data: AnalysisResult, locale: Locale): string[] {
+  const en = locale === 'en';
+  const calendar = deriveRotationCalendar(data.nasaInsightByMonth);
+  const balance = data.climate.waterBalanceByMonth ?? [];
+  const lines = ['', `## ${en ? 'Climate window by month' : 'Janela climática por mês'}`, '', seasonCaveat(locale), ''];
+  for (const insight of deriveSeasonInsights(calendar, balance, data.input.plantingMonth)) { const text = describeSeasonInsight(insight, locale); lines.push(`- **${text.title}.** ${text.detail}`); }
+  if (calendar.length) {
+    const head = Array.from({ length: 12 }, (_, index) => monthLabel(index + 1, locale));
+    lines.push('', `### ${en ? 'Thermal calendar (✓ inside documented range, ! outside, N/D no reading; margin in °C)' : 'Calendário térmico (✓ dentro da faixa documentada, ! fora, N/D sem leitura; margem em °C)'}`, '', `| ${en ? 'Hypothesis' : 'Hipótese'} | ${head.join(' | ')} |`, `|---|${head.map(() => '---').join('|')}|`);
+    for (const row of calendar) lines.push(`| ${row.scenarioId} ${cropDisplayName(row.cropId, row.cropName, locale) || 'N/D'} | ${row.cells.map((cell) => cell.state === 'unknown' ? 'N/D' : `${cell.state === 'compatible' ? '✓' : '!'} ${cell.marginC}`).join(' | ')} |`);
+  }
+  if (balance.some((month) => month.balanceMedianMm !== null)) {
+    lines.push('', `### ${en ? 'Climate water balance (median mm: precipitation, FAO-56 ET0, difference)' : 'Balanço hídrico climático (mediana em mm: chuva, ET0 FAO-56, diferença)'}`, '', `| ${en ? 'Month' : 'Mês'} | ${en ? 'Precipitation' : 'Chuva'} | ET0 | ${en ? 'Balance' : 'Balanço'} |`, '|---|---|---|---|');
+    for (const month of balance) lines.push(`| ${monthLabel(month.month, locale)} | ${month.precipMedianMm ?? 'N/D'} | ${month.et0MedianMm ?? 'N/D'} | ${month.balanceMedianMm ?? 'N/D'} |`);
+  } else lines.push('', `${en ? 'Climate water balance' : 'Balanço hídrico climático'}: N/D`);
+  const ndvi = data.climate.ndvi;
+  if (ndvi) {
+    const low = relativeLowVegetationMonths(ndvi.months);
+    lines.push('', `${en ? 'MODIS NDVI (monthly median)' : 'NDVI MODIS (mediana mensal)'}: ${ndvi.months.map((month) => `${monthLabel(month.month, locale)} ${month.medianNdvi ?? 'N/D'}`).join(', ')}${low.length ? ` — ${en ? 'relative lowest months' : 'meses relativamente mais baixos'}: ${low.map((month) => monthLabel(month, locale)).join(', ')}` : ''}`);
+  } else lines.push('', `${en ? 'MODIS NDVI' : 'NDVI MODIS'}: N/D`);
+  return lines;
+}
+
 function sourceLines(data: AnalysisResult, locale: Locale): string[] {
   const en = locale === 'en';
   const lines = ['', `## ${en ? 'Source status' : 'Estado das fontes'}`, ''];
@@ -48,7 +73,7 @@ function sourceLines(data: AnalysisResult, locale: Locale): string[] {
 export function buildAnalysisSummary(data: AnalysisResult, locale: Locale): string {
   const en = locale === 'en';
   const evidenceLevel = (level: string) => ({ climate_exploration: en ? 'Climate exploration' : 'Exploração climática', regionally_contextualized: en ? 'Regional context' : 'Contexto regional', locally_validated: en ? 'Traceable local validation' : 'Validação local rastreável' }[level] ?? level);
-  const lines = [`# Field Shift — ${en ? 'Exploratory comparison' : 'Comparação exploratória'}`, '', `${en ? 'Location' : 'Local'}: ${data.input.location.latitude}, ${data.input.location.longitude}`, `${en ? 'Exploratory boundary' : 'Polígono exploratório'}: ${boundaryText(data, en)}`, ...waterLines(data, en), `${en ? 'Planting-month climate window' : 'Mês da janela climática'}: ${data.input.plantingMonth}`, `${en ? 'Climate source' : 'Fonte climática'}: ${data.climate.provenance?.source ?? 'N/D'} (${data.climate.provenance?.period.start ?? 'N/D'}–${data.climate.provenance?.period.end ?? 'N/D'})`, ...decisionLines(data, locale), ...sourceLines(data, locale), '', `## ${en ? 'Scenarios' : 'Cenários'}`];
+  const lines = [`# Field Shift — ${en ? 'Exploratory comparison' : 'Comparação exploratória'}`, '', `${en ? 'Location' : 'Local'}: ${data.input.location.latitude}, ${data.input.location.longitude}`, `${en ? 'Exploratory boundary' : 'Polígono exploratório'}: ${boundaryText(data, en)}`, ...waterLines(data, en), `${en ? 'Planting-month climate window' : 'Mês da janela climática'}: ${data.input.plantingMonth}`, `${en ? 'Climate source' : 'Fonte climática'}: ${data.climate.provenance?.source ?? 'N/D'} (${data.climate.provenance?.period.start ?? 'N/D'}–${data.climate.provenance?.period.end ?? 'N/D'})`, ...decisionLines(data, locale), ...seasonLines(data, locale), ...sourceLines(data, locale), '', `## ${en ? 'Scenarios' : 'Cenários'}`];
   for (const strategy of data.strategies) {
     lines.push('', `### ${strategy.id}. ${strategy.title}`, `${en ? 'Primary hypothesis' : 'Hipótese principal'}: ${strategy.proposedCrop?.name ?? 'N/D'}`, `${en ? 'Evidence level' : 'Nível de evidência'}: ${evidenceLevel(strategy.validationLevel)}`);
     for (const indicator of strategy.indicators) lines.push(`- ${indicator.label}: ${indicator.state} — ${indicator.detail}`);

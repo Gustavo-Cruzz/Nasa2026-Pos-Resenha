@@ -28,4 +28,16 @@ After a slot edit, the browser recomputes from the climate and regional context 
 
 The Evidence Center is generated as a structured manifest, not scraped from UI text. It deduplicates NASA, farmer-input, catalog and municipal sources; links each visible qualitative claim to rule IDs and source IDs; groups missing evidence; and repeats four non-calculation guardrails. Filters may focus the drawer on one scenario, slot or indicator. Counts summarize available layers and gaps only; they are not confidence percentages.
 
-Not calculated: ET0, ETc, irrigation need, yield, NPK/SOC change, economics, pest diagnosis, forecast, or field diagnosis. Verified Kc is displayed as a source-specific response reference; FAO-56 `ETc = Kc × ET0` remains context only, not an active calculation.
+## Climate window by month (ET0, water balance, thermal calendar, what-if)
+
+ET0 is now calculated, and only as a **climate indicator**. `lib/climate/et0.ts` implements the FAO-56 Penman–Monteith daily equation from NASA POWER `T2M_MAX`, `T2M_MIN`, `RH2M`, `WS2M` (2 m), `ALLSKY_SFC_SW_DWN` and surface pressure `PS` (the elevation used by the clear-sky radiation term is inferred from `PS`). Simplifications: soil heat flux G = 0, actual vapour pressure from mean relative humidity (FAO-56 eq. 19), albedo 0.23. The implementation reproduces FAO-56 Example 18 (3.88 mm/day) within 0.06 mm/day in `tests/unit/et0.test.ts`. A day with any missing or implausible input has ET0 `null`; it is never zero.
+
+The monthly water balance takes, per year, total precipitation minus total ET0 for months where every day has both values, and then the median across years (`historicalWaterBalanceByMonth`). It is shown with its coverage. It is context for how dry or wet a month typically is. It is not crop water use (ETc), an irrigation need, a drought tolerance, a yield effect or a forecast; no Kc is multiplied by it.
+
+The 12-month thermal calendar (`lib/engine/season.ts`) compares the monthly NASA POWER median temperature with each hypothesis' documented viable range. Each cell is compatible, attention or N/D (no reading or no documented range) and carries the margin in °C to the nearest range edge (negative means outside). Season insights are rule-based: the month where hypotheses diverge, otherwise the hypothesis with the smallest thermal margin, and the months with a climate water deficit. Every insight states the NASA value, the documented range and the rule; none is a score, ranking or recommendation.
+
+The "what if" sliders (temperature ±3 °C, rainfall ±30%) apply a hypothetical offset to the monthly medians and recompute the calendar, insights and balance. ET0 is not recomputed, the offset is not a forecast, and the decision card keeps using the historical reading.
+
+MODIS NDVI (MOD13Q1 250 m, 16-day) is read only from a pre-processed, SHA-256-verified fixture for exact demonstration coordinates (`data/ndvi/`, produced by `npm run fetch:modis-ndvi -- <site>`); the ORNL DAAC service allows ten dates per request and is not called at request time. Elsewhere, and while no fixture exists, NDVI is N/D. "Lowest vegetation months" are relative to the point's own series and need a reading for at least nine months; no absolute bare-soil threshold is applied.
+
+Not calculated: ETc, irrigation need, yield, NPK/SOC change, economics, pest diagnosis, forecast, or field diagnosis. Verified Kc is displayed as a source-specific response reference; FAO-56 `ETc = Kc × ET0` remains context only, not an active calculation.
