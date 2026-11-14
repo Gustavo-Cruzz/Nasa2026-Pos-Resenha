@@ -39,6 +39,7 @@ export function NasaInsightPanel({ insights = [], initialMonth }: { insights?: N
         <ArrowDown className="mx-auto text-cyan-300 sm:-rotate-90" aria-hidden="true" />
         <div><p className="font-bold">{headline}</p></div>
       </div>
+      <p className="mt-4 text-xs text-slate-400">{locale === 'en' ? 'Changing the month here does not alter crops, priorities, or the saved plan.' : 'Trocar o mês aqui não altera culturas, prioridades nem o plano salvo.'}</p>
       <div className="mt-5 grid gap-3 sm:grid-cols-3">{insight.effects.map((effect) => <article className={`rounded-lg border p-3 ${tone[effect.state]}`} key={effect.scenarioId}><p className="text-xs font-semibold uppercase">{locale === 'en' ? 'Scenario' : 'Cenário'} {effect.scenarioId}</p><p className="mt-1 font-bold">{cropDisplayName(effect.cropId, effect.cropName, locale)} · {stateLabel(effect.state)}</p><p className="mt-2 text-xs"><b>{copy.nasaInsightRule}:</b> {ruleLabel(effect)}</p>{effect.documentedRangeC ? <p className="mt-1 text-xs">{effect.documentedRangeC.min}–{effect.documentedRangeC.max} °C</p> : null}</article>)}</div>
       {insight.sourceUrl ? <a className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold underline" href={insight.sourceUrl} rel="noreferrer" target="_blank">{copy.nasaInsightSource}<ExternalLink size={15} aria-hidden="true" /></a> : null}
     </div>

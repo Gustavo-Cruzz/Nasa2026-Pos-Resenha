@@ -1,0 +1,306 @@
+[
+  {
+    "version": 1,
+    "createdAt": "2026-11-14T00:00:00.000Z",
+    "eventDefinition": {
+      "consecutiveDays": 7,
+      "precipitationBelowMm": 1
+    },
+    "horizonDays": 7,
+    "lookbackDays": 30,
+    "featureNames": [
+      "preceding_30d_precipitation_mm",
+      "preceding_30d_dry_days",
+      "preceding_30d_mean_temperature_c",
+      "preceding_30d_et0_mm",
+      "month_sin",
+      "month_cos"
+    ],
+    "coefficients": [
+      -0.3803182054580166,
+      0.43816237156591054,
+      -0.38547250187377075,
+      -0.1954372907521842,
+      -0.2478380841546293,
+      -0.404163474774385
+    ],
+    "intercept": -0.4420758327361429,
+    "mean": [
+      98.62305053598786,
+      17.41408882082695,
+      24.334577539560954,
+      132.7644266462484,
+      -0.008252638201736896,
+      -0.007916320832256527
+    ],
+    "scale": [
+      89.35495848756464,
+      9.857921029210235,
+      1.9578884300947452,
+      27.856865784377934,
+      0.7068961627618903,
+      0.7072248870760428
+    ],
+    "baselineByMonth": {
+      "1": 0.05058365758754864,
+      "2": 0.011811023622047244,
+      "3": 0.010752688172043012,
+      "4": 0.2518518518518518,
+      "5": 0.5232974910394266,
+      "6": 0.7962962962962963,
+      "7": 0.9139784946236559,
+      "8": 0.8315412186379928,
+      "9": 0.43703703703703706,
+      "10": 0.12186379928315412,
+      "11": 0,
+      "12": 0
+    },
+    "samples": {
+      "train": 3265,
+      "validation": 1059,
+      "test": 1059
+    },
+    "evaluation": {
+      "baseline": {
+        "samples": 1059,
+        "brierScore": 0.10964470918107218,
+        "calibration": [
+          {
+            "lower": 0,
+            "upper": 0.2,
+            "samples": 510,
+            "meanPrediction": 0.032300896297324355,
+            "observedFrequency": 0.027450980392156862
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "samples": 90,
+            "meanPrediction": 0.25185185185185216,
+            "observedFrequency": 0.16666666666666666
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "samples": 183,
+            "meanPrediction": 0.4808743169398925,
+            "observedFrequency": 0.6174863387978142
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "samples": 90,
+            "meanPrediction": 0.7962962962962965,
+            "observedFrequency": 0.7444444444444445
+          },
+          {
+            "lower": 0.8,
+            "upper": 1,
+            "samples": 186,
+            "meanPrediction": 0.8727598566308232,
+            "observedFrequency": 0.8279569892473119
+          }
+        ]
+      },
+      "model": {
+        "samples": 1059,
+        "brierScore": 0.11024543193581332,
+        "calibration": [
+          {
+            "lower": 0,
+            "upper": 0.2,
+            "samples": 486,
+            "meanPrediction": 0.12345021484122967,
+            "observedFrequency": 0.018518518518518517
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "samples": 137,
+            "meanPrediction": 0.28882429174441976,
+            "observedFrequency": 0.22627737226277372
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "samples": 96,
+            "meanPrediction": 0.49230857612454954,
+            "observedFrequency": 0.6145833333333334
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "samples": 202,
+            "meanPrediction": 0.7331957355293476,
+            "observedFrequency": 0.7376237623762376
+          },
+          {
+            "lower": 0.8,
+            "upper": 1,
+            "samples": 138,
+            "meanPrediction": 0.8359478446100693,
+            "observedFrequency": 0.8333333333333334
+          }
+        ]
+      }
+    },
+    "validationStatus": "not_validated",
+    "limitations": [
+      "Chronological NASA POWER historical experiment; not a weather forecast.",
+      "Root-zone wetness is excluded unless a complete compatible historical feature series is available.",
+      "Model does not beat climatology on held-out Brier score."
+    ]
+  },
+  {
+    "version": 1,
+    "createdAt": "2026-11-14T00:00:00.000Z",
+    "eventDefinition": {
+      "consecutiveDays": 7,
+      "precipitationBelowMm": 1
+    },
+    "horizonDays": 15,
+    "lookbackDays": 30,
+    "featureNames": [
+      "preceding_30d_precipitation_mm",
+      "preceding_30d_dry_days",
+      "preceding_30d_mean_temperature_c",
+      "preceding_30d_et0_mm",
+      "month_sin",
+      "month_cos"
+    ],
+    "coefficients": [
+      -0.47684604981952916,
+      0.5340517816685001,
+      -0.4177796471801558,
+      -0.25965792580748703,
+      -0.21721894797320768,
+      -0.560620065325875
+    ],
+    "intercept": -0.10998014329554882,
+    "mean": [
+      98.44084636614545,
+      17.430542778288867,
+      24.333685270366914,
+      132.76137779822176,
+      -0.00887606983399907,
+      -0.008988313134760903
+    ],
+    "scale": [
+      89.25795474608151,
+      9.852757097811898,
+      1.9589229212352475,
+      27.87379840890232,
+      0.7071052814004619,
+      0.7069954360721582
+    ],
+    "baselineByMonth": {
+      "1": 0.13043478260869565,
+      "2": 0.04330708661417323,
+      "3": 0.03942652329749104,
+      "4": 0.5037037037037037,
+      "5": 0.8351254480286738,
+      "6": 0.9962962962962963,
+      "7": 0.992831541218638,
+      "8": 0.985663082437276,
+      "9": 0.6333333333333333,
+      "10": 0.1935483870967742,
+      "11": 0,
+      "12": 0.014336917562724014
+    },
+    "samples": {
+      "train": 3261,
+      "validation": 1057,
+      "test": 1057
+    },
+    "evaluation": {
+      "baseline": {
+        "samples": 1057,
+        "brierScore": 0.09381191715775654,
+        "calibration": [
+          {
+            "lower": 0,
+            "upper": 0.2,
+            "samples": 508,
+            "meanPrediction": 0.0695865171923581,
+            "observedFrequency": 0.09055118110236221
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "samples": 0,
+            "meanPrediction": null,
+            "observedFrequency": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "samples": 90,
+            "meanPrediction": 0.5037037037037043,
+            "observedFrequency": 0.43333333333333335
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "samples": 90,
+            "meanPrediction": 0.633333333333333,
+            "observedFrequency": 0.8555555555555555
+          },
+          {
+            "lower": 0.8,
+            "upper": 1,
+            "samples": 369,
+            "meanPrediction": 0.9521228545618774,
+            "observedFrequency": 0.943089430894309
+          }
+        ]
+      },
+      "model": {
+        "samples": 1057,
+        "brierScore": 0.0982996463281933,
+        "calibration": [
+          {
+            "lower": 0,
+            "upper": 0.2,
+            "samples": 448,
+            "meanPrediction": 0.1209933582026799,
+            "observedFrequency": 0.07142857142857142
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.4,
+            "samples": 119,
+            "meanPrediction": 0.26919150581177587,
+            "observedFrequency": 0.2689075630252101
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.6,
+            "samples": 102,
+            "meanPrediction": 0.4921800871664079,
+            "observedFrequency": 0.7745098039215687
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.8,
+            "samples": 83,
+            "meanPrediction": 0.7033237234123516,
+            "observedFrequency": 0.9397590361445783
+          },
+          {
+            "lower": 0.8,
+            "upper": 1,
+            "samples": 305,
+            "meanPrediction": 0.8861383168854389,
+            "observedFrequency": 0.9475409836065574
+          }
+        ]
+      }
+    },
+    "validationStatus": "not_validated",
+    "limitations": [
+      "Chronological NASA POWER historical experiment; not a weather forecast.",
+      "Root-zone wetness is excluded unless a complete compatible historical feature series is available.",
+      "Model does not beat climatology on held-out Brier score."
+    ]
+  }
+]

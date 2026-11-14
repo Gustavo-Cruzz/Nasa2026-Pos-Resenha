@@ -19,7 +19,8 @@
     "update:brazil-context": "node scripts/update-brazil-context.mjs",
     "update:brazil-pam": "node scripts/update-brazil-pam.mjs",
     "fetch:modis-ndvi": "node --experimental-strip-types scripts/fetch-modis-ndvi.ts",
-    "fetch:nasa-fixture": "node --experimental-strip-types scripts/fetch-nasa-fixture.ts"
+    "fetch:nasa-fixture": "node --experimental-strip-types scripts/fetch-nasa-fixture.ts",
+    "train:dry-spell": "node --experimental-strip-types scripts/train-dry-spell-model.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "1.2.3",
