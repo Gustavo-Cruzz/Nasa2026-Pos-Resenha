@@ -1,7 +1,7 @@
 import type { QualitativeIndicator } from '@/lib/engine/types';
 import type { LabSlotAssessment } from '@/lib/lab/assessment';
 
-const tracked = new Set<QualitativeIndicator['id']>(['thermal_compatibility', 'cover_potential', 'functional_diversity', 'soil_context']);
+const tracked = new Set<QualitativeIndicator['id']>(['thermal_compatibility', 'documented_water_response', 'cover_potential', 'functional_diversity', 'soil_context']);
 export type LabIndicatorChange = { indicator: QualitativeIndicator['id']; label: string; before: QualitativeIndicator['state']; after: QualitativeIndicator['state']; direction: 'changed' | 'unchanged' | 'became_unknown' };
 export type LabChangeDelta = { scenarioId: 'A' | 'B' | 'C'; slotIndex: number; previousCropId: string | null; nextCropId: string | null; changes: LabIndicatorChange[]; evidenceAdded: string[]; evidenceStillMissing: string[] };
 

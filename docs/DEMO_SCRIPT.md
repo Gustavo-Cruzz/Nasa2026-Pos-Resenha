@@ -4,7 +4,7 @@
 2. Enable **NASA SMAP**. State: dated 2025-06-30, 9 km, model value-added visual evidence—not field measurement.
 3. Draw an exploratory boundary. State: user sketch only; it does not prove ownership or agricultural use.
 4. Run **Same NASA lens, three regions**. Compare Rio Verde, Accra and New Delhi; emphasize independent coordinate requests and explicit N/D.
-5. Continue to A/B/C. Present C as **Contexto hídrico**, not a drought-resilience claim. NASA changes the exposure reading and visible gaps, while deterministic crop hypotheses remain auditable.
+5. Continue to A/B/C. Present C as **Contexto hídrico**, not a drought-resilience claim. Show “Resposta hídrica documentada”: NASA describes historical rain days and root-zone context, while the crop catalog contributes the verified Kc peak and stage. The app does not calculate ETc, water demand or irrigation.
 
 1. On the home page, use “Ver demonstração do Brasil”; explain that the prefilled farm is fictional and exists only to shorten the demo.
 2. Show the compact journey menu and the prefilled historical crops, priorities and common planting month.

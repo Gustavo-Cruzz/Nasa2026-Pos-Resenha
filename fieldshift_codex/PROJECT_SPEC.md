@@ -90,6 +90,8 @@ lib/
 4. **Prioridades:** conservação de água, saúde do solo e adequação comercial/operacional. Usar pesos normalizados com presets “equilibrado”, “água”, “solo”, “operacional”; irrigação `rainfed | irrigated | unknown`; permitir restrição de culturas sem mercado local.
 5. **Resultado:** 3 cenários exploratórios para horizonte de 24 meses: `A` continuidade, `B` foco em cobertura/solo, `C` contexto hídrico. C compara a mesma exposição NASA e não promete tolerância à seca, menor consumo ou melhor desempenho. Um único mês de plantio (1–12) é a janela climática comum. Sem ciclo verificável, exibir mês e duração desconhecida, sem inventar datas. Para cada cenário: indicadores qualitativos, justificativa, alertas, fontes, nível de evidência e lacunas.
 
+   Quando houver perfil Kc verificado para a cultura, C e a comparação podem mostrar o pico Kc/fase ao lado da exposição NASA. Essa justaposição não calcula ETc, consumo ou irrigação, não torna estudos distintos numericamente comparáveis e não altera seleção de culturas.
+
 ### Baseline obrigatório
 
 A linha de base é a **intenção de rotação atual do agricultor**. Se não informada, criar uma **hipótese editável** de continuação com base na sequência recente; rotular “Continuação presumida — confirmar”. Nunca apresentar as três safras passadas como se fossem automaticamente o plano futuro. Comparar alternativas sempre contra a mesma janela temporal de 24 meses.

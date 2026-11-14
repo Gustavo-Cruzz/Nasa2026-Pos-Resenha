@@ -2,7 +2,7 @@
 
 Scope: record-level audit of `data/crop-evidence.json`. This is a provenance audit, not a new agronomic validation and not a Rio Verde field validation.
 
-The file contains 37 records: 28 marked `verified`, 9 marked `not_verified`. This audit additionally confirmed cultivar-specific sorghum BRS 310 maturity/flowering and disease-response statements in Embrapa Comunicado Técnico 101, BRS 323/BRS 422 sunflower physiological-maturity ranges, and BRS Guariba cowpea cycle/disease statements on Embrapa's cultivar page. These records remain cultivar-specific and are not projected into a universal calendar. Only a verified record with a typed range and compatible field semantics is projected into the runtime catalog. `not_verified` records stay outside scenario compatibility. Source URLs, institution, access date, page/section, excerpt, stated context and location remain attached to every audited record.
+The file contains 38 records: 29 marked `verified`, 9 marked `not_verified`. This audit additionally confirmed cultivar-specific sorghum BRS 310 maturity/flowering and disease-response statements in Embrapa Comunicado Técnico 101, BRS 323/BRS 422 sunflower physiological-maturity ranges, BRS Guariba cowpea cycle/disease statements on Embrapa's cultivar page, and ANA's national technical Kc reference for irrigated common colored bean. These records remain source/context-specific and are not projected into a universal calendar. Only a verified record with compatible typed semantics is projected into the runtime catalog. `not_verified` records stay outside scenario compatibility. Source URLs, institution, access date, page/section, excerpt, stated context and location remain attached to every audited record.
 
 Verified P0 evidence currently available to the engine:
 
@@ -13,9 +13,10 @@ Verified P0 evidence currently available to the engine:
 | Grain sorghum | viable temperature, Kc stages | cycle duration, suitability pH range |
 | Sunflower | suitability pH range, Kc stages | cycle duration, viable temperature range |
 | Cowpea | viable/ideal temperature, cycle duration, Kc stages; BRS Guariba maturity/disease profile | suitability pH range; universal calendar/disease claim |
+| Common bean | ANA national technical Kc stages for irrigated common colored bean | cycle duration, thermal/pH range, local ET0, Rio Verde calendar |
 | *Urochloa ruziziensis* | cycle duration | viable temperature range, suitability pH range |
 
-The engine may use documented viable-temperature ranges only for its qualitative C scenario and documented purpose/family only for B. It does not activate Kc, ET0/ETc, irrigation, yield, nutrient, residue or calendar calculations. Non-local evidence does not create a Rio Verde planting calendar or local validation.
+The engine uses documented viable-temperature ranges for thermal context, purpose/family for B, and verified Kc profiles only as a source-specific qualitative response reference paired with NASA exposure. It does not multiply Kc by ET0, calculate ETc/irrigation, compare water consumption across studies, or change crop selection. Non-local evidence does not create a Rio Verde planting calendar or local validation.
 
 Rio Verde ZARC remains a separate contextual source in `data/rio-verde-zarc.json`; its raw codes remain un-interpreted and are never percentages in this product.
 

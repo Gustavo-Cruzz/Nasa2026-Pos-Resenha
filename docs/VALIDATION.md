@@ -14,5 +14,7 @@
 - Scenario C is labeled “Contexto hídrico”; neither UI nor engine calls it water resilience.
 - The SMAP GIBS raster is a dated visual overlay only. Drawing a polygon does not change analysis or claim a verified field.
 - Rio Verde, Accra and New Delhi comparison calls each coordinate independently and exposes unavailable values instead of substituting another location.
+- Verified Kc profiles may appear only beside available NASA water exposure. They do not change crop selection, produce ET0/ETc, rank crops/studies, or claim irrigation need.
+- Common-bean Kc values retain the ANA irrigated-national-reference context; they are not projected to cowpea, upland rice, ruziziensis or a local calendar.
 
 Automated checks: `tests/unit/`, `tests/e2e/navigation.spec.ts`. National tests cover Rio Verde, São Paulo, Salvador, Boa Esperança do Norte and coordinates outside Brazil. No field validation claim.

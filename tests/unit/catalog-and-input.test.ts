@@ -18,6 +18,8 @@ describe('catalog and wizard contracts', () => {
     expect(crops.every((crop) => crop.parameterStatus === 'missing')).toBe(true);
     expect(cropEvidence.find((record) => record.cropId === 'cowpea' && record.field === 'maturityDays')?.source.verification).toBe('verified');
     expect(cropEvidence.find((record) => record.cropId === 'cowpea' && record.field === 'maturityDays')?.cultivar).toBe('BRS Guariba');
+    expect(crops.find((crop) => crop.id === 'common_bean')?.kcStages).toEqual([{ stage: 'initial', kc: 0.4 }, { stage: 'mid', kc: 1.15 }, { stage: 'end', kc: 0.35 }]);
+    expect(cropEvidence.find((record) => record.cropId === 'common_bean' && record.field === 'kcStages')?.source.institution).toContain('Agência Nacional de Águas');
   });
 
   it('accepts partial soil without changing its origin', () => {

@@ -134,6 +134,10 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await expect(page.getByRole('heading', { name: 'Continuidade presumida — confirmar' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
   await expect(page.getByText('Indicadores disponíveis lado a lado.')).toBeVisible();
+  const waterEvidenceRow = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: 'Resposta hídrica documentada' }) });
+  await expect(waterEvidenceRow).toBeVisible();
+  await expect(waterEvidenceRow.getByText(/pico Kc 1[,.]05/i).first()).toBeVisible();
+  await expect(waterEvidenceRow.getByText(/não calcula ETc/i).first()).toBeVisible();
   await expect(page.getByRole('heading', { name: 'NASA Insight' })).toBeVisible();
   await page.getByLabel('Mês explorado').selectOption('5');
   await expect(page.getByText(/trocar o mês aqui não altera culturas/i)).toBeVisible();

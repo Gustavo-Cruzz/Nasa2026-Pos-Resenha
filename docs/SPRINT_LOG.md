@@ -441,3 +441,15 @@ Implemented: added an opt-in NASA SMAP L4 analyzed root-zone soil-moisture layer
 Evidence (2026-11-14): verified official GIBS layer metadata/capabilities and a live Rio Verde tile (`HTTP 200`, PNG). `npm run lint`, `npm run typecheck`, `npm run test` (62 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed during implementation. E2E covers SMAP disclosure, exploratory drawing when WebGL is available, and independent three-region comparison. Production-build screenshots were reviewed at 390×844 and 1440×900; the fallback remains usable where WebGL is unavailable.
 
 Limitations / next: GIBS supplies a dated visual raster, not a numeric field sample or current talhão condition. The exploratory polygon is not yet part of the validated farm-analysis contract and is intentionally ignored by the engine. A future numeric SMAP pipeline still requires authenticated/preprocessed Earthdata acquisition, uncertainty handling and temporal aggregation. No deployment or push was performed.
+
+## NASA-W3 — Resposta hídrica documentada
+
+Status: complete.
+
+Implemented: promoted verified crop-coefficient profiles into the typed runtime catalog and added the official ANA/SNIRH profile for common colored bean. The qualitative “documented water response” indicator now pairs crop-specific Kc peak/stage evidence with the shared NASA historical exposure window (IMERG rain days and/or POWER root-zone wetness). It remains unknown when either side is unavailable. Scenario C receives a traceable explanation only when both evidence classes exist; crop selection remains unchanged.
+
+Guardrails: the feature does not calculate ET0, ETc, crop water demand, irrigation requirement, drought tolerance, productivity or a water score. Kc values are displayed only with their exact source and stage. The ANA aggregate paddy-rice record was not assigned to upland rice because the production system is ambiguous. Missing profiles remain unknown.
+
+Evidence (2026-11-14): catalog projection and engine tests verify the common-bean ANA record, observed/unknown behavior, exact source traceability, peak Kc display and absence of ETc/irrigation-score outputs. Browser coverage verifies the hydric row and its limitation in Results. `npm run lint`, `npm run typecheck`, `npm run test` (63 unit tests), `npm run build`, and `npm run test:e2e` (20 Playwright tests) passed.
+
+Limitations / next: Kc is a dimensionless crop-stage coefficient, not a measured water requirement. A defensible quantitative balance would additionally require verified ET0, stage durations and locally appropriate calendars; those inputs are intentionally absent rather than inferred. No deployment or push was performed.

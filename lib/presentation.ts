@@ -14,7 +14,7 @@ export function scenarioDisplayTitle(strategy: Pick<Rotation, 'id' | 'title' | '
 
 export function indicatorDisplay(indicator: QualitativeIndicator, locale: Locale): { label: string; detail: string } {
   if (locale === 'pt-BR') return indicator;
-  const labels = { thermal_compatibility: 'Thermal compatibility', historical_precipitation: 'Historical precipitation in the month', rainfall_distribution: 'Historical rainfall distribution', root_zone_wetness: 'Relative root-zone wetness', cover_potential: 'Cover potential', functional_diversity: 'Functional diversity', soil_context: 'Soil context (pH)' } as const;
+  const labels = { thermal_compatibility: 'Thermal compatibility', historical_precipitation: 'Historical precipitation in the month', rainfall_distribution: 'Historical rainfall distribution', root_zone_wetness: 'Relative root-zone wetness', documented_water_response: 'Documented crop water response', cover_potential: 'Cover potential', functional_diversity: 'Functional diversity', soil_context: 'Soil context (pH)' } as const;
   const detail = (() => {
     if (indicator.id === 'thermal_compatibility') return indicator.state === 'unknown' ? 'Documented thermal range and/or historical climate is unavailable.' : 'Exploratory comparison with NASA monthly climatology.';
     if (indicator.id === 'historical_precipitation') {
@@ -24,6 +24,11 @@ export function indicatorDisplay(indicator: QualitativeIndicator, locale: Locale
     }
     if (indicator.id === 'rainfall_distribution') return indicator.state === 'unknown' ? 'GPM IMERG is unavailable for this series.' : indicator.detail.replace('dias com chuva registrada no mês mediano', 'days with recorded rain in the median month').replace('cobertura anual completa de', 'complete annual coverage of').replace('Não indica suficiência para a cultura.', 'It does not indicate crop sufficiency.');
     if (indicator.id === 'root_zone_wetness') return indicator.state === 'unknown' ? 'Root-zone wetness context is unavailable.' : indicator.detail.replace('índice relativo', 'relative index').replace('cobertura diária de', 'daily coverage of').replace('Grade regional modelada, não medição do talhão.', 'Modeled regional grid, not a field measurement.');
+    if (indicator.id === 'documented_water_response') {
+      if (indicator.detail.startsWith('Perfil Kc verificável indisponível')) return 'No verifiable Kc profile is available for this crop.';
+      if (indicator.detail.includes('exposição NASA indisponível')) return indicator.detail.replace('Perfil Kc documentado disponível, mas exposição NASA indisponível.', 'A documented Kc profile is available, but NASA exposure is unavailable.').replace('Pico Kc', 'Peak Kc').replace('na fase', 'at stage');
+      return indicator.detail.replace('Exposição histórica comum:', 'Shared historical exposure:').replace('zona radicular', 'root zone').replace('dias com chuva IMERG', 'IMERG rain days').replace('Referência específica da cultura:', 'Crop-specific reference:').replace('pico Kc', 'peak Kc').replace('na fase', 'at stage').replace('Não calcula ETc, consumo ou irrigação e não ranqueia estudos.', 'It does not calculate ETc, water use, or irrigation and does not rank studies.');
+    }
     if (indicator.id === 'cover_potential') return indicator.state === 'unknown' ? 'No crop is proposed.' : indicator.state === 'yes' ? 'Cataloged cover purpose; does not estimate carbon, N, or fertility.' : 'Cover purpose is not cataloged.';
     if (indicator.id === 'functional_diversity') return indicator.state === 'unknown' ? 'The previous or proposed crop family is unknown.' : indicator.state === 'compatible' ? 'Different family from the previous informed crop.' : 'Same family as the previous informed crop.';
     return indicator.state === 'unknown' ? 'Informed pH and a verifiable pH range are required.' : indicator.state === 'compatible' ? 'Informed pH is within the documented range.' : 'Informed pH is outside the documented range.';
@@ -37,5 +42,6 @@ export function explanationDisplay(explanation: Explanation, locale: Locale): st
   if (explanation.ruleId === 'BRAZIL_MUNICIPAL_ZARC_CONTEXT') return 'Municipal ZARC context is available; raw codes are preserved without interpretation.';
   if (explanation.ruleId === 'GLOBAL_EXPLORATION') return 'No applicable municipal ZARC context is available; global climate exploration remains available.';
   if (explanation.ruleId === 'SELECTION_GAP') return 'The minimum documented criteria were not available for crop selection.';
+  if (explanation.ruleId === 'NASA_EXPOSURE_WITH_DOCUMENTED_KC') return 'Water context combines historical NASA exposure with a documented crop Kc profile. The source-specific profile does not calculate ETc, water use, irrigation, or water superiority.';
   return 'See the linked rule, evidence, and remaining gaps for this exploratory statement.';
 }

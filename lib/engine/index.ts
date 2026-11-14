@@ -1,5 +1,5 @@
 import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
-import { cropById, type Crop } from '@/lib/catalog';
+import { cropById, verifiedCropEvidence, type Crop } from '@/lib/catalog';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { AnalysisResult, Explanation, Rotation, ValidationLevel } from '@/lib/engine/types';
 import { labPrimaryCrop, type LabPlan } from '@/lib/lab';
@@ -25,6 +25,7 @@ function strategy(id: 'A' | 'B' | 'C', title: string, crop: Crop | undefined, in
     ...(assumed ? [{ kind: 'limitation' as const, message: 'Continuação presumida baseada no último evento; confirme ou edite o plano.', ruleId: 'BASELINE_PRESUMED', sourceRefs: [], certainty: 'low' as const, missingData: ['futureBaseline'] }] : []),
     ...(reason ? [{ kind: 'limitation' as const, message: reason, ruleId: 'SELECTION_GAP', sourceRefs: [], certainty: 'high' as const, missingData: ['documented_criteria'] }] : []),
     ...(regional ? [{ kind: 'benefit' as const, message: `Contexto regional ZARC ${regionalContext.zarc?.safra} disponível para ${regionalContext.municipality?.name} (${regionalContext.municipality?.uf}); códigos brutos são preservados sem interpretação.`, ruleId: 'BRAZIL_MUNICIPAL_ZARC_CONTEXT', sourceRefs: regionalContext.zarc ? [regionalContext.zarc.sourceUrl] : [], certainty: 'high' as const, missingData: [] }] : []),
+    ...(id === 'C' && crop?.kcStages && climate.waterContext && (climate.waterContext.rootZoneWetnessMedian !== null || climate.waterContext.medianRainDays !== null) ? [{ kind: 'limitation' as const, message: 'O contexto hídrico combina exposição histórica NASA com um perfil Kc documentado para a cultura. O perfil é específico da fonte e não calcula ETc, consumo, irrigação ou superioridade hídrica.', ruleId: 'NASA_EXPOSURE_WITH_DOCUMENTED_KC', sourceRefs: [climate.provenance?.sourceUrl, verifiedCropEvidence(crop.id, 'kcStages')?.source.url].filter((value): value is string => Boolean(value)), certainty: 'medium' as const, missingData: [] }] : []),
   ];
   const lastCrop = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined;
   return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, input) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate), slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };

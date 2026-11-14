@@ -935,6 +935,29 @@
         "accessedAt": "2026-11-12",
         "verification": "not_verified"
       }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "kcStages",
+      "value": [
+        { "stage": "initial", "kc": 0.4 },
+        { "stage": "mid", "kc": 1.15 },
+        { "stage": "end", "kc": 0.35 }
+      ],
+      "unit": "dimensionless",
+      "context": "national technical reference for irrigated common colored bean; stage durations and local ET0 are not supplied by this record",
+      "cultivar": null,
+      "location": "Brazil; not a Rio Verde field measurement or calendar",
+      "source": {
+        "institution": "Agência Nacional de Águas e Saneamento Básico (ANA)",
+        "title": "Coeficientes Técnicos de Uso da Água para a Agricultura Irrigada",
+        "year": 2020,
+        "url": "https://www.snirh.gov.br/portal/centrais-de-conteudos/central-de-publicacoes/ana_coeficientes_agricultura_irrigada_vf.pdf",
+        "pageOrSection": "Apêndice A, p. 27 — Feijão comum de cor em grão",
+        "snippet": "Kc inicial 0,4; médio 1,15; final 0,35.",
+        "accessedAt": "2026-11-14",
+        "verification": "verified"
+      }
     }
   ]
 }
