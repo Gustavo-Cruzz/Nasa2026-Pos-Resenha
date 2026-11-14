@@ -1,5 +1,7 @@
 # Relatório de fit — Field Shift × NASA Space Apps 2026
 
+> Historical review. The current product scope is Brazil nationwide; Rio Verde references in this report are demonstration evidence, not a product boundary.
+
 Data: 2026-11-14 · Desafio: *Field Shift: Adapting Farms with NASA Data* · Estado do código: commit `7cc8a61` + trabalho local da rodada 10b (sem commit).
 
 Fontes consultadas: [Judging & Awards Guide 2026](https://www.spaceappschallenge.org/resources/judging-awards-guide), [página do desafio e aba Resources](https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/), [vencedores globais de 2025](https://www.spaceappschallenge.org/2025/meet-the-2025-global-winners/). Notas de 1 a 5 e probabilidades relativas são **julgamento meu**, não dados oficiais.

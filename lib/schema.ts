@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { croppingSystemSchema } from '@/lib/intercrops';
 
 export const coordinatesSchema = z.object({
   latitude: z.number().min(-90).max(90),
@@ -12,10 +13,15 @@ export const yearMonthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Use 
 
 export const soilProfileSchema = z.object({
   ph: z.number().min(0).max(14).optional(),
+  phMethod: z.string().trim().min(1).max(80).optional(),
   sandPct: z.number().min(0).max(100).optional(),
   siltPct: z.number().min(0).max(100).optional(),
   clayPct: z.number().min(0).max(100).optional(),
   organicCarbonGKg: z.number().min(0).optional(),
+  organicMatterGKg: z.number().min(0).optional(),
+  phosphorusMgDm3: z.number().min(0).optional(),
+  potassiumMgDm3: z.number().min(0).optional(),
+  drainagePerception: z.enum(['good', 'limited', 'unknown']).optional(),
   depthCm: z.number().positive().optional(),
   observedAt: z.string().date().optional(),
   origin: z.enum(['farmer_lab', 'regional_estimate', 'unknown']),
@@ -25,6 +31,17 @@ export const soilProfileSchema = z.object({
   if (texture.some((value) => value !== undefined) && texture.some((value) => value === undefined)) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: 'Texture must include sand, silt, and clay together.' });
   }
+});
+
+/** Farmer-declared operational context. It filters exploration; it is not agronomic evidence. */
+export const farmerCropProfileSchema = z.object({
+  availableCropIds: z.array(z.string().min(1)).max(40).default([]),
+  exploreCropIds: z.array(z.string().min(1)).max(40).default([]),
+  blockedCropIds: z.array(z.string().min(1)).max(40).default([]),
+  customCrops: z.array(z.object({ label: z.string().trim().min(1).max(80), purpose: z.enum(['grain', 'cover', 'forage', 'other']) })).max(10).default([]),
+}).superRefine((profile, context) => {
+  const usable = new Set([...profile.availableCropIds, ...profile.exploreCropIds]);
+  profile.blockedCropIds.forEach((cropId, index) => { if (usable.has(cropId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['blockedCropIds', index], message: 'A crop cannot be both available and blocked.' }); });
 });
 
 export const cropEventSchema = z.object({
@@ -61,6 +78,8 @@ export const analysisInputSchema = z.object({
   fieldBoundary: fieldBoundarySchema.optional(),
   waterPoint: waterPointSchema.optional(),
   soilObservation: soilObservationSchema.optional(),
+  farmerCrops: farmerCropProfileSchema.optional(),
+  croppingSystems: z.array(croppingSystemSchema).max(3).optional(),
   plantingMonth: z.number().int().min(1).max(12),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
@@ -71,6 +90,19 @@ export const analysisInputSchema = z.object({
   input.history.slice(1).forEach((event, index) => {
     if (event.startYearMonth < input.history[index].endYearMonth) context.addIssue({ code: z.ZodIssueCode.custom, path: ['history', index + 1], message: 'History events must be chronological and cannot overlap.' });
   });
+  const systems = input.croppingSystems ?? [];
+  const plotIds = new Set<string>();
+  systems.forEach((system, systemIndex) => {
+    if (plotIds.has(system.plotId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['croppingSystems', systemIndex, 'plotId'], message: 'Each cropping system needs a distinct plot ID.' });
+    plotIds.add(system.plotId);
+    const blocked = new Set(input.farmerCrops?.blockedCropIds ?? []);
+    const configured = Boolean(input.farmerCrops && (input.farmerCrops.availableCropIds.length || input.farmerCrops.exploreCropIds.length));
+    const permitted = new Set([...(input.farmerCrops?.availableCropIds ?? []), ...(input.farmerCrops?.exploreCropIds ?? [])]);
+    system.events.forEach((event, eventIndex) => {
+      if (blocked.has(event.cropId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['croppingSystems', systemIndex, 'events', eventIndex, 'cropId'], message: 'A blocked crop cannot remain in a declared cropping system.' });
+      if (configured && !permitted.has(event.cropId)) context.addIssue({ code: z.ZodIssueCode.custom, path: ['croppingSystems', systemIndex, 'events', eventIndex, 'cropId'], message: 'Cropping-system crops must be available or accepted for exploration.' });
+    });
+  });
 });
 
 export type Coordinates = z.infer<typeof coordinatesSchema>;
@@ -78,4 +110,5 @@ export type FieldBoundary = z.infer<typeof fieldBoundarySchema>;
 export type WaterPoint = z.infer<typeof waterPointSchema>;
 export type SoilObservation = z.infer<typeof soilObservationSchema>;
 export type SoilProfile = z.infer<typeof soilProfileSchema>;
+export type FarmerCropProfile = z.infer<typeof farmerCropProfileSchema>;
 export type AnalysisInput = z.infer<typeof analysisInputSchema>;

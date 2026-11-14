@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { p0Crops, evidenceCoverageAssessment, type CropCoverage } from '@/lib/evidence-coverage';
+import { evidenceCoverageAssessment, type CropCoverage } from '@/lib/evidence-coverage';
+import { crops as p0Crops } from '@/lib/catalog';
 import { changeLabSlot, createLabPlan, type LabCropId, type LabPlan } from '@/lib/lab';
 import { loadDraft, saveLabPlan } from '@/lib/storage';
 import { CropSprite } from '@/components/crops/crop-sprite';
@@ -17,6 +18,7 @@ import { LabChangeFeedback } from '@/components/lab/lab-change-feedback';
 import { EvidenceCenterDrawer, EvidenceTriggerButton } from '@/components/evidence/evidence-center';
 import type { EvidenceFilter } from '@/lib/evidence/types';
 import { useLocale } from '@/components/locale-provider';
+import { permittedCatalogCrops } from '@/lib/farmer-profile';
 
 type Target = { scenario: 'A' | 'B' | 'C'; slot: number };
 const season = (slot: { year: number; season: string }, en: boolean) => en ? `Year ${slot.year} · Season ${slot.season}` : `Ano ${slot.year} · Temporada ${slot.season}`;
@@ -44,7 +46,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
       .catch((error: unknown) => setAnalysisError(error instanceof Error ? error.message : en ? 'Could not load the laboratory assessment.' : 'Não foi possível carregar a avaliação do laboratório.'));
   }, [en, loaded]);
   const regionalContext = analysis?.regionalContext;
-  const coverage = useMemo(() => draft ? p0Crops.map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext)) : [], [draft, regionalContext]);
+  const coverage = useMemo(() => draft ? permittedCatalogCrops(draft.data.farmerCrops).map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext)) : [], [draft, regionalContext]);
 
   if (!draft || !plan) return <section className="mt-6 rounded-xl border border-slate-700 p-5"><h1 className="page-title font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1><p className="mt-3 text-slate-300">{en ? 'Save the farm before assembling scenario hypotheses.' : 'Registre a fazenda antes de montar hipóteses de cenários.'}</p><Button asChild className="mt-5"><Link href="/farm">{en ? 'Go to my farm' : 'Ir para minha fazenda'}</Link></Button></section>;
 
@@ -78,7 +80,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
     <p className="mt-3 max-w-3xl text-slate-300">{en ? 'Compare first; edit the four slots only when needed. Seasons A/B are neutral labels, not an assumed agricultural calendar.' : 'Compare primeiro; edite os quatro slots apenas quando precisar. Temporadas A/B são rótulos neutros, não um calendário agrícola presumido.'}</p>
     <div className="mt-5"><BrazilContextNote context={regionalContext} /></div>
     {analysis?.evidenceManifest ? <div className="mt-4"><EvidenceTriggerButton manifest={analysis.evidenceManifest} onClick={() => { setEvidenceFilter(undefined); setEvidenceOpen(true); }} /></div> : analysisError ? <p className="mt-4 rounded border border-amber-300/50 p-3 text-sm text-amber-100" role="status">{analysisError} {en ? 'The laboratory remains editable.' : 'O laboratório continua editável.'}</p> : <p className="mt-4 text-sm text-slate-300" role="status">{en ? 'Loading climate, rules, and evidence…' : 'Carregando clima, regras e evidências…'}</p>}
-    <section className="mt-6 rounded-xl border border-slate-700 p-4" aria-labelledby="lab-deck"><h2 className="font-bold" id="lab-deck">{en ? 'P0 crop deck' : 'Deck de culturas P0'}</h2><p className="mt-2 text-xs text-lime-200 sm:hidden">{en ? 'Swipe to view all eight crops →' : 'Deslize para ver as oito culturas →'}</p><div className="mt-3 flex gap-3 overflow-x-auto pb-2">{coverage.map((item) => <div className="flex min-w-44 items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/60 p-3" key={item.crop.id}><CropSprite cropId={item.crop.id} name={item.crop.commonNames[locale]} size={48} /><p className="font-semibold">{item.crop.commonNames[locale]}</p></div>)}</div></section>
+    <section className="mt-6 rounded-xl border border-slate-700 p-4" aria-labelledby="lab-deck"><h2 className="font-bold" id="lab-deck">{en ? 'Crops accepted for alternatives' : 'Culturas aceitas para alternativas'}</h2><p className="mt-2 text-xs text-lime-200 sm:hidden">{en ? 'Swipe to view all accepted crops →' : 'Deslize para ver todas as culturas aceitas →'}</p><div className="mt-3 flex gap-3 overflow-x-auto pb-2">{coverage.map((item) => <div className="flex min-w-44 items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/60 p-3" key={item.crop.id}><CropSprite cropId={item.crop.id} name={item.crop.commonNames[locale]} size={48} /><p className="font-semibold">{item.crop.commonNames[locale]}</p></div>)}</div></section>
     <div className="mt-6 grid grid-cols-3 gap-2 lg:hidden" role="tablist" aria-label={en ? 'Choose laboratory scenario' : 'Escolher cenário do laboratório'}>{plan.scenarios.map((scenario) => <button aria-controls={`scenario-${scenario.id}`} aria-selected={activeScenario === scenario.id} className={activeScenario === scenario.id ? 'rounded-lg bg-lime-300 px-2 py-3 font-bold text-slate-950' : 'rounded-lg border border-slate-600 px-2 py-3 font-bold'} key={scenario.id} role="tab" type="button" onClick={() => setActiveScenario(scenario.id)}>{en ? 'Scenario' : 'Cenário'} {scenario.id}</button>)}</div>
     <section className="mt-4 grid gap-4 lg:mt-6 lg:grid-cols-3" aria-label={en ? 'Three laboratory scenarios' : 'Três cenários do laboratório'}>{plan.scenarios.map((scenario) => {
       const configured = scenario.slots.filter((slot) => slot.cropId).length;

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "uf": "GO",
+  "status": "partial",
+  "coverage": "exact_points_only",
+  "nativeResolutionM": 250,
+  "depthCm": { "min": 0, "max": 5 },
+  "artifacts": [
+    {
+      "id": "soilgrids-rio-verde-2026-11-14-v1",
+      "slug": "rio-verde",
+      "location": { "latitude": -17.798, "longitude": -50.919 },
+      "artifact": "../rio-verde-0-5cm.json",
+      "metadata": "../rio-verde-0-5cm.meta.json"
+    }
+  ],
+  "limitations": [
+    "This is a state-organized batch, not statewide coverage.",
+    "Only listed exact coordinates are available; all other GO coordinates remain unknown.",
+    "No municipality mean, nearest point, or state statistic may be used as a substitute."
+  ]
+}

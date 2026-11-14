@@ -1,5 +1,135 @@
 # Sprint log
 
+## Family farm F11 — correções da auditoria de consórcios
+
+Status: complete — contratos, motor, UI e validação corrigidos.
+
+Implemented: expanded cropping-system types to single crop, simultaneous intercrop, succession, and rotation; added catalog-ID, unique-plot, Farmer-First restriction, overlap/order, and exact documented-example validation. Unknown crops remain rejected instead of disappearing from summaries. Permanent crops remain registrable but cannot enter annual baseline or laboratory slots.
+
+Implemented: A/B/C now marks whether each declared system applies to its main crop, adds sourced competition/sequence limitations only to applicable hypotheses, and includes declared companions in qualitative species/cover context without claiming productivity, water savings, nutrient gains, or local suitability. Results show crop periods and scenario applicability.
+
+Implemented: Farm now provides accessible selectors plus draggable crop cards for 2–3-crop systems, visible field-level validation, all four system labels, and corrected catalog-wide copy. Evidence coverage no longer treats a generic source URL as regional applicability.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (154 unit tests), and `npm run build` passed. Three focused Playwright flows passed: V1 draft migration, bilingual Farm/Lab/Results continuity, and 2–3-crop drag/drop with chronological validation and persistence.
+
+Limitations: documented library examples remain exploratory and are not auto-selected. User-defined custom crops stay registered as unknown profile context but cannot enter catalog-dependent system calculations.
+
+## Family farm F10 — catálogo e contratos de consórcios
+
+Status: complete — catálogo, escolha Farmer-First, consórcios e comparação.
+
+Implemented: merged the 16 supplied family-farm crops and 18 contextual evidence records without replacing existing crop IDs. Added aliases for existing maize, common bean, cowpea and upland rice; retained common bean and cowpea as distinct species. Metadata now keeps permanent crops registrable while excluding them from annual lab/rotation slots.
+
+Implemented: added a pure cropping-system contract for single and 2–3-crop intercrops, requiring overlapping dates, rejecting duplicate crop IDs, preserving long cassava alongside shorter companion crops, and exposing documented-example constraints, sources and competition risks without quantitative benefit claims. The Farm draft now lets the producer add up to three crops per plot and requires explicit dates; Results presents this declared context as a layer over A/B/C, never as a productivity, soil or water-use claim.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (151 unit tests), and `npm run build` passed. Tests cover idempotent crop merge, distinct bean species/aliases, contextual harvest evidence, overlapping cassava+cowpea, invalid non-overlapping intercrops, permanent crops excluded from annual slots, and A/B/C system context.
+
+Next: preserve these contracts when adding more agronomic evidence; do not turn library examples into automatic regional recommendations.
+
+## Scope F9 — Brasil nacional
+
+Status: complete — documentation and product-contract scope updated.
+
+Implemented: changed the active project, agent, product, data, methodology, validation, demo and gamification documentation from a GO/Rio Verde pilot framing to Brazil nationwide. Rio Verde remains a reproducible example and exact-coordinate fixture, while the existing IBGE/ZARC municipal context is the national boundary. State-organized SoilGrids batches remain partial until their exact points or native-grid tiles have been processed and verified.
+
+Guardrails: national product scope does not make every Brazilian coordinate regionally evidenced, locally validated or soil-covered. Global NASA inspection remains a technical climate-only capability outside the Brazilian agronomic promise.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (146 unit tests), and `npm run build` passed after the documentation-contract update.
+
+## Soil artifacts F7 — versioned SoilGrids WCS extraction
+
+Status: complete for the exact Rio Verde demonstration coordinate; Brazil-wide coverage intentionally not claimed.
+
+Implemented: added a reproducible WCS collector that reads SoilGrids 2.0 Q0.05, Q0.5 and Q0.95 pixel samples without using the paused REST API, validates single signed-int16 GeoTIFF responses, applies documented conventional-unit conversions and writes a versioned JSON artifact plus SHA-256 sidecar. The committed 0–5 cm/250 m Rio Verde artifact includes pH, SOC, sand, silt, clay, CEC and bulk density, its source query for every quantile, license, citation, source resolution and 90% prediction interval.
+
+Implemented: the regional adapter now exposes this data only for the exact captured coordinate and labels it `estimated`; every other point remains `unknown`. Added a national production policy: Brazil-wide native-resolution coverage must be generated as reviewed offline batches because it contains roughly 136 million 250 m cells before properties and quantiles.
+
+Limitations: SoilGrids is a machine-learning spatial product and not suitable for assertions about an individual field. The artifact never replaces a local laboratory sample, does not add crop/irrigation calculations, and does not create nationwide coverage from a pilot point.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (146 unit tests), and `npm run build` passed. Unit tests verify the exact-coordinate gate, the retained unknown attributes, artifact SHA-256, source URLs, depth, resolution, units and prediction-interval ordering.
+
+Next: generate reviewable offline regional batches before enabling additional Brazilian coordinates; keep any unprocessed coordinate as unknown.
+
+## Soil artifacts F8 — batches organized by state
+
+Status: complete — batch orchestration only; no statewide coverage claim.
+
+Implemented: added the first state batch manifest for GO, registering the verified Rio Verde point under `partial` / `exact_points_only`. The new state-batch CLI validates every inventory entry and can sequentially regenerate approved WCS artifacts only with an explicit `--execute`; its safe default performs no download or overwrite.
+
+Guardrails: state organization is not state aggregation. The manifest prohibits nearest-point, municipal-average and state-statistic substitution, and cannot be marked broader coverage without a reviewed native-grid tile processor and completed artifacts.
+
+Evidence (2026-11-14): `npm run fetch:soilgrids-state-batch -- --batch data/soilgrids/batches/go.json` validated the inventory without network writes. `npm run lint`, `npm run typecheck`, `npm run test` (146 unit tests), and `npm run build` passed.
+
+## Farmer-First F6 — solo regional verificável e incerteza
+
+Status: complete — no spatial estimate loaded.
+
+Implemented: introduced an isolated regional-soil adapter with SoilGrids and MapBiomas Solo provenance. It currently returns an explicit unavailable/unknown context with every spatial attribute, unit, depth, resolution and uncertainty as `null`; it does not call the suspended SoilGrids REST API. The Farm UI uses this boundary to state the N/D status, while preserving local laboratory values as the primary, separate source.
+
+Implemented: expanded every analysis data-quality record with uncertainty and exposes it in Results alongside its classification, method, unit, inputs and limitations.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (144 unit tests), and `npm run build` passed. Focused Playwright checks for the crops-first opening and English end-to-end farm/laboratory/results flow passed.
+
+Next: run the complete quality gate, focused browser checks, then perform the final requirement audit. A regional estimate can only become available after a compatible, versioned preprocessed artifact documents its source, depth, unit, resolution and uncertainty.
+
+## Farmer-First F5 — abertura pelas culturas
+
+Status: complete.
+
+Implemented: changed the primary landing CTA from Atlas-first to `Conhecer minha fazenda` / `Meet my farm`. The Farm route now opens with farmer crop choices before location, soil and history; the Atlas remains an explicit “change location” step for climate context. This lets a producer express operational crops and goals before interacting with a map.
+
+Evidence (2026-11-14): `npm run typecheck`, `npm run test` (143 unit tests), and `npm run lint` passed. Focused bilingual landing/Atlas Playwright coverage passed.
+
+Next: final build and completion audit; retain all scientific gaps as unknown rather than extending the scope with unverified soil, crop-cycle or water-demand data.
+
+## Farmer-First F4 — proveniência e cenários de aceite
+
+Status: complete.
+
+Implemented: added the `DataQualityRecord` contract to every analysis and Results: measured, observed, estimated, derived, scenario, or unknown, with method/formula, unit, inputs, source references and limitations. NASA historical climate is observed only when available; local lab soil is measured; separately declared regional soil is estimated; A/B/C are scenarios; qualitative soil-health comparison is derived.
+
+Implemented: added four acceptance tests for (1) Rio Verde soybean/maize with lab soil and irrigation; (2) same crop context, rainfed, water-first; (3) global point without ZARC; and (4) custom crop plus unavailable regional soil. They verify that the flow stays operational without inventing evidence.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (143 unit tests), and `npm run build` passed. The Results provenance/Evidence Center Playwright flow passed after resolving an accessible-name collision.
+
+Next: run final lint/build/browser validation and document the completion audit. No SoilGrids or MapBiomas values may be added without verified compatible artifacts.
+
+## Farmer-First F3 — decisões, prioridades e jornada
+
+Status: complete — no numeric recommendation.
+
+Implemented: reframed farm preferences as “what do you most need to protect or improve?”, with an accessible primary-focus choice (water, soil, operations) plus secondary sliders and irrigation context. Objective crop restrictions remain farmer-declared availability/exploration/blocks from F1 and are called out where they affect alternatives. The journey labels now use farmer decision language: crops/land, possible futures, and plan.
+
+Guardrails: primary focus only highlights compatible trade-offs already present in the comparison. It does not score crops, bypass blocks, infer unavailable operational windows, or create a recommendation.
+
+Evidence (2026-11-14): `npm run typecheck`, `npm run test` (139 unit tests), and `npm run lint` passed. `npm run build` passed. Three focused navigation/farm Playwright flows passed; an accessible-name collision found during testing was corrected.
+
+Next: final requirement-by-requirement audit of farmer scenarios, data provenance classification and remaining scientific limits.
+
+## Farmer-First F2 — contexto qualitativo de saúde do solo
+
+Status: complete — evidence-limited.
+
+Implemented: added a pure soil-health layer to A/B/C and an accessible result comparison. It reports catalogued species diversity, immediate family repetition, cover purpose, documented nitrogen-fixation potential, potential bare-soil interval, erosion-protection context, and an explicitly initial local organic-carbon/matter reading. B/C display the delta from A as a qualitative difference only.
+
+Guardrails: no carbon gain, fertility improvement, N quantity, soil-loss reduction, yield or irrigation claim is calculated. Bare-soil interval remains N/D without compatible dates, verified duration and management; erosion protection remains limited by management/terrain/field-cover evidence; nitrogen does not use family as a substitute for a documented potential.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (139 unit tests), and `npm run build` passed. Three focused Results Playwright flows passed. Unit coverage proves species/cover/carbon context, preserves unknown bare-soil periods, and rejects carbon/N-future claims.
+
+Next: reorganize the farmer journey and priorities/restrictions into decision language while preserving existing routes and draft migration.
+
+## Farmer-First F1 — culturas operacionais e Meu Solo
+
+Status: complete — regional-soil evidence intentionally unavailable.
+
+Implemented: added a validated farmer crop profile to the local draft: `Posso cultivar`, `Quero explorar`, `Não posso usar`, and named custom crops with stated purpose. The pure candidate engine preserves A/current strategy and filters B/C to catalog crops operationally available or accepted for exploration, excluding blocks. A custom crop stays explicit farmer context with no invented scientific parameters. The laboratory uses the same permitted catalog set.
+
+Implemented: expanded optional local soil input with pH method, sand/silt/clay, organic carbon/matter, P, K, depth, date, drainage and source classification. Local laboratory evidence remains separate from regional estimates. The UI reports SoilGrids/MapBiomas regional context as N/D because no verified compatible preprocessed artifact exists and the suspended SoilGrids REST API is deliberately not called.
+
+Evidence (2026-11-14): `npm run lint`, `npm run typecheck`, `npm run test` (138 unit tests), and `npm run build` passed. Seven focused Playwright farm/laboratory flows passed. New tests cover profile validation, custom crops, local-soil fields, alternatives changing with operational availability, and preserving a blocked current baseline.
+
+Limitations / next: custom crops can be recorded but cannot enter catalog-derived B/C indicators until verified evidence exists. SoilGrids/MapBiomas integration requires licensed, preprocessed regional artifacts with depth/unit/uncertainty metadata; no estimates were created. Next sprint: derive qualitative soil-health deltas only from documented crop functions and complete sequence information.
+
 ## V5 — Mapa-base geográfico navegável
 
 Status: complete.
@@ -525,3 +655,17 @@ Implemented: (1) MODIS NDVI collected through the Microsoft Planetary Computer S
 Evidence (2026-11-14): `terrain.test.ts` recovers known slopes from synthetic planes (5%, 10% in two directions), covers class boundaries, margins, hotspots, missing elevations never becoming flat, grid limits and every SRTM failure mode; `erosivity.test.ts` checks the MFI formula and class limits; `ndvi.test.ts` verifies the three committed fixtures. Live check in the browser: SRTM answered for all three demo points; Rio Verde boundary: 739–747 m, mean slope 2.8%, 25 cells, no hotspots, MFI 171.5 (very severe), NDVI lowest in Jul–Sep; scenario C is maize. `npm run lint`, `npm run typecheck`, `npm run test` (129 unit tests) and `npm run build` pass.
 
 Limitations / next: (1) OpenTopoData public limits are 1 call/s and 1000 calls/day; heavy use would need a cache layer or a self-hosted copy. (2) SRTM vertical error makes slopes on small boundaries approximate. (3) NDVI exists only at the three demonstration points and they are city centres (low absolute NDVI). (4) Common bean has no documented viable temperature, so it shows N/D in the thermal calendar; upland rice, cowpea pH and soybean cycle remain open for lack of a range in the sources found. (5) The Playwright suite, offline service-worker reload and screenshots remain unverified.
+
+## Climate Risk Intelligence — Forecast pressure and dry-spell experiment
+
+Status: complete, evidence-limited.
+
+Implemented: added an independent Open-Meteo Forecast adapter with Zod payload/unit checks for daily precipitation, provider-calculated FAO reference ET0 and temperatures; a `/api/climate-risk` boundary with source URL, issue time, UTC, model selection, units, availability and explicit limitations; and pure 7/15-day `P − ET0` pressure calculations. A horizon with even one missing precipitation or ET0 value is N/D rather than a partial aggregate. The NASA comparison is a same-calendar historical climatology, never current forecast data.
+
+Implemented: added reproducible offline dry-spell logistic training (`npm run train:dry-spell`), versioned `data/dry-spell-models.json`, past-only 30-day windows, a 30-day chronological embargo, Brier score and five-bin calibration. Event: at least seven consecutive days under 1 mm/day. The Rio Verde 7-day model test has 1,059 samples and Brier 0.11025 vs climatology 0.10964; the 15-day model has 1,057 and 0.09830 vs 0.09381. Both are `not_validated`, so no ML probability is disclosed; only a pilot-specific climatological reference is available. Other coordinates explicitly have no location-compatible artifact.
+
+Implemented: integrated an accessible bilingual Climate Risk Lab into Results. It preserves the existing historical NASA panels and A/B/C analysis. Strategy-specific forecast exposure stays N/D because crop dates, durations and stages are not verified; the UI makes that gap explicit instead of inventing differences.
+
+Evidence (2026-11-14): `npm run train:dry-spell`; `npm run typecheck`; `npm run test` (134 unit tests); `npm run lint`; and `npm run build` passed. Playwright: 19 existing navigation flows plus the new forecast-provenance/no-unvalidated-probability flow passed when run within the environment time window. The remaining legacy incomplete-analysis mock exceeds the sandbox's 30-second command window; it was not changed by this sprint.
+
+Limitations / next: Open-Meteo free access is for non-commercial/evaluation use and requires attribution; production use needs a licence/plan review. Provider `best_match` is a model-selection request, not field validation. Forecast ET0 is provider-calculated reference ET0 and is not recomputed locally. The dry-spell artifact only covers the exact Rio Verde fixture, excludes root-zone wetness pending complete compatible features, and is intentionally not released as a predictive probability. ETc, crop water use, soil water, irrigation, yield and strategy-specific forecast claims remain out of scope.

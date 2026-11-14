@@ -1,0 +1,396 @@
+{
+  "version": "staging-1",
+  "scope": "Reference evidence only; adapt to existing crop-evidence.json schema; no global auto-fill",
+  "records": [
+    {
+      "cropId": "pumpkin",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 90,
+        "max": 120
+      },
+      "unit": "days",
+      "context": "Abóbora: time to harvest from planting; Cucurbita spp. group",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "watermelon",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 85,
+        "max": 90
+      },
+      "unit": "days",
+      "context": "Melancia: time to harvest from planting",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 21",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "lettuce",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 50,
+        "max": 70
+      },
+      "unit": "days",
+      "context": "Alface de verão; cultivation system and cultivar dependent",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "lettuce",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 60,
+        "max": 80
+      },
+      "unit": "days",
+      "context": "Alface de inverno; cultivation system and cultivar dependent",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "tomato",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 100,
+        "max": 120
+      },
+      "unit": "days",
+      "context": "Tomate de mesa: time to harvest from planting; not entire crop removal cycle",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 21",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "carrot",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 85,
+        "max": 100
+      },
+      "unit": "days",
+      "context": "Cenoura de verão: time to harvest from planting",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "carrot",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 90,
+        "max": 110
+      },
+      "unit": "days",
+      "context": "Cenoura de inverno: time to harvest from planting",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "kale",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 80,
+        "max": 90
+      },
+      "unit": "days",
+      "context": "Couve: first harvest; not the end of occupation for repeated leaf harvest",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "onion",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 120,
+        "max": 180
+      },
+      "unit": "days",
+      "context": "Cebola: time to harvest from planting",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 20",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 100,
+        "max": 120
+      },
+      "unit": "days",
+      "context": "Pimentão: onset of harvest; harvesting can continue thereafter",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 21",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "okra",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 70,
+        "max": 80
+      },
+      "unit": "days",
+      "context": "Quiabo: beginning of harvest, not end of multiple harvests",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Implantação e condução de uma horta de médio porte",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1063739/1/CT155FINAL.pdf",
+        "pageOrSection": "Tabela 1, p. 21",
+        "snippet": "Intervalo de colheita apresentado para horticultura de referência, não ciclo universal de cultivar.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "cassava",
+      "field": "harvestWindowMonths",
+      "value": {
+        "min": 10,
+        "max": 12
+      },
+      "unit": "months",
+      "context": "Mandioca de mesa, preferable harvest after one cycle, Cerrado",
+      "cultivar": null,
+      "location": "Cerrado technical guidance, not generic species maturity",
+      "source": {
+        "title": "Mandioca no Cerrado: orientações técnicas",
+        "year": 2011,
+        "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/896924/1/fialho02.pdf",
+        "pageOrSection": "Ciclo da cultura",
+        "snippet": "Colheita de mandioca de mesa no Cerrado em um ciclo de cerca de 10 a 12 meses.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "cassava",
+      "field": "harvestWindowMonths",
+      "value": {
+        "min": 18,
+        "max": 24
+      },
+      "unit": "months",
+      "context": "Mandioca industrial, one or two cycles, Cerrado",
+      "cultivar": null,
+      "location": "Cerrado technical guidance; dependent on variety and purpose",
+      "source": {
+        "title": "Mandioca no Cerrado: orientações técnicas",
+        "year": 2011,
+        "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/896924/1/fialho02.pdf",
+        "pageOrSection": "Ciclo da cultura",
+        "snippet": "Cultivo de mandioca industrial pode durar 18 a 24 meses em condições de Cerrado.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 90,
+        "max": 150
+      },
+      "unit": "days",
+      "context": "Ciclo até colheita, dependente de cultivar e ambiente",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Ecofisiologia e exigências climáticas — Batata-doce",
+        "year": 2021,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas",
+        "pageOrSection": "Desenvolvimento",
+        "snippet": "Intervalo típico de ciclo é de 90 a 150 dias, dependendo da cultivar e do ambiente.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "preferredDayNightTempC",
+      "value": {
+        "day": 30,
+        "night": 20
+      },
+      "unit": "°C",
+      "context": "Ideal diurna/noturna reportada na referência; não é faixa global de aptidão",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Ecofisiologia e exigências climáticas — Batata-doce",
+        "year": 2021,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas",
+        "pageOrSection": "Desenvolvimento",
+        "snippet": "Temperaturas diurnas e noturnas devem permanecer separadas; não converter em faixa média diária.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "waterDemandReferenceMm",
+      "value": 500,
+      "unit": "mm",
+      "context": "Total aproximado para ciclo de 110 a 140 dias descrito, não necessidade exata de irrigação nem ETc operacional",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "Ecofisiologia e exigências climáticas — Batata-doce",
+        "year": 2021,
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas",
+        "pageOrSection": "Desenvolvimento",
+        "snippet": "Referência contextual de demanda hídrica total, não aplicável automaticamente a outros ciclos.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "peanut",
+      "field": "harvestDaysReference",
+      "value": {
+        "min": 90,
+        "max": 90
+      },
+      "unit": "days",
+      "context": "Ciclo aproximado da cultivar BR-1; não espécie inteira; 1993 is year of cultivar release, not verified publication date",
+      "cultivar": "BR-1",
+      "location": "Cultivar BR-1, Nordeste brasileiro",
+      "source": {
+        "title": "Amendoim BR1 — Embrapa Algodão",
+        "year": null,
+        "url": "https://www.embrapa.br/web/algodao/busca-de-solucoes-tecnologicas/-/produto-servico/972/amendoim-br-1",
+        "pageOrSection": "Características da cultivar",
+        "snippet": "Cultivar BR-1 com ciclo precoce próximo de 90 dias.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "peanut",
+      "field": "drainageRisk",
+      "value": "Poor drainage and oxygen-deficient soil can impair root and pod growth",
+      "unit": "qualitative",
+      "context": "Needs drainage and soil aeration",
+      "cultivar": null,
+      "location": "Brazilian technical reference; not a location-specific recommendation",
+      "source": {
+        "title": "500 Perguntas, 500 Respostas — Amendoim",
+        "year": 2014,
+        "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/578407/1/500perguntasamendoim.pdf",
+        "pageOrSection": "Drenagem e aeração",
+        "snippet": "Encharcamento e baixa aeração devem ser tratados como alertas, não como incompatibilidade quantificada.",
+        "verification": "verified_source_text",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-14"
+      }
+    }
+  ]
+}

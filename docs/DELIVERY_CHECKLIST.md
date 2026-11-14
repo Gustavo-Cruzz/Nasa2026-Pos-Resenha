@@ -2,7 +2,7 @@
 
 - [x] NASA verified fixture/provenance
 - [x] Global climate-only scope
-- [x] Rio Verde ZARC subset
+- [x] Contexto municipal ZARC nacional (Brasil)
 - [x] Input validation/local draft
 - [x] Pure decision engine, unavailable state
 - [x] Responsive sprite cards

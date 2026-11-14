@@ -23,6 +23,9 @@ import { DecisionHero } from '@/components/results/decision-hero';
 import { NasaInsightPanel } from '@/components/results/nasa-insight-panel';
 import { EvidenceCenterTrigger } from '@/components/evidence/evidence-center';
 import { ExportSummaryButton } from '@/components/results/export-summary-button';
+import { ClimateRiskLab } from '@/components/results/climate-risk-lab';
+import { SoilHealthComparison } from '@/components/results/soil-health-comparison';
+import { DataQualityPanel } from '@/components/results/data-quality-panel';
 import { useLocale } from '@/components/locale-provider';
 import { recordJourneyCompletion } from '@/lib/journey-metrics';
 import { cropDisplayName, explanationDisplay, scenarioDisplayTitle } from '@/lib/presentation';
@@ -64,10 +67,14 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     {data.evidenceManifest ? <div className="mt-4"><EvidenceCenterTrigger manifest={data.evidenceManifest} /></div> : null}
     {data.input.fieldBoundary ? <div className="mt-5"><h2 className="mb-2 font-bold">{en ? 'Boundary in the analysis' : 'Polígono na análise'}</h2><BoundarySummary boundary={data.input.fieldBoundary} waterPoint={data.input.waterPoint} /></div> : data.input.waterPoint ? <p className="mt-5 text-sm text-slate-300"><b>{en ? 'Water point declared by the producer' : 'Ponto de água informado pelo produtor'}:</b> {waterKindLabel(data.input.waterPoint.kind, en)}{data.input.waterPoint.label ? ` — ${data.input.waterPoint.label}` : ''}. {en ? 'Declared context only.' : 'Apenas contexto declarado.'}</p> : null}
     <SeasonPanel data={data} />
+    <ClimateRiskLab location={data.input.location} />
+    <SoilHealthComparison strategies={data.strategies} />
+    <DataQualityPanel records={data.dataQuality} />
     <TerrainPanel data={data} />
     <NasaInsightPanel initialMonth={data.input.plantingMonth} insights={data.nasaInsightByMonth} />
     <p className="mt-4 text-sm text-slate-300"><b>{en ? 'Highlighted priorities' : 'Prioridades em destaque'}:</b> {data.priorityHighlights.map((id) => priorityLabels[id] ?? id).join(', ')}.</p>
     <ScenarioComparisonTable data={data} />
+    <CroppingSystemsSummary data={data} />
     <DecisionSummary data={data} />
     <section className="mt-6 grid gap-4 lg:grid-cols-3" aria-label="Estratégias exploratórias">{data.strategies.map((strategy) => {
       const cropName = cropDisplayName(strategy.proposedCrop?.cropId, strategy.proposedCrop?.name, locale);
@@ -75,6 +82,15 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
     })}</section>
     <details className="mt-6 rounded-xl border border-slate-700 bg-slate-900 p-5"><summary className="cursor-pointer font-bold">{en ? 'Climate and regional technical details' : 'Detalhes técnicos de clima e contexto regional'}</summary><RegionalContextDetails data={data} /><ClimatePanel climate={data.climate} plantingMonth={data.input.plantingMonth} /></details>
   </>;
+}
+
+function CroppingSystemsSummary({ data }: { data: AnalysisResult }) {
+  const { locale } = useLocale();
+  const en = locale === 'en';
+  const systems = data.strategies[0]?.croppingSystems ?? [];
+  if (!systems.length) return null;
+  const typeLabels = en ? { single: 'Single crop', intercrop: 'Simultaneous intercrop', succession: 'Crop succession', rotation: 'Cropping-system rotation' } : { single: 'Cultivo solteiro', intercrop: 'Consórcio simultâneo', succession: 'Sucessão de cultivos', rotation: 'Rotação de sistemas' };
+  return <section className="mt-6 rounded-xl border border-cyan-300/50 bg-slate-900 p-5" aria-labelledby="cropping-systems-heading"><h2 className="text-xl font-bold" id="cropping-systems-heading">{en ? 'Declared cropping systems' : 'Sistemas de cultivo declarados'}</h2><p className="mt-2 text-sm text-slate-300">{en ? 'Dates show simultaneous growth or sequence. A/B/C only receives this context when its main crop belongs to the system; no yield, soil, or water benefit is inferred.' : 'As datas mostram crescimento simultâneo ou sequência. A/B/C só recebe este contexto quando sua cultura principal pertence ao sistema; nenhum benefício de produtividade, solo ou água é inferido.'}</p><div className="mt-4 grid gap-3 md:grid-cols-2">{systems.map((system) => <article className="rounded-lg border border-slate-700 bg-slate-800/60 p-4" key={system.plotId}><p className="font-semibold text-cyan-100">{system.plotId} · {typeLabels[system.type]}</p><div className="mt-3 grid gap-2">{system.periods.map((period) => <div className="rounded border border-slate-600 p-2 text-xs" key={`${period.cropId}-${period.startYearMonth}`}><b>{cropDisplayName(period.cropId, undefined, locale)}</b><span className="ml-2 text-slate-300">{period.startYearMonth} → {period.endYearMonth}</span></div>)}</div><p className="mt-2 text-sm text-slate-200">{system.speciesCount} {en ? 'species' : 'espécies'} · {system.familyCount} {en ? 'families' : 'famílias'}{system.hasPermanentCrop ? ` · ${en ? 'perennial present' : 'perene presente'}` : ''}.</p><p className="mt-2 text-xs"><b>{en ? 'Applied to' : 'Aplicado a'}:</b> {data.strategies.filter((strategy) => strategy.croppingSystems.find((item) => item.plotId === system.plotId)?.appliesToStrategy).map((strategy) => strategy.id).join(', ') || (en ? 'none; declared context only' : 'nenhuma; somente contexto declarado')}.</p><p className="mt-2 text-xs text-slate-300">{system.documentedExample ? (en ? 'Exact source example ID and crop set verified; still not local advice.' : 'ID do exemplo-fonte e conjunto de culturas verificados; ainda não é recomendação local.') : (en ? 'Producer-defined system: evidence is not inferred.' : 'Sistema definido pelo produtor: evidência não é inferida.')}</p>{system.risks.length ? <p className="mt-3 text-xs text-amber-100"><b>{en ? 'Risks / unknowns' : 'Riscos / desconhecidos'}:</b> {system.risks.join(' ')}</p> : null}{system.limitations.length ? <p className="mt-2 text-xs text-slate-300">{system.limitations.join(' ')}</p> : null}{system.sourceRefs.length ? <p className="mt-3 text-xs"><b>{en ? 'Sources' : 'Fontes'}:</b> {system.sourceRefs.map((source) => <a className="ml-2 underline" href={source} key={source} rel="noreferrer" target="_blank">{en ? 'Reference' : 'Referência'}</a>)}</p> : null}</article>)}</div></section>;
 }
 
 function RegionalContextDetails({ data }: { data: AnalysisResult }) {

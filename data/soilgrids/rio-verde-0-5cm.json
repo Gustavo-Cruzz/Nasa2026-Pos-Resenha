@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "id": "soilgrids-rio-verde-2026-11-14-v1",
+  "status": "available",
+  "classification": "estimated",
+  "provider": "SoilGrids 2.0 / ISRIC World Soil Information",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": "Poggio et al. (2021), SoilGrids 2.0: producing soil information for the globe with quantified spatial uncertainty, https://doi.org/10.5194/soil-7-217-2021",
+  "retrievedAt": "2026-11-14T20:46:27.880Z",
+  "requestedLocation": {
+    "latitude": -17.798,
+    "longitude": -50.919
+  },
+  "projectedCrs": "http://www.opengis.net/def/crs/EPSG/0/152160",
+  "projectedCoordinate": {
+    "x": -4945429.885694528,
+    "y": -2184587.6799700614
+  },
+  "pixel": {
+    "column": 60017,
+    "row": 42182,
+    "minX": -4945500,
+    "maxX": -4945250,
+    "minY": -2184750,
+    "maxY": -2184500,
+    "resolutionM": 250
+  },
+  "attributes": [
+    {
+      "id": "phh2o",
+      "value": 5.2,
+      "unit": "pH",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 4.5,
+        "upper": 6.4,
+        "unit": "pH"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fphh2o.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=phh2o_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fphh2o.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=phh2o_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fphh2o.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=phh2o_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    },
+    {
+      "id": "soc",
+      "value": 21.7,
+      "unit": "g/kg",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 7,
+        "upper": 77.6,
+        "unit": "g/kg"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsoc.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=soc_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsoc.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=soc_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsoc.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=soc_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    },
+    {
+      "id": "clay",
+      "value": 39.2,
+      "unit": "%",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 5.2,
+        "upper": 72.6,
+        "unit": "%"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fclay.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=clay_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fclay.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=clay_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fclay.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=clay_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    },
+    {
+      "id": "sand",
+      "value": 45.9,
+      "unit": "%",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 20.6,
+        "upper": 78.4,
+        "unit": "%"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsand.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=sand_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsand.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=sand_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsand.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=sand_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    },
+    {
+      "id": "silt",
+      "value": 10.9,
+      "unit": "%",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 1.8,
+        "upper": 50,
+        "unit": "%"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsilt.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=silt_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsilt.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=silt_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fsilt.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=silt_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    },
+    {
+      "id": "cec",
+      "value": 10.9,
+      "unit": "cmol(c)/kg",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 3.1,
+        "upper": 37.2,
+        "unit": "cmol(c)/kg"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fcec.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=cec_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fcec.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=cec_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fcec.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=cec_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    },
+    {
+      "id": "bdod",
+      "value": 1.28,
+      "unit": "kg/dm³",
+      "depthCm": {
+        "min": 0,
+        "max": 5
+      },
+      "resolutionM": 250,
+      "uncertainty": {
+        "type": "90% prediction interval",
+        "lower": 0.86,
+        "upper": 1.68,
+        "unit": "kg/dm³"
+      },
+      "sourceUrls": [
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fbdod.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=bdod_0-5cm_Q0.05&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fbdod.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=bdod_0-5cm_Q0.5&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29",
+        "https://maps.isric.org/mapserv?map=%2Fmap%2Fbdod.map&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=bdod_0-5cm_Q0.95&FORMAT=GEOTIFF_INT16&SUBSETTINGCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&OUTPUTCRS=http%3A%2F%2Fwww.opengis.net%2Fdef%2Fcrs%2FEPSG%2F0%2F152160&SUBSET=X%28-4945500%2C-4945250%29&SUBSET=Y%28-2184750%2C-2184500%29"
+      ]
+    }
+  ],
+  "limitations": [
+    "Machine-learning spatial prediction, not a laboratory measurement.",
+    "Native 250 m pixel support is unsuitable for asserting a field-scale soil condition.",
+    "Only the exact requested coordinate may use this artifact.",
+    "No map value replaces farmer-provided local laboratory data."
+  ]
+}

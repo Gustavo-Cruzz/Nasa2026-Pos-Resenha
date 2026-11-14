@@ -27,7 +27,7 @@ Implementar `PROJECT_SPEC.md` fielmente como produto demonstrável de apoio à d
 - TypeScript strict; evitar `any`, `as unknown as`, `@ts-ignore` e mocks em produção.
 - Validar inputs com Zod no cliente e servidor.
 - Domínio em `lib/engine` com funções puras e testes isolados.
-- Separar localização global (`climate_only`) do piloto regional (`pilot_recommendation`).
+- O escopo de produto é Brasil nacional. Separar a exploração climática global técnica do contexto regional brasileiro por município/UF, sem promover um lote estadual parcial a cobertura nacional.
 - Usar IDs constantes de culturas e traduções; não acoplar lógica a strings de UI.
 - UI responsiva, acessível, com estados loading/error/unknown.
 - Não adicionar IA generativa, login, banco de dados, mapas pesados ou dependências sem propósito essencial.

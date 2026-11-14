@@ -1,9 +1,9 @@
 # Demo
 
-1. Open Atlas and select **Rio Verde**. Show POWER temperature/rain, GPM IMERG rain days and root-zone context.
+1. Open Atlas and select a **Brazilian municipality** (Rio Verde remains a reproducible example). Show POWER temperature/rain, GPM IMERG rain days and root-zone context.
 2. Enable **NASA SMAP**. State: dated 2025-06-30, 9 km, model value-added visual evidence—not field measurement; historical numeric SMAP needs authenticated Earthdata preprocessing.
 3. Draw an exploratory boundary and carry it into the farm. Show its approximate area and whether the 9 km SMAP grid is coarser than the boundary; the sketch still does not prove ownership or agricultural use.
-4. Run **Same NASA lens, three regions**. Compare Rio Verde, Accra and New Delhi; emphasize independent coordinate requests and explicit N/D.
+4. Compare Brazilian coordinates independently; emphasize that municipal context, ZARC and soil artifacts remain coordinate-specific and explicit N/D is preferable to transfer between municipalities.
 5. Continue to A/B/C. First show the concrete attention sentence: month + hypothesis + NASA value outside the documented crop range. Present C as **Contexto hídrico**, not a drought-resilience claim. Show “Resposta hídrica documentada”: NASA describes historical rain days and root-zone context, while the crop catalog contributes the verified Kc peak and stage. The app does not calculate ETc, water demand or irrigation.
 
 1. On the home page, use “Ver demonstração do Brasil”; explain that the prefilled farm is fictional and exists only to shorten the demo.
@@ -12,5 +12,5 @@
 4. Open Laboratory; change one crop slot and show the immediate before/after delta. Emphasize that it reports changed evidence, remaining unknowns and an undo action—not a score or winner.
 5. Use “Ver evidências” from that delta to open the Evidence Center already filtered to the edited scenario and slot. Show NASA, farmer input, catalog/regional sources, rule IDs and gaps in one place.
 6. Open Results; confirm that the four-slot sequence and indicators match the saved laboratory state, then compare A/B/C through mobile tabs or the desktop criteria table.
-7. Explain that Brazilian sources contextualize the catalog, while Rio Verde ZARC adds regional context only at the pilot coordinate; neither is field validation or a national suitability rule, and raw codes are not percentages.
+7. Explain that Brazilian sources contextualize the catalog nationally through municipality-level records; neither is field validation nor a universal suitability rule, and raw codes are not percentages.
 8. End with the decision handoff: what is known, what remains unknown and what should be reviewed with technical assistance. State: no forecast, yield, NPK, irrigation prescription, aggregate ranking, or field validation.

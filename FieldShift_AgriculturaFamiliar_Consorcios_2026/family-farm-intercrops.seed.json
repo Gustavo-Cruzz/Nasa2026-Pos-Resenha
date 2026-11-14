@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "disclaimer": "Documented examples are not locally validated recommendations",
+  "systems": [
+    {
+      "id": "maize_cowpea",
+      "cropIds": [
+        "maize",
+        "cowpea"
+      ],
+      "labelPtBR": "Milho + feijão-caupi",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": null,
+      "startOffsetDays": null,
+      "method": "co-plant in one plot; actual row layout requires agronomic verification",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Milho e feijão devem ter calendário compatível; não generalizar densidade.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Consorciação de culturas — Embrapa",
+          "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/tematicas/sistema-plantio-direto/fazendo-certo/planejando-e-executando/fase-de-implantacao/organizando-o-sistema-produtivo/consorciacao-de-culturas",
+          "section": "Diversificação / consórcios"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "maize_common_bean",
+      "cropIds": [
+        "maize",
+        "common_bean"
+      ],
+      "labelPtBR": "Milho + feijão-comum",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": null,
+      "startOffsetDays": null,
+      "method": "same plot, intercropped, row pattern selected by farmer",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Sem recomendação universal de região/cultivar.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Diversificação da produção e segurança alimentar — Embrapa",
+          "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1004972/1/p.2023.pdf",
+          "section": "Diversificação / consórcios"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "maize_pumpkin",
+      "cropIds": [
+        "maize",
+        "pumpkin"
+      ],
+      "labelPtBR": "Milho + abóbora",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": null,
+      "startOffsetDays": null,
+      "method": "same plot, possible mixed system",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Arquitetura e competições devem ser verificadas.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Diversificação da produção e segurança alimentar — Embrapa",
+          "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1004972/1/p.2023.pdf",
+          "section": "Diversificação / consórcios"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "maize_common_bean_pumpkin",
+      "cropIds": [
+        "maize",
+        "common_bean",
+        "pumpkin"
+      ],
+      "labelPtBR": "Milho + feijão-comum + abóbora",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": null,
+      "startOffsetDays": null,
+      "method": "three species grown with overlapping periods",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Condições locais precisam de validação; não substituir por rotação sequencial.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Diversificação da produção e segurança alimentar — Embrapa",
+          "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1004972/1/p.2023.pdf",
+          "section": "Diversificação / consórcios"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "cassava_cowpea",
+      "cropIds": [
+        "cassava",
+        "cowpea"
+      ],
+      "labelPtBR": "Mandioca + feijão-caupi",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": "fileiras duplas de mandioca 2,00 x 0,60 x 0,60 m; caupi intercala fileiras conforme protocolo da fonte",
+      "startOffsetDays": null,
+      "method": "cowpea between rows / double rows of cassava",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "No Sistema Bragantino, caupi é implantado 20–30 dias depois da mandioca; documentar esse contexto sem aplicar atraso automaticamente.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Métodos de plantio — Mandioca, Embrapa",
+          "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/metodos-de-plantio",
+          "section": "Consorciação"
+        },
+        {
+          "institution": "Embrapa",
+          "title": "Sistema Bragantino para a Agricultura Familiar — Passo a Passo (2008)",
+          "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/410157/1/FLSistemaBragantinoPassoAPasso.pdf",
+          "section": "Plantio da mandioca e do feijão-caupi, p. 27"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "cassava_common_bean",
+      "cropIds": [
+        "cassava",
+        "common_bean"
+      ],
+      "labelPtBR": "Mandioca + feijão-comum",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": "fileiras simples ou duplas; consultar fonte",
+      "startOffsetDays": null,
+      "method": "beans between cassava rows",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Arranjo depende de solo, cultivar e modalidade de consórcio.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Métodos de plantio — Mandioca, Embrapa",
+          "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/metodos-de-plantio",
+          "section": "Consorciação"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "cassava_maize",
+      "cropIds": [
+        "cassava",
+        "maize"
+      ],
+      "labelPtBR": "Mandioca + milho",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": "fileiras duplas de mandioca; milho nas entrelinhas",
+      "startOffsetDays": null,
+      "method": "corn between cassava rows",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "A fonte alerta contra um segundo plantio de milho durante o ciclo da mandioca.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Métodos de plantio — Mandioca, Embrapa",
+          "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/metodos-de-plantio",
+          "section": "Consorciação"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "cassava_peanut",
+      "cropIds": [
+        "cassava",
+        "peanut"
+      ],
+      "labelPtBR": "Mandioca + amendoim",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": "3 fileiras de amendoim entre fileiras duplas de mandioca em protocolo descrito",
+      "startOffsetDays": null,
+      "method": "peanut between double rows of cassava",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Exige conferência de adubação, drenagem, mecanização e densidade.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Métodos de plantio — Mandioca, Embrapa",
+          "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/metodos-de-plantio",
+          "section": "Consorciação"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "cassava_maize_cowpea",
+      "cropIds": [
+        "cassava",
+        "maize",
+        "cowpea"
+      ],
+      "labelPtBR": "Mandioca + milho + feijão-caupi",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": "1–2 fileiras de milho entre 2 de mandioca alternadas com fileiras de feijão",
+      "startOffsetDays": null,
+      "method": "triple crop intercropping",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "A fonte descreve feijão Phaseolus/Vigna em sistema triplo; identificar espécie e espaçamento local.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Métodos de plantio — Mandioca, Embrapa",
+          "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/metodos-de-plantio",
+          "section": "Consorciação"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "annual"
+    },
+    {
+      "id": "lettuce_carrot",
+      "cropIds": [
+        "lettuce",
+        "carrot"
+      ],
+      "labelPtBR": "Alface + cenoura",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": null,
+      "startOffsetDays": null,
+      "method": "vegetable bed intercrop",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Verificar manejo e densidade conforme variedade e calendário.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Diversificação da produção e segurança alimentar — Embrapa",
+          "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1004972/1/p.2023.pdf",
+          "section": "Diversificação / consórcios"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "vegetable_bed"
+    },
+    {
+      "id": "coffee_peanut",
+      "cropIds": [
+        "coffee",
+        "peanut"
+      ],
+      "labelPtBR": "Café + amendoim (exploratório)",
+      "systemType": "intercropping",
+      "referenceContext": "Brazilian technical references; local compatibility unverified",
+      "arrangement": null,
+      "startOffsetDays": null,
+      "method": "understory/alleys in perennial crop",
+      "potentialBenefits": [
+        "diversificação da produção",
+        "possível melhor uso da área e cobertura, sujeito a manejo"
+      ],
+      "risks": [
+        "competição por luz, água e nutrientes",
+        "necessidade de ajustar população e sincronizar operações"
+      ],
+      "constraints": "Não inserir café no mesmo slot de safra anual; representar talhão perene e entrelinha.",
+      "sourceRefs": [
+        {
+          "institution": "Embrapa",
+          "title": "Diversificação da produção e segurança alimentar — Embrapa",
+          "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1004972/1/p.2023.pdf",
+          "section": "Diversificação / consórcios"
+        }
+      ],
+      "validation": "documented_example_not_local_recommendation",
+      "modelEligibility": "exploratory",
+      "siteType": "perennial_interrow"
+    }
+  ]
+}

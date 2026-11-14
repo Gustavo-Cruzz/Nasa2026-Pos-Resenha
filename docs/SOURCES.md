@@ -1,5 +1,7 @@
 # Sources
 
+Field Shift's product scope is Brazil nationwide. Sources with Rio Verde/GO scope below remain demonstration or local evidence only; they are not used to limit the national municipal-context boundary or to generalize a value to another location.
+
 - IBGE Produção Agrícola Municipal, tabela SIDRA 5457: área colhida e quantidade produzida municipal do último ano publicado. Contexto estatístico somente; presença não significa aptidão. “Arroz (em casca)” e “Feijão (em grão)” não distinguem sistema ou espécie.
 - Embrapa Arroz e Feijão: páginas de ZARC para feijão-comum e arroz de terras altas, usadas como referência de identidade/escopo. Nenhum parâmetro numérico foi inferido.
 
@@ -12,8 +14,10 @@
 - ANA/SNIRH, *Coeficientes Técnicos de Uso da Água para a Agricultura Irrigada*: https://www.snirh.gov.br/portal/centrais-de-conteudos/central-de-publicacoes/ana_coeficientes_agricultura_irrigada_vf.pdf — Kc references are source-specific and are not irrigation prescriptions.
 - FAO-56: https://www.fao.org/4/X0490E/x0490e0b.htm — Penman–Monteith ET0 (eq. 6, 7, 19, 21, 37–39) implemented as a climate indicator; ETc is not calculated.
 - NASA POWER daily `PS` (surface pressure, kPa), used for ET0 and the elevation inferred from it.
+- Open-Meteo Forecast API: https://open-meteo.com/en/docs — daily precipitation, provider-calculated FAO reference ET0 and temperature forecasts, requested in UTC with `models=best_match`. Forecast data are CC BY 4.0 with attribution required: https://open-meteo.com/en/license. The free endpoint is non-commercial/evaluation only under its terms: https://open-meteo.com/en/terms.
 - NASA LP DAAC MOD13Q1 v061 (250 m, 16-day NDVI), read through the Microsoft Planetary Computer STAC catalog (collection `modis-13Q1-061`; STAC metadata: int16, scale 0.0001; fill −3000 and valid range −2000..10000 per the LP DAAC product guide): https://planetarycomputer.microsoft.com/dataset/modis-13Q1-061 — pre-processed offline into `data/ndvi/`. The ORNL DAAC subset service (https://modis.ornl.gov/data/modis_webservice.html) returned HTTP 502/503 and is not used.
 - Local verified NASA Rio Verde fixture: `data/nasa-power-rio-verde.meta.json`.
+- ISRIC SoilGrids 2.0 WCS: https://docs.isric.org/globaldata/soilgrids/ — global machine-learning spatial predictions at 250 m, six standard depth intervals, CC BY 4.0. `data/soilgrids/rio-verde-0-5cm.json` is an exact-coordinate offline extraction (0–5 cm), with Q0.05/Q0.5/Q0.95 values and WCS URLs per attribute; its hash and reproduction metadata are in the `.meta.json` sidecar. It is an estimate, not laboratory soil data, and must not be used outside its captured coordinate.
 - Ferreira; Santos (2020), *Zoneamento Agrícola de Risco Climático para Grandes Culturas no Município de Rio Verde, Goiás*: local PDF `2021-Marco Antônio Alves Ferreira-ZONEAMENTO AGRÍCOLA DE RISCO CLIMÁTICO PARA GRANDES CULTURAS NO MUNICÍPIO DE RIO VERDE, GOIÁS.pdf`, tables 1, 2, 4, 5, pp. 4–7.
 - MAPA ZARC Goiás: https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/goias-go
 - IBGE API de Malhas, municípios do Brasil em qualidade mínima: https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?formato=application/vnd.geo+json&qualidade=minima&intrarregiao=municipio — artifact and SHA-256 in `data/brazil-municipalities.json`.

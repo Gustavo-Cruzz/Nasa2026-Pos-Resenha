@@ -13,9 +13,9 @@ function range(value: { min: number; max: number } | null, unit: string): string
 export function evidenceCoverageAssessment(location: Coordinates | null, cropId: string, regionalContext?: BrazilRegionalContext | null): CropCoverage {
   const crop = cropById.get(cropId as Crop['id']);
   if (!crop) throw new Error(`Unknown crop: ${cropId}`);
-  const p0 = (P0 as readonly string[]).includes(crop.id);
+  const priorityP0 = (P0 as readonly string[]).includes(crop.id);
   const contextualZarc = Boolean(location && regionalContext?.zarc?.crops[crop.id]);
-  const status: EvidenceStatus = !p0 ? 'unavailable' : contextualZarc ? 'partial' : 'insufficient_evidence';
+  const status: EvidenceStatus = contextualZarc ? 'partial' : 'insufficient_evidence';
   const reference = crop.sourceRefs;
   const indicators: EvidenceIndicator[] = [
     { id: 'temperature', label: 'Faixa térmica documentada', value: range(crop.viableTempC, '°C') ?? range(crop.idealTempC, '°C'), status: crop.viableTempC || crop.idealTempC ? 'partial' : 'insufficient_evidence', sourceRefs: reference, explanation: crop.viableTempC || crop.idealTempC ? 'Parâmetro documentado fora de uma validação local automática.' : 'N/D: faixa térmica verificável não está disponível.' },
@@ -25,7 +25,7 @@ export function evidenceCoverageAssessment(location: Coordinates | null, cropId:
   ];
   const missingEvidence = [...new Set(indicators.filter((indicator) => indicator.status === 'insufficient_evidence').map((indicator) => indicator.id))];
   const place = regionalContext?.municipality ? `${regionalContext.municipality.name} (${regionalContext.municipality.uf})` : null;
-  return { crop, status, indicators, warnings: [contextualZarc ? `ZARC ${regionalContext?.zarc?.safra} disponível para ${place}; códigos brutos preservados sem interpretação.` : place ? `Município identificado: ${place}. Não há registro ZARC desta cultura P0 na safra carregada.` : 'Há fontes brasileiras no catálogo. Não há contexto regional aplicável a esta coordenada.'], missingEvidence };
+  return { crop, status, indicators, warnings: [contextualZarc ? `ZARC ${regionalContext?.zarc?.safra} disponível para ${place}; códigos brutos preservados sem interpretação.` : place ? `Município identificado: ${place}. Não há registro ZARC ${priorityP0 ? 'P0 ' : ''}aplicável desta cultura na safra carregada.` : 'Há fontes brasileiras no catálogo. Não há contexto regional aplicável a esta coordenada.'], missingEvidence };
 }
 
 export function p0CropCoverage(location: Coordinates | null, regionalContext?: BrazilRegionalContext | null): CropCoverage[] { return P0.map((cropId) => evidenceCoverageAssessment(location, cropId, regionalContext)); }

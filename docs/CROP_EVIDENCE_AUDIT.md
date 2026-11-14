@@ -1,5 +1,7 @@
 # Crop evidence audit — 2026-11-12
 
+> Historical audit. Current product scope is Brazil nationwide; this document's location-specific evidence remains limited to its documented applicability.
+
 Scope: record-level audit of `data/crop-evidence.json`. This is a provenance audit, not a new agronomic validation and not a Rio Verde field validation.
 
 The file contains 38 records: 29 marked `verified`, 9 marked `not_verified`. This audit additionally confirmed cultivar-specific sorghum BRS 310 maturity/flowering and disease-response statements in Embrapa Comunicado Técnico 101, BRS 323/BRS 422 sunflower physiological-maturity ranges, BRS Guariba cowpea cycle/disease statements on Embrapa's cultivar page, and ANA's national technical Kc reference for irrigated common colored bean. These records remain source/context-specific and are not projected into a universal calendar. Only a verified record with compatible typed semantics is projected into the runtime catalog. `not_verified` records stay outside scenario compatibility. Source URLs, institution, access date, page/section, excerpt, stated context and location remain attached to every audited record.

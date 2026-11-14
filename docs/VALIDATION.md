@@ -1,5 +1,7 @@
 # Validation
 
+Product scope is Brazil nationwide. The checks below distinguish national municipality-level context from a demonstration artifact: coverage missing for a Brazilian coordinate is `unknown`, never borrowed from another municipality, UF or pilot point.
+
 - Any valid global coordinate still returns A/B/C; unavailable NASA data remains explicit and does not remove scenarios.
 - Brazilian coordinate → 2025 IBGE municipality code when the point intersects the committed municipal mesh.
 - Matching municipality + P0 crop in the MAPA 2026/2027 artifact → `regionally_contextualized` for that crop only.
@@ -17,5 +19,9 @@
 - Rio Verde, Accra and New Delhi comparison calls each coordinate independently and exposes unavailable values instead of substituting another location.
 - Verified Kc profiles may appear only beside available NASA water exposure. They do not change crop selection, produce ETc, rank crops/studies, or claim irrigation need.
 - Common-bean Kc values retain the ANA irrigated-national-reference context; they are not projected to cowpea, upland rice, ruziziensis or a local calendar.
+- Climate Risk Lab marks Open-Meteo output as `meteorological_forecast`; NASA POWER remains `historical_observation`, and sliders/scenarios remain `historical_scenario`. A forecast failure returns a recoverable state and never substitutes a historical reading.
+- Forecast P−ET0 is only returned when every day in the requested 7/15-day horizon contains precipitation and ET0 in verified mm units. It is never soil moisture, ETc, irrigation need or a crop deficit.
+- Dry-spell samples use only the 30 days before each issue date; labels begin at the issue date. Chronological partitions have a 30-day embargo. The artifact records Brier and five-bin calibration on its test partition. It is `not_validated` unless it beats climatology with at least 30 held-out samples.
+- Each analysis exposes data classification records (`measured`, `observed`, `estimated`, `derived`, `scenario`, `unknown`) with method, inputs, units where applicable, sources and limitations. A classification never upgrades an estimate into a local measurement.
 
 Automated checks: `tests/unit/`, `tests/e2e/navigation.spec.ts`. National tests cover Rio Verde, São Paulo, Salvador, Boa Esperança do Norte and coordinates outside Brazil. No field validation claim.

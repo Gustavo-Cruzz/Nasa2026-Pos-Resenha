@@ -15,7 +15,7 @@ async function installDraft(page: Page, futureBaseline?: { cropId: string; confi
 
 const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 11, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 450, validPrecipitationDays: 450 }], plantingMonthPrecipitation: { month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, waterContext: { month: 11, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 }, calendarDayContext: { month: 11, day: 14, tmeanMedianC: 25, precipMedianMm: 4, imergPrecipMedianMm: 3.5, rootZoneWetnessMedian: 0.64, validYears: 15, expectedYears: 15 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
-test('navigates from home to the global atlas with its real MapLibre basemap', async ({ page }) => {
+test('starts from farmer crops, then opens the global atlas with its real MapLibre basemap', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.field-atmosphere')).toBeVisible();
   await page.getByRole('link', { name: 'Começar exploração' }).click();
@@ -83,7 +83,7 @@ test('opens a consistent mobile menu and starts the Brazil demonstration in one 
 test('persists a real English language selection for landing and methodology', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Idioma').selectOption('en');
-  await expect(page.getByRole('link', { name: 'Start exploring' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Meet my farm' })).toBeVisible();
   await page.getByRole('link', { name: 'Methodology' }).click();
   await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();
   await page.reload();
@@ -157,6 +157,17 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await page.getByRole('button', { name: 'Exportar resumo técnico' }).click();
   expect((await download).suggestedFilename()).toMatch(/^field-shift-.*\.md$/);
   await expect(page.getByRole('link', { name: 'Editar linha de base' })).toBeVisible();
+});
+
+test('shows forecast provenance and never turns an unvalidated ML experiment into a probability', async ({ page }) => {
+  await installDraft(page);
+  await page.route('**/api/climate-risk*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ status: 'ok', forecast: { source: 'Open-Meteo Forecast API', sourceUrl: 'https://example.test/forecast', issuedAt: '2026-11-14T00:00:00.000Z', model: 'best_match', timezone: 'UTC', horizonDays: 16, limitations: [] }, waterPressure: { sevenDays: { horizonDays: 7, precipitationTotalMm: 12, et0TotalMm: 24, climateBalanceMm: -12, negativeBalanceDays: 5, validDays: 7, expectedDays: 7, historicalEquivalentBalanceMm: -8, historicalComparison: 'drier_than_historical', limitations: [] }, fifteenDays: { horizonDays: 15, precipitationTotalMm: 20, et0TotalMm: 50, climateBalanceMm: -30, negativeBalanceDays: 11, validDays: 15, expectedDays: 15, historicalEquivalentBalanceMm: -18, historicalComparison: 'drier_than_historical', limitations: [] } }, drySpell: [{ horizonDays: 7, validationStatus: 'not_validated', climatologyReference: 0.4, probability: null, evaluation: { baseline: { brierScore: 0.1 }, model: { brierScore: 0.11 } }, limitations: [] }], strategyExposure: { status: 'not_applicable', reason: 'Sem calendário.' } }) }));
+  await page.goto('/results');
+  await expect(page.getByRole('heading', { name: 'Climate Risk Lab' })).toBeVisible();
+  await expect(page.getByText('Open-Meteo Forecast API')).toBeVisible();
+  await expect(page.getByText('probabilidade de IA não divulgada')).toBeVisible();
+  await expect(page.getByText('12 mm', { exact: true })).toBeVisible();
+  await expect(page.getByText('Não há inferência de exposição futura específica por estratégia.')).toBeVisible();
 });
 
 test('uses static review art when reduced motion is requested', async ({ page }) => {
@@ -275,7 +286,7 @@ test('keeps the core farm, laboratory, and results flow in English', async ({ pa
   await expect(page.getByRole('button', { name: 'Save and open laboratory' })).toBeVisible();
   await page.goto('/lab');
   await expect(page.getByRole('heading', { name: 'Rotation laboratory' })).toBeVisible();
-  await expect(page.getByText('P0 crop deck')).toBeVisible();
+  await expect(page.getByText('Crops accepted for alternatives')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Review comparison' })).toBeVisible();
   await page.goto('/results');
   await expect(page.getByRole('heading', { name: 'Strategy comparison' })).toBeVisible();
@@ -307,4 +318,31 @@ test('compares scenarios with mobile tabs on a 375px viewport', async ({ page })
   await expect(page.getByRole('tab', { name: 'Cenário B' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('tabpanel').getByRole('heading', { name: /B\./ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Voltar ao laboratório' })).toBeVisible();
+});
+
+test('builds a 2–3 crop system with drag, validates chronology, and persists it', async ({ page }) => {
+  await installDraft(page);
+  await page.goto('/farm');
+  const systems = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Sistemas de cultivo (opcional)' }) });
+  await systems.getByRole('button', { name: 'Adicionar sistema composto' }).click();
+  const card = systems.getByRole('button', { name: /mandioca.*Arraste para um sistema/i });
+  const system = systems.locator('article').first();
+  const transfer = await page.evaluateHandle(() => new DataTransfer());
+  await card.dispatchEvent('dragstart', { dataTransfer: transfer });
+  await system.dispatchEvent('dragover', { dataTransfer: transfer });
+  await system.dispatchEvent('drop', { dataTransfer: transfer });
+  await expect(system.getByLabel('Cultura')).toHaveCount(3);
+  await system.getByLabel('Tipo de sistema').selectOption('succession');
+  const starts = system.getByLabel('Início');
+  const ends = system.getByLabel('Fim');
+  await starts.nth(0).fill('2026-01'); await ends.nth(0).fill('2026-04');
+  await starts.nth(1).fill('2026-03'); await ends.nth(1).fill('2026-06');
+  await starts.nth(2).fill('2026-07'); await ends.nth(2).fill('2027-06');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByText('Os eventos devem ser cronológicos e sem sobreposição.')).toBeVisible();
+  await starts.nth(1).fill('2026-05');
+  await page.getByRole('button', { name: 'Salvar rascunho' }).click();
+  await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo');
+  const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').data.croppingSystems[0]);
+  expect(stored).toMatchObject({ type: 'succession', events: [{ startYearMonth: '2026-01' }, { startYearMonth: '2026-05' }, { cropId: 'cassava' }] });
 });

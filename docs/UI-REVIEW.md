@@ -1,5 +1,7 @@
 # UI review — Field Shift
 
+> Historical review. The current product scope is Brazil nationwide; this report retains the scope applicable when it was written.
+
 Review date: 2026-11-13. Real Chromium captures inspected at 390×844 and 1440×900 for Farm, Results and Methodology.
 
 Overall score after the history simplification: **23/24**.

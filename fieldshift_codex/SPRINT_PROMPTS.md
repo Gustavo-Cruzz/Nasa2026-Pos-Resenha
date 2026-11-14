@@ -16,7 +16,7 @@ Implemente somente S1: servidor NASA POWER Daily Point em `lib/climate/nasa-powe
 
 ## S2 — Catálogo e wizard (12–20 h)
 
-Implemente somente S2: 10 espécies e campos científicos com validação, sem inventar parâmetros; priorize 8 fichas P0 e deixe espécies P1 não elegíveis quando faltar validação; insira fontes dos parâmetros que conseguir verificar e registre lacunas. Implemente as cinco etapas do wizard com Zod, salvamento local versionado, solo opcional, pesos, histórico com mês/ano e baseline futuro confirmável. Exibir recorte regional piloto vs global. Criar testes de entrada e mobile. Commit `sprint-2-catalog-wizard`.
+Implemente somente S2: 10 espécies e campos científicos com validação, sem inventar parâmetros; priorize 8 fichas P0 e deixe espécies P1 não elegíveis quando faltar validação; insira fontes dos parâmetros que conseguir verificar e registre lacunas. Implemente as cinco etapas do wizard com Zod, salvamento local versionado, solo opcional, pesos, histórico com mês/ano e baseline futuro confirmável. Exibir contexto regional brasileiro por município/UF e lacunas explícitas. Criar testes de entrada e mobile. Commit `sprint-2-catalog-wizard`.
 
 ## S3 — Motor de decisão (20–32 h)
 

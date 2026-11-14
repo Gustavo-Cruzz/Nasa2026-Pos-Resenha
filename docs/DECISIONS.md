@@ -1,5 +1,11 @@
 # Decisions
 
+## Brazil nationwide scope — 2026-11-14
+
+- The product's agronomic/regional scope is Brazil nationwide, not Goiás or the Rio Verde demonstration. The versioned IBGE municipal mesh and MAPA ZARC index remain the national regional-context boundary.
+- Rio Verde remains a reproducible example and the first verified SoilGrids artifact, not a geographical gate. A partial UF batch only makes its listed artifacts available; every unprocessed Brazilian coordinate remains `unknown`.
+- Global NASA exploration is technically retained but is outside the Brazilian product promise and does not acquire Brazilian crop, soil or municipal context outside the country.
+
 ## S0 — 2026-11-12
 
 - The initial product scope contains navigation and domain contracts only. No crop parameter, regional rule, climate fixture, score, or recommendation is introduced before its assigned sprint.
@@ -43,3 +49,9 @@
 - The UI is branded Plantaê (see `docs/BRANDKIT.md`). The Tailwind palette already matched the kit, so the work was typography (Nunito Sans, IBM Plex Mono), 16 px cards, Floresta fields, the symbol/wordmark, a procedural Cerrado scene on the home, tone-of-voice copy and semantic color use: "compatible" and informational banners are cyan (observed data), not lime, so a green highlight cannot read as agricultural approval.
 - The symbol is an original placeholder; the official file was not provided. Storage keys and the draft-file marker keep the `field-shift` name for compatibility.
 - Correction to the "Plan 10" PAM note: the inconsistency flagged by the external review **was** reproducible in the UI. The Brazil note printed "PAM: nenhuma observação positiva…" whenever there was no PAM data, including when the regional context had not been loaded (the Farm form passes none) and for points outside Brazil. It now says that only for an identified municipality without PAM records (`lib/brazil/pam-note.ts`, tested); otherwise it stays silent.
+## Climate Risk Intelligence — 2026-11-14
+
+- Weather forecasts are acquired through a dedicated Open-Meteo adapter, never through NASA POWER. The endpoint requests daily precipitation, provider-calculated FAO reference ET0 and temperatures in UTC for up to 16 days, validates both payload shape and documented units, and records a source URL, issue time and `best_match` provider model selection.
+- `P − ET0` remains a climate-only indicator. Any missing daily precipitation or ET0 makes that entire 7/15-day aggregate N/D. Historical comparison scales complete NASA monthly P−ET0 medians to the calendar window; it is explicitly a climatological reference, not a forecast verification or soil-water calculation.
+- The dry-spell event is seven consecutive days below 1 mm/day. Offline logistic artifacts are trained from the exact Rio Verde NASA fixture using past-only 30-day features, a chronological 60/20/20 split and a 30-day embargo. Both committed artifacts are `not_validated` because their held-out Brier scores are worse than climatology, so no ML probability is emitted.
+- Strategy-specific forecast exposure is intentionally N/D: runtime rotations have no verified dates, durations or development stages. The UI explains this rather than inventing A/B/C differences.
