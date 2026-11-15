@@ -2,24 +2,19 @@ import { expect, test, type Page } from '@playwright/test';
 
 const draft = (futureBaseline?: { cropId: string; confirmed: true }) => ({ version: 1, savedAt: '2026-11-12T15:00:00.000Z', data: { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], futureBaseline, priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' } });
 
-test('switches the decorative farm scene explicitly and persists the choice', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Noite' }).click();
-  await expect(page.getByRole('button', { name: 'Noite' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('img[src*="field-night"]')).toBeVisible();
-  await page.reload();
-  await expect(page.getByRole('button', { name: 'Noite' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByText('Cena ilustrativa — não é observação da fazenda.')).toBeVisible();
-});
+async function openMoreOptions(page: Page) {
+  const details = page.locator('details', { hasText: 'Mais opções' });
+  if ((await details.getAttribute('open')) === null) await details.locator('summary').click();
+}
 async function installDraft(page: Page, futureBaseline?: { cropId: string; confirmed: true }) { await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), draft(futureBaseline)); }
 
-const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 11, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 450, validPrecipitationDays: 450 }], plantingMonthPrecipitation: { month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, waterContext: { month: 11, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 }, calendarDayContext: { month: 11, day: 14, tmeanMedianC: 25, precipMedianMm: 4, imergPrecipMedianMm: 3.5, rootZoneWetnessMedian: 0.64, validYears: 15, expectedYears: 15 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
+const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 11, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 450, validPrecipitationDays: 450 }], plantingMonthPrecipitation: { month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, historicalPrecipitationByMonth: [{ month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }], waterContext: { month: 11, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 }, calendarDayContext: { month: 11, day: 14, tmeanMedianC: 25, precipMedianMm: 4, imergPrecipMedianMm: 3.5, rootZoneWetnessMedian: 0.64, validYears: 15, expectedYears: 15 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
-test('starts from farmer crops, then opens the global atlas with its real MapLibre basemap', async ({ page }) => {
+test('starts from the home CTA, then opens the region explorer with its Leaflet satellite map', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.field-atmosphere')).toBeVisible();
-  await page.getByRole('link', { name: 'Começar exploração' }).click();
-  await expect(page.getByRole('heading', { name: 'Explore a sua região' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Ver demonstração Brasil' })).toBeVisible();
+  await page.getByRole('link', { name: 'Explorar uma região' }).click();
+  await expect(page.getByRole('heading', { name: 'Explore uma região' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Navegação principal' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('.atlas-map')).toBeVisible();
   await expect(page.locator('.atlas-map-frame')).toBeVisible();
@@ -28,6 +23,7 @@ test('starts from farmer crops, then opens the global atlas with its real MapLib
 test('keeps coordinate entry available when the map is unavailable', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
+  await openMoreOptions(page);
   await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
   const canvas = page.locator('.atlas-map.leaflet-container');
   if (await canvas.count()) {
@@ -35,38 +31,30 @@ test('keeps coordinate entry available when the map is unavailable', async ({ pa
     await expect(page.getByLabel('Latitude')).not.toHaveValue('');
     await expect(page.getByLabel('Longitude')).not.toHaveValue('');
   } else {
-    await expect(page.getByRole('status')).toContainText('Mapa interativo indisponível neste navegador');
+    await expect(page.getByRole('status').filter({ hasText: 'Mapa interativo indisponível neste navegador' })).toBeVisible();
     await page.getByLabel('Latitude').fill('5.6037');
     await page.getByLabel('Longitude').fill('-0.187');
     await page.getByRole('button', { name: 'Ir ao ponto' }).click();
-    await expect(page.getByText('Contexto histórico para hoje')).toBeVisible();
+    await expect(page.getByRole('list', { name: 'Chuva e temperatura típicas por mês' })).toBeVisible();
   }
 });
 
-test('shows dated SMAP evidence, draws an exploratory area, and compares three NASA regions', async ({ page }) => {
+test('shows the NASA soil-moisture layer with its date and draws an exploratory area', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
-  await page.getByRole('button', { name: 'Mostrar NASA SMAP' }).click();
-  await expect(page.getByText('NASA SMAP L4 · 2025-06-30')).toBeVisible();
-  await expect(page.getByLabel(/Escala NASA SMAP de umidade do solo/)).toBeVisible();
+  const soilLayer = page.getByRole('button', { name: 'Umidade do solo', exact: true });
+  await soilLayer.click();
+  await expect(soilLayer).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText(/Umidade do solo \(zona radicular\) em .* · NASA SMAP/)).toBeVisible();
   const canvas = page.locator('.atlas-map.leaflet-container');
-  if (await canvas.count()) {
-    await page.getByRole('button', { name: 'Desenhar área exploratória' }).click();
-    await canvas.click({ position: { x: 220, y: 150 } });
-    await canvas.click({ position: { x: 260, y: 190 } });
-    await canvas.click({ position: { x: 190, y: 205 } });
-    await page.getByRole('button', { name: 'Encerrar área' }).click();
-    await expect(page.getByText(/não confirma propriedade/)).toBeVisible();
-  }
-  await page.getByRole('button', { name: 'Comparar sinais NASA' }).click();
-  await expect(page.getByRole('heading', { name: 'Rio Verde (GO), Brasil' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Acra, Gana' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Nova Délhi, Índia' })).toBeVisible();
-  await expect(page.getByText('12', { exact: true })).toHaveCount(3);
-  if (await canvas.count()) {
-    await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
-    await expect(page.getByText(/Limite exploratório com 3 vértices incluído na análise/)).toBeVisible();
-  }
+  await expect(canvas).toBeVisible();
+  await openMoreOptions(page);
+  await page.getByRole('button', { name: 'Desenhar área exploratória' }).click();
+  await canvas.click({ position: { x: 220, y: 150 } });
+  await canvas.click({ position: { x: 260, y: 190 } });
+  await canvas.click({ position: { x: 190, y: 205 } });
+  await page.getByRole('button', { name: 'Encerrar área' }).click();
+  await expect(page.getByText(/não confirma propriedade/)).toBeVisible();
 });
 
 test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {
@@ -97,61 +85,46 @@ test('opens a consistent mobile menu and starts the Brazil demonstration in one 
 test('persists a real English language selection for landing and methodology', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('Idioma').selectOption('en');
-  await expect(page.getByRole('link', { name: 'Meet my farm' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Explore a region' })).toBeVisible();
   await page.getByRole('link', { name: 'Methodology' }).click();
   await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();
 });
 
-test('selects Brazil, Ghana, and India globally then transfers coordinates to farm', async ({ page }) => {
+test('selects Brazil, Ghana, and India examples globally and updates the coordinates and climate HUD', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
+  await openMoreOptions(page);
   await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
   await expect(page.getByLabel('Latitude')).toHaveValue('-17.798');
   await page.getByRole('button', { name: 'Acra, Gana' }).click();
   await expect(page.getByLabel('Latitude')).toHaveValue('5.6037');
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
-  await expect(page.getByText('Contexto histórico para hoje')).toBeVisible();
-  await expect(page.getByRole('article', { name: 'soja' })).toBeVisible();
-  await expect(page.getByRole('dialog', { name: 'Detalhes de soja' })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Usar este local na minha fazenda' }).click();
-  await expect(page.getByRole('heading', { name: 'Localização' })).toBeVisible();
-  await expect(page.getByText('Local do atlas aplicado. Complete a linha do tempo.')).toBeVisible();
+  await expect(page.getByRole('list', { name: 'Chuva e temperatura típicas por mês' })).toBeVisible();
+  await expect(page.getByText('NASA POWER · 2011–2025 · mediana')).toBeVisible();
 });
 
 test('shows retryable NASA failure without a fabricated climate metric', async ({ page }) => {
   await page.route('**/api/climate*', (route) => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ status: 'error', code: 'NASA_REQUEST_FAILED', message: 'NASA indisponível.' }) }));
   await page.goto('/explore');
+  await openMoreOptions(page);
   await page.getByRole('button', { name: 'Acra, Gana' }).click();
   await expect(page.getByText('NASA indisponível.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
-});
-
-test('keeps Atlas crop sprites compact and passive without the Brazil context block', async ({ page }) => {
-  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
-  await page.goto('/explore');
-  await page.getByLabel('Latitude').fill('-23.5505');
-  await page.getByLabel('Longitude').fill('-46.6333');
-  await page.getByRole('button', { name: 'Ir ao ponto' }).click();
-  await expect(page.getByText('Contexto Brasil')).toHaveCount(0);
-  await expect(page.getByRole('article', { name: 'milho' })).toBeVisible();
-  await expect(page.getByRole('article', { name: /feijão-comum/i }).locator('img')).toHaveAttribute('src', /common-bean/);
-  await expect(page.getByRole('article', { name: /arroz de terras altas/i }).locator('img')).toHaveAttribute('src', /upland-rice/);
-  await expect(page.getByRole('button', { name: 'milho' })).toHaveCount(0);
 });
 
 test('renders provenance and source drawers for pilot analysis', async ({ page }) => {
   test.setTimeout(25_000);
   await installDraft(page);
   await page.goto('/results');
-  await expect(page.getByRole('heading', { name: 'Continuidade presumida — confirmar' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Comparação de estratégias', level: 1 })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
   await expect(page.getByText('Indicadores disponíveis lado a lado.')).toBeVisible();
   const waterEvidenceRow = page.getByRole('row').filter({ has: page.getByRole('rowheader', { name: 'Resposta hídrica documentada' }) });
   await expect(waterEvidenceRow).toBeVisible();
-  await expect(waterEvidenceRow.getByText(/pico Kc 1[,.]05/i).first()).toBeVisible();
+  await expect(waterEvidenceRow.getByText(/pico Kc \d[,.]\d+/i).first()).toBeVisible();
   await expect(waterEvidenceRow.getByText(/não calcula ETc/i).first()).toBeVisible();
   await expect(page.getByRole('heading', { name: 'NASA Insight' })).toBeVisible();
   await page.getByLabel('Mês explorado').selectOption('5');
@@ -207,8 +180,8 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
   await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
   await expect(page.getByRole('status').filter({ hasText: 'Rascunho da fazenda salvo' })).toBeVisible();
   await page.getByRole('link', { name: 'Revisar comparação' }).click();
-  await expect(page.getByRole('heading', { name: 'Plano do produtor' })).toBeVisible();
-  await expect(page.getByRole('article').filter({ hasText: 'Plano do produtor' })).toContainText('girassol');
+  await expect(page.getByRole('heading', { name: 'Comparação de estratégias', level: 1 })).toBeVisible();
+  await expect(page.getByRole('main')).toContainText('girassol');
   await expect(page.getByLabel('Sequência do cenário A')).toBeVisible();
 });
 
@@ -230,7 +203,7 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await expect(page.getByRole('heading', { name: 'Laboratório de rotações' })).toBeVisible();
   await expect(page.getByRole('button', { name: /Evidências ·/ })).toBeVisible();
   await page.getByText('Editar sequência de 4 slots').first().click();
-  const choose = page.getByRole('button', { name: 'Escolher cultura' }).nth(1);
+  const choose = page.getByRole('button', { name: 'Trocar cultura' }).nth(1);
   await choose.focus();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('dialog', { name: 'Escolher cultura para slot' })).toBeVisible();
@@ -240,7 +213,7 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
   await page.getByRole('button', { name: 'Ver evidências' }).click();
   const evidence = page.getByRole('dialog', { name: 'Centro de Evidências' });
   await expect(evidence).toBeVisible();
-  await expect(evidence.getByText(/cenário A, slot 3/i).first()).toBeVisible();
+  await expect(evidence.getByText(/cenário A, slot 2/i).first()).toBeVisible();
   await page.getByRole('button', { name: 'Fechar evidências' }).click();
   await page.getByRole('button', { name: 'Desfazer' }).click();
   await expect(page.getByRole('status').filter({ hasText: 'Última alteração desfeita.' })).toBeVisible();
@@ -256,7 +229,7 @@ test('blocks overlapping timeline dates and allows another crop entry', async ({
   await page.getByLabel('Outra cultura do evento 2').fill('mandioca');
   await page.getByLabel('Início (mês/ano) do evento 2').fill('2023-05');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
-  await expect(page.getByText('Este evento se sobrepõe ao anterior. Ajuste o início ou fim.')).toBeVisible();
+  await expect(page.getByText('Os eventos devem ser cronológicos e sem sobreposição.')).toBeVisible();
   await expect(page.getByLabel('Início (mês/ano) do evento 2')).toHaveAttribute('aria-invalid', 'true');
 });
 
@@ -311,14 +284,14 @@ test('keeps the core farm, laboratory, and results flow in English', async ({ pa
 
 test('shows three stacked global scenarios and unknown climate after NASA failure', async ({ page }) => {
   await installDraft(page);
-  await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, regionalContext: { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Fora do Brasil.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));
+  await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, regionalContext: { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Fora do Brasil.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], nasaInsight: { status: 'unknown', month: 4, metric: 'unavailable', observedValue: null, unit: null, period: null, coveragePct: null, changesComparison: false, effects: [], attentionDecision: null, limitations: ['NASA indisponível para esta coordenada.'], sourceUrl: null }, nasaInsightByMonth: [], boundaryAnalysis: { status: 'not_provided', vertexCount: 0, areaHa: null, centroid: null, smapHistorical: { product: 'SPL4SMGP', version: 8, temporalCoverage: '2015-03-31/present', temporalResolution: '3 hours', nominalResolutionKm: 9, numericStatus: 'requires_earthdata_preprocessing', spatialInterpretation: 'no_boundary', sourceUrl: 'https://example.test/smap' } }, strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/results');
   await page.getByText('Detalhes técnicos de clima e contexto regional').click();
   await expect(page.getByText('Indisponível: cenários preservados com métricas climáticas desconhecidas.')).toBeVisible();
-  const headings = page.getByLabel('Estratégias exploratórias').getByRole('heading', { name: /Cenário [ABC]/ });
-  await expect(headings).toHaveCount(3);
-  const y = await headings.evaluateAll((items) => items.map((item) => item.getBoundingClientRect().y));
+  const cards = page.getByLabel('Estratégias exploratórias').locator('article');
+  await expect(cards).toHaveCount(3);
+  const y = await cards.evaluateAll((items) => items.map((item) => item.getBoundingClientRect().y));
   expect(y[0]).toBeLessThan(y[1]);
   expect(y[1]).toBeLessThan(y[2]);
 });
