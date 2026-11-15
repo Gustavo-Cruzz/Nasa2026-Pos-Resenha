@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { acceptMapPlace, suggestMapChange, suggestMapPlace, advance, buildAnalysisInput, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, decisionSummary, pointScenario, type ChatState } from '@/lib/chat/flow';
+import { acceptMapPlace, suggestMapChange, suggestMapPlace, advance, buildAnalysisInput, chooseCategories, chooseCategoryCrops, chooseNextPlanting, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, decisionSummary, pointScenario, type ChatState } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 
 const rioVerde: PlaceMatch = { code: '5218805', name: 'Rio Verde', uf: 'GO', latitude: -17.798, longitude: -50.919 };
 const say = (state: ChatState, text: string, locale: 'pt-BR' | 'en' = 'pt-BR') => advance(state, text, locale);
-const located = (): ChatState => provideLocation(initialState(), [rioVerde], 'Rio Verde, GO', 'pt-BR').state;
+/** Existing chat assertions start after the new crop-inventory portion has been completed. */
+const located = (): ChatState => ({ ...provideLocation(initialState(), [rioVerde], 'Rio Verde, GO', 'pt-BR').state, step: 'current', draft: { location: { latitude: rioVerde.latitude, longitude: rioVerde.longitude, label: 'Rio Verde (GO)' }, categoryIds: ['grains'], categoryIndex: 1, workedCropIds: ['soybean', 'maize'], nextPlanting: 'soybean' } });
 const confirm = (): ChatState => ['soja', 'milho', 'Água empoçada', 'só isso'].reduce((state, message) => say(state, message).state, located());
 
 describe('chat registration: the questions', () => {
@@ -21,7 +22,7 @@ describe('chat registration: the questions', () => {
     for (const answer of ['soja', 'milho', 'Água empoçada', 'só isso']) { state = say(state, answer).state; steps.push(state.step); }
     expect(steps).toEqual(['location', 'current', 'previous', 'soil', 'soil', 'confirm']);
     expect(state.draft).toMatchObject({ location: { latitude: -17.798, longitude: -50.919, label: 'Rio Verde (GO)' }, current: 'soybean', previous: 'maize', soil: { kinds: ['waterlogging'] }, soilDone: true });
-    expect(['location', 'current', 'previous', 'soil', 'confirm'].map((step) => stepNumber(step as ChatState['step']))).toEqual([1, 2, 3, 4, 4]);
+    expect(['location', 'current', 'previous', 'soil', 'confirm'].map((step) => stepNumber(step as ChatState['step']))).toEqual([1, 5, 5, 6, 6]);
   });
   it('no longer asks about the planting month, priorities, boundary or water point', () => {
     const texts: string[] = greeting('pt-BR').map((reply) => reply.text);
@@ -32,10 +33,23 @@ describe('chat registration: the questions', () => {
     expect(all).toContain('estranha');
   });
   it('accepts coordinates and the foreign examples without a lookup', () => {
-    expect(say(initialState(), '5.6037, -0.187').state.step).toBe('current');
+    expect(say(initialState(), '5.6037, -0.187').state.step).toBe('categories');
     const accra = say(initialState(), 'Acra, Gana');
     expect(accra.state.draft.location).toMatchObject({ latitude: 5.6037, label: 'Acra, Gana' });
     expect(accra.effects).toEqual([]);
+  });
+});
+
+describe('chat registration: crop inventory', () => {
+  it('selects multiple real catalog groups, walks them in order and saves their crop IDs', () => {
+    let state = chooseCategories(provideLocation(initialState(), [rioVerde], 'Rio Verde', 'pt-BR').state, ['roots', 'grains'], 'pt-BR').state;
+    expect(state.draft.categoryIds).toEqual(['roots', 'grains']);
+    state = chooseCategoryCrops(state, ['cassava', 'sweet_potato'], 'pt-BR').state;
+    state = chooseCategoryCrops(state, ['maize'], 'pt-BR').state;
+    expect(state.step).toBe('nextPlanting');
+    expect(state.draft.workedCropIds).toEqual(['cassava', 'sweet_potato', 'maize']);
+    state = chooseNextPlanting(state, 'maize', 'pt-BR').state;
+    expect(state.draft.nextPlanting).toBe('maize');
   });
 });
 
@@ -53,9 +67,9 @@ describe('chat registration: city lookup', () => {
   });
   it('moves on with a single match and labels the city with its state', () => {
     const turn = provideLocation(initialState(), [rioVerde], 'rio verde', 'pt-BR');
-    expect(turn.state.step).toBe('current');
+    expect(turn.state.step).toBe('categories');
     expect(turn.replies[0].text).toBe('Anotado: Rio Verde (GO).');
-    expect(turn.replies[1].text).toContain('plantando agora');
+    expect(turn.replies[1].text).toContain('tipos de culturas');
   });
   it('asks which one when several cities match, offering "Name (UF)" chips', () => {
     const matches: PlaceMatch[] = [{ code: '2201200', name: 'Bom Jesus', uf: 'PI', latitude: -9.07, longitude: -44.36 }, { code: '4302105', name: 'Bom Jesus', uf: 'RS', latitude: -28.67, longitude: -50.42 }];
@@ -246,12 +260,12 @@ describe('analysis input from the registration', () => {
 });
 
 describe('chat opened from the explorer', () => {
-  it('skips the city question and asks for the current crop', () => {
+  it('skips the city question and asks for crop groups', () => {
     const turn = startWithLocation({ latitude: -12.737, longitude: -55.6807, label: 'Sorriso (MT)' }, 'pt-BR');
-    expect(turn.state.step).toBe('current');
+    expect(turn.state.step).toBe('categories');
     expect(turn.state.draft.location).toMatchObject({ label: 'Sorriso (MT)' });
     expect(turn.replies.map((reply) => reply.text).join(' ')).toContain('Anotado: Sorriso (MT).');
-    expect(turn.replies.at(-1)?.text).toContain('plantando agora');
+    expect(turn.replies.at(-1)?.text).toContain('tipos de culturas');
   });
 });
 
@@ -266,9 +280,9 @@ describe('places picked on the explorer map', () => {
   });
   it('accepting sets the location and advances to the crops question', () => {
     const turn = acceptMapPlace(initialState(), place, 'pt-BR');
-    expect(turn.state.step).toBe('current');
+    expect(turn.state.step).toBe('categories');
     expect(turn.state.draft.location).toEqual(place);
-    expect(turn.replies.at(-1)?.chips).toEqual(cropChips('pt-BR'));
+    expect(turn.replies.at(-1)?.picker?.kind).toBe('categories');
   });
   it('accepting after the location step keeps the other answers', () => {
     const state = say(located(), 'soja').state;

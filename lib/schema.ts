@@ -35,6 +35,9 @@ export const soilProfileSchema = z.object({
 
 /** Farmer-declared operational context. It filters exploration; it is not agronomic evidence. */
 export const farmerCropProfileSchema = z.object({
+  /** Conversation inventory: categories and crops the producer says they work with. It does not imply a simultaneous planting or rotation. */
+  categoryIds: z.array(z.string().min(1)).max(12).optional(),
+  workedCropIds: z.array(z.string().min(1)).max(40).optional(),
   availableCropIds: z.array(z.string().min(1)).max(40).default([]),
   exploreCropIds: z.array(z.string().min(1)).max(40).default([]),
   blockedCropIds: z.array(z.string().min(1)).max(40).default([]),

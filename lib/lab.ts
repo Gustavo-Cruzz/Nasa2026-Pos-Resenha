@@ -14,9 +14,9 @@ const slots = (cropId: LabCropId | null) => [{ year: 1 as const, season: 'A' as 
 export function createLabPlan(input: AnalysisInput, cropIds: Array<string | undefined>): LabPlan {
   const valid = (cropId: string | undefined): LabCropId | null => cropId && cropById.has(cropId) && isAnnualRotationEligible(cropId) ? cropId : null;
   return { scenarios: [
-    { id: 'A', title: input.futureBaseline?.confirmed ? 'Plano do produtor' : 'Continuidade presumida — confirmar', slots: slots(valid(cropIds[0])) },
-    { id: 'B', title: 'Saúde do solo', slots: slots(valid(cropIds[1])) },
-    { id: 'C', title: 'Contexto hídrico', slots: slots(valid(cropIds[2])) },
+    { id: 'A', title: input.futureBaseline?.confirmed ? 'Cenário A — Meu plano' : 'Continuidade presumida — confirmar', slots: slots(valid(cropIds[0])) },
+    { id: 'B', title: 'Cenário B — Foco na recuperação do solo', slots: slots(valid(cropIds[1])) },
+    { id: 'C', title: 'Cenário C — Foco na conservação da água', slots: slots(valid(cropIds[2])) },
   ] };
 }
 

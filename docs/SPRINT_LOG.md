@@ -999,3 +999,15 @@ Implemented: generated a real 1440×900 desktop capture of the Plantaê home pag
 Checks: visually inspected the generated screenshot and verified that the English headline, navigation, accessibility controls, calls to action, and platform artwork render cleanly. README links and Markdown formatting pass `git diff --check`.
 
 Limitations: the screenshot represents the current desktop home page and should be refreshed if the hero layout changes materially.
+
+## Sprint F16 — João: inventário de culturas e cenários declarados
+
+Status: complete.
+
+Implemented: João now asks, after location, for one or more crop groups derived from the existing combined catalog (`lib/chat/crop-categories.ts`), then walks each selected group in the chosen order. Crop cards use the existing `CropSprite` mapping and its visual fallback, retain original catalog IDs, have accessible pressed/checkbox states, a visible multiple-selection hint and counters. The producer then chooses one next planting from their inventory or opens the existing full catalog; that intent is separate from the inventory and from declared cropping systems. `farmerCrops` now carries optional `categoryIds` and `workedCropIds`, while `futureBaseline` carries the confirmed next planting. The existing chat answers, location, history and soil remain intact when selection is revisited.
+
+Scenario A is titled “Cenário A — Meu plano” and uses the confirmed next planting. B and C are titled for soil recovery and water conservation, respectively, while keeping the existing evidence-based selection, NASA/ET0 context, evidence manifest and four-slot laboratory. A permanent or non-annual declared crop remains the farmer's intent but is not automatically inserted into an annual lab slot; the engine reports that limitation instead of inventing a rotation.
+
+Evidence (2026-11-15): `tests/unit/chat-flow.test.ts` covers multi-group and multi-crop progression, source IDs, next planting and transfer to the analysis contract. Full `npm run test -- --run` passes (62 files, 423 tests); `npm run typecheck`, `npm run lint` and `npm run build` pass.
+
+Limitations / next: partial chat answers are held in the active conversation until the validated analysis draft is saved at confirmation; a browser reload mid-conversation does not yet restore an incomplete crop selection. Mobile layout is responsive by component design but was not browser-automated in this sprint.

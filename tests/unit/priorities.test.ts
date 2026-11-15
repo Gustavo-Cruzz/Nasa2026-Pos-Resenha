@@ -19,7 +19,7 @@ describe('priority-aware scenarios (audit 1.1)', () => {
     expect(crops(soil)[0]).toBe(crops(water)[0]);
     expect(soil.strategies.map((item) => item.id)).toEqual(['A', 'B', 'C']);
     expect(JSON.stringify([crops(soil), soil.strategies.map((item) => item.priorityAlignment)])).not.toBe(JSON.stringify([crops(water), water.strategies.map((item) => item.priorityAlignment)]));
-    expect(water.strategies[2].title).toBe('Menor exposição hídrica documentada');
+    expect(water.strategies[2].title).toBe('Cenário C — Foco na conservação da água');
     expect(JSON.stringify(run({ water: 5, soil: 0, operations: 0 }))).toBe(JSON.stringify(water));
   });
   it('only reports alignment for priorities with weight > 0, qualitatively and with a concrete attribute', () => {
@@ -30,7 +30,7 @@ describe('priority-aware scenarios (audit 1.1)', () => {
   it('marks the water criterion as not applied (neutral title) when no Kc or cycle is documented', () => {
     const ids = ['upland_rice', 'ruziziensis', 'soybean'];
     const result = analyze({ ...rio, history: [{ cropId: 'maize', startYearMonth: '2024-02', endYearMonth: '2024-06' }], priorities: { water: 5, soil: 0, operations: 0 }, farmerCrops: { availableCropIds: ids, exploreCropIds: [], blockedCropIds: [], customCrops: [] } }, unavailable);
-    expect(result.strategies[2].title === 'Diversificação' || result.strategies[2].explanations.some((item) => item.ruleId === 'PRIORITY_RULE_APPLIED')).toBe(true);
+    expect(result.strategies[2].title === 'Cenário C — Foco na conservação da água' || result.strategies[2].explanations.some((item) => item.ruleId === 'PRIORITY_RULE_APPLIED')).toBe(true);
   });
   it('treats equal weights as no dominant priority', () => { expect(dominantPriorities({ water: 1, soil: 1, operations: 1 }).size).toBe(0); expect([...dominantPriorities({ water: 3, soil: 1, operations: 0 })]).toEqual(['water']); });
   it('keeps lab-plan crops untouched while attaching alignment', () => {

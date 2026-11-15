@@ -2,18 +2,20 @@ import { analysisInputSchema, soilObservationKinds, type AnalysisInput, type Soi
 import { cropDisplayName } from '@/lib/presentation';
 import { detectCommand, findCrop, isDone, isSkip, normalize, parseLocation, parseSoilAnswer, parseYesNo, SOIL_CHIP_LABELS, type PlaceResult } from '@/lib/chat/parse';
 import type { PlaceMatch } from '@/lib/brazil/places';
+import { categoryById, cropCategories, cropCategoryIds } from '@/lib/chat/crop-categories';
 
 type Locale = 'pt-BR' | 'en';
 /** The chat gathers the minimum context for the analysis presented on the results page. */
-export type Step = 'location' | 'current' | 'previous' | 'soil' | 'confirm';
+export type Step = 'location' | 'categories' | 'categoryCrops' | 'nextPlanting' | 'current' | 'previous' | 'soil' | 'confirm';
 /** `soil`: undefined = not asked yet, null = nothing unusual, otherwise the problems reported so far; `soilDone` closes the "anything else?" loop. */
-export type ChatDraft = { location?: PlaceResult; current?: string; previous?: string | null; soil?: SoilObservation | null; soilDone?: boolean };
+export type ChatDraft = { location?: PlaceResult; categoryIds?: string[]; workedCropIds?: string[]; categoryIndex?: number; nextPlanting?: string; current?: string; previous?: string | null; soil?: SoilObservation | null; soilDone?: boolean };
 export type ChatState = { step: Step; draft: ChatDraft };
 /** `multi`: the chips can be ticked several at a time; `finishLabel` is the button shown while none is ticked (with some ticked it confirms them). */
-export type Reply = { text: string; chips?: string[]; multi?: { finishLabel: string } };
+export type CropPicker = { kind: 'categories' | 'crops' | 'next'; ids: string[]; categoryId?: string };
+export type Reply = { text: string; chips?: string[]; multi?: { finishLabel: string }; picker?: CropPicker };
 export type Effect = { type: 'lookup'; query: string } | { type: 'go' } | { type: 'restart' };
 export type Turn = { state: ChatState; replies: Reply[]; effects: Effect[] };
-export const TOTAL_STEPS = 4;
+export const TOTAL_STEPS = 6;
 
 export const initialState = (): ChatState => ({ step: 'location', draft: {} });
 
@@ -45,13 +47,16 @@ export function mergeSoil(current: SoilObservation | null | undefined, added: So
 
 function nextStep(draft: ChatDraft): Step {
   if (!draft.location) return 'location';
+  if (!draft.categoryIds?.length) return 'categories';
+  if ((draft.categoryIndex ?? 0) < draft.categoryIds.length) return 'categoryCrops';
+  if (!draft.nextPlanting) return 'nextPlanting';
   if (!draft.current) return 'current';
   if (draft.previous === undefined) return 'previous';
   if (draft.soil === undefined || (draft.soil && !draft.soilDone)) return 'soil';
   return 'confirm';
 }
 
-export function stepNumber(step: Step): number { return { location: 1, current: 2, previous: 3, soil: 4, confirm: 4 }[step]; }
+export function stepNumber(step: Step): number { return { location: 1, categories: 2, categoryCrops: 3, nextPlanting: 4, current: 5, previous: 5, soil: 6, confirm: 6 }[step]; }
 
 export function greeting(locale: Locale): Reply[] {
   return [reply(pick(locale, 'Oi! Eu sou o João.\nQuero te ajudar a proteger a sua colheita.', 'Hi! I am João.\nI want to help you protect your harvest.')), ...prompt('location', {}, locale)];
@@ -67,6 +72,13 @@ export function startWithLocation(place: PlaceResult, locale: Locale): Turn {
 export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
   switch (step) {
     case 'location': return [reply(pick(locale, 'Em que cidade fica a sua fazenda?\nComece a digitar e escolha na lista. Fora do Brasil, envie latitude e longitude.', 'Which city is your farm in?\nStart typing and pick from the list. Outside Brazil, send latitude and longitude.'))];
+    case 'categories': return [{ text: pick(locale, 'Com quais tipos de culturas você trabalha? Pode escolher mais de uma opção! 🌱\nSeleção múltipla — escolha quantas opções quiser.', 'Which crop groups do you work with? You can choose more than one.\nMultiple selection — choose as many as you want.'), picker: { kind: 'categories', ids: cropCategories.map((item) => item.id) } }];
+    case 'categoryCrops': {
+      const category = categoryById.get(draft.categoryIds?.[draft.categoryIndex ?? 0] ?? '');
+      if (!category) return prompt(nextStep({ ...draft, categoryIndex: draft.categoryIds?.length }), draft, locale);
+      return [{ text: pick(locale, `Você selecionou ${category.name['pt-BR']}! ${category.icon} Quais dessas culturas você planta ou já trabalha?\nSeleção múltipla — marque todas as culturas com que você trabalha.`, `You selected ${category.name.en}! ${category.icon} Which of these crops do you grow or work with?\nMultiple selection — select all that apply.`), picker: { kind: 'crops', ids: category.cropIds, categoryId: category.id } }];
+    }
+    case 'nextPlanting': return [{ text: pick(locale, 'Perfeito! Já conheço melhor as culturas com que você trabalha. Agora vamos planejar seu próximo plantio.\n\nQual cultura você pretende plantar a seguir?', 'Great! I know more about the crops you work with. Now let us plan your next planting.\n\nWhich crop do you plan to plant next?'), picker: { kind: 'next', ids: draft.workedCropIds ?? [] } }];
     case 'current': return [reply(pick(locale, 'O que você está plantando agora?', 'What are you growing now?'), cropChips(locale))];
     case 'previous': return [reply(pick(locale, 'E o que você plantou antes?\nSe não lembra, toque em "pular".', 'And what did you grow before?\nIf you do not remember, tap "skip".'), [...cropChips(locale), pick(locale, 'pular', 'skip')])];
     case 'soil': {
@@ -88,6 +100,8 @@ export function summarize(draft: ChatDraft, locale: Locale): string {
   return [
     pick(locale, 'Sua fazenda:', 'Your farm:'),
     `• ${pick(locale, 'Local', 'Location')}: ${draft.location ? (draft.location.label ?? `${draft.location.latitude}, ${draft.location.longitude}`) : 'N/D'}`,
+    `• ${pick(locale, 'Culturas com que trabalha', 'Crops you work with')}: ${(draft.workedCropIds ?? []).map((id) => crop(id, locale)).join(', ') || 'N/D'}`,
+    `• ${pick(locale, 'Próximo plantio', 'Next planting')}: ${draft.nextPlanting ? crop(draft.nextPlanting, locale) : 'N/D'}`,
     `• ${pick(locale, 'Cultura atual', 'Current crop')}: ${draft.current ? crop(draft.current, locale) : 'N/D'}`,
     `• ${pick(locale, 'Cultura anterior', 'Previous crop')}: ${draft.previous ? crop(draft.previous, locale) : pick(locale, 'não informada', 'not informed')}`,
     `• ${pick(locale, 'Solo', 'Soil')}: ${soil}`,
@@ -121,9 +135,37 @@ export function decisionSummary(draft: ChatDraft, locale: Locale): string {
  */
 export function buildAnalysisInput(draft: ChatDraft, year = new Date().getFullYear(), month = new Date().getMonth() + 1): AnalysisInput | undefined {
   if (!draft.location || !draft.current) return undefined;
+  // Older saved conversations predate the explicit plan question; retain their
+  // declared current crop as a migration fallback rather than discarding them.
+  const nextPlanting = draft.nextPlanting ?? draft.current;
   const events = [...(draft.previous ? [{ cropId: draft.previous, startYearMonth: `${year - 1}-01`, endYearMonth: `${year - 1}-12` }] : []), { cropId: draft.current, startYearMonth: `${year}-01`, endYearMonth: `${year}-12` }];
-  const parsed = analysisInputSchema.safeParse({ location: { latitude: draft.location.latitude, longitude: draft.location.longitude }, ...(draft.soil ? { soilObservation: draft.soil } : {}), plantingMonth: month, history: events, priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' });
+  const parsed = analysisInputSchema.safeParse({ location: { latitude: draft.location.latitude, longitude: draft.location.longitude }, ...(draft.soil ? { soilObservation: draft.soil } : {}), farmerCrops: { categoryIds: draft.categoryIds ?? [], workedCropIds: draft.workedCropIds ?? [], availableCropIds: draft.workedCropIds ?? [], exploreCropIds: [], blockedCropIds: [], customCrops: [] }, plantingMonth: month, history: events, futureBaseline: { cropId: nextPlanting, confirmed: true }, priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' });
   return parsed.success ? parsed.data : undefined;
+}
+
+/** UI selections stay as IDs and advance through selected groups in the exact order chosen. */
+export function chooseCategories(state: ChatState, ids: string[], locale: Locale): Turn {
+  if (state.step !== 'categories') return { state, replies: [], effects: [] };
+  const categoryIds = cropCategoryIds(ids);
+  if (!categoryIds.length) return { state, replies: [reply(pick(locale, 'Escolha pelo menos uma categoria para continuar.', 'Choose at least one group to continue.'))], effects: [] };
+  return goTo({ ...state.draft, categoryIds, workedCropIds: [], categoryIndex: 0, nextPlanting: undefined }, locale, reply(pick(locale, `${categoryIds.length} ${categoryIds.length === 1 ? 'categoria selecionada.' : 'categorias selecionadas.'}`, `${categoryIds.length} ${categoryIds.length === 1 ? 'group selected.' : 'groups selected.'}`)));
+}
+
+export function chooseCategoryCrops(state: ChatState, ids: string[], locale: Locale): Turn {
+  if (state.step !== 'categoryCrops') return { state, replies: [], effects: [] };
+  const category = categoryById.get(state.draft.categoryIds?.[state.draft.categoryIndex ?? 0] ?? '');
+  if (!category) return { state, replies: [], effects: [] };
+  const chosen = [...new Set(ids)].filter((id) => category.cropIds.includes(id));
+  const existing = state.draft.workedCropIds ?? [];
+  const workedCropIds = [...existing.filter((id) => !category.cropIds.includes(id)), ...chosen];
+  const next = { ...state.draft, workedCropIds, categoryIndex: (state.draft.categoryIndex ?? 0) + 1 };
+  return goTo(next, locale, reply(chosen.length ? pick(locale, `${chosen.length} cultura${chosen.length === 1 ? '' : 's'} anotada${chosen.length === 1 ? '' : 's'}.`, `${chosen.length} crop${chosen.length === 1 ? '' : 's'} noted.`) : pick(locale, 'Nenhuma cultura dessa categoria anotada.', 'No crop from this group noted.')));
+}
+
+export function chooseNextPlanting(state: ChatState, cropId: string, locale: Locale): Turn {
+  if (state.step !== 'nextPlanting' || !findCrop(cropId)) return { state, replies: [reply(pick(locale, 'Escolha uma cultura válida do catálogo.', 'Choose a valid catalog crop.'))], effects: [] };
+  const workedCropIds = state.draft.workedCropIds?.includes(cropId) ? state.draft.workedCropIds : [...(state.draft.workedCropIds ?? []), cropId];
+  return goTo({ ...state.draft, workedCropIds, nextPlanting: cropId }, locale, reply(pick(locale, `Próximo plantio anotado: ${crop(cropId, locale)}.`, `Next planting noted: ${crop(cropId, locale)}.`)));
 }
 
 export function helpText(locale: Locale): string {
@@ -187,6 +229,7 @@ export function advance(state: ChatState, rawText: string, locale: Locale): Turn
       return goTo({ ...state.draft, soil: mergeSoil(state.draft.soil, answer.observation), soilDone: false }, locale);
     }
   }
+  return keep([]);
 }
 
 /** Several soil problems ticked at once: they are merged with what was reported before and the soil question is closed. */
