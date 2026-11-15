@@ -8,7 +8,7 @@ const context = farmExplanationContextSchema.parse({
   history: [{ crop: 'soybean', period: '2025-01–2025-05' }],
   climate: { status: 'available', period: '20110101–20251231', monthly: Array.from({ length: 12 }, (_, index) => ({ month: index + 1, rainMm: index === 6 ? null : 100, temperatureC: 24 })), rainySeasonMonths: [10, 11, 12, 1, 2, 3], waterBalanceMm: [20, 10, 5, 0, -5, -20, -30, -25, -5, 10, 20, 25] },
   soil: { status: 'partial', ph: null, organicCarbonGKg: null, sandPct: null, siltPct: null, clayPct: null, farmerObservations: [] },
-  terrain: { status: 'unavailable', meanSlopePct: null, maxSlopePct: null, hotspotSharePct: null },
+  terrain: { status: 'unavailable', meanSlopePct: null, maxSlopePct: null, steepSlopeSharePct: null },
   strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, crop: null, baseline: id === 'A', baselineAssumed: id === 'A', indicators: [], missingData: ['eligible_crop'] })), warnings: [],
 });
 
@@ -23,6 +23,33 @@ describe('farm explanation contract', () => {
   it('rejects duplicated output that omits a required section', () => {
     const result = fallbackFarmExplanation(context);
     result.sections[5] = { ...result.sections[0] };
+    expect(farmExplanationSchema.safeParse(result).success).toBe(false);
+  });
+
+  it('rejects water language that sounds like a field diagnosis', () => {
+    const result = fallbackFarmExplanation(context);
+    const water = result.sections.find((item) => item.id === 'water');
+    if (!water) throw new Error('water section missing');
+    water.summary = 'Existe déficit hídrico e falta água na lavoura.';
+    expect(farmExplanationSchema.safeParse(result).success).toBe(false);
+  });
+
+  it('requires the water explanation to name ET0 in plain context', () => {
+    const result = fallbackFarmExplanation(context);
+    const water = result.sections.find((item) => item.id === 'water');
+    if (!water) throw new Error('water section missing');
+    water.summary = 'Cinco meses têm valor negativo.';
+    water.limitation = 'Este gráfico não orienta decisões no campo.';
+    expect(farmExplanationSchema.safeParse(result).success).toBe(false);
+  });
+
+  it('rejects unexplained water balance and past crops presented as a future plan', () => {
+    const result = fallbackFarmExplanation(context);
+    const overview = result.sections.find((item) => item.id === 'overview');
+    const water = result.sections.find((item) => item.id === 'water');
+    if (!overview || !water) throw new Error('required section missing');
+    overview.points = ['Cultura planejada: soja.'];
+    water.points = ['Em julho, o saldo foi negativo.'];
     expect(farmExplanationSchema.safeParse(result).success).toBe(false);
   });
 

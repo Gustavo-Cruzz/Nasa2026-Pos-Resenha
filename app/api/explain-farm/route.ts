@@ -5,7 +5,7 @@ import { FARM_EXPLANATION_SYSTEM_PROMPT, fallbackFarmExplanation, farmExplanatio
 const MODEL = 'gemini-3.5-flash-lite';
 const requestSchema = z.object({ context: farmExplanationContextSchema });
 const responseJsonSchema = {
-  type: 'object', additionalProperties: false, required: ['sections'], properties: { sections: { type: 'array', minItems: 6, maxItems: 6, items: { type: 'object', additionalProperties: false, required: ['id', 'summary', 'points', 'limitation'], properties: { id: { type: 'string', enum: ['overview', 'climate', 'water', 'soil', 'rotation', 'terrain'] }, summary: { type: 'string' }, points: { type: 'array', maxItems: 2, items: { type: 'string' } }, limitation: { type: 'string' } } } } },
+  type: 'object', additionalProperties: false, required: ['sections'], properties: { sections: { type: 'array', minItems: 6, maxItems: 6, items: { type: 'object', additionalProperties: false, required: ['id', 'summary', 'points', 'limitation'], properties: { id: { type: 'string', enum: ['overview', 'climate', 'water', 'soil', 'rotation', 'terrain'] }, summary: { type: 'string', description: 'Uma ou duas frases curtas, em linguagem cotidiana, explicando o que a pessoa está vendo.' }, points: { type: 'array', maxItems: 2, items: { type: 'string' }, description: 'Até dois fatos úteis que aparecem literalmente nos dados.' }, limitation: { type: 'string', description: 'Uma frase simples dizendo o que estes dados não permitem concluir.' } } } } },
 };
 
 export async function POST(request: NextRequest) {

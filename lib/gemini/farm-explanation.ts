@@ -11,11 +11,13 @@ export const farmExplanationContextSchema = z.object({
   history: z.array(z.object({ crop: z.string().max(100), period: z.string().max(30) })).max(3),
   climate: z.object({ status: z.enum(['available', 'unavailable']), period: z.string().max(30).nullable(), monthly: z.array(z.object({ month: z.number().int(), rainMm: nullableNumber, temperatureC: nullableNumber })).length(12), rainySeasonMonths: z.array(z.number().int()).max(12), waterBalanceMm: z.array(nullableNumber).length(12) }),
   soil: z.object({ status: z.enum(['available', 'partial', 'unavailable']), ph: nullableNumber, organicCarbonGKg: nullableNumber, sandPct: nullableNumber, siltPct: nullableNumber, clayPct: nullableNumber, farmerObservations: z.array(z.string().max(40)).max(7) }),
-  terrain: z.object({ status: z.enum(['available', 'unavailable']), meanSlopePct: nullableNumber, maxSlopePct: nullableNumber, hotspotSharePct: nullableNumber }),
+  terrain: z.object({ status: z.enum(['available', 'unavailable']), meanSlopePct: nullableNumber, maxSlopePct: nullableNumber, steepSlopeSharePct: nullableNumber }),
   strategies: z.array(z.object({ id: z.enum(['A', 'B', 'C']), title: z.string().max(160), crop: z.string().max(100).nullable(), baseline: z.boolean(), baselineAssumed: z.boolean(), indicators: z.array(z.object({ label: z.string().max(120), state: z.string().max(30), detail: z.string().max(500) })).max(12), missingData: z.array(z.string().max(100)).max(20) })).length(3),
   warnings: z.array(z.string().max(500)).max(30),
 });
 export type FarmExplanationContext = z.infer<typeof farmExplanationContextSchema>;
+
+const misleadingLanguage = /d[eé]ficit h[ií]drico|foco de calor|precisa irrigar|deve irrigar|recomenda-se/iu;
 
 export const farmExplanationSchema = z.object({
   sections: z.array(z.object({
@@ -27,6 +29,14 @@ export const farmExplanationSchema = z.object({
     const ids = new Set(sections.map((item) => item.id));
     explanationSectionIds.forEach((id) => { if (!ids.has(id)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Missing section ${id}` }); });
   }),
+}).superRefine((result, ctx) => {
+  result.sections.forEach((section, index) => {
+    const text = [section.summary, ...section.points, section.limitation].join(' ');
+    if (misleadingLanguage.test(text)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['sections', index], message: 'Explicação contém linguagem absoluta ou que confunde indicador climático com condição do talhão.' });
+    if (section.id === 'water' && !/(?:ET0|ET₀|evapotranspira[cç][aã]o de refer[eê]ncia)/iu.test(text)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['sections', index], message: 'A seção de água precisa explicar ET0.' });
+    if (section.id === 'water' && /\bsaldo\b/iu.test(text)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['sections', index], message: 'A seção de água deve comparar chuva e ET0 diretamente, sem usar saldo.' });
+    if (section.id === 'overview' && /(?:cultura|cultivo) planejad[oa]/iu.test(text)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['sections', index], message: 'O histórico não pode ser apresentado como plano futuro.' });
+  });
 });
 export type FarmExplanation = z.infer<typeof farmExplanationSchema>;
 
@@ -56,16 +66,23 @@ export function buildFarmExplanationContext(data: AnalysisResult): FarmExplanati
       clayPct: data.input.soil?.clayPct ?? staticSoil?.clay.value ?? null,
       farmerObservations: data.input.soilObservation?.kinds ?? [],
     },
-    terrain: { status: data.terrain?.status ?? 'unavailable', meanSlopePct: data.terrain?.slopePct?.mean ?? null, maxSlopePct: data.terrain?.slopePct?.max ?? null, hotspotSharePct: data.terrain?.status === 'available' ? data.terrain.hotspots.sharePct : null },
+    terrain: { status: data.terrain?.status ?? 'unavailable', meanSlopePct: data.terrain?.slopePct?.mean ?? null, maxSlopePct: data.terrain?.slopePct?.max ?? null, steepSlopeSharePct: data.terrain?.status === 'available' ? data.terrain.hotspots.sharePct : null },
     strategies: data.strategies.map((item) => ({ id: item.id, title: item.title, crop: item.proposedCrop?.name ?? item.proposedCrop?.cropId ?? null, baseline: item.baseline, baselineAssumed: item.baselineAssumed, indicators: item.indicators.map(({ label, state, detail }) => ({ label, state, detail })), missingData: item.missingData })),
     warnings: data.warnings,
   };
   return farmExplanationContextSchema.parse(context);
 }
 
-export const FARM_EXPLANATION_SYSTEM_PROMPT = `Você explica resultados climáticos e cenários exploratórios de uma fazenda para pessoas com pouca familiaridade com gráficos. Use somente o JSON recebido. Não invente medidas, relações causais, diagnóstico, recomendação, previsão, produtividade, necessidade de irrigação ou benefício agronômico. Valores nulos significam desconhecido. Diferencie dado regional/de grade de medição do talhão. Explique números e gráficos em português simples. Cada resumo deve ter no máximo 2 frases curtas; cada seção pode ter no máximo 2 pontos; sempre inclua uma limitação concreta. Seja completo, direto e não repita o título.`;
+export const FARM_EXPLANATION_SYSTEM_PROMPT = `Você é João, um guia que explica resultados de uma fazenda para quem não tem costume de ler gráficos. Clareza vem primeiro.
+
+Use somente o JSON recebido. Fale em português brasileiro, com palavras comuns, frases curtas e tom acolhedor. A lista history mostra cultivos passados; nunca a chame de cultura planejada ou plano futuro. Converta números de mês em nomes: 1 é janeiro e 12 é dezembro; nunca escreva "mês 10". Quando usar ET0, explique na mesma frase: "evapotranspiração de referência (ET0), uma estimativa da água que o clima pode retirar do solo e da vegetação". Diga diretamente "a chuva histórica ficou abaixo/acima da ET0"; não use a palavra saldo e nunca chame isso de déficit hídrico, falta de água na lavoura ou necessidade de irrigação.
+
+Chuva, temperatura e ET0 são histórico de uma grade regional, não medição da fazenda e não previsão. Solo regional é estimativa, não análise do talhão. Cenários A/B/C são opções para comparar; o título de um cenário não prova que a cultura melhora solo, água ou produtividade. Em terrain, steepSlopeSharePct significa porcentagem das amostras com inclinação de 8% ou mais. Se um valor for null, diga apenas que esse dado não está disponível. Se vários valores da seção forem null, diga isso uma vez só, sem repetir pontos iguais. Não deduza consequência do dado ausente.
+
+Não invente medidas, causas, diagnóstico, recomendação, previsão, produtividade, irrigação, benefício ou risco. Evite palavras absolutas como "garante", "impede", "melhor" e "deve". Cada resumo deve ter no máximo 2 frases curtas; cada seção pode ter no máximo 2 pontos; sempre inclua uma limitação concreta. Não repita o título.`;
 
 export function fallbackFarmExplanation(context: FarmExplanationContext): FarmExplanation {
+  const monthNames = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
   const place = context.location.municipality ? `${context.location.municipality}${context.location.uf ? ` (${context.location.uf})` : ''}` : 'ponto informado';
   const availableMonths = context.climate.monthly.filter((item) => item.rainMm !== null || item.temperatureC !== null).length;
   const knownBalance = context.climate.waterBalanceMm.filter((value) => value !== null);
@@ -74,7 +91,7 @@ export function fallbackFarmExplanation(context: FarmExplanationContext): FarmEx
   const soilKnown = [context.soil.ph, context.soil.organicCarbonGKg, context.soil.sandPct].some((value) => value !== null);
   return farmExplanationSchema.parse({ sections: [
     { id: 'overview', summary: `A análise usa o histórico informado e compara três cenários para ${place}.`, points: [`Cenários: ${crops}.`], limitation: 'São hipóteses para comparação, não uma recomendação de plantio.' },
-    { id: 'climate', summary: context.climate.status === 'available' ? `Há dados históricos em ${availableMonths} meses do ano; barras mostram chuva e a linha mostra temperatura.` : 'O clima histórico não ficou disponível para esta análise.', points: context.climate.rainySeasonMonths.length ? [`Meses identificados como estação chuvosa: ${context.climate.rainySeasonMonths.join(', ')}.`] : [], limitation: 'Histórico climático mostra o que ocorreu na grade regional; não prevê a próxima safra.' },
+    { id: 'climate', summary: context.climate.status === 'available' ? `Há dados históricos em ${availableMonths} meses do ano; barras mostram chuva e a linha mostra temperatura.` : 'O clima histórico não ficou disponível para esta análise.', points: context.climate.rainySeasonMonths.length ? [`Estação chuvosa identificada: ${context.climate.rainySeasonMonths.map((month) => monthNames[month - 1]).join(', ')}.`] : [], limitation: 'Histórico climático mostra o que ocorreu na grade regional; não prevê a próxima safra.' },
     { id: 'water', summary: knownBalance.length ? `Em ${negative} de ${knownBalance.length} meses calculados, a chuva histórica ficou abaixo da ET₀.` : 'Não há dados suficientes para mostrar o balanço mensal de chuva menos ET₀.', points: [], limitation: 'Esse balanço é indicador climático; não calcula consumo da cultura nem necessidade de irrigação.' },
     { id: 'soil', summary: soilKnown ? 'O quadro reúne valores regionais ou dados informados pelo produtor; a origem deve ser conferida nos detalhes.' : 'Não há valores suficientes para resumir o solo.', points: context.soil.farmerObservations.length ? [`Observações do produtor: ${context.soil.farmerObservations.join(', ')}.`] : [], limitation: 'Estimativa regional e relato não substituem análise de solo do talhão.' },
     { id: 'rotation', summary: `Os cenários A, B e C usam a mesma base de clima e destacam culturas ou prioridades diferentes.`, points: context.strategies.filter((item) => item.baselineAssumed).length ? ['A continuação foi presumida e precisa ser confirmada.'] : [], limitation: 'A comparação não estima rendimento, lucro ou chance de sucesso.' },
