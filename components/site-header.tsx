@@ -24,7 +24,7 @@ export function SiteHeader() {
   const links = [
     { href: '/explore', label: copy.explore, icon: 'explore', also: [] as string[] },
     { href: '/chat', label: copy.farm, icon: 'farm', also: ['/farm'] },
-    { href: '/results', label: copy.compare, icon: 'compare', also: ['/lab'] },
+    { href: '/results', label: copy.compare, icon: 'compare', also: ['/lab', '/future-stories'] },
     { href: '/methodology', label: copy.methodology, icon: undefined, also: [] as string[] },
   ];
   const isActive = (link: (typeof links)[number]) => pathname === link.href || link.also.includes(pathname);

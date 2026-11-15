@@ -50,3 +50,13 @@ html[data-contrast="high"] a { text-decoration: underline; }
 h1.page-title { font-size: clamp(2rem, 1.6rem + 1.6vw, 2.5rem); line-height: 1.15; letter-spacing: -0.01em; }
 .font-mono, code, kbd { font-feature-settings: 'zero' 1; }
 button, input, select, textarea { font-family: inherit; }
+
+/* Future Farm Stories — illustrative scene composer. Motion is decorative only (1–2 px leaf sway). */
+.ffs-scene { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: .9rem; border: 1px solid #405840; background: #6b3a1f; contain: layout paint; }
+.ffs-scene img { image-rendering: pixelated; }
+.ffs-plant { position: absolute; display: block; background-repeat: no-repeat; background-position: center bottom; background-size: contain; image-rendering: pixelated; transform-origin: 50% 100%; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { .ffs-scene[data-animate="true"] .ffs-plant { animation: ffs-sway 1.68s steps(6, end) infinite; } }
+.ffs-scene[data-animate="false"] .ffs-plant { animation: none; }
+@keyframes ffs-sway { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(1px); } 50% { transform: translateX(2px); } 75% { transform: translateX(-1px); } }
+.ffs-demo-anim { opacity: 0; transition: opacity 200ms ease-out; }
+.ffs-demo-anim[data-loaded="true"] { opacity: 1; }

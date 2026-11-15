@@ -1,0 +1,954 @@
+{
+  "pack": "FieldShift Future Farm Stories",
+  "version": "1.0.0",
+  "created": "2026-11-14",
+  "format": {
+    "scene": "960x540 PNG RGB and GIF animated, 6 frames per GIF, 280ms/frame",
+    "cropOverlay": "96x96 PNG RGBA",
+    "props": "64x64 PNG RGBA",
+    "tiles": "32x32 PNG RGBA",
+    "ambientFx": "960x540 PNG RGBA"
+  },
+  "sources": {
+    "sceneBackground": "Generated pixel-art master background",
+    "sixCropOverlays": "Adapted from images previously generated in the Field Shift conversation or drawn as pixel art",
+    "sixteenCanonicalCropSprites": "Copied from previous user crop sprite pack"
+  },
+  "demoScenes": [
+    {
+      "scenario": "A",
+      "cycle": 1,
+      "cropId": "maize",
+      "cropLabel": "Milho",
+      "png": "/assets/farm-stories/scenes/scenario-a-cycle-1.png",
+      "gif": "/assets/farm-stories/scenes/scenario-a-cycle-1.gif",
+      "alt": "Ilustração de uma fazenda com Milho no ciclo 1; sem significado preditivo"
+    },
+    {
+      "scenario": "A",
+      "cycle": 2,
+      "cropId": "soybean",
+      "cropLabel": "Soja",
+      "png": "/assets/farm-stories/scenes/scenario-a-cycle-2.png",
+      "gif": "/assets/farm-stories/scenes/scenario-a-cycle-2.gif",
+      "alt": "Ilustração de uma fazenda com Soja no ciclo 2; sem significado preditivo"
+    },
+    {
+      "scenario": "A",
+      "cycle": 3,
+      "cropId": "maize",
+      "cropLabel": "Milho",
+      "png": "/assets/farm-stories/scenes/scenario-a-cycle-3.png",
+      "gif": "/assets/farm-stories/scenes/scenario-a-cycle-3.gif",
+      "alt": "Ilustração de uma fazenda com Milho no ciclo 3; sem significado preditivo"
+    },
+    {
+      "scenario": "A",
+      "cycle": 4,
+      "cropId": "ruziziensis",
+      "cropLabel": "Braquiária-ruziziensis",
+      "png": "/assets/farm-stories/scenes/scenario-a-cycle-4.png",
+      "gif": "/assets/farm-stories/scenes/scenario-a-cycle-4.gif",
+      "alt": "Ilustração de uma fazenda com Braquiária-ruziziensis no ciclo 4; sem significado preditivo"
+    },
+    {
+      "scenario": "B",
+      "cycle": 1,
+      "cropId": "soybean",
+      "cropLabel": "Soja",
+      "png": "/assets/farm-stories/scenes/scenario-b-cycle-1.png",
+      "gif": "/assets/farm-stories/scenes/scenario-b-cycle-1.gif",
+      "alt": "Ilustração de uma fazenda com Soja no ciclo 1; sem significado preditivo"
+    },
+    {
+      "scenario": "B",
+      "cycle": 2,
+      "cropId": "ruziziensis",
+      "cropLabel": "Braquiária-ruziziensis",
+      "png": "/assets/farm-stories/scenes/scenario-b-cycle-2.png",
+      "gif": "/assets/farm-stories/scenes/scenario-b-cycle-2.gif",
+      "alt": "Ilustração de uma fazenda com Braquiária-ruziziensis no ciclo 2; sem significado preditivo"
+    },
+    {
+      "scenario": "B",
+      "cycle": 3,
+      "cropId": "maize",
+      "cropLabel": "Milho",
+      "png": "/assets/farm-stories/scenes/scenario-b-cycle-3.png",
+      "gif": "/assets/farm-stories/scenes/scenario-b-cycle-3.gif",
+      "alt": "Ilustração de uma fazenda com Milho no ciclo 3; sem significado preditivo"
+    },
+    {
+      "scenario": "B",
+      "cycle": 4,
+      "cropId": "cowpea",
+      "cropLabel": "Feijão-caupi",
+      "png": "/assets/farm-stories/scenes/scenario-b-cycle-4.png",
+      "gif": "/assets/farm-stories/scenes/scenario-b-cycle-4.gif",
+      "alt": "Ilustração de uma fazenda com Feijão-caupi no ciclo 4; sem significado preditivo"
+    },
+    {
+      "scenario": "C",
+      "cycle": 1,
+      "cropId": "sorghum",
+      "cropLabel": "Sorgo",
+      "png": "/assets/farm-stories/scenes/scenario-c-cycle-1.png",
+      "gif": "/assets/farm-stories/scenes/scenario-c-cycle-1.gif",
+      "alt": "Ilustração de uma fazenda com Sorgo no ciclo 1; sem significado preditivo"
+    },
+    {
+      "scenario": "C",
+      "cycle": 2,
+      "cropId": "cowpea",
+      "cropLabel": "Feijão-caupi",
+      "png": "/assets/farm-stories/scenes/scenario-c-cycle-2.png",
+      "gif": "/assets/farm-stories/scenes/scenario-c-cycle-2.gif",
+      "alt": "Ilustração de uma fazenda com Feijão-caupi no ciclo 2; sem significado preditivo"
+    },
+    {
+      "scenario": "C",
+      "cycle": 3,
+      "cropId": "sunflower",
+      "cropLabel": "Girassol",
+      "png": "/assets/farm-stories/scenes/scenario-c-cycle-3.png",
+      "gif": "/assets/farm-stories/scenes/scenario-c-cycle-3.gif",
+      "alt": "Ilustração de uma fazenda com Girassol no ciclo 3; sem significado preditivo"
+    },
+    {
+      "scenario": "C",
+      "cycle": 4,
+      "cropId": "ruziziensis",
+      "cropLabel": "Braquiária-ruziziensis",
+      "png": "/assets/farm-stories/scenes/scenario-c-cycle-4.png",
+      "gif": "/assets/farm-stories/scenes/scenario-c-cycle-4.gif",
+      "alt": "Ilustração de uma fazenda com Braquiária-ruziziensis no ciclo 4; sem significado preditivo"
+    }
+  ],
+  "cropIdsWithOverlay": [
+    "maize",
+    "soybean",
+    "sorghum",
+    "sunflower",
+    "cowpea",
+    "ruziziensis"
+  ],
+  "files": [
+    {
+      "path": "public/assets/farm-stories/backgrounds/farm-base-960x540.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 816117
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/cowpea.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 13496
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/maize.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 8208
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/ruziziensis.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 785
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/sorghum.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 9418
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/soybean.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 13093
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/sunflower.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 9273
+    },
+    {
+      "path": "public/assets/farm-stories/crop-overlays/unknown-generic.png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 498
+    },
+    {
+      "path": "public/assets/farm-stories/effects/ambient-cloud-00.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 2372
+    },
+    {
+      "path": "public/assets/farm-stories/effects/ambient-cloud-01.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 2370
+    },
+    {
+      "path": "public/assets/farm-stories/effects/ambient-cloud-02.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 2369
+    },
+    {
+      "path": "public/assets/farm-stories/effects/ambient-cloud-03.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 2370
+    },
+    {
+      "path": "public/assets/farm-stories/effects/ambient-cloud-04.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 2369
+    },
+    {
+      "path": "public/assets/farm-stories/effects/ambient-cloud-05.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 2369
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-bird.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 192
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-cloud.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 336
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-fence.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 255
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-hay-bale.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 303
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-leaf.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 392
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-mulch.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 318
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-rain.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 274
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-rock.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 370
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-shrub.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 434
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-sign.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 297
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-sun.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 252
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-tree.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 509
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-water-drop.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 406
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-water-tank.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 365
+    },
+    {
+      "path": "public/assets/farm-stories/props/prop-wind.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 326
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-1.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 901117
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-2.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 897554
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-3.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 901117
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-4.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 718899
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-1.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 897554
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-2.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 718899
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-3.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 901117
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-4.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 887216
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-1.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 881990
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-2.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 887216
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-3.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 840490
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-4.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 718899
+    },
+    {
+      "path": "public/assets/farm-stories/thumbnails/scenario-a-thumb.png",
+      "dimensions": [
+        320,
+        180
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 129115
+    },
+    {
+      "path": "public/assets/farm-stories/thumbnails/scenario-b-thumb.png",
+      "dimensions": [
+        320,
+        180
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 124622
+    },
+    {
+      "path": "public/assets/farm-stories/thumbnails/scenario-c-thumb.png",
+      "dimensions": [
+        320,
+        180
+      ],
+      "format": "PNG",
+      "mode": "RGB",
+      "frameCount": 1,
+      "bytes": 127586
+    },
+    {
+      "path": "public/assets/farm-stories/tiles/tile-cover-32.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 741
+    },
+    {
+      "path": "public/assets/farm-stories/tiles/tile-dry-32.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 555
+    },
+    {
+      "path": "public/assets/farm-stories/tiles/tile-grass-32.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 715
+    },
+    {
+      "path": "public/assets/farm-stories/tiles/tile-mulch-32.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 695
+    },
+    {
+      "path": "public/assets/farm-stories/tiles/tile-path-32.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 534
+    },
+    {
+      "path": "public/assets/farm-stories/tiles/tile-soil-32.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "frameCount": 1,
+      "bytes": 516
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-1.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1195906
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-2.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1187216
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-3.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1195906
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-4.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 930584
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-1.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1187216
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-2.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 930584
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-3.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1195906
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-4.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1168137
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-1.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1212774
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-2.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1168137
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-3.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 1158359
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-4.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "GIF",
+      "mode": "P",
+      "frameCount": 6,
+      "bytes": 930584
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-1.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 713306
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-2.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 632216
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-3.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 713306
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-a-cycle-4.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 446018
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-1.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 632216
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-2.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 446018
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-3.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 713306
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-b-cycle-4.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 674392
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-1.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 718974
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-2.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 674392
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-3.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 758014
+    },
+    {
+      "path": "public/assets/farm-stories/scenes/scenario-c-cycle-4.webp",
+      "dimensions": [
+        960,
+        540
+      ],
+      "format": "WEBP",
+      "mode": "RGBA",
+      "frameCount": 6,
+      "bytes": 446018
+    }
+  ],
+  "note": "Reference crop icons stored outside public to avoid overwriting current repo sprites.",
+  "artAssetsCount": 74,
+  "nonCanonicalCropRefs": 16
+}
