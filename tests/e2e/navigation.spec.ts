@@ -109,8 +109,7 @@ test('selects Brazil, Ghana, and India examples globally and updates the coordin
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
   await expect(page.getByRole('list', { name: 'Chuva e temperatura típicas por mês' })).toBeVisible();
   await expect(page.getByText('NASA POWER · 2011–2025 · mediana', { exact: true })).toBeVisible();
-  await page.getByRole('tab', { name: 'Dados' }).click();
-  const dataPanel = page.getByRole('tabpanel', { name: 'Dados' });
+  const dataPanel = page.locator('#explore-data-panel');
   await expect(dataPanel.getByRole('heading', { name: 'Nova Délhi, Índia' })).toBeVisible();
   await expect(dataPanel.getByRole('img', { name: 'Chuva e temperatura típicas por mês' })).toBeVisible();
   await expect(dataPanel.getByText(/NASA POWER · 2011–2025 · mediana dos anos históricos/)).toBeVisible();
@@ -125,8 +124,7 @@ test('shows retryable NASA failure without a fabricated climate metric', async (
   await page.goto('/explore');
   await openMoreOptions(page);
   await page.getByRole('button', { name: 'Acra, Gana' }).click();
-  await page.getByRole('tab', { name: 'Dados' }).click();
-  const dataPanel = page.getByRole('tabpanel', { name: 'Dados' });
+  const dataPanel = page.locator('#explore-data-panel');
   await expect(dataPanel.getByText('NASA indisponível.', { exact: true })).toBeVisible();
   const retry = dataPanel.getByRole('button', { name: 'Tentar novamente' });
   const requestsBeforeRetry = climateRequests;
@@ -212,7 +210,7 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
 test('migrates a V1 draft on the farm timeline and preserves its data at 375px', async ({ page }) => {
   await installDraft(page);
   await page.setViewportSize({ width: 375, height: 844 });
-  await page.goto('/farm');
+  await page.goto('/farm/historico');
   await expect(page.getByRole('heading', { name: 'Linha do tempo da fazenda' })).toBeVisible();
   await expect(page.getByLabel('Início (mês/ano) do evento 1')).toHaveValue('2023-01');
   await page.getByRole('button', { name: 'Salvar e ir ao laboratório' }).click();
@@ -247,7 +245,7 @@ test('edits a laboratory slot by keyboard without inventing a calendar', async (
 
 test('blocks overlapping timeline dates and allows another crop entry', async ({ page }) => {
   await installDraft(page);
-  await page.goto('/farm');
+  await page.goto('/farm/historico');
   await page.getByRole('button', { name: /2\. milho/ }).click();
   await page.getByText('Outra cultura', { exact: true }).click();
   await page.getByLabel('Outra cultura do evento 2').fill('mandioca');
@@ -259,7 +257,7 @@ test('blocks overlapping timeline dates and allows another crop entry', async ({
 
 test('explains invalid month fields and confirms a save without navigating away', async ({ page }) => {
   await installDraft(page);
-  await page.goto('/farm');
+  await page.goto('/farm/historico');
   await page.getByRole('button', { name: /2\. milho/ }).click();
   const start = page.getByLabel('Início (mês/ano) do evento 2');
   await start.fill('');
@@ -269,14 +267,14 @@ test('explains invalid month fields and confirms a save without navigating away'
   await start.fill('2023-07');
   await page.getByRole('button', { name: 'Salvar rascunho' }).click();
   await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo às');
-  await expect(page).toHaveURL(/\/farm$/);
+  await expect(page).toHaveURL(/\/farm\/historico$/);
 });
 
 test('starts with one history event and lets the producer add or remove optional events', async ({ page }) => {
   const oneEvent = draft();
   oneEvent.data.history = [oneEvent.data.history[0]];
   await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), oneEvent);
-  await page.goto('/farm');
+  await page.goto('/farm/historico');
   await expect(page.getByRole('heading', { name: 'Histórico recente de cultivos' })).toBeVisible();
   await expect(page.getByRole('button', { name: /1\. soja/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /2\./ })).toHaveCount(0);
@@ -291,7 +289,7 @@ test('starts with one history event and lets the producer add or remove optional
 test('keeps the core farm, laboratory, and results flow in English', async ({ page }) => {
   await installDraft(page);
   await page.addInitScript(() => window.localStorage.setItem('field-shift:locale', 'en'));
-  await page.goto('/farm');
+  await page.goto('/farm/historico');
   await expect(page.getByRole('heading', { name: 'Farm timeline' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Recent crop history' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Save and open laboratory' })).toBeVisible();
@@ -334,7 +332,7 @@ test('compares scenarios with mobile tabs on a 375px viewport', async ({ page })
 
 test('builds a 2–3 crop system with drag, validates chronology, and persists it', async ({ page }) => {
   await installDraft(page);
-  await page.goto('/farm');
+  await page.goto('/farm/historico');
   const systems = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Sistemas de cultivo (opcional)' }) });
   await expect(systems.locator('img[alt*="mandioca" i]').first()).toHaveAttribute('src', /cassava\.png/);
   await systems.getByRole('button', { name: 'Adicionar sistema composto' }).click();
@@ -358,20 +356,4 @@ test('builds a 2–3 crop system with drag, validates chronology, and persists i
   await expect(page.getByRole('status')).toContainText('Rascunho salvo neste dispositivo');
   const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').data.croppingSystems[0]);
   expect(stored).toMatchObject({ type: 'succession', events: [{ startYearMonth: '2026-01' }, { startYearMonth: '2026-05' }, { cropId: 'cassava' }] });
-});
-
-test('a place picked on the explorer map is offered to João and advances the chat', async ({ page }) => {
-  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
-  await page.goto('/explore');
-  await openMoreOptions(page);
-  await page.getByRole('button', { name: 'Rio Verde (GO), zona rural' }).click();
-  // The explorer opens on the Data tab; João's offer waits in the chat tab, which is hidden until selected.
-  await page.getByRole('tab', { name: 'Conversa com o João' }).click();
-  const log = page.getByRole('log', { name: 'Conversa' });
-  await expect(log).toContainText('Vi que você marcou');
-  await expect(log).toContainText('Rio Verde');
-  await page.getByRole('button', { name: 'Sim, é aqui' }).click();
-  await expect(log).toContainText('O que você está plantando agora?');
-  await expect(page.getByRole('button', { name: 'Soja' })).toBeVisible();
-  await page.screenshot({ path: '/tmp/claude-1000/-home-PiSothe-Documents-Nasa/ae090924-a6d5-41a8-81eb-70e0623e2ddd/scratchpad/explore-chat-linked.png' });
 });

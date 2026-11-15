@@ -32,7 +32,7 @@ function ScenarioCardView({ card, data, en, locale }: { card: ScenarioCard; data
     <header>
       <p className="text-sm font-semibold text-lime-300">{en ? 'Scenario' : 'Cenário'} {card.id}{card.baseline ? <> · <Chip tone="info">{en ? 'what you do today' : 'o que você faz hoje'}</Chip></> : null}</p>
       <h3 className="mt-1 text-lg font-bold leading-tight">{scenarioDisplayTitle(strategy, locale)}</h3>
-      {strategy.baseline ? <Link className="mt-2 inline-block min-h-6 text-sm underline" href="/farm?edit=baseline">{en ? 'Edit baseline' : 'Editar linha de base'}</Link> : null}
+      {strategy.baseline ? <Link className="mt-2 inline-block min-h-6 text-sm underline" href="/farm/historico?edit=baseline">{en ? 'Edit baseline' : 'Editar linha de base'}</Link> : null}
     </header>
     <Sequence card={card} en={en} locale={locale} />
     {card.delta.length ? <Delta card={card} en={en} locale={locale} /> : null}

@@ -76,6 +76,8 @@ export const soilObservationSchema = z.object({ kinds: z.array(z.enum(soilObserv
 export const analysisInputSchema = z.object({
   location: coordinatesSchema,
   fieldBoundary: fieldBoundarySchema.optional(),
+  /** 'suggested' = default square created from the location (not measured); absent or 'drawn' = the farmer's own perimeter. */
+  fieldBoundaryOrigin: z.enum(['suggested', 'drawn']).optional(),
   waterPoint: waterPointSchema.optional(),
   soilObservation: soilObservationSchema.optional(),
   farmerCrops: farmerCropProfileSchema.optional(),

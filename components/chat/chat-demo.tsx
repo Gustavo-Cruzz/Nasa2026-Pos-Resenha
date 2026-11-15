@@ -3,15 +3,18 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, MapPin, RotateCcw, SendHorizontal } from 'lucide-react';
-import { acceptMapPlace, advance, buildAnalysisInput, mapChoices, suggestMapChange, suggestMapPlace, type MapPlace, chooseSoil, greeting, initialState, startWithLocation, lookupFailed, provideLocation, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
+import { acceptMapPlace, advance, buildAnalysisInput, mapChoices, suggestMapChange, suggestMapPlace, type MapPlace, chooseSoil, geoChoices, geoFallback, geoFound, geoGreeting, greeting, initialState, startWithLocation, lookupFailed, provideLocation, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { saveDraft } from '@/lib/storage';
 import type { AtlasPolygon } from '@/lib/atlas';
 import { useLocale } from '@/components/locale-provider';
 import { ASSISTANT_NAME, ChatAvatar } from '@/components/chat/chat-avatar';
+import { suggestedBoundary } from '@/lib/farm/default-boundary';
+import { ChatMiniMap } from '@/components/chat/chat-mini-map';
 import { VoiceInputButton } from '@/components/chat/voice-input-button';
 
-type Message = { id: number; role: 'bot' | 'user'; text: string };
+type Message = { id: number; role: 'bot' | 'user'; text: string; map?: MapPlace };
+const GEO_TIMEOUT_MS = 10000;
 const DELAY_MS = 350;
 const SUGGEST_DELAY_MS = 180;
 const MAP_DEBOUNCE_MS = 600;
@@ -31,8 +34,12 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
   // Opened from the explorer with ?lat&lon&label: the city is already known.
   const searchParams = useSearchParams();
   const [boot] = useState<Turn | undefined>(() => readPrefill(searchParams, locale));
-  const [messages, setMessages] = useState<Message[]>(() => asMessages(boot ? boot.replies : greeting(locale)));
-  const [chips, setChips] = useState<string[]>(() => (boot ? boot.replies : greeting(locale)).at(-1)?.chips ?? []);
+  // Without a known place (no prefill, no map point) João first asks permission to use the device location.
+  const askConsent = !boot && !mapPoint;
+  const [consent, setConsent] = useState(askConsent);
+  const opening = (): Reply[] => (boot ? boot.replies : askConsent ? geoGreeting(locale) : greeting(locale));
+  const [messages, setMessages] = useState<Message[]>(() => asMessages(opening()));
+  const [chips, setChips] = useState<string[]>(() => opening().at(-1)?.chips ?? []);
   const [multi, setMulti] = useState<Reply['multi']>();
   const [picked, setPicked] = useState<string[]>([]);
   const [state, setState] = useState<ChatState>(() => boot?.state ?? initialState());
@@ -100,7 +107,7 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
   const runEffects = (effects: Effect[], turn: Turn) => {
     const effect = effects[0];
     if (!effect) { setBusy(false); return; }
-    if (effect.type === 'restart') { setMessages(asMessages(greeting(locale))); setChips(greeting(locale).at(-1)?.chips ?? []); setBusy(false); return; }
+    if (effect.type === 'restart') { const first = geoGreeting(locale); setMessages(asMessages(first)); setChips(first.at(-1)?.chips ?? []); setConsent(true); setOffer(undefined); setBusy(false); return; }
     if (effect.type === 'go') {
       const input = buildAnalysisInput(turn.state.draft);
       if (!input) { addBot([{ text: en ? 'Something is missing in my notes. Say "restart" to begin again.' : 'Faltou algo nas minhas anotações. Diga "recomeçar" para começar de novo.' }]); setBusy(false); return; }
@@ -129,6 +136,33 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     window.setTimeout(() => { if (turn.replies.length) addBot(turn.replies); runEffects(turn.effects, turn); }, DELAY_MS);
   };
 
+  const fallbackToCity = (kind: Parameters<typeof geoFallback>[0]) => { setBusy(false); addBot(geoFallback(kind, locale)); };
+
+  // Reads the device position (10 s limit), names it through the municipal reverse lookup when possible and offers it with a mini map.
+  const requestLocation = () => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) { fallbackToCity('unsupported'); return; }
+    setBusy(true); setChips([]);
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      let place: MapPlace = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+      try {
+        const response = await fetch(`/api/places?lat=${place.latitude}&lon=${place.longitude}`);
+        const body = await response.json() as { status: string; municipality?: { name: string; uf: string } | null };
+        if (body.status === 'ok' && body.municipality) place = { ...place, label: `${body.municipality.name} (${body.municipality.uf})` };
+      } catch { /* the coordinates serve as the label */ }
+      const found = geoFound(place, locale);
+      setMessages((current) => [...current, { id: nextId(), role: 'bot', text: found.text, map: place }]);
+      setChips(found.chips ?? []); setMulti(undefined); setPicked([]);
+      setOffer({ place, kind: 'location' });
+      setBusy(false);
+    }, (error) => fallbackToCity(error.code === 1 ? 'denied' : error.code === 3 ? 'timeout' : 'unavailable'), { enableHighAccuracy: true, timeout: GEO_TIMEOUT_MS, maximumAge: 0 });
+  };
+
+  const answerConsent = (yes: boolean) => {
+    setConsent(false);
+    setMessages((current) => [...current, { id: nextId(), role: 'user', text: yes ? geoChoices(locale).yes : geoChoices(locale).no }]);
+    if (yes) requestLocation(); else { setChips([]); respond({ state, replies: geoFallback('declined', locale), effects: [] }); }
+  };
+
   const answerOffer = (yes: boolean) => {
     if (!offer || busy) return;
     const choices = mapChoices(locale);
@@ -143,6 +177,11 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     const value = raw.trim();
     if (!value || busy) return;
     const choices = mapChoices(locale);
+    if (consent) {
+      const geo = geoChoices(locale);
+      if (value === geo.yes || value === geo.no) { answerConsent(value === geo.yes); return; }
+      setConsent(false);
+    }
     if (offer?.kind === 'location' && (value === choices.yes || value === choices.no)) { answerOffer(value === choices.yes); return; }
     setOffer((current) => (current?.kind === 'location' ? undefined : current));
     setMessages((current) => [...current, { id: nextId(), role: 'user', text: value }]);
@@ -184,7 +223,7 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     <div aria-label={en ? 'Conversation' : 'Conversa'} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto px-4 py-4" ref={logRef} role="log">
       {messages.map((message) => <div className={`flex ${message.role === 'user' ? 'justify-end' : 'items-end gap-2'}`} key={message.id}>
         {message.role === 'bot' ? <span aria-hidden="true" className="shrink-0"><ChatAvatar size={32} /></span> : null}
-        <p className={`max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${message.role === 'user' ? 'rounded-br-sm bg-lime-300 text-slate-950' : 'rounded-bl-sm border border-slate-700 bg-slate-800 text-slate-100'}`}><BubbleText bot={message.role === 'bot'} text={message.text} /></p>
+        <div className={`max-w-[85%] whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${message.role === 'user' ? 'rounded-br-sm bg-lime-300 text-slate-950' : 'rounded-bl-sm border border-slate-700 bg-slate-800 text-slate-100'}`}><BubbleText bot={message.role === 'bot'} text={message.text} />{message.map ? <div className="mt-2 w-64 max-w-full sm:w-80"><ChatMiniMap place={message.map} /></div> : null}</div>
       </div>)}
       {busy ? <div className="flex items-end gap-2" role="status"><span aria-hidden="true" className="shrink-0"><ChatAvatar size={32} /></span><span className="chat-typing rounded-2xl rounded-bl-sm border border-slate-700 bg-slate-800 px-4 py-3"><span className="sr-only">{en ? 'Typing…' : 'Digitando…'}</span><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" /></span></div> : null}
     </div>
@@ -225,8 +264,9 @@ function bold(text: string) { return text.split(/\*\*(.+?)\*\*/g).map((part, ind
 function persistAtlas(location: MapPlace | undefined, polygon: AtlasPolygon | undefined) {
   try {
     if (location) window.localStorage.setItem('field-shift:atlas-point', JSON.stringify({ latitude: location.latitude, longitude: location.longitude, ...(location.label ? { label: location.label } : {}) }));
-    if (polygon && polygon.length >= 3) window.localStorage.setItem('field-shift:atlas-polygon', JSON.stringify(polygon));
-    else if (polygon) window.localStorage.removeItem('field-shift:atlas-polygon');
+    if (polygon && polygon.length >= 3) { window.localStorage.setItem('field-shift:atlas-polygon', JSON.stringify(polygon)); window.localStorage.setItem('field-shift:atlas-polygon-origin', 'drawn'); }
+    else if (location) { window.localStorage.setItem('field-shift:atlas-polygon', JSON.stringify(suggestedBoundary(location))); window.localStorage.setItem('field-shift:atlas-polygon-origin', 'suggested'); }
+    else { window.localStorage.removeItem('field-shift:atlas-polygon'); window.localStorage.removeItem('field-shift:atlas-polygon-origin'); }
   } catch { /* storage unavailable: the analysis still opens */ }
 }
 

@@ -6,6 +6,6 @@ export const metadata = { title: 'Entrar · Plantaê' };
 export const dynamic = 'force-dynamic';
 
 export default async function SignInPage() {
-  if (await currentUser()) redirect('/painel');
+  if (await currentUser()) redirect('/farm');
   return <SignInForm />;
 }

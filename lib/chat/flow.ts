@@ -231,3 +231,30 @@ export function acceptMapPlace(state: ChatState, place: MapPlace, locale: Locale
   const location: PlaceResult = { latitude: place.latitude, longitude: place.longitude, ...(place.label ? { label: place.label } : {}) };
   return goTo({ ...state.draft, location }, locale, reply(pick(locale, `Anotado: ${mapPlaceName(place)}.`, `Noted: ${mapPlaceName(place)}.`)));
 }
+
+/** Geolocation consent: João's first question when the place is not known yet. */
+export const geoChoices = (locale: Locale) => ({ yes: pick(locale, 'Sim, pode usar', 'Yes, go ahead'), no: pick(locale, 'Não, prefiro digitar', 'No, I prefer to type') });
+
+export function geoGreeting(locale: Locale): Reply[] {
+  const { yes, no } = geoChoices(locale);
+  return [greeting(locale)[0], reply(pick(locale, 'Posso usar a localização do seu aparelho para achar a sua fazenda?\nO navegador vai pedir a sua permissão. Nada é guardado sem você cadastrar.', 'May I use your device location to find your farm?\nThe browser will ask for your permission. Nothing is saved unless you register.'), [yes, no])];
+}
+
+/** João's message once the device location arrived (the app draws the mini map under it). */
+export function geoFound(place: MapPlace, locale: Locale): Reply {
+  const { yes, no } = mapChoices(locale);
+  return reply(pick(locale, `Achei você aqui: **${mapPlaceName(place)}**.\nÉ essa a localização da fazenda que você quer cadastrar?`, `I found you here: **${mapPlaceName(place)}**.\nIs this the location of the farm you want to register?`), [yes, no]);
+}
+
+export type GeoFailure = 'unsupported' | 'denied' | 'unavailable' | 'timeout';
+/** Friendly fallback when the location could not be read or the user declined: the normal city question follows. */
+export function geoFallback(kind: GeoFailure | 'declined', locale: Locale): Reply[] {
+  const lead = kind === 'declined'
+    ? pick(locale, 'Tudo bem, vamos pelo jeito tradicional.', 'Fine, let us do it the usual way.')
+    : kind === 'denied'
+      ? pick(locale, 'Sem permissão de localização, tudo bem.', 'No location permission, that is fine.')
+      : kind === 'timeout'
+        ? pick(locale, 'Não consegui a localização a tempo.', 'I could not get the location in time.')
+        : pick(locale, 'Não consegui ler a localização do aparelho.', 'I could not read the device location.');
+  return [reply(lead), ...prompt('location', {}, locale)];
+}

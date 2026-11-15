@@ -306,3 +306,12 @@ describe('chat closing: decision summary', () => {
     expect(prompt('confirm', soilDraft(), 'en')[0].text).toContain('compare B with A in the analysis.');
   });
 });
+
+describe('chat registration: geolocation consent', () => {
+  it('opens with the consent question and two chips, and falls back to the city question', async () => {
+    const { geoGreeting, geoChoices, geoFallback, geoFound } = await import('@/lib/chat/flow');
+    expect(geoGreeting('pt-BR').at(-1)?.chips).toEqual([geoChoices('pt-BR').yes, geoChoices('pt-BR').no]);
+    expect(geoFallback('denied', 'en').at(-1)?.text).toContain('Which city');
+    expect(geoFound({ latitude: -17.8, longitude: -50.9 }, 'pt-BR').chips).toHaveLength(2);
+  });
+});

@@ -905,3 +905,33 @@ Implemented: per-slot crop windows with window P−ET0, monthly IMERG/root-zone 
 Evidence (2026-11-15): `npx tsc --noEmit`, `npm run lint`, `npm run build` pass; `npx vitest run` 52 files / 356 tests. Demo (Rio Verde, `/api/analyze`): A soja→milho, B soja→sorgo, C soja→braquiária; B and C better in water (+101 mm window P−ET0) and soil; C calendar unknown (braquiária not in ZARC).
 
 Limitations / next: Brazilian cycles still missing for most crops (assumed 4-month windows); ZARC soil class not inferred from SoilGrids; screening thresholds await agronomist review; Frente 3 (3.1 decision-first results, 3.2 jargon).
+
+## "Minha fazenda" merges the farm panel; João asks for the device location
+
+Status: complete in code; not yet checked in a browser.
+
+Implemented: `/farm` is now the user's farm hub (server-checked session). With no session or no farm it shows João's registration chat. The chat now opens by asking for permission to use the device location (`geoGreeting`, `geoChoices`, `geoFallback`, `geoFound` in `lib/chat/flow.ts`). If the user declines, the browser has no geolocation, permission is denied or the 10 s timeout passes, the chat falls back to asking for the city. If the user accepts, the point is labelled through `/api/places?lat&lon` and shown in a read-only satellite mini map inside the chat (`components/chat/chat-mini-map.tsx`), and João asks whether that is the farm. The rest of the flow is unchanged and ends in `/cadastro`, which saves the farm to the account and opens `/farm?chegada=1`. That first arrival plays a pixel-art animation of João walking to the place's pin and "entering the world" (`components/farm/farm-arrival.tsx`, with a skip button; it is skipped under reduced motion). With a farm, `/farm` shows the merged dashboard (former `/painel`): a satellite map framed on the perimeter, where the user can draw or edit the perimeter (saved via `PUT /api/farm`), then summary, climate and water, history and rotation, soil and relief. At the end, "Análise detalhada" saves the draft and opens `/results`. `/painel` redirects to `/farm` and was removed from the header. `/entrar` and the sign-in form now go to `/farm`. The old manual timeline moved to `/farm/historico`, and the lab/results "edit farm" links point there. Explore no longer embeds the registration chat; it is for general consultation and links to "Minha fazenda".
+
+Evidence (2026-11-15): `npx tsc --noEmit`, eslint on app/components/lib/tests and `npx vitest run` (402 tests) pass. `/farm`, `/farm/historico` → 200; `/painel` → 307. The e2e specs for the timeline now target `/farm/historico`. The explorer-chat e2e test was removed.
+
+Limitations / next: `npm run build` and Playwright were not run, so the dev server would not be disturbed. Not yet verified in a browser: the geolocation prompt, the mini map, the arrival animation and drawing the perimeter. The unused `dashboard` i18n key remains.
+
+## "Minha fazenda" simplified (layout A), explore-style map, suggested perimeter, ENSO notice
+
+Status: complete in code; the user reviewed the prototypes in the browser and chose layout A.
+
+Implemented: `/farm` uses `components/farm/layouts/layout-a.tsx`, which shows:
+- João's headline.
+- The explore-style map (`components/farm/farm-map.tsx`: satellite, weather pixel FX, climate HUD, layers, perimeter editing).
+- Three traffic-light cards: Chuva, Plantio, Solo e rotação.
+- The crop strip and a CTA to `/results` for details.
+
+All texts come from `useFarmInsights` (`components/farm/layouts/use-farm-insights.ts` + pure `lib/farm/insights.ts`), which reuses João's explore lines and shows "Sem dado" when data is missing. When NOAA RONI reports an active El Niño or La Niña, a highlighted "Notícia importante" card shows the phase, João's sentence, the RONI reading as evidence and the NOAA source link. A neutral phase stays a footnote. Technical panels (charts, regional soil, terrain) now live only in Compare.
+
+A new farm gets a suggested 25 ha square around the chosen point (`lib/farm/default-boundary.ts`; a fixed starting shape, not data). It is marked `fieldBoundaryOrigin: 'suggested'` and labelled "Área sugerida" until the farmer edits it ('drawn').
+
+Prototypes B and C and the layout switch were removed.
+
+Evidence (2026-11-15): typecheck, eslint and vitest (412 tests) pass; `/farm` → 200.
+
+Limitations: the 25 ha default is not regional data. `/results` still labels a suggested polygon as an ordinary boundary. `npm run build` and Playwright were not run, to avoid disturbing the dev server.

@@ -6,7 +6,7 @@ export type RegistrationGap = 'previous_crop' | 'water' | 'area';
 const FIELDS: ReadonlyArray<readonly [RegistrationGap, (input: AnalysisInput) => boolean]> = [
   ['previous_crop', (input) => input.history.length < 2],
   ['water', (input) => input.irrigation === 'unknown'],
-  ['area', (input) => !input.fieldBoundary || input.fieldBoundary.length < 3],
+  ['area', (input) => !input.fieldBoundary || input.fieldBoundary.length < 3 || input.fieldBoundaryOrigin === 'suggested'],
 ];
 
 export function registrationGaps(input: AnalysisInput): RegistrationGap[] {
@@ -21,5 +21,5 @@ export function registrationProgress(input: AnalysisInput): { filled: number; to
 export const GAP_LABEL: Record<RegistrationGap, { 'pt-BR': string; en: string }> = {
   previous_crop: { 'pt-BR': 'cultura anterior', en: 'previous crop' },
   water: { 'pt-BR': 'como a lavoura recebe água', en: 'how the crop gets water' },
-  area: { 'pt-BR': 'área desenhada no mapa', en: 'area drawn on the map' },
+  area: { 'pt-BR': 'ajustar a área no mapa', en: 'adjust the area on the map' },
 };

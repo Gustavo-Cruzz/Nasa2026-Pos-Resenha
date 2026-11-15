@@ -1,9 +1,9 @@
 'use client';
 
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { AlertCircle, MessageCircle, Pentagon, RefreshCw, SlidersHorizontal } from 'lucide-react';
+import { AlertCircle, Pentagon, RefreshCw, SlidersHorizontal } from 'lucide-react';
 import { atlasPointSchema, ATLAS_EXAMPLES, climateApiResponseSchema, type AtlasPoint, type AtlasPolygon, type ClimateApiResponse, type MapLayers } from '@/lib/atlas';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { Button } from '@/components/ui/button';
@@ -19,8 +19,6 @@ import { LiveWeatherPanel } from '@/components/atlas/live-weather';
 import { BoundarySummary } from '@/components/boundary/boundary-summary';
 import { GeoJsonImport } from '@/components/boundary/geojson-import';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
-import { ChatDemo } from '@/components/chat/chat-demo';
-import { ClientOnly } from '@/components/client-only';
 import type * as Leaflet from 'leaflet';
 import { FarmWeatherFx, parseSim } from '@/components/atlas/farm-weather-fx';
 import { PixelClimateHud } from '@/components/atlas/pixel-climate-hud';
@@ -44,8 +42,6 @@ export function LocationExplorer() {
   const [latitude, setLatitude] = useState(String(BAHIA.latitude));
   const [longitude, setLongitude] = useState(String(BAHIA.longitude));
   const [state, setState] = useState<ClimateState>({ kind: 'loading' });
-  // The opening view (Bahia) is not shown to the chat: only a place the user actually picks is offered, so the chat is not nagged on load.
-  const [picked, setPicked] = useState(false);
   const [polygon, setPolygon] = useState<AtlasPolygon>([]);
   const [drawingPolygon, setDrawingPolygon] = useState(false);
   const polygonBeforeDrawing = useRef<AtlasPolygon>([]);
@@ -56,8 +52,6 @@ export function LocationExplorer() {
   const [leafletMap, setLeafletMap] = useState<Leaflet.Map | null>(null);
   const requestId = useRef(0);
   const live = useLiveWeather(point);
-  // The side column holds two views of the same place: the chat with João (opens first) and the data (with João's comments). Both stay mounted, so a conversation is never lost when switching.
-  const [tab, setTab] = useState<'data' | 'chat'>('chat');
   const sideRef = useRef<HTMLDivElement>(null);
   const scrollToSide = useRef(false);
 
@@ -77,7 +71,7 @@ export function LocationExplorer() {
   }, [state]);
 
   const setSelectedPoint = useCallback((next: AtlasPoint) => {
-    setPicked(true); setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next);
+    setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next);
     // A point picked on the map has no name yet: ask which municipality contains it.
     if (!next.label) void fetch(`/api/places?lat=${next.latitude}&lon=${next.longitude}`).then((response) => response.json() as Promise<{ status: string; municipality?: { name: string; uf: string } | null }>).then((body) => {
       const found = body.status === 'ok' ? body.municipality : null;
@@ -87,7 +81,6 @@ export function LocationExplorer() {
   const pickPlace = (place: PlaceMatch) => { scrollToSide.current = true; setSelectedPoint({ latitude: place.latitude, longitude: place.longitude, label: `${place.name} (${place.uf})` }); };
   const importBoundary = (boundary: AtlasPolygon) => { setPolygon(boundary); setDrawingPolygon(false); const center = analyzeBoundary(boundary).centroid; if (center) setSelectedPoint({ latitude: Number(center.latitude.toFixed(6)), longitude: Number(center.longitude.toFixed(6)) }); };
   const submitCoordinates = () => { const parsed = atlasPointSchema.safeParse({ latitude: Number(latitude), longitude: Number(longitude) }); if (!parsed.success) { setState({ kind: 'error', message: en ? 'Enter latitude between −90 and 90 and longitude between −180 and 180.' : 'Informe latitude entre −90 e 90 e longitude entre −180 e 180.' }); return; } setSelectedPoint(parsed.data); };
-  const chatLoading = <p className="text-slate-300" role="status">Carregando conversa… / Loading chat…</p>;
   return <section className="grid gap-4">
     <PlaceSearch onPick={pickPlace} />
     <div className="atlas-layout-d">
@@ -97,12 +90,9 @@ export function LocationExplorer() {
         <FarmWeatherFx drawing={drawingPolygon} en={en} live={live} map={leafletMap} onDraw={startDrawing} point={point} polygon={polygon} sim={fxSim} />{drawingPolygon ? <DrawToolbar count={polygon.length} en={en} onCancel={cancelDrawing} onFinish={finishDrawing} onUndo={() => setPolygon((current) => current.slice(0, -1))} /> : <PixelClimateHud en={en} onRetry={() => { if (point) void fetchClimate(point); }} state={state} />}
       </div>
       <div className="atlas-side-col" ref={sideRef}>
-        <div aria-label={en ? 'Side panel' : 'Painel lateral'} className="flex gap-2" role="tablist">
-          {([['data', en ? 'Data' : 'Dados'], ['chat', en ? 'Chat with João' : 'Conversa com o João']] as const).map(([id, label]) => <button aria-controls={`explore-${id}-panel`} aria-selected={tab === id} className={`min-h-11 flex-1 rounded-lg border px-3 text-sm font-semibold ${tab === id ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 text-slate-100 hover:border-lime-300'}`} id={`explore-${id}-tab`} key={id} onClick={() => setTab(id)} role="tab" type="button">{label}</button>)}
-        </div>
         <div className="atlas-side-body">
       <ExploreExtrasProvider point={point}>
-        <aside aria-labelledby="explore-data-tab" aria-live="polite" className="atlas-panel" hidden={tab !== 'data'} id="explore-data-panel" role="tabpanel">
+        <aside aria-live="polite" className="atlas-panel" id="explore-data-panel">
           {!point ? <p className="text-slate-300">{en ? 'Search a city or tap the map.' : 'Busque uma cidade ou toque no mapa.'}</p> : <>
             <h2 className="text-2xl font-bold leading-tight">{point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')}</h2>
             <p className="mt-1 font-mono text-xs text-slate-400">{coordinateLabel(point)}</p>
@@ -113,11 +103,10 @@ export function LocationExplorer() {
               <PlantingPanels data={state.data} en={en} />
             </JoaoLinesProvider> : null}
             <LiveWeatherPanel state={live} />
-            <Button className="mt-6 w-full justify-center" type="button" onClick={() => setTab('chat')}><MessageCircle aria-hidden="true" className="mr-2" size={18} />{en ? 'Talk to João about my farm' : 'Conversar com o João sobre a minha fazenda'}</Button>
+            <p className="mt-6 text-sm text-slate-300">{en ? 'Want to follow your own farm?' : 'Quer acompanhar a sua fazenda?'}{' '}<Link className="font-semibold text-lime-300 underline underline-offset-2 hover:text-lime-200" href="/farm">{en ? 'Register it in My farm' : 'Cadastre em Minha fazenda'}</Link></p>
           </>}
         </aside>
       </ExploreExtrasProvider>
-          <div aria-labelledby="explore-chat-tab" className="atlas-chat-col" hidden={tab !== 'chat'} id="explore-chat-panel" role="tabpanel"><Suspense fallback={chatLoading}><ClientOnly fallback={chatLoading}><ChatDemo mapPoint={picked ? point : null} mapPolygon={polygon} /></ClientOnly></Suspense></div>
         </div>
       </div>
 
@@ -180,7 +169,7 @@ export async function requestClimate(next: AtlasPoint, en: boolean): Promise<Cli
   return parsed.data;
 }
 
-function DrawToolbar({ count, en, onUndo, onFinish, onCancel }: { count: number; en: boolean; onUndo: () => void; onFinish: () => void; onCancel: () => void }) {
+export function DrawToolbar({ count, en, onUndo, onFinish, onCancel }: { count: number; en: boolean; onUndo: () => void; onFinish: () => void; onCancel: () => void }) {
   const ready = count >= 3;
   const button = 'border-2 px-3 py-1.5 font-mono text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40';
   return <div className="absolute left-3 right-14 bottom-8 z-[1000] mx-auto flex w-fit flex-wrap items-center justify-center gap-2 border-2 border-lime-300 bg-slate-950/90 p-2 shadow-[4px_4px_0_0_rgba(0,0,0,0.6)]" role="toolbar" aria-label={en ? 'Area drawing' : 'Desenho da área'}>
