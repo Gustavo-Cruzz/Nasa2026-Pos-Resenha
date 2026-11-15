@@ -26,7 +26,7 @@ import { FarmWeatherFx, parseSim } from '@/components/atlas/farm-weather-fx';
 import { PixelClimateHud } from '@/components/atlas/pixel-climate-hud';
 import { useLocale } from '@/components/locale-provider';
 
-type Climate = Extract<ClimateApiResponse, { status: 'ok' }>;
+export type Climate = Extract<ClimateApiResponse, { status: 'ok' }>;
 type ClimateState = { kind: 'idle' } | { kind: 'loading' } | { kind: 'ready'; data: Climate } | { kind: 'error'; message: string };
 const MONTHS = { 'pt-BR': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] } as const;
 const oneDecimal = (value: number, en: boolean) => value.toLocaleString(en ? 'en-US' : 'pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -56,8 +56,8 @@ export function LocationExplorer() {
   const [leafletMap, setLeafletMap] = useState<Leaflet.Map | null>(null);
   const requestId = useRef(0);
   const live = useLiveWeather(point);
-  // The side column holds two views of the same place: the data (with João's comments) and the chat with João. Both stay mounted, so a conversation is never lost when switching.
-  const [tab, setTab] = useState<'data' | 'chat'>('data');
+  // The side column holds two views of the same place: the chat with João (opens first) and the data (with João's comments). Both stay mounted, so a conversation is never lost when switching.
+  const [tab, setTab] = useState<'data' | 'chat'>('chat');
   const sideRef = useRef<HTMLDivElement>(null);
   const scrollToSide = useRef(false);
 
@@ -135,12 +135,12 @@ export function LocationExplorer() {
 }
 
 /** Placeholder blocks with the shape of the results, so the panel does not jump when the data arrives. */
-function PanelSkeleton({ label }: { label: string }) {
+export function PanelSkeleton({ label }: { label: string }) {
   const block = 'rounded-lg bg-slate-800/70 motion-reduce:animate-none animate-pulse';
   return <div aria-live="polite" className="mt-5" role="status"><p className="text-sm text-slate-300">{label}</p><div aria-hidden="true" className="mt-3 grid gap-2"><div className="grid grid-cols-2 gap-2"><div className={`${block} h-16`} /><div className={`${block} h-16`} /></div><div className={`${block} h-44`} /><div className="grid grid-cols-2 gap-2"><div className={`${block} h-12`} /><div className={`${block} h-12`} /></div></div></div>;
 }
 
-function ClimateView({ data, en }: { data: Climate; en: boolean }) {
+export function ClimateView({ data, en }: { data: Climate; en: boolean }) {
   const names = MONTHS[en ? 'en' : 'pt-BR'];
   const currentMonth = new Date().getMonth() + 1;
   const rain = new Map(data.climateSummary.historicalPrecipitationByMonth.map((item) => [item.month, item.medianTotalMm]));
@@ -170,7 +170,7 @@ function ClimateView({ data, en }: { data: Climate; en: boolean }) {
 }
 
 
-async function requestClimate(next: AtlasPoint, en: boolean): Promise<Climate> {
+export async function requestClimate(next: AtlasPoint, en: boolean): Promise<Climate> {
   const today = new Date();
   const query = `lat=${encodeURIComponent(next.latitude)}&lon=${encodeURIComponent(next.longitude)}&month=${today.getMonth() + 1}&day=${today.getDate()}`;
   const response = await fetch(`/api/climate?${query}`);

@@ -11,7 +11,7 @@ export type ChatDraft = { location?: PlaceResult; current?: string; previous?: s
 export type ChatState = { step: Step; draft: ChatDraft };
 /** `multi`: the chips can be ticked several at a time; `finishLabel` is the button shown while none is ticked (with some ticked it confirms them). */
 export type Reply = { text: string; chips?: string[]; multi?: { finishLabel: string } };
-export type Effect = { type: 'lookup'; query: string } | { type: 'go' } | { type: 'restart' };
+export type Effect = { type: 'lookup'; query: string } | { type: 'go' } | { type: 'register' } | { type: 'restart' };
 export type Turn = { state: ChatState; replies: Reply[]; effects: Effect[] };
 export const TOTAL_STEPS = 4;
 
@@ -75,7 +75,7 @@ export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
         ? [reply(pick(locale, `Anotei: ${soilList(draft.soil, locale)}.\nMais alguma coisa no solo?`, `Noted: ${soilList(draft.soil, locale)}.\nAnything else in the soil?`), chips, multi)]
         : [reply(pick(locale, 'Você notou alguma coisa estranha no solo?\nMarque o que valer, ou escreva do seu jeito.', 'Have you noticed anything unusual in the soil?\nTick what applies, or write it your way.'), chips, multi)];
     }
-    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${pick(locale, 'Tudo certo?', 'All good?')}`, [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')])];
+    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${pick(locale, 'Tudo certo?', 'All good?')}`, [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Cadastrar minha fazenda', 'Register my farm'), pick(locale, 'Mudar algo', 'Change something')])];
   }
 }
 
@@ -134,9 +134,10 @@ export function advance(state: ChatState, rawText: string, locale: Locale): Turn
   if (state.step === 'confirm') {
     const target = changeTarget(text);
     if (target) { const draft = target === 'soil' ? { ...state.draft, soil: undefined, soilDone: false } : state.draft; return { state: { step: target, draft }, replies: prompt(target, draft, locale), effects: [] }; }
+    if (/\b(cadastrar|cadastro|register|sign\s?up)\b/.test(normalize(text))) return { state, replies: [reply(pick(locale, 'Vamos cadastrar a sua fazenda.\nCrie um usuário e uma senha e eu guardo tudo.', 'Let us register your farm.\nCreate a username and a password and I will save everything.'))], effects: [{ type: 'register' }] };
     if (parseYesNo(text) === 'yes') return { state, replies: [reply(pick(locale, 'Pronto! Abrindo a sua análise…', 'Done! Opening your analysis…'))], effects: [{ type: 'go' }] };
     if (/\b(mudar|change|algo|something|nao|no)\b/.test(normalize(text))) return keep([reply(pick(locale, 'O que você quer mudar?', 'What do you want to change?'), [pick(locale, 'Mudar a cidade', 'Change the city'), pick(locale, 'Mudar a cultura atual', 'Change the current crop'), pick(locale, 'Mudar a cultura anterior', 'Change the previous crop'), pick(locale, 'Mudar o solo', 'Change the soil')])]);
-    const ok = [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')];
+    const ok = [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Cadastrar minha fazenda', 'Register my farm'), pick(locale, 'Mudar algo', 'Change something')];
     if (/\b(plantar|adicionar|incluir|quero|want|plant|add)\b/.test(normalize(text))) return keep([reply(pick(locale, 'Por enquanto eu só registro o que você já plantou.\nNa análise você compara as opções de cultura.', 'For now I only register what you have already grown.\nIn the analysis you compare crop options.'), ok)]);
     return keep([reply(pick(locale, 'Não entendi.\nToque em "Ver minha análise" ou diga o que mudar.', 'I did not understand.\nTap "See my analysis" or tell me what to change.'), ok)]);
   }

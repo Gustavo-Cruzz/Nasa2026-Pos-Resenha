@@ -8,6 +8,7 @@ import { PlantaeLogo } from '@/components/brand/plantae-logo';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '@/components/locale-provider';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { PageReader } from '@/components/accessibility/page-reader';
 
 export function SiteHeader() {
   const { copy } = useLocale();
@@ -25,6 +26,7 @@ export function SiteHeader() {
     { href: '/explore', label: copy.explore, icon: 'explore', also: [] as string[] },
     { href: '/chat', label: copy.farm, icon: 'farm', also: ['/farm'] },
     { href: '/results', label: copy.compare, icon: 'compare', also: ['/lab', '/future-stories'] },
+    { href: '/painel', label: copy.dashboard, icon: undefined, also: ['/entrar', '/cadastro'] as string[] },
     { href: '/methodology', label: copy.methodology, icon: 'methodology', also: [] as string[] },
   ];
   const isActive = (link: (typeof links)[number]) => pathname === link.href || link.also.includes(pathname);
@@ -33,7 +35,7 @@ export function SiteHeader() {
   return <header className="relative border-b border-slate-800"><nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4" aria-label="Navegação principal">
     <Link aria-label={copy.productName} className="shrink-0 rounded-lg" href="/"><PlantaeLogo className="max-sm:hidden" size={34} /><PlantaeLogo className="sm:hidden" compact size={34} /></Link>
     <div className="hidden items-center gap-1 md:flex">{links.map((link) => <Link aria-current={isActive(link) ? 'page' : undefined} className={itemClass(link)} href={link.href} key={link.href}>{icon(link)}{link.label}</Link>)}</div>
-    <div className="flex items-center gap-2"><LocaleSwitcher />
+    <div className="flex items-center gap-2"><PageReader targetId="main-content" /><LocaleSwitcher />
       <button aria-controls="mobile-menu" aria-expanded={open} aria-label={copy.menu} className="grid h-10 w-10 place-items-center rounded-lg border border-slate-600 text-cream hover:border-lime-300 md:hidden" onClick={() => setOpenAt(open ? null : pathname)} type="button">{open ? <X aria-hidden="true" size={22} /> : <Menu aria-hidden="true" size={22} />}</button>
     </div>
   </nav>
