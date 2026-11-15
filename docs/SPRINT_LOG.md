@@ -839,3 +839,13 @@ Implemented: `origin/main` rebuilt the Explore page around the map (pixel climat
 Evidence (2026-11-15): lint, typecheck and the unit suite pass on the merged tree (310 tests: ours plus the upstream audit tests). Browser at 1280×900: map with HUD and weather effects on the left, tabs on the right; "Dados" is selected on a fresh load, the panel scrolls inside the map's height (582 px visible of 5586), eight João comments render; switching to "Conversa com o João" shows the chat and hides the data without unmounting either.
 
 Limitations / next: the data panel's older "Agora" tiles duplicate part of the upstream on-map weather note. The upstream map overlay no longer takes our live-weather strip. Default tab is "Dados"; the upstream design had the chat as the main right column, so the default can be flipped in one line. No Playwright test covers the tabs.
+
+## Sprint F15 — Frente 2 da auditoria (dados NASA diferenciam as estratégias; trade-offs)
+
+Status: complete, with the limitations below. Source: `AUDITORIA_DESAFIO3_FIELDSHIFT.md`, tasks 2.1–2.7 and Frente 1 pendencies P1–P4, P7, P11, P12. Full report: `docs/RELATORIO_FRENTE2.md`.
+
+Implemented: per-slot crop windows with window P−ET0, monthly IMERG/root-zone and frost screening (2.1, 2.6); ZARC 20/30/40 % risk legend from the MAPA Painel manual, per decêndio × soil × cycle group, per slot (2.2); 6-axis trade-off matrix with "Ganha em / Perde em / Não sabemos" ordered by priorities (2.3); 24-month bare-soil calendar × Fournier erosivity × SRTM slope (2.4); MODIS NDVI fixtures on cropland in Rio Verde, Sorriso, LEM and Cascavel (2.5); B/C selection prefers a different family from the safra crop and avoids ZARC not-indicated crops; Embrapa residue, cowpea cycle and ECOCROP ranges in the catalog.
+
+Evidence (2026-11-15): `npx tsc --noEmit`, `npm run lint`, `npm run build` pass; `npx vitest run` 52 files / 356 tests. Demo (Rio Verde, `/api/analyze`): A soja→milho, B soja→sorgo, C soja→braquiária; B and C better in water (+101 mm window P−ET0) and soil; C calendar unknown (braquiária not in ZARC).
+
+Limitations / next: Brazilian cycles still missing for most crops (assumed 4-month windows); ZARC soil class not inferred from SoilGrids; screening thresholds await agronomist review; Frente 3 (3.1 decision-first results, 3.2 jargon).
