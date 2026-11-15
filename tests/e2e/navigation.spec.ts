@@ -15,19 +15,12 @@ async function installDraft(page: Page, futureBaseline?: { cropId: string; confi
 
 const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ month: 11, tmeanMedianC: 25, precipMedianMm: 4, validTemperatureDays: 450, validPrecipitationDays: 450 }], plantingMonthPrecipitation: { month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }, historicalPrecipitationByMonth: [{ month: 11, medianTotalMm: 124, validYears: 15, expectedYears: 15, coveragePct: 100 }], waterContext: { month: 11, imergMedianTotalMm: 130, medianRainDays: 12, rootZoneWetnessMedian: 0.64, validImergYears: 15, expectedYears: 15, imergCoveragePct: 100, rootZoneCoveragePct: 100 }, calendarDayContext: { month: 11, day: 14, tmeanMedianC: 25, precipMedianMm: 4, imergPrecipMedianMm: 3.5, rootZoneWetnessMedian: 0.64, validYears: 15, expectedYears: 15 } }, provenance: { sourceUrl: 'https://example.test/nasa', period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', coveragePct: { T2M: 100, PRECTOTCORR: 100 }, missingDays: [] }, warnings: [] };
 
-test('starts the farm analysis from the home CTA, while the map remains an explicit secondary path', async ({ page }) => {
+test('offers one home path: start the farm analysis with João', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Ver demonstração Brasil' })).toBeVisible();
   await page.getByRole('link', { name: 'Analisar minha fazenda' }).click();
   await expect(page.getByRole('heading', { name: 'Cadastre a sua fazenda com o João' })).toBeVisible();
   await expect(page.getByText('Sua análise em 4 passos')).toBeVisible();
   await expect(page.getByText('1/4 · Localização')).toBeVisible();
-  await page.goto('/');
-  await page.getByRole('link', { name: 'Prefiro escolher o local no mapa' }).click();
-  await expect(page.getByRole('heading', { name: 'Explore uma região' })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Navegação principal' }).getByRole('link', { name: 'Explorar' })).toHaveAttribute('aria-current', 'page');
-  await expect(page.locator('.atlas-map')).toBeVisible();
-  await expect(page.locator('.atlas-map-frame')).toBeVisible();
 });
 
 test('keeps coordinate entry available when the map is unavailable', async ({ page }) => {

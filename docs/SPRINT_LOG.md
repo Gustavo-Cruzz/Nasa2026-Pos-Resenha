@@ -4,7 +4,7 @@
 
 Status: complete — a jornada de primeira utilização agora começa pela análise da fazenda, expõe seus quatro passos e permite escolher texto ou áudio ao falar com João.
 
-Implemented: a página inicial passou a destacar uma única ação primária, `Analisar minha fazenda`; a demonstração Brasil continua disponível como ação secundária e a escolha prévia de ponto no mapa fica em um link explicitamente alternativo. O idioma inicial foi alinhado ao contrato do produto: `pt-BR`, mantendo a troca para inglês.
+Implemented: a página inicial passou a ter um único caminho: `Analisar minha fazenda`, que abre a conversa com João. A demonstração Brasil e a escolha prévia de ponto no mapa não aparecem nessa tela. O idioma inicial foi alinhado ao contrato do produto: `pt-BR`, mantendo a troca para inglês.
 
 Implemented: antes de responder ao João, o produtor escolhe `Continuar no chat` ou `Mandar mensagem de áudio`. No modo de áudio, o microfone usa reconhecimento de voz do navegador, coloca a transcrição no campo para revisão e nunca envia a mensagem automaticamente ou armazena gravação. O cadastro mostra `Sua análise em 4 passos` com a etapa atual, incluindo a revisão final. Navegadores sem reconhecimento exibem um aviso e preservam o chat escrito.
 
