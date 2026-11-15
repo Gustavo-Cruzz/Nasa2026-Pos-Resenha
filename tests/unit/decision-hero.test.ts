@@ -7,22 +7,25 @@ import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { AnalysisInput } from '@/lib/schema';
 import { createLabPlan } from '@/lib/lab';
 
-const input: AnalysisInput = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 3, soil: 2, operations: 1 }, irrigation: 'unknown', futureBaseline: { cropId: 'soybean', confirmed: true } };
-const monthly = (april: number | null) => Array.from({ length: 12 }, (_, index) => ({ month: index + 1, tmeanMedianC: index === 3 ? april : 25, precipMedianMm: 2, validTemperatureDays: 400, validPrecipitationDays: 400 }));
+const input: AnalysisInput = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 10, history: [{ cropId: 'soybean', startYearMonth: '2023-10', endYearMonth: '2024-02' }, { cropId: 'maize', startYearMonth: '2024-02', endYearMonth: '2024-06' }, { cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }], priorities: { water: 2, soil: 3, operations: 1 }, irrigation: 'unknown' };
+/** Distinct first-season crops per hypothesis (A soybean, B sorghum, C maize). The default plan gives B and C the same planting-month crop, so the thermal check cannot diverge. */
+const plan = createLabPlan(input, ['soybean', 'sorghum', 'maize']);
+const monthly = (october: number | null) => Array.from({ length: 12 }, (_, index) => ({ month: index + 1, tmeanMedianC: index === 9 ? october : 25, precipMedianMm: 2, validTemperatureDays: 400, validPrecipitationDays: 400 }));
 const rain = Array.from({ length: 12 }, (_, index) => ({ month: index + 1, medianTotalMm: 100 + index, validYears: 15, expectedYears: 15, coveragePct: 100 }));
-const climate = (april: number | null, extra: Partial<ClimateContext> = {}): ClimateContext => ({ status: 'available', origin: 'live', monthly: monthly(april), plantingMonthPrecipitation: rain[3], historicalPrecipitationByMonth: rain, provenance: { source: 'NASA_POWER', requestedCoordinates: input.location, period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', rawParameterNames: ['T2M', 'PRECTOTCORR'], sourceUrl: 'https://power.larc.nasa.gov/example', timezone: 'UTC', coveragePct: { T2M: 100, T2M_MAX: 100, T2M_MIN: 100, PRECTOTCORR: 100, RH2M: 100, WS2M: 100, ALLSKY_SFC_SW_DWN: 100 }, missingDays: [], warnings: [] }, gaps: [], ...extra });
+const climate = (october: number | null, extra: Partial<ClimateContext> = {}): ClimateContext => ({ status: 'available', origin: 'live', monthly: monthly(october), plantingMonthPrecipitation: rain[9], historicalPrecipitationByMonth: rain, provenance: { source: 'NASA_POWER', requestedCoordinates: input.location, period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', rawParameterNames: ['T2M', 'PRECTOTCORR'], sourceUrl: 'https://power.larc.nasa.gov/example', timezone: 'UTC', coveragePct: { T2M: 100, T2M_MAX: 100, T2M_MIN: 100, PRECTOTCORR: 100, RH2M: 100, WS2M: 100, ALLSKY_SFC_SW_DWN: 100 }, missingDays: [], warnings: [] }, gaps: [], ...extra });
 const unavailable: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['NASA down'] };
 
 describe('decision hero', () => {
   it('reports attention with month, NASA value, documented range, rule, source and a human next step', () => {
-    const data = analyze(input, climate(35));
+    const data = analyze(input, climate(35), plan);
     const hero = deriveDecisionHero(data);
     expect(hero.state).toBe('attention');
-    expect(hero.month).toBe(4);
+    expect(hero.month).toBe(10);
     expect(hero.observedValue).toBe(35);
     expect(hero.items.map((item) => item.scenarioId)).toEqual(['A', 'C']);
     expect(hero.items.every((item) => item.rangeC && item.ruleId === 'DOCUMENTED_THERMAL_RANGE' && item.sourceRefs.length > 0)).toBe(true);
     expect(hero.sourceUrl).toContain('power.larc.nasa.gov');
+    // The demo history shows a clear soybean -> maize pattern, so the baseline is detected rather than assumed.
     expect(hero.nextCheck).toBe('review_with_technician');
   });
 

@@ -3,25 +3,26 @@ import type { ClimateContext } from '@/lib/climate/nasa-power';
 import { assessCropIndicators } from '@/lib/engine/indicators';
 import type { QualitativeIndicator } from '@/lib/engine/types';
 import type { LabPlan } from '@/lib/lab';
-import type { AnalysisInput } from '@/lib/schema';
+import type { AnalysisInput, SoilProfile } from '@/lib/schema';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
 import type { ValidationLevel } from '@/lib/engine/types';
+import { slotSeasonWindow } from '@/lib/engine/slot-season';
 
 export type LabSlotAssessment = { scenarioId: 'A' | 'B' | 'C'; slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string | null; cropName: string | null; previousCropId: string | null; validationLevel: ValidationLevel; indicators: QualitativeIndicator[]; sourceRefs: string[]; missingEvidence: string[] };
 
 const getCrop = (id: string | null | undefined): Crop | undefined => id ? cropById.get(id as Crop['id']) : undefined;
 
-export function assessLabPlan(input: AnalysisInput, plan: LabPlan, climate: ClimateContext, regionalContext?: BrazilRegionalContext): LabSlotAssessment[] {
+export function assessLabPlan(input: AnalysisInput, plan: LabPlan, climate: ClimateContext, regionalContext?: BrazilRegionalContext, regionalSoil?: SoilProfile): LabSlotAssessment[] {
   const historicalCrop = getCrop(input.history.at(-1)?.cropId);
   return plan.scenarios.flatMap((scenario) => scenario.slots.map((slot, slotIndex) => {
     const crop = getCrop(slot.cropId);
     const previousCrop = slotIndex === 0 ? historicalCrop : getCrop(scenario.slots[slotIndex - 1]?.cropId);
-    const indicators = assessCropIndicators(crop, previousCrop, input, climate);
+    const indicators = assessCropIndicators(crop, previousCrop, input, climate, regionalSoil, slotSeasonWindow(input, slot.season));
     const missingEvidence = [...new Set([
       ...(!crop ? ['crop'] : []),
       ...(crop && !crop.viableTempC ? ['temperature'] : []),
       ...(crop && !crop.cycleDaysRange ? ['cycle'] : []),
-      ...(input.soil?.ph === undefined || !crop?.soilPhRange ? ['soil_ph'] : []),
+      ...((input.soil?.ph === undefined && regionalSoil?.ph === undefined) || (input.soil?.ph !== undefined && !crop?.soilPhRange) ? ['soil_ph'] : []),
       ...(!previousCrop ? ['previous_crop_family'] : []),
     ])];
     const validationLevel: ValidationLevel = crop && regionalContext?.zarc?.crops[crop.id] ? 'regionally_contextualized' : 'climate_exploration';
