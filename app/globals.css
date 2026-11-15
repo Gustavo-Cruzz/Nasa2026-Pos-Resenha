@@ -66,3 +66,5 @@ button, input, select, textarea { font-family: inherit; }
 @keyframes ffs-sway { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(1px); } 50% { transform: translateX(2px); } 75% { transform: translateX(-1px); } }
 .ffs-demo-anim { opacity: 0; transition: opacity 200ms ease-out; }
 .ffs-demo-anim[data-loaded="true"] { opacity: 1; }
+@keyframes joao-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.joao-in { animation: joao-in 220ms ease-out both; }
