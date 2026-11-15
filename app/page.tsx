@@ -14,7 +14,7 @@ export default function HomePage() {
     <div>
       <h1 className="home-title text-[2.25rem] font-bold leading-[1.08] tracking-tight text-cream sm:text-5xl lg:text-[3.5rem]"><span className="block">{first}</span><span className="block">{second}</span></h1>
       <p className="mt-5 max-w-xl text-lg leading-8 text-slate-300">{copy.tagline}</p>
-      <div className="mt-8 flex flex-wrap gap-3"><Button asChild><Link href="/explore">{copy.start}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Link></Button><Button asChild variant="secondary"><Link href="/chat">{copy.registerFarm}</Link></Button><DemoBrazilButton /></div>
+      <div className="mt-8 flex flex-wrap gap-3"><DemoBrazilButton /><Button asChild variant="secondary"><Link href="/explore">{copy.start}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Link></Button><Button asChild variant="secondary"><Link href="/chat">{copy.registerFarm}</Link></Button></div>
     </div>
     <HomeScene />
   </section>;
