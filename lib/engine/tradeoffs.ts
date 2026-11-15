@@ -133,6 +133,9 @@ function market(scenario: Rotation, base: Rotation, ctx: Ctx): Draft {
   const factEn = (item: Crop, value: number) => value > 0 ? `local ${item.commonNames.en} chain exists: ${nEn(value)} ha harvested in ${pam.year}` : `no harvested area of ${item.commonNames.en} recorded in PAM ${pam.year}`;
   const level: Draft['level'] = scenario.id === 'A' ? 'similar' : (x > 0) === (y > 0) ? 'similar' : x > 0 ? 'better' : 'worse';
   const evidence = [fact(crop, x), ...(scenario.id !== 'A' && cropA ? [`A: ${fact(cropA, y)}`] : []), pam.caveat];
+  /** A cover-only crop is not sold: "worse" here means the safrinha income A has is lost, not that the crop is bad. */
+  const coverOnly = !crop.purposes.includes('commercial') && crop.purposes.includes('cover');
+  if (coverOnly && level === 'worse' && cropA) return { level, summary: `Cultura de cobertura: sem venda na safrinha (A vende ${cropA.commonNames['pt-BR']}, com cadeia local de ${nPt(y)} ha em ${pam.year}). O ganho dela é no solo, não na renda.`, summaryEn: `Cover crop: no safrinha sale (A sells ${cropA.commonNames.en}, with a local chain of ${nEn(y)} ha in ${pam.year}). Its gain is in the soil, not in income.`, evidence, sourceRefs: [pam.sourceUrl], missing: [] };
   return { level, summary: `${fact(crop, x)[0]!.toUpperCase()}${fact(crop, x).slice(1)} (PAM municipal; indica cadeia local, não preço nem lucro).`, summaryEn: `${factEn(crop, x)[0]!.toUpperCase()}${factEn(crop, x).slice(1)} (municipal PAM; indicates a local chain, not price or profit).`, evidence, sourceRefs: [pam.sourceUrl], missing: [] };
 }
 
