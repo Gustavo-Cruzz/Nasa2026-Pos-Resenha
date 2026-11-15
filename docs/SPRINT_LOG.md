@@ -1,5 +1,19 @@
 # Sprint log
 
+## /results3 — explicação dos resultados reais com Gemini 3.5 Flash-Lite
+
+Status: complete — a página deixou de usar fazenda, clima, solo, relevo e cenários mockados.
+
+Implemented: `/results3` agora executa o mesmo `/api/analyze` do resultado principal, reaproveita o último resultado local somente quando a análise ao vivo falha e monta seis blocos com `AnalysisResult` real: cenários A/B/C, chuva e temperatura NASA POWER, balanço mensal precipitação menos ET0, solo informado/estimado, histórico/cenários e relevo NASA SRTM. Valores ausentes permanecem `N/D`; meses sem balanço completo não viram zero.
+
+Implemented: `POST /api/explain-farm` usa `gemini-3.5-flash-lite` pela API REST oficial com `GEMINI_API_KEY` somente no servidor. O contexto enviado é um recorte Zod limitado dos resultados; a resposta JSON também é validada por Zod e exige seis seções curtas, até duas observações e uma limitação por tema. O prompt proíbe inventar medidas, diagnóstico, recomendação, previsão, produtividade, irrigação ou benefício. Sem chave, timeout, erro ou resposta inválida, a interface mantém explicações determinísticas e identifica o fallback.
+
+Evidence (2026-11-15): `npm run lint`, `npm run typecheck`, `npm run test` (316 unit tests) e `npm run build` passaram. Seis testes cobrem as seis seções, preservação de desconhecidos, rejeição de saída incompleta, linguagem hídrica enganosa, ET0 sem explicação, histórico tratado como plano e fallback da rota sem chave. A rota dinâmica `/api/explain-farm` aparece no build.
+
+Limitations / next: a chamada autenticada foi validada localmente; o ambiente publicado também precisa de `GEMINI_API_KEY` configurada no servidor/Vercel. Texto gerado é apoio de leitura e não substitui números, fontes, metodologia, assistência técnica ou observação do talhão.
+
+Improvement (2026-11-15): com a chave configurada, a rota foi testada de ponta a ponta contra o Gemini real. O prompt agora prioriza linguagem cotidiana, converte números de mês em nomes, explica ET0 na primeira menção, trata `history` somente como passado e esclarece solo, clima e relevo regionais. A entrada de relevo foi renomeada para evitar confusão entre amostras inclinadas e focos de calor. A validação semântica rejeita diagnóstico hídrico, indicação de irrigação, cultivo passado apresentado como plano e uso de “saldo” sem contexto; saída rejeitada usa o fallback curto. O reteste final retornou `origin: gemini`, seis seções claras e nenhuma dessas ambiguidades.
+
 ## Soil Brazil SQ4 — resumo de solo em 30 segundos
 
 Status: complete — quatro indicadores essenciais e detalhes sob demanda.
