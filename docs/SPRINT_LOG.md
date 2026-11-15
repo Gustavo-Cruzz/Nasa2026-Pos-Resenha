@@ -806,3 +806,9 @@ Missing art (flagged): `unsure` ("Em dúvida": used on the El Niño line, where 
 Evidence (2026-11-15): `tests/unit/joao.test.ts` now has 28 tests, including the mood per tone, the rainy-season-only forecast rule, sad for missing data, unsure for El Niño and pt/en parity of moods. Browser: Explore reported forecast:happy, dry-spells:alert, root-zone:alert, enso:unsure (flagged), the others neutral; /results3 moods happy/alert/neutral follow the blocks' tones; the dock face shows the alert João; `/joao-moods` shows four ready moods and two dashed "Falta arte" boxes. Lint, typecheck and unit tests pass.
 
 Limitations / next: the "good" rules are declared thresholds (±0.05 wetness, ±25% rain, a quarter of the years), not agronomic limits. `sad` is used for missing data, so a genuinely bad reading has no distinct mood yet. The "Falta arte" tag shows only outside production builds. The mock blocks in /results2 and /results3 map their tone directly (ok → happy), which is a layout choice, not a computed result.
+
+## Methodology nav icon
+
+Status: complete.
+
+Implemented: the Metodologia link in the header (desktop and mobile menu) had no icon; it now uses the supplied pixel art (open book with a sprout and a gear) as `public/assets/journey/journey-methodology.png`, 96×96 transparent like the other nav icons, trimmed and scaled to fit with 4 px of padding. `site-header.tsx` points the link at it. Checked in the browser at 1280 px and in the 375 px menu; lint, typecheck and unit tests pass. Limitation: the book is wider than tall, so it fills less of the square than the map and the barn; the source is a smooth upscale of pixel art, so it was scaled with Lanczos rather than nearest-neighbour.

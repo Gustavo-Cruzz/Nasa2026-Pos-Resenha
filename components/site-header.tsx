@@ -25,7 +25,7 @@ export function SiteHeader() {
     { href: '/explore', label: copy.explore, icon: 'explore', also: [] as string[] },
     { href: '/chat', label: copy.farm, icon: 'farm', also: ['/farm'] },
     { href: '/results', label: copy.compare, icon: 'compare', also: ['/lab', '/future-stories'] },
-    { href: '/methodology', label: copy.methodology, icon: undefined, also: [] as string[] },
+    { href: '/methodology', label: copy.methodology, icon: 'methodology', also: [] as string[] },
   ];
   const isActive = (link: (typeof links)[number]) => pathname === link.href || link.also.includes(pathname);
   const itemClass = (link: (typeof links)[number]) => `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold ${isActive(link) ? 'bg-lime-300/15 text-lime-200' : 'text-slate-300 hover:bg-lime-300/10 hover:text-lime-200'}`;
