@@ -16,6 +16,8 @@ Limitations: áudio depende de `SpeechRecognition`/`webkitSpeechRecognition`, da
 
 Improvement (2026-11-15): o fluxo de cadastro de fazenda foi retirado da jornada pública. João oferece apenas abrir a análise ou corrigir respostas; a rota histórica `/cadastro` redireciona para a conversa. Antes de avançar, João explica que a próxima tela compara três caminhos de rotação, mostra mudanças, principal cuidado e lacunas, sem prometer recomendação de plantio.
 
+Improvement (2026-11-15): o cabeçalho agora usa somente play e stop no leitor de página, sem controle de velocidade, pausa ou reinício; ambos os botões são compactos, têm rótulo acessível e tooltip. O seletor de idioma foi reduzido visualmente sem perder seu alvo clicável. A home resume o propósito do Plantaê em linguagem direta: comparar caminhos de rotação a partir do cultivo declarado e do clima histórico regional.
+
 Next: simplificar o primeiro resumo da comparação em uma decisão curta antes dos detalhes técnicos, mantendo incertezas e evidências acessíveis.
 
 ## README do pitch e arquitetura de decisão

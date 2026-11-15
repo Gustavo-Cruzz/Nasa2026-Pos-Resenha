@@ -34,7 +34,7 @@ test('dictates into João chat in Portuguese and English without auto-sending', 
 test('reads the main page with bilingual controls and highlights current content', async ({ page }) => {
   await page.goto('/methodology');
   await page.getByRole('button', { name: 'Ler página' }).click();
-  await expect(page.getByRole('button', { name: 'Pausar leitura' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Parar leitura' })).toBeEnabled();
   await expect(page.locator('#main-content')).toHaveAttribute('data-reading', 'true');
   expect(await page.evaluate(() => (window as unknown as { __spoken: Array<{ text: string; lang: string }> }).__spoken.at(-1)?.lang)).toBe('pt-BR');
   await page.getByRole('button', { name: 'Parar leitura' }).click();
