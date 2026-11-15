@@ -3,15 +3,18 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, MapPin, RotateCcw, SendHorizontal } from 'lucide-react';
-import { advance, buildAnalysisInput, chooseSoil, greeting, initialState, startWithLocation, lookupFailed, provideLocation, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
+import { acceptMapPlace, advance, buildAnalysisInput, mapChoices, suggestMapChange, suggestMapPlace, type MapPlace, chooseSoil, greeting, initialState, startWithLocation, lookupFailed, provideLocation, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { saveDraft } from '@/lib/storage';
+import type { AtlasPolygon } from '@/lib/atlas';
 import { useLocale } from '@/components/locale-provider';
 import { ASSISTANT_NAME, ChatAvatar } from '@/components/chat/chat-avatar';
 
 type Message = { id: number; role: 'bot' | 'user'; text: string };
 const DELAY_MS = 350;
 const SUGGEST_DELAY_MS = 180;
+const MAP_DEBOUNCE_MS = 600;
+const pointKey = (place: MapPlace) => `${place.latitude.toFixed(5)},${place.longitude.toFixed(5)}`;
 const COORDINATES = /^[\d\s.,;+\-−–°nsewNSEW]+$/;
 let sequence = 0;
 const nextId = () => { sequence += 1; return sequence; };
@@ -19,7 +22,7 @@ const asMessages = (replies: Reply[]): Message[] => replies.filter((reply) => re
 const placeLabel = (place: PlaceMatch) => `${place.name} (${place.uf})`;
 
 /** Chat that only registers the farm (city, current crop, previous crop, soil) and then opens the results page. */
-export function ChatDemo() {
+export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace | null; mapPolygon?: AtlasPolygon } = {}) {
   const { locale, copy } = useLocale();
   const en = locale === 'en';
   const router = useRouter();
@@ -37,6 +40,12 @@ export function ChatDemo() {
   const [suggest, setSuggest] = useState<{ query: string; results: PlaceMatch[] }>();
   const [dismissed, setDismissed] = useState('');
   const [active, setActive] = useState<{ query: string; index: number }>();
+
+  // A place picked on the map: offered once (after a short pause) as the farm location; `offer` is the place waiting for an answer.
+  const [offer, setOffer] = useState<{ place: MapPlace; kind: 'location' | 'change' }>();
+  const lastOffered = useRef('');
+  const mapPolygonRef = useRef(mapPolygon);
+  useEffect(() => { mapPolygonRef.current = mapPolygon; }, [mapPolygon]);
 
   const query = text.trim();
   const suggestions = state.step === 'location' && !busy && suggest?.query === query && dismissed !== query ? suggest.results : [];
@@ -61,6 +70,18 @@ export function ChatDemo() {
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, [query, state.step]);
 
+  useEffect(() => {
+    if (!mapPoint || busy) return;
+    const key = pointKey(mapPoint);
+    if (key === lastOffered.current || (state.draft.location && pointKey(state.draft.location) === key)) return;
+    const timer = window.setTimeout(() => {
+      lastOffered.current = key;
+      if (state.step === 'location') { const suggestion = suggestMapPlace(mapPoint, locale); setMessages((current) => [...current, ...asMessages([suggestion])]); setChips(suggestion.chips ?? []); setMulti(undefined); setPicked([]); setOffer({ place: mapPoint, kind: 'location' }); }
+      else { setMessages((current) => [...current, ...asMessages([suggestMapChange(mapPoint, locale)])]); setOffer({ place: mapPoint, kind: 'change' }); }
+    }, MAP_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [mapPoint, busy, state, locale]);
+
   const addBot = (replies: Reply[]) => { setMessages((current) => [...current, ...asMessages(replies)]); setChips(replies.at(-1)?.chips ?? []); setMulti(replies.at(-1)?.multi); setPicked([]); };
 
   const lookup = async (value: string, current: ChatState) => {
@@ -83,6 +104,7 @@ export function ChatDemo() {
       const input = buildAnalysisInput(turn.state.draft);
       if (!input) { addBot([{ text: en ? 'Something is missing in my notes. Say "restart" to begin again.' : 'Faltou algo nas minhas anotações. Diga "recomeçar" para começar de novo.' }]); setBusy(false); return; }
       saveDraft(input);
+      persistAtlas(turn.state.draft.location, mapPolygonRef.current);
       router.push('/results');
       return;
     }
@@ -98,9 +120,22 @@ export function ChatDemo() {
     window.setTimeout(() => { if (turn.replies.length) addBot(turn.replies); runEffects(turn.effects, turn); }, DELAY_MS);
   };
 
+  const answerOffer = (yes: boolean) => {
+    if (!offer || busy) return;
+    const choices = mapChoices(locale);
+    const { place, kind } = offer;
+    setOffer(undefined);
+    setMessages((current) => [...current, { id: nextId(), role: 'user', text: yes ? (kind === 'location' ? choices.yes : choices.change) : (kind === 'location' ? choices.no : choices.keep) }]);
+    if (yes) { respond(acceptMapPlace(state, place, locale)); return; }
+    if (kind === 'location') respond({ state, replies: [{ text: en ? 'Fine. Type your city, or send latitude and longitude.' : 'Tudo bem. Digite a cidade ou envie latitude e longitude.' }], effects: [] });
+  };
+
   const send = (raw: string) => {
     const value = raw.trim();
     if (!value || busy) return;
+    const choices = mapChoices(locale);
+    if (offer?.kind === 'location' && (value === choices.yes || value === choices.no)) { answerOffer(value === choices.yes); return; }
+    setOffer((current) => (current?.kind === 'location' ? undefined : current));
     setMessages((current) => [...current, { id: nextId(), role: 'user', text: value }]);
     setText('');
     respond(advance(state, value, locale));
@@ -116,6 +151,7 @@ export function ChatDemo() {
 
   const choosePlace = (place: PlaceMatch) => {
     if (busy) return;
+    setOffer(undefined);
     setMessages((current) => [...current, { id: nextId(), role: 'user', text: placeLabel(place) }]);
     setText('');
     respond(provideLocation(state, [place], placeLabel(place), locale));
@@ -153,6 +189,10 @@ export function ChatDemo() {
         : <button className="min-h-10 rounded-full border border-lime-300/60 px-4 text-sm font-semibold text-lime-100 hover:bg-lime-300/10" key={chip} type="button" onClick={() => send(chip)}>{chip}</button>)}</div>
       {multi ? <button className="mt-3 min-h-11 w-full rounded-lg bg-lime-300 px-4 text-sm font-bold text-slate-950 hover:bg-lime-200" type="button" onClick={finishPicks}>{picked.length ? `${en ? 'Continue' : 'Continuar'} (${picked.length})` : multi.finishLabel}</button> : null}
     </div> : null}
+    {offer?.kind === 'change' && !busy ? <div aria-label={en ? 'Change location' : 'Trocar local'} className="flex flex-wrap gap-2 border-t border-slate-800 px-4 pb-1 pt-3" role="group">
+      <button className="min-h-10 rounded-full border border-lime-300/60 px-4 text-sm font-semibold text-lime-100 hover:bg-lime-300/10" type="button" onClick={() => answerOffer(true)}>{mapChoices(locale).change}</button>
+      <button className="min-h-10 rounded-full border border-slate-600 px-4 text-sm font-semibold text-slate-200 hover:bg-slate-800" type="button" onClick={() => answerOffer(false)}>{mapChoices(locale).keep}</button>
+    </div> : null}
     <form className="flex items-center gap-2 border-t border-slate-700 p-3" onSubmit={onSubmit}>
       <label className="sr-only" htmlFor="chat-input">{en ? 'Your message' : 'Sua mensagem'}</label>
       <input aria-activedescendant={activeIndex >= 0 ? `place-${suggestions[activeIndex].code}` : undefined} aria-autocomplete={state.step === 'location' ? 'list' : undefined} aria-controls={suggestions.length ? 'place-suggestions' : undefined} aria-expanded={state.step === 'location' ? suggestions.length > 0 : undefined} autoComplete="off" className="min-h-11 flex-1 rounded-lg border border-slate-600 bg-slate-950 px-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/30" disabled={busy} id="chat-input" onChange={(event) => setText(event.target.value)} onKeyDown={onKeyDown} placeholder={state.step === 'location' ? (en ? 'Type your city…' : 'Digite sua cidade…') : (en ? 'Type your answer…' : 'Digite sua resposta…')} role={state.step === 'location' ? 'combobox' : undefined} value={text} />
@@ -164,8 +204,20 @@ export function ChatDemo() {
 /** Bot messages: the first line is the question, the rest is a softer hint. Summaries (bullet lists) stay uniform. */
 function BubbleText({ text, bot }: { text: string; bot: boolean }) {
   const [head, ...rest] = text.split('\n');
-  if (!bot || rest.length === 0 || text.includes('•')) return <>{text}</>;
-  return <>{head}<span className="mt-1 block opacity-65">{rest.join('\n')}</span></>;
+  if (!bot || rest.length === 0 || text.includes('•')) return <>{bold(text)}</>;
+  return <>{bold(head)}<span className="mt-1 block opacity-65">{rest.join('\n')}</span></>;
+}
+
+/** **word** becomes bold; everything else stays plain text. */
+function bold(text: string) { return text.split(/\*\*(.+?)\*\*/g).map((part, index) => (index % 2 ? <strong key={index}>{part}</strong> : part)); }
+
+/** Keeps the old explorer hand-off keys: the chosen point and, with at least 3 vertices, the drawn area (read by the farm page). */
+function persistAtlas(location: MapPlace | undefined, polygon: AtlasPolygon | undefined) {
+  try {
+    if (location) window.localStorage.setItem('field-shift:atlas-point', JSON.stringify({ latitude: location.latitude, longitude: location.longitude, ...(location.label ? { label: location.label } : {}) }));
+    if (polygon && polygon.length >= 3) window.localStorage.setItem('field-shift:atlas-polygon', JSON.stringify(polygon));
+    else if (polygon) window.localStorage.removeItem('field-shift:atlas-polygon');
+  } catch { /* storage unavailable: the analysis still opens */ }
 }
 
 function readPrefill(params: URLSearchParams, locale: 'pt-BR' | 'en'): Turn | undefined {

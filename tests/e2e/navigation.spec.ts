@@ -334,3 +334,17 @@ test('builds a 2–3 crop system with drag, validates chronology, and persists i
   const stored = await page.evaluate(() => JSON.parse(window.localStorage.getItem('field-shift:draft') ?? '{}').data.croppingSystems[0]);
   expect(stored).toMatchObject({ type: 'succession', events: [{ startYearMonth: '2026-01' }, { startYearMonth: '2026-05' }, { cropId: 'cassava' }] });
 });
+
+test('a place picked on the explorer map is offered to João and advances the chat', async ({ page }) => {
+  await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
+  await page.goto('/explore');
+  await openMoreOptions(page);
+  await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
+  const log = page.getByRole('log', { name: 'Conversa' });
+  await expect(log).toContainText('Vi que você marcou');
+  await expect(log).toContainText('Rio Verde');
+  await page.getByRole('button', { name: 'Sim, é aqui' }).click();
+  await expect(log).toContainText('O que você está plantando agora?');
+  await expect(page.getByRole('button', { name: 'Soja' })).toBeVisible();
+  await page.screenshot({ path: '/tmp/claude-1000/-home-PiSothe-Documents-Nasa/ae090924-a6d5-41a8-81eb-70e0623e2ddd/scratchpad/explore-chat-linked.png' });
+});

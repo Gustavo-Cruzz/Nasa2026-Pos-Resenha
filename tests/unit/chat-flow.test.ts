@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { advance, buildAnalysisInput, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, type ChatState } from '@/lib/chat/flow';
+import { acceptMapPlace, suggestMapChange, suggestMapPlace, advance, buildAnalysisInput, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, type ChatState } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 
 const rioVerde: PlaceMatch = { code: '5218805', name: 'Rio Verde', uf: 'GO', latitude: -17.798, longitude: -50.919 };
@@ -252,5 +252,28 @@ describe('chat opened from the explorer', () => {
     expect(turn.state.draft.location).toMatchObject({ label: 'Sorriso (MT)' });
     expect(turn.replies.map((reply) => reply.text).join(' ')).toContain('Anotado: Sorriso (MT).');
     expect(turn.replies.at(-1)?.text).toContain('plantando agora');
+  });
+});
+
+describe('places picked on the explorer map', () => {
+  const place = { latitude: -17.798, longitude: -50.919, label: 'Rio Verde (GO)' };
+  it('suggests the place once with yes/no quick replies, in both languages', () => {
+    const pt = suggestMapPlace(place, 'pt-BR');
+    expect(pt.text).toContain('**Rio Verde (GO)**');
+    expect(pt.chips).toEqual(['Sim, é aqui', 'Não, vou digitar a cidade']);
+    expect(suggestMapPlace({ latitude: 1, longitude: 2 }, 'en').text).toContain('1.0000, 2.0000');
+    expect(suggestMapChange(place, 'en').chips).toBeUndefined();
+  });
+  it('accepting sets the location and advances to the crops question', () => {
+    const turn = acceptMapPlace(initialState(), place, 'pt-BR');
+    expect(turn.state.step).toBe('current');
+    expect(turn.state.draft.location).toEqual(place);
+    expect(turn.replies.at(-1)?.chips).toEqual(cropChips('pt-BR'));
+  });
+  it('accepting after the location step keeps the other answers', () => {
+    const state = say(located(), 'soja').state;
+    const turn = acceptMapPlace(state, { latitude: 1, longitude: 2 }, 'en');
+    expect(turn.state.draft).toMatchObject({ current: 'soybean', location: { latitude: 1, longitude: 2 } });
+    expect(turn.state.step).toBe('previous');
   });
 });

@@ -37,6 +37,8 @@ export function LocationExplorer() {
   const [latitude, setLatitude] = useState(String(BAHIA.latitude));
   const [longitude, setLongitude] = useState(String(BAHIA.longitude));
   const [state, setState] = useState<ClimateState>({ kind: 'loading' });
+  // The opening view (Bahia) is not shown to the chat: only a place the user actually picks is offered, so the chat is not nagged on load.
+  const [picked, setPicked] = useState(false);
   const [polygon, setPolygon] = useState<AtlasPolygon>([]);
   const [drawingPolygon, setDrawingPolygon] = useState(false);
   const [layers, setLayers] = useState<MapLayers>({ smap: false, rain: false, modis: false });
@@ -53,7 +55,7 @@ export function LocationExplorer() {
   useEffect(() => { void settle(BAHIA); }, [settle]);
 
   const setSelectedPoint = useCallback((next: AtlasPoint) => {
-    setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next);
+    setPicked(true); setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next);
     // A point picked on the map has no name yet: ask which municipality contains it.
     if (!next.label) void fetch(`/api/places?lat=${next.latitude}&lon=${next.longitude}`).then((response) => response.json() as Promise<{ status: string; municipality?: { name: string; uf: string } | null }>).then((body) => {
       const found = body.status === 'ok' ? body.municipality : null;
@@ -72,7 +74,7 @@ export function LocationExplorer() {
         {point ? <MapOverlay coordinates={coordinateLabel(point)} layers={layers} name={point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')} onToggle={(layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }))} /> : null}
         <FarmWeatherFx drawing={drawingPolygon} en={en} live={live} map={leafletMap} onDraw={() => setDrawingPolygon(true)} point={point} polygon={polygon} sim={fxSim} /><PixelClimateHud en={en} onRetry={() => { if (point) void fetchClimate(point); }} state={state} />
       </div>
-      <div className="atlas-chat-col"><Suspense fallback={chatLoading}><ClientOnly fallback={chatLoading}><ChatDemo /></ClientOnly></Suspense></div>
+      <div className="atlas-chat-col"><Suspense fallback={chatLoading}><ClientOnly fallback={chatLoading}><ChatDemo mapPoint={picked ? point : null} mapPolygon={polygon} /></ClientOnly></Suspense></div>
     </div>
     <details className="rounded-xl border border-slate-700 bg-slate-900/60 p-4">
       <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold"><SlidersHorizontal aria-hidden="true" size={16} />{en ? 'More options' : 'Mais opções'}</summary>
