@@ -24,7 +24,7 @@ test('keeps coordinate entry available when the map is unavailable', async ({ pa
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
   await openMoreOptions(page);
-  await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
+  await page.getByRole('button', { name: 'Rio Verde (GO), zona rural' }).click();
   const canvas = page.locator('.atlas-map.leaflet-container');
   if (await canvas.count()) {
     await canvas.click({ position: { x: 240, y: 150 } });
@@ -96,8 +96,8 @@ test('selects Brazil, Ghana, and India examples globally and updates the coordin
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
   await openMoreOptions(page);
-  await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
-  await expect(page.getByLabel('Latitude')).toHaveValue('-17.798');
+  await page.getByRole('button', { name: 'Rio Verde (GO), zona rural' }).click();
+  await expect(page.getByLabel('Latitude')).toHaveValue('-17.9');
   await page.getByRole('button', { name: 'Acra, Gana' }).click();
   await expect(page.getByLabel('Latitude')).toHaveValue('5.6037');
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
@@ -339,7 +339,7 @@ test('a place picked on the explorer map is offered to João and advances the ch
   await page.route('**/api/climate*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify(climateOk) }));
   await page.goto('/explore');
   await openMoreOptions(page);
-  await page.getByRole('button', { name: 'Rio Verde (GO), Brasil' }).click();
+  await page.getByRole('button', { name: 'Rio Verde (GO), zona rural' }).click();
   const log = page.getByRole('log', { name: 'Conversa' });
   await expect(log).toContainText('Vi que você marcou');
   await expect(log).toContainText('Rio Verde');

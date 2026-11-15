@@ -14,3 +14,21 @@
 6. Open Results; confirm that the four-slot sequence and indicators match the saved laboratory state, then compare A/B/C through mobile tabs or the desktop criteria table.
 7. Explain that Brazilian sources contextualize the catalog nationally through municipality-level records; neither is field validation nor a universal suitability rule, and raw codes are not percentages.
 8. End with the decision handoff: what is known, what remains unknown and what should be reviewed with technical assistance. State: no forecast, yield, NPK, irrigation prescription, aggregate ranking, or field validation.
+
+## Simulação do tempo no mapa para o pitch
+
+Uso interno, não listado na navegação. Em `/explore`, acrescente `?simular=` à URL para forçar um efeito de tempo sobre o perímetro da fazenda (polígono desenhado ou exemplo marcado), independentemente do clima real:
+
+| Valor | Efeito exibido |
+|---|---|
+| `chuva` | chuva |
+| `vento` | vento |
+| `calor` | calor |
+| `nuvens` | nuvens |
+| `calmo` | sem efeito marcante |
+
+Exemplo: `/explore?simular=vento`. Valores desconhecidos voltam ao tempo real (Open-Meteo).
+
+- A legenda mostra "[sim.]" e "Simulação do protótipo": diga isso ao público.
+- O efeito é só contexto visual. Não é previsão, medição de campo nem alerta.
+- Se o público perguntar pelo tempo real, desative a URL e use a leitura ao vivo (Open-Meteo, sem `simular`).

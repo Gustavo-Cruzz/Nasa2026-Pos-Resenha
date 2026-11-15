@@ -47,8 +47,12 @@ export const regionalContextApiResponseSchema = z.discriminatedUnion('status', [
 ]);
 export type RegionalContextApiResponse = z.infer<typeof regionalContextApiResponseSchema>;
 
+/** Brazilian examples sit on rural cropland (ESA WorldCover 2021 class 40), away from each municipal centre; Accra and New Delhi stay as global technical examples. */
 export const ATLAS_EXAMPLES: Array<AtlasPoint & { label: string }> = [
-  { label: 'Rio Verde (GO), Brasil', latitude: -17.798, longitude: -50.919 },
+  { label: 'Rio Verde (GO), zona rural', latitude: -17.9, longitude: -50.85 },
+  { label: 'Sorriso (MT), zona rural', latitude: -12.6, longitude: -55.9 },
+  { label: 'Luís Eduardo Magalhães (BA), zona rural', latitude: -12.2, longitude: -45.9 },
+  { label: 'Cascavel (PR), zona rural', latitude: -24.9, longitude: -53.25 },
   { label: 'Acra, Gana', latitude: 5.6037, longitude: -0.187 },
   { label: 'Nova Délhi, Índia', latitude: 28.6139, longitude: 77.209 },
 ];
