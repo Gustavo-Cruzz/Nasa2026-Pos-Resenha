@@ -3,6 +3,9 @@ import type { ClimateDay } from '@/lib/climate/nasa-power';
 export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; tsoilMedianC?: number | null; precipMedianMm: number | null; validTemperatureDays: number; validPrecipitationDays: number };
 export type HistoricalPrecipitationMonth = { month: number; medianTotalMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalWaterContextMonth = { month: number; imergMedianTotalMm: number | null; medianRainDays: number | null; rootZoneWetnessMedian: number | null; validImergYears: number; expectedYears: number; imergCoveragePct: number; rootZoneCoveragePct: number };
+/** Frost screen per calendar month: share of complete years with at least one day Tmin <= thresholdC, and the median count of such days. */
+export type FrostMonth = { month: number; thresholdC: number; frostYears: number; validYears: number; expectedYears: number; frostYearShare: number | null; medianFrostDays: number | null };
+export const FROST_SCREEN_THRESHOLD_C = 2;
 /** Median monthly precipitation, FAO-56 ET0 and their difference across complete years only. Climate context; not crop demand. */
 export type WaterBalanceMonth = { month: number; precipMedianMm: number | null; et0MedianMm: number | null; balanceMedianMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalCalendarDay = { month: number; day: number; tmeanMedianC: number | null; precipMedianMm: number | null; imergPrecipMedianMm: number | null; rootZoneWetnessMedian: number | null; validYears: number; expectedYears: number };
@@ -130,4 +133,25 @@ export function monthlyForYear(daily: ClimateDay[], year: number): YearMonth[] {
     const complete = (values: number[]) => days.length > 0 && values.length === days.length;
     return { month, rainTotalMm: complete(rain) ? Number(rain.reduce((sum, value) => sum + value, 0).toFixed(1)) : null, tmeanMedianC: complete(temperature) ? median(temperature) : null };
   });
+}
+
+/** Air-temperature (NASA POWER T2M_MIN) frost screen; 2 C is a screening threshold, crop-specific damage thresholds are not modelled. Years with any missing Tmin day are excluded, never filled in. */
+export function frostByMonth(daily: ClimateDay[], thresholdC: number = FROST_SCREEN_THRESHOLD_C): FrostMonth[] {
+  return Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    const byYear = new Map<string, ClimateDay[]>();
+    for (const day of daily) {
+      if (Number(day.date.slice(4, 6)) !== month) continue;
+      const year = day.date.slice(0, 4);
+      byYear.set(year, [...(byYear.get(year) ?? []), day]);
+    }
+    const counts = [...byYear.values()].flatMap((days) => days.length > 0 && days.every((day) => day.tminC !== null) ? [days.filter((day) => (day.tminC as number) <= thresholdC).length] : []);
+    const frostYears = counts.filter((count) => count > 0).length;
+    return { month, thresholdC, frostYears, validYears: counts.length, expectedYears: byYear.size, frostYearShare: counts.length ? Number((frostYears / counts.length).toFixed(4)) : null, medianFrostDays: median(counts) };
+  });
+}
+
+/** Month-by-month IMERG rain days and root-zone wetness context for every calendar month, from the series already loaded. */
+export function historicalWaterContextByMonth(daily: ClimateDay[]): HistoricalWaterContextMonth[] {
+  return Array.from({ length: 12 }, (_, index) => historicalWaterContextForMonth(daily, index + 1));
 }

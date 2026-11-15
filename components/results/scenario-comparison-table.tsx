@@ -7,7 +7,7 @@ import { alignmentDisplay, indicatorDisplay, scenarioDisplayTitle } from '@/lib/
 import { ScenarioComparisonShortcut } from '@/components/future-stories/scenario-comparison-shortcut';
 
 const stateText: Record<IndicatorState, string> = { compatible: 'compatível', attention: 'atenção', unknown: 'desconhecido', yes: 'presente', no: 'não catalogado', observed: 'observação' };
-const indicatorOrder = ['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'documented_water_response', 'cover_potential', 'functional_diversity', 'soil_context'] as const;
+const indicatorOrder = ['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'window_water_balance', 'frost_risk', 'documented_water_response', 'cover_potential', 'functional_diversity', 'soil_context'] as const;
 
 const levelStyle: Record<PriorityAlignment['level'], string> = { supports: 'text-lime-300', neutral: 'text-slate-200', conflicts: 'text-amber-300', unknown: 'text-slate-400' };
 function Alignment({ items, locale }: { items: PriorityAlignment[] | undefined; locale: 'pt-BR' | 'en' }) {

@@ -34,7 +34,7 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
   const sourceIds = (refs: string[], indicatorId: string) => [...new Set([
     ...refs.flatMap((ref) => sourceByUrl.get(ref) ? [sourceByUrl.get(ref)!] : []),
     ...(['functional_diversity', 'soil_context'].includes(indicatorId) ? ['farmer-input'] : []),
-    ...(['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'documented_water_response'].includes(indicatorId) ? ['nasa-power'] : []),
+    ...(['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'window_water_balance', 'frost_risk', 'documented_water_response'].includes(indicatorId) ? ['nasa-power'] : []),
   ])];
   const claims: EvidenceClaim[] = strategies.flatMap((strategy) => {
     const summary = strategy.indicators.map((indicator) => ({ id: `${strategy.id}-summary-${indicator.id}`, scenarioId: strategy.id, slotIndex: null, indicatorId: indicator.id, label: `${indicator.label} — cenário ${strategy.id}`, observation: indicator.detail, ruleId: `SUMMARY_${indicator.id.toUpperCase()}`, result: indicator.state, status: claimStatus(indicator.state), validationLevel: strategy.validationLevel, sourceIds: sourceIds(indicator.sourceRefs, indicator.id), missingData: indicator.state === 'unknown' ? [indicator.id] : [] }));

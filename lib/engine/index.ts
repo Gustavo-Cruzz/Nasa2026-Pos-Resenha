@@ -5,7 +5,7 @@ import type { AnalysisResult, Explanation, Rotation, ValidationLevel } from '@/l
 import { createDefaultLabPlan, labPrimaryCrop, type LabPlan } from '@/lib/lab';
 import { detectCurrentPattern, detectCurrentPatternDetailed } from '@/lib/lab/sequence';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
-import { deriveNasaInsights } from '@/lib/engine/nasa-insight';
+import { deriveNasaInsight, deriveNasaInsights } from '@/lib/engine/nasa-insight';
 import { assessCropIndicators } from '@/lib/engine/indicators';
 import { assessLabPlan } from '@/lib/lab/assessment';
 import { buildEvidenceManifest } from '@/lib/evidence/manifest';
@@ -48,7 +48,7 @@ function strategy(id: 'A' | 'B' | 'C', title: string, crop: Crop | undefined, in
   ];
   const lastCrop = input.history.at(-1)?.cropId ? getCrop(input.history.at(-1)!.cropId!) : undefined;
   const history = input.history.flatMap((event) => event.cropId ? [getCrop(event.cropId)] : []).filter((item): item is Crop => Boolean(item));
-  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, plantingMonth) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate, regionalSoil), soilHealth: assessSoilHealth(input, crop, history, declaredCompanions, regionalSoil), croppingSystems, slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
+  return { id, title, baseline, baselineAssumed: assumed, horizonMonths: 24, proposedCrop: crop ? proposed(crop, plantingMonth) : null, validationLevel: level(regionalContext, cropId), regionalContextAvailable: regional, indicators: assessCropIndicators(crop, lastCrop, input, climate, regionalSoil, plantingMonth === input.plantingMonth ? undefined : { month: plantingMonth, label: 'safrinha' }), soilHealth: assessSoilHealth(input, crop, history, declaredCompanions, regionalSoil), croppingSystems, slots: [], configuredSlots: 0, explanations, missingData: missing, unavailable: !crop };
 }
 function baselineCrop(input: AnalysisInput): Crop | undefined { const cropId = input.futureBaseline?.confirmed ? input.futureBaseline.cropId : input.history.at(-1)?.cropId; return cropId && isAnnualRotationEligible(cropId) ? getCrop(cropId) : undefined; }
 function selectable(input: AnalysisInput): Crop[] { return permittedCatalogCrops(input.farmerCrops); }
@@ -90,5 +90,5 @@ export function analyze(input: unknown, climate: ClimateContext = EMPTY_CLIMATE,
   const boundaryAnalysis = analyzeBoundary(parsed.data.fieldBoundary);
   const evidenceManifest = buildEvidenceManifest(strategies, climate, regionalContext, boundaryAnalysis);
   const boundaryWarnings = boundaryAnalysis.status === 'spatial_context' ? ['O polígono entra como contexto espacial. SMAP L4 histórico numérico exige pré-processamento autenticado Earthdata e não foi inferido da camada visual GIBS.'] : [];
-  return { strategies, climate, regionalContext, boundaryAnalysis, warnings: [...evaluateConstraints(regionalContext).map((item) => item.message), ...regionalContext.gaps, ...climate.gaps, ...boundaryWarnings], input: parsed.data, regionalContextAvailable: Boolean(regionalContext.zarc), disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights, nasaInsight: nasaInsightByMonth[parsed.data.plantingMonth - 1], nasaInsightByMonth, dataQuality: deriveDataQuality(parsed.data, climate, options.regionalSoil), evidenceManifest };
+  return { strategies, climate, regionalContext, boundaryAnalysis, warnings: [...evaluateConstraints(regionalContext).map((item) => item.message), ...regionalContext.gaps, ...climate.gaps, ...boundaryWarnings], input: parsed.data, regionalContextAvailable: Boolean(regionalContext.zarc), disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights, nasaInsight: deriveNasaInsight(strategies, climate, parsed.data.plantingMonth, { ownWindow: true }), nasaInsightByMonth, dataQuality: deriveDataQuality(parsed.data, climate, options.regionalSoil), evidenceManifest };
 }

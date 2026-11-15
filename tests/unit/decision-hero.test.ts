@@ -44,7 +44,7 @@ describe('decision hero', () => {
   });
 
   it('exports the concrete decision and source status in Markdown', () => {
-    const md = buildAnalysisSummary(analyze(input, climate(35)), 'en');
+    const md = buildAnalysisSummary(analyze(input, climate(35), plan), 'en');
     expect(md).toContain('## Concrete decision');
     expect(md).toMatch(/State: attention/);
     expect(md).toMatch(/NASA signal: 35 °C/);
@@ -82,7 +82,7 @@ describe('source health', () => {
 
 describe('season content in the export', () => {
   it('adds the monthly window, calendar and water-balance status without inventing values', () => {
-    const md = buildAnalysisSummary(analyze(input, climate(35)), 'en');
+    const md = buildAnalysisSummary(analyze(input, climate(35), plan), 'en');
     expect(md).toContain('## Climate window by month');
     expect(md).toContain('Thermal calendar');
     expect(md).toMatch(/not a forecast/);
