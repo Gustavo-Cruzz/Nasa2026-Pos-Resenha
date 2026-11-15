@@ -18,9 +18,15 @@ const climateOk = { status: 'ok', origin: 'live', climateSummary: { monthly: [{ 
 test('offers one home path: start the farm analysis with João', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Analisar minha fazenda' }).click();
-  await expect(page.getByRole('heading', { name: 'Cadastre a sua fazenda com o João' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Converse com o João sobre sua fazenda' })).toBeVisible();
   await expect(page.getByText('Sua análise em 4 passos')).toBeVisible();
   await expect(page.getByText('1/4 · Localização')).toBeVisible();
+});
+
+test('redirects the retired farm-registration route to João', async ({ page }) => {
+  await page.goto('/cadastro');
+  await expect(page).toHaveURL(/\/farm/);
+  await expect(page.getByRole('heading', { name: 'Converse com o João sobre sua fazenda' })).toBeVisible();
 });
 
 test('keeps coordinate entry available when the map is unavailable', async ({ page }) => {
@@ -60,7 +66,7 @@ test('shows the NASA soil-moisture layer with its date and draws an exploratory 
   await expect(page.getByText(/não confirma propriedade/)).toBeVisible();
 });
 
-test('opens a consistent mobile menu and starts the Brazil demonstration in one action', async ({ page }) => {
+test('opens and closes a consistent mobile menu', async ({ page }) => {
   test.setTimeout(60_000);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
@@ -73,17 +79,6 @@ test('opens a consistent mobile menu and starts the Brazil demonstration in one 
   }).toPass({ timeout: 30_000 });
   await menu.click();
   await expect(exploreLink).toBeHidden();
-  await page.getByRole('button', { name: 'Ver demonstração Brasil' }).click();
-  await expect(page).toHaveURL(/\/results\?demo=brasil/);
-  await expect(page.getByText('Demonstração Brasil', { exact: true })).toBeVisible();
-  await openTechnicalDetails(page);
-  const soilSummary = page.getByRole('heading', { name: 'Contexto do solo em 30 segundos' }).locator('..');
-  await expect(soilSummary).toContainText('Textura');
-  await expect(soilSummary).toContainText('pH em água');
-  await expect(soilSummary).toContainText('Carbono orgânico');
-  await expect(soilSummary).toContainText('Umidade radicular');
-  await expect(soilSummary.getByText('Fontes, método e propriedades adicionais')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Leve esta conversa adiante' })).toBeVisible();
 });
 
 test('persists a real English language selection for landing and methodology', async ({ page }) => {

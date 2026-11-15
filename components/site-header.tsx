@@ -24,7 +24,7 @@ export function SiteHeader() {
   }, [open]);
   const links = [
     { href: '/explore', label: copy.explore, icon: 'explore', also: [] as string[] },
-    { href: '/farm', label: copy.farm, icon: 'farm', also: ['/chat', '/cadastro', '/entrar', '/painel'] as string[] },
+    { href: '/farm', label: copy.farm, icon: 'farm', also: ['/chat', '/painel'] as string[] },
     { href: '/results', label: copy.compare, icon: 'compare', also: ['/lab', '/future-stories'] },
     { href: '/methodology', label: copy.methodology, icon: 'methodology', also: [] as string[] },
   ];

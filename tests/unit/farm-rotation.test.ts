@@ -23,20 +23,19 @@ describe('rotation read', () => {
   });
 });
 
-describe('chat: register my farm', () => {
+describe('chat: finish analysis setup', () => {
   const confirm: ChatState = { step: 'confirm', draft: { location: { latitude: -17.798, longitude: -50.919, label: 'Rio Verde (GO)' }, current: 'soybean', previous: 'maize', soil: null, soilDone: true } };
 
-  it('offers "Cadastrar minha fazenda" next to "Ver minha análise" at the confirm step', () => {
+  it('offers only analysis or answer editing at the confirm step', () => {
     const chips = prompt('confirm', confirm.draft, 'pt-BR').at(-1)?.chips ?? [];
-    expect(chips).toEqual(['Ver minha análise', 'Cadastrar minha fazenda', 'Mudar algo']);
-    expect(prompt('confirm', confirm.draft, 'en').at(-1)?.chips).toContain('Register my farm');
+    expect(chips).toEqual(['Ver minha análise', 'Mudar algo']);
+    expect(prompt('confirm', confirm.draft, 'en').at(-1)?.chips).toEqual(['See my analysis', 'Change something']);
+    expect(prompt('confirm', confirm.draft, 'pt-BR').at(-1)?.text).toContain('Na próxima tela, eu vou comparar três caminhos de rotação');
   });
-  it('turns "Cadastrar minha fazenda" (and "register my farm") into a register effect, not into the analysis', () => {
-    expect(advance(confirm, 'Cadastrar minha fazenda', 'pt-BR').effects).toEqual([{ type: 'register' }]);
-    expect(advance(confirm, 'register my farm', 'en').effects).toEqual([{ type: 'register' }]);
+  it('opens the analysis directly after confirmation', () => {
     expect(advance(confirm, 'Ver minha análise', 'pt-BR').effects).toEqual([{ type: 'go' }]);
   });
-  it('keeps what the registration needs: the draft still builds a valid analysis input', () => {
+  it('keeps a valid analysis input', () => {
     expect(buildAnalysisInput(confirm.draft)).toMatchObject({ location: { latitude: -17.798 }, irrigation: expect.any(String) });
   });
 });

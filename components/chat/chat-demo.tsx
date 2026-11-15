@@ -57,7 +57,7 @@ function ContactChoice({ onChoose }: { onChoose: (mode: 'audio' | 'text') => voi
   </section>;
 }
 
-/** Chat that only registers the farm (city, current crop, previous crop, soil) and then opens the results page. */
+/** Chat that gathers location, crop and soil context before opening the analysis. */
 export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace | null; mapPolygon?: AtlasPolygon } = {}) {
   const { locale, copy } = useLocale();
   const en = locale === 'en';
@@ -150,14 +150,6 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
       router.push('/results');
       return;
     }
-    if (effect.type === 'register') {
-      const input = buildAnalysisInput(turn.state.draft);
-      if (!input) { addBot([{ text: en ? 'Something is missing in my notes. Say "restart" to begin again.' : 'Faltou algo nas minhas anotações. Diga "recomeçar" para começar de novo.' }]); setBusy(false); return; }
-      saveDraft(input);
-      persistAtlas(turn.state.draft.location, mapPolygonRef.current);
-      router.push('/cadastro');
-      return;
-    }
     void lookup(effect.query, turn.state);
   };
 
@@ -248,7 +240,7 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     else if (event.key === 'Escape') { event.preventDefault(); setDismissed(query); }
   };
 
-  return <section aria-label={en ? 'Register your farm' : 'Cadastro da fazenda'} className="mx-auto -mt-6 flex h-[calc(100dvh-7rem)] min-h-[30rem] max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80 sm:mt-0 sm:h-[78vh]">
+  return <section aria-label={en ? 'Farm conversation' : 'Conversa sobre a fazenda'} className="mx-auto -mt-6 flex h-[calc(100dvh-7rem)] min-h-[30rem] max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80 sm:mt-0 sm:h-[78vh]">
     <header className="flex items-center gap-3 border-b border-slate-700 bg-slate-900 px-4 py-3">
       <ChatAvatar size={44} />
       <div className="min-w-0 flex-1"><h1 className="truncate text-base font-bold leading-tight">{ASSISTANT_NAME}</h1><p className="truncate text-xs text-slate-400">{en ? 'Plantaê assistant' : 'Assistente do Plantaê'}</p></div>

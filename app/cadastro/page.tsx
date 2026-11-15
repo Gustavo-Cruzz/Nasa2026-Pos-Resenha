@@ -1,9 +1,6 @@
-import { LoadingStatus } from '@/components/loading-status';
-import { ClientOnly } from '@/components/client-only';
-import { RegisterFarm } from '@/components/farm/register-farm';
+import { redirect } from 'next/navigation';
 
-export const metadata = { title: 'Register farm · Plantaê' };
-
+/** Registration is intentionally not part of the public journey; analysis starts with João. */
 export default function RegisterFarmPage() {
-  return <ClientOnly fallback={<LoadingStatus en="Loading…" pt="Carregando…" />}><RegisterFarm /></ClientOnly>;
+  redirect('/farm');
 }

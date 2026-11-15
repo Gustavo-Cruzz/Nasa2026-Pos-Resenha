@@ -220,7 +220,7 @@ describe('chat registration: confirmation and hand-off to the results page', () 
     const turn = say(confirm(), 'recomeçar');
     expect(turn.effects).toEqual([{ type: 'restart' }]);
     expect(turn.state).toEqual(initialState());
-    expect(say(initialState(), 'ajuda').replies[0].text).toContain('só cadastro');
+    expect(say(initialState(), 'ajuda').replies[0].text).toContain('comparo três caminhos possíveis');
   });
 });
 
@@ -282,8 +282,9 @@ describe('chat closing: decision summary', () => {
   const soilDraft = (): ChatState['draft'] => ({ location: { latitude: -17.798, longitude: -50.919 }, current: 'soybean', previous: 'maize', soil: { kinds: ['erosion'] }, soilDone: true });
   it('points to B (soil health) when the farmer reported soil problems', () => {
     expect(pointScenario(soilDraft())).toEqual({ scenario: 'B', priority: 'soil' });
-    expect(decisionSummary(soilDraft(), 'pt-BR')).toBe('Para proteger o solo sem perder a safrinha, compare B com A na análise.');
-    expect(decisionSummary(soilDraft(), 'en')).toBe('To protect the soil without losing the second crop, compare B with A in the analysis.');
+    expect(decisionSummary(soilDraft(), 'pt-BR')).toContain('Para proteger o solo sem perder a safrinha, compare B com A na análise.');
+    expect(decisionSummary(soilDraft(), 'pt-BR')).toContain('Na próxima tela, eu vou comparar três caminhos de rotação');
+    expect(decisionSummary(soilDraft(), 'en')).toContain('To protect the soil without losing the second crop, compare B with A in the analysis.');
   });
   it('points to C (diversification) when the previous crop is the same as the current one', () => {
     const draft = { ...soilDraft(), soil: null, previous: 'soybean' };
@@ -301,7 +302,7 @@ describe('chat closing: decision summary', () => {
     const prompted = prompt('confirm', soilDraft(), 'pt-BR')[0];
     expect(prompted.text).toContain('Para proteger o solo sem perder a safrinha, compare B com A na análise.');
     expect(prompted.text.indexOf('compare B')).toBeLessThan(prompted.text.indexOf('Tudo certo?'));
-    expect(prompted.text.endsWith('Tudo certo?')).toBe(true);
+    expect(prompted.text).toContain('Tudo certo? Toque em “Ver minha análise” para seguir');
     expect(prompted.chips).toContain('Ver minha análise');
     expect(prompt('confirm', soilDraft(), 'en')[0].text).toContain('compare B with A in the analysis.');
   });

@@ -4,14 +4,14 @@ import { detectCommand, findCrop, isDone, isSkip, normalize, parseLocation, pars
 import type { PlaceMatch } from '@/lib/brazil/places';
 
 type Locale = 'pt-BR' | 'en';
-/** The chat only registers the farm; the analysis is presented on the results page. */
+/** The chat gathers the minimum context for the analysis presented on the results page. */
 export type Step = 'location' | 'current' | 'previous' | 'soil' | 'confirm';
 /** `soil`: undefined = not asked yet, null = nothing unusual, otherwise the problems reported so far; `soilDone` closes the "anything else?" loop. */
 export type ChatDraft = { location?: PlaceResult; current?: string; previous?: string | null; soil?: SoilObservation | null; soilDone?: boolean };
 export type ChatState = { step: Step; draft: ChatDraft };
 /** `multi`: the chips can be ticked several at a time; `finishLabel` is the button shown while none is ticked (with some ticked it confirms them). */
 export type Reply = { text: string; chips?: string[]; multi?: { finishLabel: string } };
-export type Effect = { type: 'lookup'; query: string } | { type: 'go' } | { type: 'register' } | { type: 'restart' };
+export type Effect = { type: 'lookup'; query: string } | { type: 'go' } | { type: 'restart' };
 export type Turn = { state: ChatState; replies: Reply[]; effects: Effect[] };
 export const TOTAL_STEPS = 4;
 
@@ -75,7 +75,7 @@ export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
         ? [reply(pick(locale, `Anotei: ${soilList(draft.soil, locale)}.\nMais alguma coisa no solo?`, `Noted: ${soilList(draft.soil, locale)}.\nAnything else in the soil?`), chips, multi)]
         : [reply(pick(locale, 'Você notou alguma coisa estranha no solo?\nMarque o que valer, ou escreva do seu jeito.', 'Have you noticed anything unusual in the soil?\nTick what applies, or write it your way.'), chips, multi)];
     }
-    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${decisionSummary(draft, locale)}\n\n${pick(locale, 'Tudo certo?', 'All good?')}`,[pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Cadastrar minha fazenda', 'Register my farm'), pick(locale, 'Mudar algo', 'Change something')])];
+    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${decisionSummary(draft, locale)}\n\n${pick(locale, 'Tudo certo? Toque em “Ver minha análise” para seguir, ou mude uma resposta.', 'All good? Tap “See my analysis” to continue, or change an answer.')}`,[pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')])];
   }
 }
 
@@ -106,9 +106,12 @@ export function pointScenario(draft: ChatDraft): { scenario: DecisionScenario; p
 /** Short closing message of the chat: which scenario to compare on the results page, and why. No numbers: the analysis holds them. */
 export function decisionSummary(draft: ChatDraft, locale: Locale): string {
   const { scenario, priority } = pointScenario(draft);
-  if (priority === 'soil') return pick(locale, 'Para proteger o solo sem perder a safrinha, compare B com A na análise.', 'To protect the soil without losing the second crop, compare B with A in the analysis.');
-  if (priority === 'diversification') return pick(locale, 'Para diversificar e não repetir a mesma cultura, compare C com A na análise.', 'To diversify and stop repeating the same crop, compare C with A in the analysis.');
-  return pick(locale, `Pelo que você contou, o plano atual (${scenario}) é a referência. Na análise, veja o que B e C ganham, perdem e o que ainda não sabemos.`, `From what you told me, your current plan (${scenario}) is the reference. In the analysis, see what B and C gain, lose, and what we do not know yet.`);
+  const focus = priority === 'soil'
+    ? pick(locale, 'Para proteger o solo sem perder a safrinha, compare B com A na análise.', 'To protect the soil without losing the second crop, compare B with A in the analysis.')
+    : priority === 'diversification'
+      ? pick(locale, 'Para diversificar e não repetir a mesma cultura, compare C com A na análise.', 'To diversify and stop repeating the same crop, compare C with A in the analysis.')
+      : pick(locale, `Pelo que você contou, o plano atual (${scenario}) é a referência.`, `From what you told me, your current plan (${scenario}) is the reference.`);
+  return `${focus}\n\n${pick(locale, 'Na próxima tela, eu vou comparar três caminhos de rotação. Você verá o que muda em cada um, o principal cuidado e o que ainda falta saber. É uma comparação para conversar e planejar — não uma recomendação de plantio.', 'On the next screen, I will compare three rotation paths. You will see what changes in each one, the main caution, and what is still unknown. It is a comparison for discussion and planning—not a planting recommendation.')}`;
 }
 
 /**
@@ -124,7 +127,7 @@ export function buildAnalysisInput(draft: ChatDraft, year = new Date().getFullYe
 }
 
 export function helpText(locale: Locale): string {
-  return pick(locale, 'Eu só cadastro a sua fazenda: cidade, o que planta, o que plantou antes e o solo.\nDiga "recomeçar" para começar de novo ou "mudar a cidade" para corrigir uma resposta.', 'I only register your farm: city, current crop, previous crop and soil.\nSay "restart" to start over, or "change the city" to fix an answer.');
+  return pick(locale, 'Eu pergunto sobre cidade, o que você planta, o que plantou antes e o solo. Depois, comparo três caminhos possíveis.\nDiga "recomeçar" para começar de novo ou "mudar a cidade" para corrigir uma resposta.', 'I ask about your location, crops, previous crop, and soil. Then I compare three possible paths.\nSay "restart" to start over, or "change the city" to fix an answer.');
 }
 
 const CHANGE_TARGETS: Array<[RegExp, Step]> = [[/\b(local|location|cidade|city|lugar)\b/, 'location'], [/\b(anterior|previous|before)\b/, 'previous'], [/\b(solo|soil|observacao|observation)\b/, 'soil'], [/\b(atual|current|agora|now|cultura|crop)\b/, 'current']];
@@ -151,11 +154,10 @@ export function advance(state: ChatState, rawText: string, locale: Locale): Turn
   if (state.step === 'confirm') {
     const target = changeTarget(text);
     if (target) { const draft = target === 'soil' ? { ...state.draft, soil: undefined, soilDone: false } : state.draft; return { state: { step: target, draft }, replies: prompt(target, draft, locale), effects: [] }; }
-    if (/\b(cadastrar|cadastro|register|sign\s?up)\b/.test(normalize(text))) return { state, replies: [reply(pick(locale, 'Vamos cadastrar a sua fazenda.\nConfirme o nome da fazenda e eu guardo tudo.', 'Let us register your farm.\nConfirm the farm name and I will save everything.'))], effects: [{ type: 'register' }] };
     if (parseYesNo(text) === 'yes') return { state, replies: [reply(pick(locale, 'Pronto! Abrindo a sua análise…', 'Done! Opening your analysis…'))], effects: [{ type: 'go' }] };
     if (/\b(mudar|change|algo|something|nao|no)\b/.test(normalize(text))) return keep([reply(pick(locale, 'O que você quer mudar?', 'What do you want to change?'), [pick(locale, 'Mudar a cidade', 'Change the city'), pick(locale, 'Mudar a cultura atual', 'Change the current crop'), pick(locale, 'Mudar a cultura anterior', 'Change the previous crop'), pick(locale, 'Mudar o solo', 'Change the soil')])]);
-    const ok = [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Cadastrar minha fazenda', 'Register my farm'), pick(locale, 'Mudar algo', 'Change something')];
-    if (/\b(plantar|adicionar|incluir|quero|want|plant|add)\b/.test(normalize(text))) return keep([reply(pick(locale, 'Por enquanto eu só registro o que você já plantou.\nNa análise você compara as opções de cultura.', 'For now I only register what you have already grown.\nIn the analysis you compare crop options.'), ok)]);
+    const ok = [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')];
+    if (/\b(plantar|adicionar|incluir|quero|want|plant|add)\b/.test(normalize(text))) return keep([reply(pick(locale, 'Por enquanto eu uso o que você já plantou como ponto de partida.\nNa análise você compara os caminhos possíveis.', 'For now I use what you have already grown as the starting point.\nIn the analysis you compare the possible paths.'), ok)]);
     return keep([reply(pick(locale, 'Não entendi.\nToque em "Ver minha análise" ou diga o que mudar.', 'I did not understand.\nTap "See my analysis" or tell me what to change.'), ok)]);
   }
 
@@ -237,13 +239,13 @@ export const geoChoices = (locale: Locale) => ({ yes: pick(locale, 'Sim, pode us
 
 export function geoGreeting(locale: Locale): Reply[] {
   const { yes, no } = geoChoices(locale);
-  return [greeting(locale)[0], reply(pick(locale, 'Posso usar a localização do seu aparelho para achar a sua fazenda?\nO navegador vai pedir a sua permissão. Nada é guardado sem você cadastrar.', 'May I use your device location to find your farm?\nThe browser will ask for your permission. Nothing is saved unless you register.'), [yes, no])];
+  return [greeting(locale)[0], reply(pick(locale, 'Posso usar a localização do seu aparelho para achar sua fazenda?\nO navegador vai pedir sua permissão. Você revisa as respostas antes de abrir a análise.', 'May I use your device location to find your farm?\nThe browser will ask for permission. You review your answers before opening the analysis.'), [yes, no])];
 }
 
 /** João's message once the device location arrived (the app draws the mini map under it). */
 export function geoFound(place: MapPlace, locale: Locale): Reply {
   const { yes, no } = mapChoices(locale);
-  return reply(pick(locale, `Achei você aqui: **${mapPlaceName(place)}**.\nÉ essa a localização da fazenda que você quer cadastrar?`, `I found you here: **${mapPlaceName(place)}**.\nIs this the location of the farm you want to register?`), [yes, no]);
+  return reply(pick(locale, `Achei você aqui: **${mapPlaceName(place)}**.\nÉ essa a localização da fazenda que você quer analisar?`, `I found you here: **${mapPlaceName(place)}**.\nIs this the farm location you want to analyze?`), [yes, no]);
 }
 
 export type GeoFailure = 'unsupported' | 'denied' | 'unavailable' | 'timeout';

@@ -14,6 +14,8 @@ Evidence (2026-11-15): inspeção visual desktop da escolha de contato; Playwrig
 
 Limitations: áudio depende de `SpeechRecognition`/`webkitSpeechRecognition`, da permissão do dispositivo e, em alguns navegadores, de serviços de reconhecimento do próprio navegador. O produto não recebe ou guarda o arquivo de áudio; somente o texto revisado entra na conversa.
 
+Improvement (2026-11-15): o fluxo de cadastro de fazenda foi retirado da jornada pública. João oferece apenas abrir a análise ou corrigir respostas; a rota histórica `/cadastro` redireciona para a conversa. Antes de avançar, João explica que a próxima tela compara três caminhos de rotação, mostra mudanças, principal cuidado e lacunas, sem prometer recomendação de plantio.
+
 Next: simplificar o primeiro resumo da comparação em uma decisão curta antes dos detalhes técnicos, mantendo incertezas e evidências acessíveis.
 
 ## README do pitch e arquitetura de decisão
