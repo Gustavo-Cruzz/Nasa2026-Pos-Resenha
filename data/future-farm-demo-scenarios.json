@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0",
+  "demoOnly": true,
+  "defaultForRealUsers": false,
+  "fictionalFarm": true,
+  "disclaimer": "Cena artistica ilustrativa da composicao de culturas. Nao representa produtividade, saude real do solo nem previsao visual.",
+  "background": "/assets/farm-stories/backgrounds/farm-base-960x540.png",
+  "visualRules": {
+    "sameBaselineForAllScenarios": true,
+    "visualVigorFromScientificScore": false,
+    "weatherFxOnlyWithExplicitTimeAndData": true,
+    "cropMissing": "neutralFallbackWithLabel",
+    "editableCyclesUseRuntimeSceneComposer": true
+  },
+  "scenarios": [
+    {
+      "id": "A",
+      "name": "Continuidade",
+      "objective": "Representar uma continuação hipotética das culturas escolhidas",
+      "cycles": [
+        {
+          "scenario": "A",
+          "cycle": 1,
+          "cropId": "maize",
+          "cropLabel": "Milho",
+          "png": "/assets/farm-stories/scenes/scenario-a-cycle-1.png",
+          "gif": "/assets/farm-stories/scenes/scenario-a-cycle-1.gif",
+          "alt": "Ilustração de uma fazenda com Milho no ciclo 1; sem significado preditivo"
+        },
+        {
+          "scenario": "A",
+          "cycle": 2,
+          "cropId": "soybean",
+          "cropLabel": "Soja",
+          "png": "/assets/farm-stories/scenes/scenario-a-cycle-2.png",
+          "gif": "/assets/farm-stories/scenes/scenario-a-cycle-2.gif",
+          "alt": "Ilustração de uma fazenda com Soja no ciclo 2; sem significado preditivo"
+        },
+        {
+          "scenario": "A",
+          "cycle": 3,
+          "cropId": "maize",
+          "cropLabel": "Milho",
+          "png": "/assets/farm-stories/scenes/scenario-a-cycle-3.png",
+          "gif": "/assets/farm-stories/scenes/scenario-a-cycle-3.gif",
+          "alt": "Ilustração de uma fazenda com Milho no ciclo 3; sem significado preditivo"
+        },
+        {
+          "scenario": "A",
+          "cycle": 4,
+          "cropId": "ruziziensis",
+          "cropLabel": "Braquiária-ruziziensis",
+          "png": "/assets/farm-stories/scenes/scenario-a-cycle-4.png",
+          "gif": "/assets/farm-stories/scenes/scenario-a-cycle-4.gif",
+          "alt": "Ilustração de uma fazenda com Braquiária-ruziziensis no ciclo 4; sem significado preditivo"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Saúde do solo",
+      "objective": "Investigar diversidade funcional e potencial de cobertura",
+      "cycles": [
+        {
+          "scenario": "B",
+          "cycle": 1,
+          "cropId": "soybean",
+          "cropLabel": "Soja",
+          "png": "/assets/farm-stories/scenes/scenario-b-cycle-1.png",
+          "gif": "/assets/farm-stories/scenes/scenario-b-cycle-1.gif",
+          "alt": "Ilustração de uma fazenda com Soja no ciclo 1; sem significado preditivo"
+        },
+        {
+          "scenario": "B",
+          "cycle": 2,
+          "cropId": "ruziziensis",
+          "cropLabel": "Braquiária-ruziziensis",
+          "png": "/assets/farm-stories/scenes/scenario-b-cycle-2.png",
+          "gif": "/assets/farm-stories/scenes/scenario-b-cycle-2.gif",
+          "alt": "Ilustração de uma fazenda com Braquiária-ruziziensis no ciclo 2; sem significado preditivo"
+        },
+        {
+          "scenario": "B",
+          "cycle": 3,
+          "cropId": "maize",
+          "cropLabel": "Milho",
+          "png": "/assets/farm-stories/scenes/scenario-b-cycle-3.png",
+          "gif": "/assets/farm-stories/scenes/scenario-b-cycle-3.gif",
+          "alt": "Ilustração de uma fazenda com Milho no ciclo 3; sem significado preditivo"
+        },
+        {
+          "scenario": "B",
+          "cycle": 4,
+          "cropId": "cowpea",
+          "cropLabel": "Feijão-caupi",
+          "png": "/assets/farm-stories/scenes/scenario-b-cycle-4.png",
+          "gif": "/assets/farm-stories/scenes/scenario-b-cycle-4.gif",
+          "alt": "Ilustração de uma fazenda com Feijão-caupi no ciclo 4; sem significado preditivo"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Resiliência hídrica",
+      "objective": "Investigar alternativas e trade-offs de exposição hídrica",
+      "cycles": [
+        {
+          "scenario": "C",
+          "cycle": 1,
+          "cropId": "sorghum",
+          "cropLabel": "Sorgo",
+          "png": "/assets/farm-stories/scenes/scenario-c-cycle-1.png",
+          "gif": "/assets/farm-stories/scenes/scenario-c-cycle-1.gif",
+          "alt": "Ilustração de uma fazenda com Sorgo no ciclo 1; sem significado preditivo"
+        },
+        {
+          "scenario": "C",
+          "cycle": 2,
+          "cropId": "cowpea",
+          "cropLabel": "Feijão-caupi",
+          "png": "/assets/farm-stories/scenes/scenario-c-cycle-2.png",
+          "gif": "/assets/farm-stories/scenes/scenario-c-cycle-2.gif",
+          "alt": "Ilustração de uma fazenda com Feijão-caupi no ciclo 2; sem significado preditivo"
+        },
+        {
+          "scenario": "C",
+          "cycle": 3,
+          "cropId": "sunflower",
+          "cropLabel": "Girassol",
+          "png": "/assets/farm-stories/scenes/scenario-c-cycle-3.png",
+          "gif": "/assets/farm-stories/scenes/scenario-c-cycle-3.gif",
+          "alt": "Ilustração de uma fazenda com Girassol no ciclo 3; sem significado preditivo"
+        },
+        {
+          "scenario": "C",
+          "cycle": 4,
+          "cropId": "ruziziensis",
+          "cropLabel": "Braquiária-ruziziensis",
+          "png": "/assets/farm-stories/scenes/scenario-c-cycle-4.png",
+          "gif": "/assets/farm-stories/scenes/scenario-c-cycle-4.gif",
+          "alt": "Ilustração de uma fazenda com Braquiária-ruziziensis no ciclo 4; sem significado preditivo"
+        }
+      ]
+    }
+  ]
+}
