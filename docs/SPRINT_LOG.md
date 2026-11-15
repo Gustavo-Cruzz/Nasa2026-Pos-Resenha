@@ -949,3 +949,13 @@ Prototypes B and C and the layout switch were removed.
 Evidence (2026-11-15): typecheck, eslint and vitest (412 tests) pass; `/farm` → 200.
 
 Limitations: the 25 ha default is not regional data. `/results` still labels a suggested polygon as an ordinary boundary. `npm run build` and Playwright were not run, to avoid disturbing the dev server.
+
+## Repository licensing and media disclaimer
+
+Status: complete.
+
+Implemented: added a root MIT license for the original software and documentation, attributed to the SilkNASA contributors. The README now distinguishes the repository license from third-party terms, identifies creative illustrations, animations, and videos as AI-generated or AI-assisted where applicable, and explicitly identifies the team photograph as a real photograph used with permission. It also states that Plantaê is the official project name, Field Shift is the NASA Space Apps 2026 challenge it addresses, and Plantaê is an independent, non-commercial SilkNASA hackathon project rather than an official NASA repository, product, certification, or endorsement.
+
+Checks: reviewed the rendered Markdown structure, relative links, repository diff, and license text. No application code or runtime behavior changed, so lint, typecheck, unit tests, end-to-end tests, and build were not required for this documentation-only change.
+
+Limitations: the MIT license covers original repository material only. Third-party datasets, services, libraries, and media remain under their own licenses and terms. The team remains responsible for retaining consent for identifiable people and verifying that every submitted asset is covered by the stated provenance.

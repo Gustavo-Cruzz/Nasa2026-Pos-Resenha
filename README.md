@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>SilkNASA Team · Plantaê Project · NASA Space Apps Challenge 2026</strong>
+  <strong>SilkNASA Team · Plantaê Project · Field Shift Challenge · NASA Space Apps 2026</strong>
 </p>
 
 > **What if farmers could explore their choices before planting?**
@@ -20,7 +20,7 @@
 >
 > **Plantaê. From space to soil. Farmers decide.**
 
-Plantaê (technical codename **Field Shift**) is a visual, bilingual agricultural decision-support MVP. Created by the **SilkNASA** team, it helps Brazilian farmers explore crop rotation hypotheses before planting without hiding uncertainty behind a single score or presenting regional data as field measurements.
+**Plantaê is the official name of the project. Field Shift is the NASA Space Apps 2026 challenge that Plantaê addresses.** Created by the **SilkNASA** team, Plantaê is a visual, bilingual agricultural decision-support MVP that helps Brazilian farmers explore crop rotation hypotheses before planting without hiding uncertainty behind a single score or presenting regional data as field measurements.
 
 The product does not decide for the farmer. It organizes climate history, municipal context, crop evidence, and farmer priorities into three comparable scenarios:
 
@@ -342,3 +342,13 @@ Prepared artifacts are versioned. A fallback from one location must never be reu
 > **From space to soil. Farmers decide.**
 
 Plantaê makes evidence explorable. It does not replace farmers, local observation, or technical assistance.
+
+## License and Disclaimers
+
+The original software and documentation in this repository are available under the [MIT License](LICENSE). Third-party data, services, libraries, and media remain subject to their respective licenses and terms; see [SOURCES](docs/SOURCES.md) for provenance and attribution.
+
+Some creative illustrations, animations, and videos used by the project were generated or assisted by generative AI and procedural tools. They are visual communication materials, not scientific observations, measurements, or evidence. The team photograph is a real photograph, not AI-generated, and is included with the permission of the people shown.
+
+Plantaê is an independent, non-commercial hackathon project created by the **SilkNASA** team as its solution to the **Field Shift challenge** in the **2026 NASA International Space Apps Challenge**. **Plantaê** is the project name; **Field Shift** is the challenge name. This repository is not an official NASA repository, product, certification, or endorsement. NASA names, missions, and public datasets are referenced only to identify the challenge and the sources used by the project.
+
+The team has no commercial intent for this hackathon submission.
