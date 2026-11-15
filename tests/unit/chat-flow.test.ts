@@ -51,6 +51,12 @@ describe('chat registration: crop inventory', () => {
     state = chooseNextPlanting(state, 'maize', 'pt-BR').state;
     expect(state.draft.nextPlanting).toBe('maize');
   });
+  it('shows names from the complete catalog in the confirmation, never N/D for selected crops', () => {
+    const text = summarize({ location: { latitude: -17, longitude: -50 }, workedCropIds: ['cassava', 'sweet_potato'], nextPlanting: 'cassava', current: 'cassava', previous: null, soil: null }, 'pt-BR');
+    expect(text).toContain('mandioca / aipim / macaxeira, batata-doce');
+    expect(text).toContain('Próximo plantio: mandioca / aipim / macaxeira');
+    expect(text).not.toContain('N/D');
+  });
 });
 
 describe('chat registration: city lookup', () => {

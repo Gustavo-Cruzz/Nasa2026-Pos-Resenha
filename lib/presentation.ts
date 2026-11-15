@@ -1,9 +1,10 @@
 import { p0Crops } from '@/lib/evidence-coverage';
+import { cropById } from '@/lib/catalog';
 import type { Explanation, PriorityAlignment, QualitativeIndicator, Rotation } from '@/lib/engine/types';
 import type { Locale } from '@/lib/i18n';
 
 export function cropDisplayName(cropId: string | null | undefined, fallback: string | null | undefined, locale: Locale): string {
-  return (cropId ? p0Crops.find((crop) => crop.id === cropId)?.commonNames[locale] : undefined) ?? fallback ?? 'N/D';
+  return (cropId ? cropById.get(cropId)?.commonNames[locale] ?? p0Crops.find((crop) => crop.id === cropId)?.commonNames[locale] : undefined) ?? fallback ?? 'N/D';
 }
 
 export function scenarioDisplayTitle(strategy: Pick<Rotation, 'id' | 'title' | 'baselineAssumed'>, locale: Locale): string {

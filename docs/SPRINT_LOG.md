@@ -1019,3 +1019,11 @@ Status: complete.
 Implemented: widened João's conversation from `max-w-2xl` to the application's `max-w-6xl` desktop content width and increased its desktop height to use the available viewport. Crop selectors now use 1/2/3/4 responsive columns from mobile through wide desktop, avoiding a needlessly tall scroll area while retaining touch-sized cards and keyboard interaction.
 
 Evidence (2026-11-15): `npm run typecheck` and `npm run lint` pass.
+
+## Sprint F18 — Nomes das culturas no resumo do João
+
+Status: complete.
+
+Fixed: the conversation summary rendered `N/D` for selected family-farm crops because the presentation formatter only consulted the older P0 evidence list. It now resolves names from the complete catalog first, retaining P0 as compatibility fallback. The regression test confirms mandioca/aipim/macaxeira, batata-doce and the next planting display by name.
+
+Evidence (2026-11-15): focused chat and visual-asset tests (42 assertions), typecheck and lint pass.
