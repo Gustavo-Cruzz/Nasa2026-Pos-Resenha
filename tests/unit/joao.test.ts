@@ -85,7 +85,7 @@ describe('João: soil, heat and the world', () => {
   it('compares the root-zone moisture with the normal and marks a drier year as attention', () => {
     expect(line(explainPlace(base()), 'root-zone')).toMatchObject({ tone: 'attention', text: 'Neste mês, em 2025, o solo na raiz estava mais seco do que o normal: 0,34 contra 0,45 no normal.' });
     const wet = base(); wet.climate.rootZoneByMonth![10] = { month: 11, medianWetness: 0.45, lastYearWetness: 0.6 };
-    expect(line(explainPlace(wet), 'root-zone')).toMatchObject({ tone: 'info' });
+    expect(line(explainPlace(wet), 'root-zone')).toMatchObject({ tone: 'good', mood: 'happy' });
     expect(line(explainPlace(wet), 'root-zone')?.text).toContain('mais úmido');
     const near = base(); near.climate.rootZoneByMonth![10] = { month: 11, medianWetness: 0.45, lastYearWetness: 0.47 };
     expect(line(explainPlace(near), 'root-zone')?.text).toContain('perto do normal');
@@ -100,7 +100,9 @@ describe('João: soil, heat and the world', () => {
     expect(result?.text).toContain('Em 11 de 14 anos teve pelo menos uma pausa de 7 dias ou mais');
     expect(result?.text).toContain('a maior pausa foi de 10,5 dias');
     const rare = base(); rare.climate.drySpells = { ...rare.climate.drySpells!, seasonsWithSpell: 2 };
-    expect(line(explainPlace(rare), 'dry-spells')?.tone).toBe('info');
+    expect(line(explainPlace(rare), 'dry-spells')?.tone).toBe('good');
+    const middle = base(); middle.climate.drySpells = { ...middle.climate.drySpells!, seasonsWithSpell: 5 };
+    expect(line(explainPlace(middle), 'dry-spells')?.tone).toBe('info');
     const empty = base(); empty.climate.drySpells = { ...empty.climate.drySpells!, seasonsAnalyzed: 0, medianLongestRunDays: null };
     expect(line(explainPlace(empty), 'dry-spells')).toBeUndefined();
   });
@@ -168,5 +170,37 @@ describe('João: the typical month and the chart', () => {
   it('stays silent when the month has no rain or temperature to explain', () => {
     const none = base(); none.climate.monthly = [];
     expect(line(explainPlace(none), 'typical-month')).toBeUndefined();
+  });
+});
+
+describe('João: mood follows the data', () => {
+  const moodOf = (data: JoaoData, id: string) => line(explainPlace(data), id)?.mood;
+  it('is attentive when the soil was drier than usual, animated when it was wetter, neutral when close', () => {
+    expect(moodOf(base(), 'root-zone')).toBe('alert');
+    const wet = base(); wet.climate.rootZoneByMonth![10] = { month: 11, medianWetness: 0.45, lastYearWetness: 0.6 };
+    expect(moodOf(wet, 'root-zone')).toBe('happy');
+    const near = base(); near.climate.rootZoneByMonth![10] = { month: 11, medianWetness: 0.45, lastYearWetness: 0.47 };
+    expect(moodOf(near, 'root-zone')).toBe('neutral');
+  });
+  it('reads the week\'s rain against the normal only while the rainy season is on', () => {
+    expect(moodOf(base(), 'forecast')).toBe('happy'); // 59 mm against about 39 mm in November
+    expect(moodOf(base({ forecast: ready(week('2026-11-14', Array(7).fill(2))) }), 'forecast')).toBe('alert');
+    expect(moodOf(base({ forecast: ready(week('2026-11-14', Array(7).fill(5.5))) }), 'forecast')).toBe('neutral');
+    // outside the rainy season the same surprise is only information
+    expect(moodOf(base({ month: 6, forecast: ready(week('2026-06-14', Array(7).fill(20))) }), 'forecast')).toBe('neutral');
+  });
+  it('is sad when the data is missing, and in doubt when João says he cannot tell', () => {
+    expect(moodOf(base({ forecast: { state: 'unavailable' } }), 'forecast')).toBe('sad');
+    expect(moodOf(base(), 'enso')).toBe('unsure');
+    const none = base(); none.climate.rootZoneByMonth = undefined;
+    expect(moodOf(none, 'root-zone')).toBe('sad');
+  });
+  it('gives every line a mood, and keeps the same moods in both languages', () => {
+    const several = [base(), base({ month: 7, forecast: ready(week('2026-07-14', Array(7).fill(0))) }), base({ forecast: { state: 'unavailable' }, enso: { state: 'unavailable' }, crops: { state: 'unavailable' } })];
+    for (const data of several) {
+      const flat = (locale: 'pt-BR' | 'en') => explainPlace(data, locale).sections.flatMap((section) => section.lines.map((item) => `${item.id}:${item.mood}`));
+      expect(flat('pt-BR').every((entry) => !entry.endsWith('undefined'))).toBe(true);
+      expect(flat('en')).toEqual(flat('pt-BR'));
+    }
   });
 });

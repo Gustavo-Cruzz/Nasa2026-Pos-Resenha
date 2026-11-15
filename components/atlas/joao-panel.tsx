@@ -30,5 +30,5 @@ export function JoaoLinesProvider({ point, climate, children }: { point: AtlasPo
 /** João's comment for one block of data; renders nothing while that line has nothing to say (for example while it loads). */
 export function JoaoComment({ id }: { id: string }) {
   const line = useContext(Lines)[id];
-  return line ? <JoaoNote happening={line.text} tone={line.tone} why={line.hint} /> : null;
+  return line ? <JoaoNote happening={line.text} mood={line.mood} tone={line.tone} why={line.hint} /> : null;
 }

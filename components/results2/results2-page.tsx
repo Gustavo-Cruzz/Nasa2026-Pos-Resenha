@@ -43,7 +43,7 @@ export function Results2Page() {
           <span className="grid h-24 w-24 shrink-0 place-items-center rounded-2xl bg-slate-950/50"><CropSprite cropId="maize" name="Milho" size={72} /></span>
           <div><h2 className="text-4xl font-bold leading-none">Milho</h2><p className="mt-2 text-slate-200">2ª safra · plantio em <b className="text-lime-200">novembro a janeiro</b></p><div className="mt-2"><Chip tone="ok">Combina bem com o seu clima</Chip></div></div>
         </div>
-        <div className="mt-5 flex flex-col"><JoaoNote happening="Olhei o clima do seu local e a sua rotação. Por isso o milho aparece primeiro." limit="É um ponto de partida para conversar com um técnico, não uma decisão pronta." points={['A temperatura do seu local fica dentro da faixa da cultura.', 'A chuva se concentra de novembro a abril, quando o milho mais precisa.', 'Vem depois da soja: alterna leguminosa e gramínea.']} /></div>
+        <div className="mt-5 flex flex-col"><JoaoNote tone="good" happening="Olhei o clima do seu local e a sua rotação. Por isso o milho aparece primeiro." limit="É um ponto de partida para conversar com um técnico, não uma decisão pronta." points={['A temperatura do seu local fica dentro da faixa da cultura.', 'A chuva se concentra de novembro a abril, quando o milho mais precisa.', 'Vem depois da soja: alterna leguminosa e gramínea.']} /></div>
       </article>
       <div className="grid gap-3 content-start">
         <p className="text-sm font-bold text-slate-300">Outras opções para comparar</p>

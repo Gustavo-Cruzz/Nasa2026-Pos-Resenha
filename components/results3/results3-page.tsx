@@ -7,7 +7,7 @@ import { CropSprite } from '@/components/crops/crop-sprite';
 import { MonthlyChart, type MonthPoint } from '@/components/atlas/monthly-chart';
 import { Chip, type Tone } from '@/components/results2/drawer';
 import { CalendarVisual, NdviVisual, RotationVisual, ScaleVisual, SoilVisual, WaterVisual } from '@/components/results2/visuals';
-import { JoaoDock, JoaoRail, useActiveBlock, type BlockComment } from '@/components/results3/joao-guide';
+import { JoaoDock, JoaoRail, joaoToneOf, useActiveBlock, type BlockComment } from '@/components/results3/joao-guide';
 
 /** MOCK DATA: illustrative values for the layout only. Nothing here is computed from the engine. */
 const FARM = { place: 'Luís Eduardo Magalhães (BA)', current: { id: 'soybean', name: 'Soja' }, previous: { id: 'maize', name: 'Milho' } };
@@ -109,7 +109,7 @@ export function Results3Page() {
           </header>
           <div className="mt-5 min-w-0">{block.body}</div>
         </article>
-        {guide ? <JoaoRail active={activeId === block.id} comment={block.comment} title={block.title} /> : null}
+        {guide ? <JoaoRail active={activeId === block.id} comment={block.comment} title={block.title} tone={joaoToneOf(block.tone)} /> : null}
       </Fragment>)}
     </div>
 
@@ -119,6 +119,6 @@ export function Results3Page() {
       <div className="mt-4 flex flex-wrap gap-3"><Link className="inline-flex items-center gap-2 rounded-lg bg-lime-300 px-4 py-2.5 font-bold text-slate-950 hover:bg-lime-200" href="/explore">Explorar outro lugar<ArrowRight aria-hidden="true" size={18} /></Link><Link className="rounded-lg border border-slate-600 px-4 py-2.5 font-semibold hover:border-lime-300" href="/methodology">Ver a metodologia</Link></div>
     </section>
 
-    {guide ? <JoaoDock block={active ? { id: active.id, title: active.title, comment: active.comment } : null} /> : null}
+    {guide ? <JoaoDock block={active ? { id: active.id, title: active.title, tone: joaoToneOf(active.tone), comment: active.comment } : null} /> : null}
   </section>;
 }
