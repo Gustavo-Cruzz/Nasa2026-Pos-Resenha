@@ -14,7 +14,7 @@ export function CropConversationPicker({ picker, selected, locale, onToggle, onC
   const count = locale === 'en' ? `${selected.length} selected` : `${selected.length} ${selected.length === 1 ? 'selecionada' : 'selecionadas'}`;
   return <section aria-label={picker.kind === 'next' ? (locale === 'en' ? 'Next planting' : 'Próximo plantio') : (locale === 'en' ? 'Crop selection' : 'Seleção de culturas')} className="border-t border-slate-800 bg-slate-950/40 px-4 py-3">
     {multi ? <div className="mb-2 flex items-center justify-between gap-2 text-xs text-slate-300"><span>{label}</span><span aria-live="polite" className="font-semibold text-lime-200">{count}</span></div> : <p className="mb-2 text-xs text-slate-300">{locale === 'en' ? 'Choose one main crop. “Choose another crop” shows the full catalog.' : 'Escolha uma cultura principal. “Escolher outra cultura” mostra todo o catálogo.'}</p>}
-    <div className="grid max-h-60 grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2">
+    <div className="grid max-h-60 grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {picker.ids.map((id) => {
         const category = picker.kind === 'categories' ? categoryById.get(id) : undefined;
         const crop = picker.kind === 'categories' ? undefined : cropById.get(id);

@@ -260,7 +260,7 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     else if (event.key === 'Escape') { event.preventDefault(); setDismissed(query); }
   };
 
-  return <section aria-label={en ? 'Farm conversation' : 'Conversa sobre a fazenda'} className="mx-auto -mt-6 flex h-[calc(100dvh-7rem)] min-h-[30rem] max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80 sm:mt-0 sm:h-[78vh]">
+  return <section aria-label={en ? 'Farm conversation' : 'Conversa sobre a fazenda'} className="mx-auto -mt-6 flex h-[calc(100dvh-7rem)] min-h-[30rem] max-w-6xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/80 sm:mt-0 sm:h-[calc(100dvh-8rem)]">
     <header className="flex items-center gap-3 border-b border-slate-700 bg-slate-900 px-4 py-3">
       <ChatAvatar size={44} />
       <div className="min-w-0 flex-1"><h1 className="truncate text-base font-bold leading-tight">{ASSISTANT_NAME}</h1><p className="truncate text-xs text-slate-400">{en ? 'Plantaê assistant' : 'Assistente do Plantaê'}</p></div>

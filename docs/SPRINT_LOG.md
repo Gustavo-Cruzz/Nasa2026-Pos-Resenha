@@ -1011,3 +1011,11 @@ Scenario A is titled “Cenário A — Meu plano” and uses the confirmed next 
 Evidence (2026-11-15): `tests/unit/chat-flow.test.ts` covers multi-group and multi-crop progression, source IDs, next planting and transfer to the analysis contract. Full `npm run test -- --run` passes (62 files, 423 tests); `npm run typecheck`, `npm run lint` and `npm run build` pass.
 
 Limitations / next: partial chat answers are held in the active conversation until the validated analysis draft is saved at confirmation; a browser reload mid-conversation does not yet restore an incomplete crop selection. Mobile layout is responsive by component design but was not browser-automated in this sprint.
+
+## Sprint F17 — Conversa ocupa a tela útil
+
+Status: complete.
+
+Implemented: widened João's conversation from `max-w-2xl` to the application's `max-w-6xl` desktop content width and increased its desktop height to use the available viewport. Crop selectors now use 1/2/3/4 responsive columns from mobile through wide desktop, avoiding a needlessly tall scroll area while retaining touch-sized cards and keyboard interaction.
+
+Evidence (2026-11-15): `npm run typecheck` and `npm run lint` pass.
