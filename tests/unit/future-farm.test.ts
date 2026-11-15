@@ -103,7 +103,10 @@ describe('Future Farm Stories adapter', () => {
   });
 
   it('falls back to the single proposed crop when no laboratory plan exists', () => {
-    const views = buildFarmScenarioViews({ analysis: analyze(base, unavailable) }, 'en');
+    // Default plans now carry four slots; clearing them keeps the single-crop fallback path covered.
+    const analysis = analyze(base, unavailable);
+    const fallback = { ...analysis, strategies: analysis.strategies.map((strategy) => ({ ...strategy, slots: [] })) };
+    const views = buildFarmScenarioViews({ analysis: fallback }, 'en');
     expect(views.every((view) => view.cycles.length <= 1)).toBe(true);
     expect(views[0].cycles[0]?.period).toBeNull();
     expect(stableStringify({ b: 1, a: [2, { d: undefined, c: 3 }] })).toBe('{"a":[2,{"c":3}],"b":1}');

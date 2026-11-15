@@ -257,7 +257,8 @@
         "verification": "verified",
         "institution": "SciELO",
         "accessedAt": "2026-11-12"
-      }
+      },
+      "supersededBy": "FAO-56 Table 12/Table 11 (decision 2026-11-15: Kc and stage lengths follow FAO-56); kept for provenance, excluded from catalog projection"
     },
     {
       "cropId": "maize",
@@ -305,7 +306,8 @@
         "verification": "verified",
         "institution": "SciELO",
         "accessedAt": "2026-11-12"
-      }
+      },
+      "supersededBy": "FAO-56 Table 12/Table 11 (decision 2026-11-15: Kc and stage lengths follow FAO-56); kept for provenance, excluded from catalog projection"
     },
     {
       "cropId": "sorghum",
@@ -337,7 +339,8 @@
         "verification": "verified",
         "institution": "Agência Nacional de Águas e Saneamento Básico (ANA)",
         "accessedAt": "2026-11-12"
-      }
+      },
+      "supersededBy": "FAO-56 Table 12/Table 11 (decision 2026-11-15: Kc and stage lengths follow FAO-56); kept for provenance, excluded from catalog projection"
     },
     {
       "cropId": "sunflower",
@@ -377,7 +380,8 @@
         "verification": "verified",
         "institution": "SciELO",
         "accessedAt": "2026-11-12"
-      }
+      },
+      "supersededBy": "FAO-56 Table 12/Table 11 (decision 2026-11-15: Kc and stage lengths follow FAO-56); kept for provenance, excluded from catalog projection"
     },
     {
       "cropId": "cowpea",
@@ -429,7 +433,8 @@
         "verification": "verified",
         "institution": "SciELO",
         "accessedAt": "2026-11-12"
-      }
+      },
+      "supersededBy": "FAO-56 Table 12/Table 11 (decision 2026-11-15: Kc and stage lengths follow FAO-56); kept for provenance, excluded from catalog projection"
     },
     {
       "cropId": "sunn_hemp",
@@ -966,7 +971,8 @@
         "snippet": "Kc inicial 0,4; médio 1,15; final 0,35.",
         "accessedAt": "2026-11-14",
         "verification": "verified"
-      }
+      },
+      "supersededBy": "FAO-56 Table 12/Table 11 (decision 2026-11-15: Kc and stage lengths follow FAO-56); kept for provenance, excluded from catalog projection"
     },
     {
       "cropId": "sorghum",
@@ -1120,6 +1126,381 @@
         "verification": "verified",
         "institution": "Embrapa Acre",
         "accessedAt": "2026-11-14"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.4,
+          "days": 15
+        },
+        {
+          "stage": "mid",
+          "kc": 1.15,
+          "days": 40
+        },
+        {
+          "stage": "end",
+          "kc": 0.5,
+          "days": 15
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Table 11 row Soybeans, planting Dec, Tropics (15/15/40/15 = 85 d); generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "e. Legumes (Leguminosae) 0.4 1.15 0.55 | Soybeans 1.15 0.50 0.5-1.0 | Table 11: Soybeans 15 15 40 15 85 Dec Tropics",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.3,
+          "days": 20
+        },
+        {
+          "stage": "mid",
+          "kc": 1.2,
+          "days": 40
+        },
+        {
+          "stage": "end",
+          "kc": 0.35,
+          "days": 30
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Table 11 row Maize (grain), June, Nigeria (humid) (20/35/40/30 = 125 d); generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Kc end 0.35 is the second Table 12 value (footnote 11: harvest after complete field drying of the grain to ~18% moisture); first value 0.60 applies to harvest at high grain moisture",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "i. Cereals 0.3 1.15 0.4 | Maize, Field (grain) (field corn) 1.20 0.60-0.3511 | Table 11: Maize (grain) 20 35 40 30 125 June Nigeria (humid)",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.3,
+          "days": 20
+        },
+        {
+          "stage": "mid",
+          "kc": 1.1,
+          "days": 40
+        },
+        {
+          "stage": "end",
+          "kc": 0.55,
+          "days": 30
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Table 11 row Sorghum, May/June, USA, Pakis., Med. (20/35/40/30 = 130 d); grain sorghum; generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Kc mid 1.10 is the upper value of the listed 1.00-1.10 range (Table 12 describes non-stressed, well-managed crops)",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "i. Cereals 0.3 1.15 0.4 | Sorghum - grain 1.00-1.10 0.55 1-2 | Table 11: Sorghum 20 35 40 30 130 May/June USA, Pakis., Med.",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.35,
+          "days": 25
+        },
+        {
+          "stage": "mid",
+          "kc": 1.15,
+          "days": 45
+        },
+        {
+          "stage": "end",
+          "kc": 0.35,
+          "days": 25
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Table 11 row Sunflower, April/May, Medit.; California (25/35/45/25 = 130 d); generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Kc mid 1.15 is the upper value of the listed 1.0-1.15 range (footnote 9: lower values are for rainfed crops with less dense plant populations)",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "h. Oil Crops 0.35 1.15 0.35 | Sunflower 1.0-1.159 0.35 2.0 | Table 11: Sunflower 25 35 45 25 130 April/May Medit.; California",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.4,
+          "days": 20
+        },
+        {
+          "stage": "mid",
+          "kc": 1.15,
+          "days": 40
+        },
+        {
+          "stage": "end",
+          "kc": 0.35,
+          "days": 20
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Beans, dry and Pulses; Table 11 row Beans (dry), May/June, Continental Climates (20/30/40/20 = 110 d); no tropical row exists for dry beans; generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Kc mid 1.15 carries Table 12 footnote 2 marker (higher Kc for crops grown on stalks 1.5-2 m tall; value shown is the table entry)",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "Beans, dry and Pulses 0.4 1.152 0.35 0.4 | Table 11: Beans (dry) 20 30 40 20 110 May/June Continental Climates",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.4,
+          "days": 20
+        },
+        {
+          "stage": "mid",
+          "kc": 1.05,
+          "days": 30
+        },
+        {
+          "stage": "end",
+          "kc": 0.35,
+          "days": 20
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Green Gram and Cowpeas; Table 11 row Green gram, cowpeas, March, Mediterranean (20/30/30/20 = 110 d); no tropical row exists; generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Kc end 0.35 is the second Table 12 value (footnote 6: harvested dry); first value 0.60 is for harvested fresh",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "e. Legumes (Leguminosae) 0.4 1.15 0.55 | Green Gram and Cowpeas 1.05 0.60-0.356 | Table 11: Green gram, cowpeas 20 30 30 20 110 March Mediterranean",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.3,
+          "days": 15
+        },
+        {
+          "stage": "mid",
+          "kc": 1.0,
+          "days": 40
+        },
+        {
+          "stage": "end",
+          "kc": 0.3,
+          "days": 25
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Millet; Table 11 row Millet, June, Pakistan (15/25/40/25 = 105 d); generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Table 12 lists Millet generically; applied to pearl millet without a species-specific FAO row",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "i. Cereals 0.3 1.15 0.4 | Millet 1.00 0.30 1.5 | Table 11: Millet 15 25 40 25 105 June Pakistan",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cotton",
+      "field": "kcStages",
+      "value": [
+        {
+          "stage": "initial",
+          "kc": 0.35,
+          "days": 30
+        },
+        {
+          "stage": "mid",
+          "kc": 1.2,
+          "days": 60
+        },
+        {
+          "stage": "end",
+          "kc": 0.7,
+          "days": 55
+        }
+      ],
+      "unit": "dimensionless",
+      "context": "Table 11 row Cotton, Mar-May, Egypt; Pakistan; Calif. (30/50/60/55 = 195 d); generic FAO-56 reference, not a Brazil/Rio Verde calibration; Kc ini/mid/end from Table 12 (non-stressed, well-managed, subhumid RHmin~45%, u2~2 m/s, no climate adjustment); stage days = Lini/Lmid/Llate of the single Table 11 row named here; development stage (Ldev, Kc interpolated linearly) not listed as a stage; Kc mid 1.20 = upper and Kc end 0.70 = first value of the listed ranges (1.15-1.20 and 0.70-0.50; the table gives no footnote selecting a value)",
+      "cultivar": null,
+      "location": "Generic FAO-56 reference (Table 11 row stated in context); not Brazil-calibrated",
+      "source": {
+        "title": "Crop evapotranspiration - Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56), Chapter 6",
+        "year": 1998,
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "pageOrSection": "Table 12 (Kc ini from group row, Kc mid/Kc end from crop row) and Table 11 (stage lengths)",
+        "snippet": "g. Fibre Crops 0.35 | Cotton 1.15-1.20 0.70-0.50 1.2-1.5 | Table 11: Cotton 30 50 60 55 195 Mar-May Egypt; Pakistan; Calif.",
+        "verification": "verified",
+        "institution": "FAO (Allen, Pereira, Raes, Smith)",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "nitrogenFixationPotential",
+      "value": "alta — a fixação biológica pode fornecer todo o N de que a soja necessita, dependendo de sua eficiência",
+      "unit": null,
+      "context": "symbiotic BNF with inoculated Bradyrhizobium; qualitative statement, not a quantified rate",
+      "cultivar": null,
+      "location": "Brazil, Embrapa Soja technical guidance; not Rio Verde validation",
+      "source": {
+        "title": "Inoculação e inoculante (Soja, Agência de Informação Tecnológica)",
+        "year": null,
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/soja/producao/inoculacao-e-inoculante",
+        "pageOrSection": "Inoculação e inoculante (texto introdutório)",
+        "snippet": "A FBN pode, dependendo de sua eficiência, fornecer todo o N que a soja necessita, e deve ser maximizada.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "nitrogenFixationPotential",
+      "value": "parcial — a FBN garante parte do suprimento de N; rizóbios nativos nem sempre têm eficiência suficiente",
+      "unit": null,
+      "context": "symbiotic BNF with native or inoculated rhizobia; qualitative statement",
+      "cultivar": null,
+      "location": "Brazil, Embrapa Q&A; not Rio Verde validation",
+      "source": {
+        "title": "Fixação biológica de nitrogênio, in Feijão-Caupi: o produtor pergunta, a Embrapa responde",
+        "year": 2017,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1085761/1/FixacaobiologicadeNitrogenio0001.pdf",
+        "pageOrSection": "Pergunta 176 (p. 95-105 do livro)",
+        "snippet": "O feijão-caupi tem a capacidade de associar-se naturalmente aos rizóbios e realizar a fixação biológica dos nutrientes (FBN), o que vai garantir parte do suprimento de nitrogênio às plantas.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "nitrogenFixationPotential",
+      "value": "parcial — a FBN pode fornecer parte do N necessário; no feijoeiro é pouco explorada por sua baixa eficiência",
+      "unit": null,
+      "context": "qualitative statement from a wild-germplasm abstract; efficiency varies by genotype",
+      "cultivar": null,
+      "location": "Brazil, Embrapa Arroz e Feijão; not Rio Verde validation",
+      "source": {
+        "title": "Fixação biológica de nitrogênio em germoplasma silvestre de feijoeiro comum",
+        "year": 2011,
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/899486/1/3630.pdf",
+        "pageOrSection": "Resumo",
+        "snippet": "A fixação biológica de nitrogênio é uma tecnologia capaz de fornecer parte o N necessário ao desenvolvimento das plantas, assim como de contribuir para a redução de impactos ambientais, tais como a contaminação do solo e redução da emissão de gases do efeito estufa. Contudo, na cultura do feijão esta tecnologia ainda é muito pouco explorada, principalmente em função da baixa eficiência apresentada.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "nitrogenFixationPotential",
+      "value": "documentada — taxa média de FBN de 67% do N da planta em estudo Embrapa (seed-production area); valor específico do estudo",
+      "unit": null,
+      "context": "15N natural abundance; single study, Baixada Fluminense; one rate, not a species-wide guarantee",
+      "cultivar": "Crotalaria juncea",
+      "location": "Baixada Fluminense, RJ (Embrapa Agrobiologia); not Rio Verde validation",
+      "source": {
+        "title": "Balanço de nitrogênio em área de produção de sementes de crotalária-juncea nas condições da Baixada Fluminense (Boletim de Pesquisa e Desenvolvimento 66)",
+        "year": 2010,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/884716/1/bot06610.pdf",
+        "pageOrSection": "Resumo",
+        "snippet": "A crotalária-juncea, nas condições do estudo, apresentou uma taxa média de fixação biológica de nitrogênio (FBN) igual a 67%.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "nitrogenFixationPotential",
+      "value": "documentada — 59% do N da parte aérea derivado da FBN em estudo Embrapa; valor específico do estudo",
+      "unit": null,
+      "context": "15N-based quantification; single experiment (Seropédica, RJ), independent of plant density tested",
+      "cultivar": null,
+      "location": "Seropédica, RJ (Embrapa Agrobiologia); not Rio Verde validation",
+      "source": {
+        "title": "Produção de biomassa de guandu em função de diferentes densidades e espaçamentos entre sulcos de plantio (Comunicado Técnico 57)",
+        "year": 2003,
+        "url": "https://www.infoteca.cnptia.embrapa.br/bitstream/doc/624780/1/cot057.pdf",
+        "pageOrSection": "Resultados e Discussão",
+        "snippet": "Em relação à quantificação da fixação biológica de nitrogênio (FBN) atmosférico, detectou-se que 59% de N presente na parte aérea do guandu foi derivada deste processo, independente da densidade populacional avaliada.",
+        "verification": "verified",
+        "institution": "Embrapa",
+        "accessedAt": "2026-11-15"
       }
     }
   ]

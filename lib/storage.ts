@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
-import { labPlanSchema, type LabPlan } from '@/lib/lab';
+import { createLabPlan, labPlanSchema, type LabPlan } from '@/lib/lab';
 
 const DRAFT_KEY = 'field-shift:draft';
 export const v2DraftSchema = z.object({ version: z.literal(2), savedAt: z.string().datetime(), data: analysisInputSchema, labPlan: labPlanSchema.optional(), legacy: z.record(z.string(), z.unknown()).optional() });
@@ -35,3 +35,12 @@ export function saveDraft(data: AnalysisInput, legacy?: Draft['legacy'], labPlan
 export function saveLabPlan(draft: Draft, labPlan: LabPlan): void { saveDraft(draft.data, draft.legacy, labPlan); }
 
 export function clearDraft(): void { window.localStorage.removeItem(DRAFT_KEY); }
+
+/**
+ * A legacy plan is exactly the old default (only slot 1 of each scenario filled from the engine's first crop).
+ * Anything the user edited differs from it and is kept untouched.
+ */
+export function isLegacyLabPlan(plan: LabPlan, input: AnalysisInput, engineCropIds: Array<string | undefined>): boolean {
+  return JSON.stringify(plan.scenarios.map((s) => s.slots.map((slot) => slot.cropId))) === JSON.stringify(createLabPlan(input, engineCropIds).scenarios.map((s) => s.slots.map((slot) => slot.cropId)));
+}
+export function upgradeLegacyLabPlan(plan: LabPlan, input: AnalysisInput, engineCropIds: Array<string | undefined>, fresh: LabPlan): LabPlan { return isLegacyLabPlan(plan, input, engineCropIds) ? fresh : plan; }

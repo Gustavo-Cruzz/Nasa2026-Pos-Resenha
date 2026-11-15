@@ -17,7 +17,7 @@ describe('Farmer-first acceptance scenarios', () => {
   it('changes contextual highlights for the same crops when rainfed water protection is primary', () => {
     const result = analyze({ ...rio, irrigation: 'rainfed', priorities: { water: 10, soil: 3, operations: 3 } }, historical, undefined, resolveBrazilRegionalContext(rio.location));
     expect(result.priorityHighlights[0]).toBe('root_zone_wetness');
-    expect(result.strategies[1].proposedCrop?.cropId).toBe('sorghum');
+    expect(result.strategies.map((strategy) => strategy.configuredSlots)).toEqual([4, 4, 4]);
   });
   it('keeps global exploration without ZARC for catalogued crops outside Brazil', () => {
     const result = analyze({ ...rio, location: { latitude: 5.6037, longitude: -0.187 } }, historical);
@@ -29,6 +29,6 @@ describe('Farmer-first acceptance scenarios', () => {
     const result = analyze({ ...rio, farmerCrops: { availableCropIds: ['soybean'], exploreCropIds: [], blockedCropIds: [], customCrops: [{ label: 'mandioca', purpose: 'grain' }] }, irrigation: 'unknown' }, historical);
     expect(result.input.farmerCrops?.customCrops[0]?.label).toBe('mandioca');
     expect(result.dataQuality.find((item) => item.id === 'farmer_soil')?.classification).toBe('unknown');
-    expect(result.strategies[1].proposedCrop).toBeNull();
+    expect(result.strategies[1].slots[1]?.cropId).toBeNull();
   });
 });
