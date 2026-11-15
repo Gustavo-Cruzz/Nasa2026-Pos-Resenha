@@ -6,6 +6,7 @@ import type { ClimateApiResponse } from '@/lib/atlas';
 import { seasonMonths } from '@/lib/climate/enso';
 import type { JsonState } from '@/components/atlas/use-json';
 import { useExtras } from '@/components/atlas/explore-extras';
+import { JoaoComment } from '@/components/atlas/joao-panel';
 
 type Climate = Extract<ClimateApiResponse, { status: 'ok' }>;
 
@@ -17,15 +18,16 @@ const MONTHS = {
 const numberFormat = (value: number, digits: number, en: boolean) => value.toLocaleString(en ? 'en-US' : 'pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
 /** Collapsible card: the title and one headline value are always visible, the detail and its caveats open on demand. */
-function Card({ id, title, headline, children, note }: { id: string; title: string; headline?: ReactNode; children: ReactNode; note?: ReactNode }) {
+function Card({ id, joao, title, headline, children, note }: { id: string; /** João's line that explains this block; defaults to the card id. */ joao?: string; title: string; headline?: ReactNode; children: ReactNode; note?: ReactNode }) {
   const { isOpen, setOpen } = useExtras();
   return <details className="group scroll-mt-2 rounded-lg border border-slate-700 bg-slate-950/60" id={`card-${id}`} onToggle={(event) => setOpen(id, event.currentTarget.open)} open={isOpen(id)}>
     <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 p-3 [&::-webkit-details-marker]:hidden">
       <span className="min-w-0"><span className="block text-sm font-bold text-lime-200">{title}</span>{headline ? <span className="mt-0.5 block text-sm text-slate-200">{headline}</span> : null}</span>
       <ChevronDown aria-hidden="true" className="shrink-0 text-slate-400 transition-transform group-open:rotate-180 motion-reduce:transition-none" size={18} />
     </summary>
-    <div className="border-t border-slate-800 p-3 text-sm">
+    <div className="flex flex-col border-t border-slate-800 p-3 text-sm">
       {children}
+      <JoaoComment id={joao ?? id} />
       {note ? <p className="mt-2 text-xs text-slate-400">{note}</p> : null}
     </div>
   </details>;
@@ -148,7 +150,7 @@ function TemperatureCard({ data, en }: { data: Climate; en: boolean }) {
   const domain: [number, number] = all.length ? [Math.floor(Math.min(...all) / 4) * 4, Math.ceil(Math.max(...all) / 4) * 4] : [0, 40];
   const m = new Date().getMonth();
   const range = low[m] !== null && high[m] !== null ? `${numberFormat(low[m] as number, 1, en)} – ${numberFormat(high[m] as number, 1, en)} °C ${en ? 'air this month' : 'de ar neste mês'}` : undefined;
-  return <Card id="temperature" headline={range} title={en ? 'Minimum and maximum temperature, by month' : 'Temperatura mínima e máxima, mês a mês'} note={en ? 'Median of the daily minimum and maximum of the air at 2 m (NASA POWER). Soil temperature: POWER soil layer 1 (near-surface soil), modelled for the grid cell, not a probe reading.' : 'Mediana das mínimas e máximas diárias do ar a 2 m (NASA POWER). Solo: camada 1 do POWER (solo próximo da superfície), modelada para a célula, não é leitura de sonda.'}>
+  return <Card id="temperature" joao="heat" headline={range} title={en ? 'Minimum and maximum temperature, by month' : 'Temperatura mínima e máxima, mês a mês'} note={en ? 'Median of the daily minimum and maximum of the air at 2 m (NASA POWER). Soil temperature: POWER soil layer 1 (near-surface soil), modelled for the grid cell, not a probe reading.' : 'Mediana das mínimas e máximas diárias do ar a 2 m (NASA POWER). Solo: camada 1 do POWER (solo próximo da superfície), modelada para a célula, não é leitura de sonda.'}>
     {!hasAir ? <p className="text-slate-300">N/D</p> : <MonthSeriesChart
       ariaLabel={en ? 'Typical minimum and maximum air temperature by month, with soil temperature when available' : 'Temperatura mínima e máxima típica do ar por mês, com a do solo quando disponível'}
       band={{ label: en ? 'Air: min to max' : 'Ar: mínima a máxima', color: '#8dc8cf', lo: low, hi: high }} domain={domain} en={en} unit="°C"
@@ -198,8 +200,8 @@ function CropsCard({ en }: { en: boolean }) {
 /** Soil-and-planting context for the selected place. Every card says where its data comes from and what it does not mean. */
 export function PlantingPanels({ data, en }: { data: Climate; en: boolean }) {
   return <div className="mt-6">
-    <h3 className="text-base font-bold">{en ? 'The numbers' : 'Os números'}</h3>
-    <p className="mt-1 text-xs text-slate-400">{en ? 'Everything João used, with its source and limits. It does not say what to plant or when.' : 'Tudo o que o João usou, com a fonte e os limites. Não diz o que plantar nem quando.'}</p>
+    <h3 className="text-base font-bold">{en ? 'The data' : 'Os dados'}</h3>
+    <p className="mt-1 text-xs text-slate-400">{en ? 'Each block shows the data, with João’s comment on what is happening. It does not say what to plant or when.' : 'Cada bloco mostra o dado e traz o comentário do João sobre o que está acontecendo. Não diz o que plantar nem quando.'}</p>
     <div className="mt-3 grid gap-3">
       <ForecastCard en={en} />
       <SeasonCards data={data} en={en} />

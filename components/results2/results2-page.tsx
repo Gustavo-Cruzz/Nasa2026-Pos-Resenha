@@ -2,10 +2,11 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CalendarDays, CheckCircle2, CloudSun, Database, Droplets, FlaskConical, Layers, Mountain, Repeat, Sprout, TriangleAlert, MapPin, ChevronsUpDown } from 'lucide-react';
+import { ArrowRight, CalendarDays, CloudSun, Database, Droplets, FlaskConical, Layers, Mountain, Repeat, Sprout, TriangleAlert, MapPin, ChevronsUpDown } from 'lucide-react';
 import { CropSprite } from '@/components/crops/crop-sprite';
 import { MonthlyChart, type MonthPoint } from '@/components/atlas/monthly-chart';
 import { Chip, Drawer, Explain } from '@/components/results2/drawer';
+import { JoaoNote } from '@/components/joao/joao-note';
 import { CalendarVisual, NdviVisual, RotationVisual, ScaleVisual, SoilVisual, WaterVisual } from '@/components/results2/visuals';
 
 /** MOCK DATA: illustrative values for the layout only. Nothing here is computed from the engine. */
@@ -42,7 +43,7 @@ export function Results2Page() {
           <span className="grid h-24 w-24 shrink-0 place-items-center rounded-2xl bg-slate-950/50"><CropSprite cropId="maize" name="Milho" size={72} /></span>
           <div><h2 className="text-4xl font-bold leading-none">Milho</h2><p className="mt-2 text-slate-200">2ª safra · plantio em <b className="text-lime-200">novembro a janeiro</b></p><div className="mt-2"><Chip tone="ok">Combina bem com o seu clima</Chip></div></div>
         </div>
-        <ul className="mt-5 grid gap-2 text-sm">{['A temperatura do seu local fica dentro da faixa da cultura.', 'A chuva se concentra de novembro a abril, quando o milho mais precisa.', 'Vem depois da soja: alterna leguminosa e gramínea.'].map((reason) => <li className="flex gap-2" key={reason}><CheckCircle2 aria-hidden="true" className="mt-0.5 shrink-0 text-cyan-300" size={17} />{reason}</li>)}</ul>
+        <div className="mt-5 flex flex-col"><JoaoNote happening="Olhei o clima do seu local e a sua rotação. Por isso o milho aparece primeiro." limit="É um ponto de partida para conversar com um técnico, não uma decisão pronta." points={['A temperatura do seu local fica dentro da faixa da cultura.', 'A chuva se concentra de novembro a abril, quando o milho mais precisa.', 'Vem depois da soja: alterna leguminosa e gramínea.']} /></div>
       </article>
       <div className="grid gap-3 content-start">
         <p className="text-sm font-bold text-slate-300">Outras opções para comparar</p>
@@ -51,7 +52,7 @@ export function Results2Page() {
     </section>
 
     <div className="mt-10 flex flex-wrap items-end justify-between gap-3">
-      <div><h2 className="text-2xl font-bold">Entenda o porquê, tema por tema</h2><p className="mt-1 text-slate-300">Abra a gaveta que quiser. Cada uma explica um pedaço da sugestão.</p></div>
+      <div><h2 className="text-2xl font-bold">Os dados, tema por tema</h2><p className="mt-1 text-slate-300">Cada bloco mostra o dado, e o João comenta o que está acontecendo.</p></div>
       <div className="flex gap-2 text-sm"><button className="inline-flex items-center gap-1.5 rounded-lg border border-slate-600 px-3 py-2 font-semibold hover:border-lime-300" onClick={() => setAll(true)} type="button"><ChevronsUpDown aria-hidden="true" size={15} />Abrir tudo</button><button className="rounded-lg border border-slate-600 px-3 py-2 font-semibold hover:border-lime-300" onClick={() => setAll(false)} type="button">Fechar tudo</button></div>
     </div>
 
@@ -61,37 +62,37 @@ export function Results2Page() {
         <div><MonthlyChart currentMonth={11} history="mediana 2011–2025" points={POINTS} /></div>
       </Drawer>
 
-      <Drawer icon={<CalendarDays size={24} />} status="Nov a Jan" takeaway="Os melhores meses para semear são do começo das chuvas." title="Janela de plantio" tone="ok">
+      <Drawer defaultOpen icon={<CalendarDays size={24} />} status="Nov a Jan" takeaway="Os melhores meses para semear são do começo das chuvas." title="Janela de plantio" tone="ok">
         <Explain limit="A janela vem das faixas de temperatura de cada cultura. Ela não considera preço, pragas nem a sua máquina." points={['Azul: o mês combina com a cultura.', 'Amarelo: dá para plantar, mas com cuidado.', 'Cinza: ainda não temos dado confiável.']} words="É o calendário de quando cada cultura costuma se dar bem aqui. Quanto mais azul na linha, mais meses boas para semear." />
         <CalendarVisual ringMonth={11} rows={[{ cropId: 'maize', name: 'Milho', cells: 'ccaaannnaacc' }, { cropId: 'sorghum', name: 'Sorgo', cells: 'cccaannnaacc' }, { cropId: 'cowpea', name: 'Caupi', cells: 'ccccannnaacc' }]} />
       </Drawer>
 
-      <Drawer icon={<Droplets size={24} />} status="Atenção jun–set" takeaway="De junho a setembro a evaporação passa a chuva." title="Água disponível" tone="attention">
+      <Drawer defaultOpen icon={<Droplets size={24} />} status="Atenção jun–set" takeaway="De junho a setembro a evaporação passa a chuva." title="Água disponível" tone="attention">
         <Explain limit="É um retrato do clima, não a necessidade de água da cultura nem uma indicação de irrigar." points={['Evaporação é a água que o sol e o vento “tiram” do chão e das plantas.', 'Barras para cima: chove mais do que evapora.', 'Barras para baixo: evapora mais do que chove.']} words="Compara quanta água chega do céu com quanta evapora. Nos meses com sobra, o solo guarda água. Nos meses com falta, ele seca." />
         <WaterVisual balance={[40, 30, 70, -5, -45, -70, -80, -95, -90, -40, 60, 95]} />
       </Drawer>
 
-      <Drawer icon={<Layers size={24} />} status="2 pontos" takeaway="Você relatou água empoçada e solo duro." title="Solo" tone="attention">
+      <Drawer defaultOpen icon={<Layers size={24} />} status="2 pontos" takeaway="Você relatou água empoçada e solo duro." title="Solo" tone="attention">
         <Explain limit="O app não diagnostica o solo. Isto é só o que você contou; quem confirma é um técnico." points={['Anote onde e quando acontece.', 'Uma análise de solo mostra o que está por trás.']} words="O solo guarda a água e os nutrientes da planta. Os dois sinais que você observou valem uma conversa com um técnico antes de plantar." />
         <SoilVisual items={[{ title: 'Água empoçada', icon: Droplets, meaning: 'Costuma ter relação com o escoamento da água ou com camadas que seguram a chuva na superfície.' }, { title: 'Solo duro', icon: FlaskConical, meaning: 'Pode indicar compactação, que dificulta a raiz de descer e a água de entrar.' }]} />
       </Drawer>
 
-      <Drawer icon={<Repeat size={24} />} status="Alterna bem" takeaway="Milho depois de soja é uma troca de famílias." title="Rotação de culturas" tone="ok">
+      <Drawer defaultOpen icon={<Repeat size={24} />} status="Alterna bem" takeaway="Milho depois de soja é uma troca de famílias." title="Rotação de culturas" tone="ok">
         <Explain limit="É uma regra geral de manejo. Ela não garante colheita maior." points={['Plantar a mesma coisa sempre cansa o solo.', 'Trocar de família ajuda a manter a terra saudável.']} words="Rotação é revezar as culturas na mesma área. Depois de uma leguminosa, como a soja, uma gramínea, como o milho, costuma ser uma boa troca." />
         <RotationVisual steps={[{ when: 'Antes', cropId: 'maize', name: 'Milho', family: 'Gramínea' }, { when: 'Agora', cropId: 'soybean', name: 'Soja', family: 'Leguminosa' }, { when: 'Próximo', cropId: 'maize', name: 'Milho', family: 'Gramínea', highlight: true }]} />
       </Drawer>
 
-      <Drawer icon={<Mountain size={24} />} status="Atenção" takeaway="Declive suave, mas com chuva forte e concentrada." title="Relevo e erosão" tone="attention">
+      <Drawer defaultOpen icon={<Mountain size={24} />} status="Atenção" takeaway="Declive suave, mas com chuva forte e concentrada." title="Relevo e erosão" tone="attention">
         <Explain limit="Mostra o risco do terreno e da chuva, não a perda de solo real. Isso exige dados que o app ainda não tem." points={['Declive: o quanto o terreno inclina.', 'Chuva agressiva: chove forte e de uma vez, e a enxurrada leva o solo.']} words="Terreno inclinado e chuva forte juntos aumentam a erosão. O seu terreno é pouco inclinado, mas a chuva é concentrada e merece atenção com a cobertura do solo." />
         <div className="grid gap-6"><ScaleVisual classes={[{ label: 'Plano', from: '0–3%', tone: 'bg-cyan-300' }, { label: 'Suave', from: '3–8%', tone: 'bg-cyan-200' }, { label: 'Ondulado', from: '8–13%', tone: 'bg-amber-200' }, { label: 'Forte', from: '13–20%', tone: 'bg-amber-300' }, { label: 'Muito forte', from: '20%+', tone: 'bg-amber-400' }]} markerLabel="5%" position={0.32} title="Inclinação do terreno" /><ScaleVisual classes={[{ label: 'Baixa', from: '<60', tone: 'bg-cyan-300' }, { label: 'Moderada', from: '60–90', tone: 'bg-cyan-200' }, { label: 'Alta', from: '90–120', tone: 'bg-amber-200' }, { label: 'Muito alta', from: '120–160', tone: 'bg-amber-300' }, { label: 'Extrema', from: '160+', tone: 'bg-amber-400' }]} markerLabel="138" note="Índice de Fournier: mede o quanto a chuva é concentrada." position={0.72} title="Agressividade da chuva" /></div>
       </Drawer>
 
-      <Drawer icon={<Sprout size={24} />} status="Verde" takeaway="A vegetação fica forte de novembro a abril." title="Vegetação vista do satélite" tone="ok">
+      <Drawer defaultOpen icon={<Sprout size={24} />} status="Verde" takeaway="A vegetação fica forte de novembro a abril." title="Vegetação vista do satélite" tone="ok">
         <Explain limit="Mostra o verde da paisagem na região, não a sua lavoura." points={['Perto de 0,2: pouco verde, solo exposto.', 'Perto de 0,8: vegetação densa e saudável.']} words="O satélite mede o quanto a vegetação está verde. É um bom sinal de quando a região “acorda” com as chuvas." />
         <NdviVisual values={[0.78, 0.8, 0.82, 0.74, 0.58, 0.42, 0.34, 0.32, 0.36, 0.48, 0.66, 0.76]} />
       </Drawer>
 
-      <Drawer icon={<Database size={24} />} status="6 fontes" takeaway="Tudo vem de bases públicas e abertas." title="De onde vêm os dados" tone="info">
+      <Drawer defaultOpen icon={<Database size={24} />} status="6 fontes" takeaway="Tudo vem de bases públicas e abertas." title="De onde vêm os dados" tone="info">
         <Explain limit="Dados de satélite e de modelo têm margem de erro. Use como ponto de partida, não como decisão final." words="Cada informação desta página tem uma fonte pública. Você pode abrir a Metodologia para ver o detalhe de cada uma." />
         <ul className="grid content-start gap-2 text-sm sm:grid-cols-2">{[['NASA POWER', 'Clima: chuva, temperatura, vento'], ['NASA MODIS', 'Verde da vegetação'], ['SRTM + Embrapa', 'Relevo e declive'], ['IBGE', 'Município e malha'], ['ZARC / PAM', 'Zoneamento e produção'], ['Catálogo de culturas', 'Faixas de cada cultura']].map(([name, use]) => <li className="rounded-lg bg-slate-950/50 p-3" key={name}><b className="block">{name}</b><span className="text-slate-400">{use}</span></li>)}</ul>
       </Drawer>

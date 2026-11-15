@@ -15,7 +15,7 @@ import { PlaceSearch } from '@/components/atlas/place-search';
 import { MonthlyChart, type MonthPoint } from '@/components/atlas/monthly-chart';
 import { PlantingPanels } from '@/components/atlas/planting-panels';
 import { ExploreExtrasProvider } from '@/components/atlas/explore-extras';
-import { JoaoExplains, JoaoThinking } from '@/components/atlas/joao-panel';
+import { JoaoComment, JoaoLinesProvider } from '@/components/atlas/joao-panel';
 import { BoundarySummary } from '@/components/boundary/boundary-summary';
 import { GeoJsonImport } from '@/components/boundary/geojson-import';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
@@ -90,11 +90,13 @@ export function LocationExplorer() {
         {!point ? <p className="text-slate-300">{en ? 'Search a city or tap the map.' : 'Busque uma cidade ou toque no mapa.'}</p> : <>
           <h2 className="text-2xl font-bold leading-tight">{point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')}</h2>
           <p className="mt-1 font-mono text-xs text-slate-400">{coordinateLabel(point)}</p>
-          {state.kind === 'loading' ? <><JoaoThinking en={en} /><PanelSkeleton label={en ? 'Loading NASA climate history…' : 'Buscando o histórico climático da NASA…'} /></> : null}
+          {state.kind === 'loading' ? <PanelSkeleton label={en ? 'Loading NASA climate history…' : 'Buscando o histórico climático da NASA…'} /> : null}
           {state.kind === 'error' ? <div className="mt-5 rounded-lg border border-amber-300/50 bg-amber-950/30 p-3"><p className="flex gap-2 text-amber-100"><AlertCircle aria-hidden="true" className="mt-0.5 shrink-0" size={18} />{state.message}</p><Button className="mt-3" type="button" variant="secondary" onClick={() => void fetchClimate(point)}><RefreshCw aria-hidden="true" size={16} />{en ? 'Try again' : 'Tentar novamente'}</Button></div> : null}
-          {state.kind === 'ready' ? <JoaoExplains climate={state.data} point={point} /> : null}
-          {state.kind === 'ready' ? <ClimateView data={state.data} en={en} /> : null}
-          {state.kind === 'ready' ? <PlantingPanels data={state.data} en={en} /> : null}
+          
+          {state.kind === 'ready' ? <JoaoLinesProvider climate={state.data} point={point}>
+            <ClimateView data={state.data} en={en} />
+            <PlantingPanels data={state.data} en={en} />
+          </JoaoLinesProvider> : null}
           <LiveWeatherPanel state={live} />
           <Button className="mt-6 w-full justify-center" type="button" onClick={registerFarm}>{en ? 'Register my farm here' : 'Cadastrar minha fazenda aqui'}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Button>
         </>}
@@ -143,6 +145,7 @@ function ClimateView({ data, en }: { data: Climate; en: boolean }) {
       {hot.length >= 2 ? fact(en ? 'Warmest month' : 'Mês mais quente', `${names[hot[0].month - 1]} · ${oneDecimal(hot[0].tempC ?? 0, en)} °C`) : null}
       {hot.length >= 2 ? fact(en ? 'Coolest month' : 'Mês mais frio', `${names[hot[hot.length - 1].month - 1]} · ${oneDecimal(hot[hot.length - 1].tempC ?? 0, en)} °C`) : null}
     </dl> : null}
+    <div className="mt-4 flex flex-col"><JoaoComment id="typical-month" /></div>
     <p className="mt-4 text-xs text-slate-400">NASA POWER · {data.provenance.period.start.slice(0, 4)}–{data.provenance.period.end.slice(0, 4)} · {en ? 'median of the historical years' : 'mediana dos anos históricos'}. <a className="underline" href={data.provenance.sourceUrl} rel="noreferrer" target="_blank">{en ? 'Source' : 'Fonte'}</a></p>
   </div>;
 }

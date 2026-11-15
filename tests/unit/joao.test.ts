@@ -160,3 +160,13 @@ describe('João: language rules', () => {
     expect(result.summary).toEqual(['Esta semana, a previsão é de cerca de 59 mm de chuva.']);
   });
 });
+
+describe('João: the typical month and the chart', () => {
+  it('says what the month normally brings and how to read the bars and the line', () => {
+    expect(line(explainPlace(base()), 'typical-month')?.text).toBe('Em novembro, costuma chover cerca de 167 mm e a temperatura média fica perto de 25,0 °C. No gráfico, as barras são a chuva de cada mês e a linha é a temperatura.');
+  });
+  it('stays silent when the month has no rain or temperature to explain', () => {
+    const none = base(); none.climate.monthly = [];
+    expect(line(explainPlace(none), 'typical-month')).toBeUndefined();
+  });
+});

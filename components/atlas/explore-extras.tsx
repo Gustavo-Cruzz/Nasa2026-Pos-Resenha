@@ -18,36 +18,23 @@ type Extras = {
   regional: JsonState<BrazilRegionalContext>;
   isOpen: (id: string) => boolean;
   setOpen: (id: string, open: boolean) => void;
-  /** Opens the given number cards and brings the first one into view inside the results panel. */
-  showNumbers: (ids: string[]) => void;
 };
 
 const Context = createContext<Extras | null>(null);
 
 /**
  * One fetch of each extra source (rain forecast, El Niño, municipal crops) shared by João and by the number cards,
- * plus which number cards are open. A reading is tied to its place, so it is never shown for another one.
+ * plus which cards are open. A reading is tied to its place, so it is never shown for another one.
  */
 export function ExploreExtrasProvider({ point, children }: { point: AtlasPoint | null; children: ReactNode }) {
   const forecast = useJson<ForecastBody>(point ? `/api/forecast?lat=${point.latitude}&lon=${point.longitude}` : null, acceptForecast);
   const enso = useJson<EnsoState>(point ? '/api/enso' : null, acceptEnso);
   const regional = useJson<BrazilRegionalContext>(point ? `/api/regional-context?lat=${point.latitude}&lon=${point.longitude}` : null, acceptRegional);
   const [openCards, setOpenCards] = useState<Record<string, boolean>>({});
-  const isOpen = useCallback((id: string) => openCards[id] === true, [openCards]);
+  // Cards start open: the data and João's comment are what the page is for. A reader can still fold a card.
+  const isOpen = useCallback((id: string) => openCards[id] !== false, [openCards]);
   const setOpen = useCallback((id: string, open: boolean) => setOpenCards((current) => current[id] === open ? current : { ...current, [id]: open }), []);
-  const showNumbers = useCallback((ids: string[]) => {
-    setOpenCards((current) => ({ ...current, ...Object.fromEntries(ids.map((id) => [id, true])) }));
-    requestAnimationFrame(() => {
-      const card = document.getElementById(`card-${ids[0]}`);
-      if (!card) return;
-      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduced' ? 'auto' : 'smooth';
-      // On desktop the results panel scrolls by itself: move only that panel, never the page. On narrow screens the page is what scrolls.
-      const panel = card.closest<HTMLElement>('.atlas-panel');
-      if (panel && panel.scrollHeight > panel.clientHeight + 1) panel.scrollTo({ top: panel.scrollTop + card.getBoundingClientRect().top - panel.getBoundingClientRect().top - 8, behavior });
-      else card.scrollIntoView({ behavior, block: 'start' });
-    });
-  }, []);
-  const value = useMemo(() => ({ forecast, enso, regional, isOpen, setOpen, showNumbers }), [forecast, enso, regional, isOpen, setOpen, showNumbers]);
+  const value = useMemo(() => ({ forecast, enso, regional, isOpen, setOpen }), [forecast, enso, regional, isOpen, setOpen]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 

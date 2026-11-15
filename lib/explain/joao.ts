@@ -101,6 +101,12 @@ const COMPARISON_PHRASE = {
 
 function rainLines(data: JoaoData, locale: Locale): JoaoLine[] {
   const lines: JoaoLine[] = [];
+  const monthRain = data.climate.rainMedianMmByMonth.find((item) => item.month === data.month)?.medianTotalMm ?? null;
+  const monthTemp = data.climate.monthly.find((item) => item.month === data.month)?.tmeanMedianC ?? null;
+  if (monthRain !== null && monthTemp !== null) {
+    const name = monthName(data.month, locale);
+    lines.push({ id: 'typical-month', tone: 'info', text: pick(locale, `Em ${name}, costuma chover cerca de ${num(monthRain, 0, locale)} mm e a temperatura média fica perto de ${num(monthTemp, 1, locale)} °C. No gráfico, as barras são a chuva de cada mês e a linha é a temperatura.`, `In ${name}, it usually rains about ${num(monthRain, 0, locale)} mm and the average temperature is around ${num(monthTemp, 1, locale)} °C. In the chart, the bars are each month’s rain and the line is the temperature.`), hint: pick(locale, 'É o valor do meio entre os anos de 2011 a 2025 (NASA POWER), então mostra o que costuma acontecer, não o que vai acontecer.', 'It is the middle value of the years 2011 to 2025 (NASA POWER), so it shows what usually happens, not what will happen.') });
+  }
   const facts = forecastFacts(data);
   const forecastHint = pick(locale, '1 mm de chuva é 1 litro de água em cada metro quadrado. É uma previsão de modelo do tempo e pode mudar. “Perto do normal” quer dizer até 25% de diferença.', '1 mm of rain is 1 litre of water on every square metre. This is a weather-model forecast and can change. “Close to usual” means within 25%.');
   if (facts === 'unavailable') lines.push({ id: 'forecast', tone: 'unknown', text: pick(locale, 'Não consegui buscar a previsão de chuva agora.', 'I could not fetch the rain forecast right now.') });
