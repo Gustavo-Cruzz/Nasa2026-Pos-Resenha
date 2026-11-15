@@ -35,7 +35,7 @@ export function ScenarioStories({ scenarios, locale, demo, initialScenario, simp
   const setCycle = (position: number) => setCycleByScenario((current) => ({ ...current, [scenario.id]: position }));
   if (!scenario) return null;
   return <div className="mt-6">
-    <ScenarioSelector en={en} scenarios={scenarios} selected={scenario.id} onSelect={setScenarioId} />
+    <ScenarioSelector en={en} scenarios={scenarios} selected={scenario.id} simple={simple} onSelect={setScenarioId} />
     <section aria-labelledby="ffs-scenario-heading" className="mt-4 rounded-xl border border-slate-700 bg-slate-900 p-4 sm:p-5" id={`ffs-panel-${scenario.id}`} role="tabpanel">
       <h2 className="text-xl font-bold" id="ffs-scenario-heading">{en ? 'Scenario' : 'Cenário'} {scenario.id}. {scenario.title}</h2>
       {cycle ? <>
@@ -58,13 +58,13 @@ export function ScenarioStories({ scenarios, locale, demo, initialScenario, simp
   </div>;
 }
 
-export function ScenarioSelector({ scenarios, selected, onSelect, en }: { scenarios: FarmScenarioView[]; selected: ScenarioId; onSelect: (id: ScenarioId) => void; en: boolean }) {
+export function ScenarioSelector({ scenarios, selected, onSelect, en, simple = false }: { scenarios: FarmScenarioView[]; selected: ScenarioId; onSelect: (id: ScenarioId) => void; en: boolean; simple?: boolean }) {
   const current = Math.max(0, scenarios.findIndex((item) => item.id === selected));
   const { refs, onKeyDown } = useArrowKeys(scenarios.length, current, (index) => onSelect(scenarios[index].id));
   return <div aria-label={en ? 'Choose a scenario' : 'Escolha um cenário'} className="grid grid-cols-3 gap-2" role="tablist" onKeyDown={onKeyDown}>
     {scenarios.map((scenario, index) => { const active = scenario.id === selected; return <button aria-controls={`ffs-panel-${scenario.id}`} aria-selected={active} className={`rounded-xl border p-2 text-left sm:p-3 ${active ? 'border-lime-300 bg-lime-300/15' : 'border-slate-600 bg-slate-900 hover:border-lime-300/60'}`} key={scenario.id} ref={(node) => { refs.current[index] = node; }} role="tab" tabIndex={active ? 0 : -1} type="button" onClick={() => onSelect(scenario.id)}>
-      <span className="block text-sm font-semibold text-lime-200">{en ? 'Scenario' : 'Cenário'} {scenario.id}</span>
-      <span className="block text-sm font-bold sm:text-base">{scenario.title}</span>
+      <span className="block text-sm font-semibold text-lime-200">{simple ? (en ? `João explains plan ${scenario.id}` : `João explica o plano ${scenario.id}`) : `${en ? 'Scenario' : 'Cenário'} ${scenario.id}`}</span>
+      {!simple ? <span className="block text-sm font-bold sm:text-base">{scenario.title}</span> : null}
       <span className="block text-xs text-slate-300 max-sm:hidden">{scenario.cycles.length} {en ? (scenario.cycles.length === 1 ? 'stage with a crop' : 'stages with a crop') : (scenario.cycles.length === 1 ? 'etapa com cultura' : 'etapas com cultura')}</span>
     </button>; })}
   </div>;
@@ -99,12 +99,16 @@ function List({ items, empty }: { items: string[]; empty: string }) {
 export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false }: { scenario: FarmScenarioView; cycle: FarmCycleView; en: boolean; locale: Locale; simple?: boolean }) {
   const copy = futureFarmCopy(locale);
   const noneComputed = en ? 'None computed; missing evidence stays unknown.' : 'Nenhum item calculado; evidência ausente permanece desconhecida.';
-  if (simple) return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
-    <p className="text-sm font-semibold text-lime-200">{cycleName(cycle, en)}</p><h3 className="mt-1 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3>
+  if (simple) {
+    const benefits = scenario.tradeoffs.gains.length ? scenario.tradeoffs.gains : cycle.potentialBenefits;
+    const attention = scenario.tradeoffs.losses.length ? scenario.tradeoffs.losses : cycle.risksAndUnknowns;
+    return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-lime-300/30 bg-slate-950/60 p-4">
+    <p className="text-sm font-semibold text-lime-200">{en ? `João explains plan ${scenario.id}` : `João explica o plano ${scenario.id}`}</p><h3 className="mt-1 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3><p className="mt-1 text-xs text-slate-400">{cycleName(cycle, en)}</p>
     {cycle.evidenceStale ? <p className="mt-3 rounded-lg border border-amber-300 bg-amber-950/50 p-3 text-sm" role="status">{copy.staleEvidence}</p> : null}
-    <div className="mt-4 space-y-4"><section><h4 className="font-semibold">{en ? 'What can this crop offer?' : 'O que esta cultura pode oferecer?'}</h4><List empty={noneComputed} items={cycle.potentialBenefits} /></section><section><h4 className="font-semibold">{en ? 'What deserves attention?' : 'O que merece atenção?'}</h4><List empty={noneComputed} items={cycle.risksAndUnknowns} /></section><section><h4 className="font-semibold">{en ? 'What NASA data shows here' : 'O que os dados NASA mostram nesta comparação'}</h4><p className="mt-1 text-sm text-slate-200">{cycle.climate?.waterDetail ?? (en ? 'No NASA climate reading is available for this stage.' : 'Não há leitura climática NASA disponível para esta etapa.')}</p></section><section><h4 className="font-semibold">{en ? 'What we still need to confirm' : 'O que ainda precisamos confirmar'}</h4><List empty={en ? 'No cataloged gap for this stage.' : 'Nenhuma lacuna catalogada para esta etapa.'} items={[...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))]} /></section>
+    <div className="mt-4 space-y-4"><section><h4 className="font-semibold">{en ? 'What this plan can offer' : 'O que este plano pode oferecer'}</h4><List empty={noneComputed} items={benefits} /></section><section><h4 className="font-semibold">{en ? 'What deserves attention' : 'O que merece atenção'}</h4><List empty={noneComputed} items={attention} /></section><section><h4 className="font-semibold">{en ? 'What NASA data shows here' : 'O que os dados NASA mostram aqui'}</h4><p className="mt-1 text-sm text-slate-200">{cycle.climate?.waterDetail ?? (en ? 'No NASA climate reading is available for this stage.' : 'Não há leitura climática NASA disponível para esta etapa.')}</p></section><section><h4 className="font-semibold">{en ? 'What we still need to confirm' : 'O que ainda precisamos confirmar'}</h4><List empty={en ? 'No cataloged gap for this stage.' : 'Nenhuma lacuna catalogada para esta etapa.'} items={[...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))]} /></section>
       <details className="border-t border-slate-700 pt-3"><summary className="cursor-pointer font-semibold">{en ? 'See sources and details' : 'Ver fontes e detalhes'}</summary><p className="mt-3 text-sm"><b>{en ? 'Evidence level' : 'Nível de evidência'}:</b> {cycle.evidenceLevel ? copy.evidenceLevel[cycle.evidenceLevel] : 'N/D'}</p>{cycle.evidenceLinks.length ? <ul className="mt-2 space-y-1 text-sm">{cycle.evidenceLinks.map((item) => <li key={item.url}><a className="break-all underline" href={item.url} rel="noreferrer" target="_blank">{item.title}</a></li>)}</ul> : <p className="mt-2 text-sm text-slate-300">{en ? 'No linked source.' : 'Nenhuma fonte vinculada.'}</p>}{scenario.scenarioNotes.length ? <List empty="" items={scenario.scenarioNotes} /> : null}</details>
     </div></aside>;
+  }
   return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
     <p className="text-sm font-semibold text-lime-200">{cycleName(cycle, en)}</p>
     <h3 className="mt-1 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3>

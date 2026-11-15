@@ -16,7 +16,7 @@ test('embeds Future Farm Stories in the simple A/B/C comparison and walks the fo
   await installDraft(page, ['maize', 'soybean', 'maize', 'ruziziensis']);
   await page.goto('/results');
   await expect(page.getByRole('heading', { name: 'Explore suas possibilidades' })).toBeVisible();
-  await expect(page.getByRole('tab', { name: /Cenário A/ })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: /João explica o plano A/ })).toHaveAttribute('aria-selected', 'true');
   const steps = page.getByRole('navigation', { name: 'Ciclos do cenário A' });
   await expect(steps.getByRole('button', { name: /Ciclo 1/ })).toHaveAttribute('aria-current', 'step');
   await expect(page.getByTestId('farm-scene')).toHaveAttribute('aria-label', /milho e feijão-caupi/i);
@@ -29,9 +29,9 @@ test('embeds Future Farm Stories in the simple A/B/C comparison and walks the fo
   await expect(page.locator('.ffs-plant:not([data-crop="soybean"])')).toHaveCount(0);
   await steps.getByRole('button', { name: /Ciclo 2/ }).press('End');
   await expect(steps.getByRole('button', { name: /Ciclo 4/ })).toHaveAttribute('aria-current', 'step');
-  await expect(page.getByRole('heading', { name: 'O que esta cultura pode oferecer?' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'O que os dados NASA mostram nesta comparação' })).toBeVisible();
-  await page.getByRole('tab', { name: /Cenário B/ }).click();
+  await expect(page.getByRole('heading', { name: 'O que este plano pode oferecer' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'O que os dados NASA mostram aqui' })).toBeVisible();
+  await page.getByRole('tab', { name: /João explica o plano B/ }).click();
   await expect(page.getByRole('navigation', { name: 'Ciclos do cenário B' }).getByRole('button')).toHaveCount(5); // prev + 3 real stages + next
   await page.getByRole('button', { name: 'Pausar animação' }).click();
   await expect(page.getByTestId('farm-scene')).toHaveAttribute('data-animate', 'false');

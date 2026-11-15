@@ -1059,3 +1059,15 @@ Implemented: removed the horizontal in-page navigation bar from Advanced compari
 Checks: `npm run typecheck`, `npm run lint`, `npm run test -- --run` and `npm run build` pass.
 
 Limitations: this change only removes the duplicated section shortcuts; it does not shorten or reorder the advanced report itself.
+
+## Sprint F22 — João explica os planos junto à fazenda animada
+
+Status: complete.
+
+Implemented: removed the three duplicated A/B/C summary cards that preceded Future Farm Stories in Simple comparison. The scenario selector now uses the direct labels “João explica o plano A/B/C”. For the selected scenario, João's concise reading follows the animated farm in document order and sits beside it on wide screens: potential documented benefits first, then attention points, NASA climate context, remaining unknowns and an expandable sources section. Scenario B/C explanations prioritize their evidence-backed trade-off gains and losses; when none are available, the panel falls back to the selected cycle's existing evidence. No benefit is generated outside the analysis result.
+
+Cleanup: at the user's request, removed the files and directories reported as untracked by `git status`; internal workspace directories such as `.agents`, `.codex` and `.aws` were deliberately preserved.
+
+Checks: React component review, `npm run typecheck`, `npm run lint`, `npm run test -- --run` (63 files / 425 tests), `npm run build` and the targeted embedded Future Farm Stories Playwright flow pass.
+
+Limitations: the full Playwright suite was not rerun. The removed untracked files were not recoverable through Git because they had never been committed.
