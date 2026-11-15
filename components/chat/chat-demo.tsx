@@ -109,6 +109,14 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
       router.push('/results');
       return;
     }
+    if (effect.type === 'register') {
+      const input = buildAnalysisInput(turn.state.draft);
+      if (!input) { addBot([{ text: en ? 'Something is missing in my notes. Say "restart" to begin again.' : 'Faltou algo nas minhas anotações. Diga "recomeçar" para começar de novo.' }]); setBusy(false); return; }
+      saveDraft(input);
+      persistAtlas(turn.state.draft.location, mapPolygonRef.current);
+      router.push('/cadastro');
+      return;
+    }
     void lookup(effect.query, turn.state);
   };
 
