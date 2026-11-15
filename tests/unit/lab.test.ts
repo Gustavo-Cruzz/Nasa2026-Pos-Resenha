@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { analyze } from '@/lib/engine';
-import { changeLabSlot, createLabPlan } from '@/lib/lab';
+import { changeLabSlot, createDefaultLabPlan, createLabPlan } from '@/lib/lab';
+import { defaultLabSequences, detectCurrentPattern } from '@/lib/lab/sequence';
+import { upgradeLegacyLabPlan } from '@/lib/storage';
+import { cropById } from '@/lib/catalog';
 import { assessLabPlan } from '@/lib/lab/assessment';
 import { diffLabSlot } from '@/lib/lab/diff';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
@@ -43,5 +46,40 @@ describe('laboratory plan', () => {
     expect(delta.nextCropId).toBe('cowpea');
     expect(delta.changes.some((change) => change.indicator === 'cover_potential' && change.before === 'unknown' && change.after === 'yes')).toBe(true);
     expect(JSON.stringify(delta)).not.toMatch(/improved|worse|score/i);
+  });
+});
+
+describe('default lab sequences', () => {
+  const seasonal: AnalysisInput = { ...base, plantingMonth: 10, history: [{ cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }, { cropId: 'maize', startYearMonth: '2025-02', endYearMonth: '2025-06' }] };
+  const engine = ['maize', 'ruziziensis', 'sorghum'];
+  it('detects safra->safrinha and fills four slots', () => {
+    expect(detectCurrentPattern(seasonal.history)).toEqual(['soybean', 'maize']);
+    const plan = createDefaultLabPlan(seasonal, engine.map((cropId) => ({ title: 'x', proposedCrop: { cropId } })) as never);
+    expect(plan.scenarios[0]!.slots.map((s) => s.cropId)).toEqual(['soybean', 'maize', 'soybean', 'maize']);
+    expect(plan.scenarios.every((s) => s.slots.every((slot) => slot.cropId))).toBe(true);
+    expect(cropById.get(plan.scenarios[1]!.slots[1]!.cropId!)!.purposes).toContain('cover');
+    expect(plan.scenarios[2]!.slots[1]!.cropId).not.toBe('maize');
+  });
+  it('anchors on the agricultural year with a trailing safra', () => {
+    const demo = [{ cropId: 'soybean', startYearMonth: '2023-10', endYearMonth: '2024-02' }, { cropId: 'maize', startYearMonth: '2024-02', endYearMonth: '2024-06' }, { cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }];
+    expect(detectCurrentPattern(demo)).toEqual(['soybean', 'maize']);
+    expect(defaultLabSequences({ ...base, history: demo }, engine)[0]!.cropIds).toEqual(['soybean', 'maize', 'soybean', 'maize']);
+    const single = [{ cropId: 'soybean', startYearMonth: '2023-10', endYearMonth: '2024-02' }, { cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }];
+    expect(detectCurrentPattern(single)).toEqual(['soybean', null]);
+    expect(defaultLabSequences({ ...base, history: single }, engine)[0]!.cropIds).toEqual(['soybean', null, 'soybean', null]);
+  });
+  it('respects blocked crops by leaving slots null', () => {
+    const restricted: AnalysisInput = { ...seasonal, farmerCrops: { availableCropIds: ['soybean', 'maize'], exploreCropIds: [], blockedCropIds: ['maize'] } as never };
+    const seqs = defaultLabSequences(restricted, engine);
+    expect(seqs[0]!.cropIds).toEqual(['soybean', null, 'soybean', null]);
+    expect(seqs.flatMap((s) => s.cropIds)).not.toContain('maize');
+    expect(seqs[1]!.cropIds[1]).toBeNull();
+  });
+  it('detects and upgrades only the legacy one-slot plan', () => {
+    const legacy = createLabPlan(seasonal, engine);
+    const fresh = createDefaultLabPlan(seasonal, engine.map((cropId) => ({ proposedCrop: { cropId } })));
+    expect(upgradeLegacyLabPlan(legacy, seasonal, engine, fresh)).toBe(fresh);
+    const edited = changeLabSlot(legacy, 'A', 1, 'cowpea');
+    expect(upgradeLegacyLabPlan(edited, seasonal, engine, fresh)).toBe(edited);
   });
 });

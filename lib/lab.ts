@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { AnalysisInput } from '@/lib/schema';
 import { cropById, isAnnualRotationEligible } from '@/lib/catalog';
+import { defaultLabSequences, type EngineStrategyLike } from '@/lib/lab/sequence';
 
 export type LabCropId = string;
 const slotSchema = z.object({ year: z.union([z.literal(1), z.literal(2)]), season: z.union([z.literal('A'), z.literal('B')]), cropId: z.string().nullable() }).refine((slot) => !slot.cropId || (cropById.has(slot.cropId) && isAnnualRotationEligible(slot.cropId)), 'Annual rotation slots accept only catalogued annual-management crops.');
@@ -17,6 +18,14 @@ export function createLabPlan(input: AnalysisInput, cropIds: Array<string | unde
     { id: 'B', title: 'Saúde do solo', slots: slots(valid(cropIds[1])) },
     { id: 'C', title: 'Contexto hídrico', slots: slots(valid(cropIds[2])) },
   ] };
+}
+
+const SLOT_KEYS = [[1, 'A'], [1, 'B'], [2, 'A'], [2, 'B']] as const;
+
+/** Default plan with all four slots per scenario filled from detected history (null where crops are not permitted). */
+export function createDefaultLabPlan(input: AnalysisInput, strategies: EngineStrategyLike[]): LabPlan {
+  const sequences = defaultLabSequences(input, strategies.map((item) => item.proposedCrop?.cropId), strategies.map((item) => item.title));
+  return { scenarios: sequences.map((sequence) => ({ id: sequence.id, title: sequence.title, slots: SLOT_KEYS.map(([year, season], index) => ({ year, season, cropId: sequence.cropIds[index] ?? null })) })) };
 }
 
 export function changeLabSlot(plan: LabPlan, scenarioId: 'A' | 'B' | 'C', slotIndex: number, cropId: LabCropId | null): LabPlan {
