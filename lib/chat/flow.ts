@@ -191,3 +191,25 @@ export function provideLocation(state: ChatState, matches: PlaceMatch[], query: 
 export function lookupFailed(state: ChatState, locale: Locale): Turn {
   return { state, replies: [reply(pick(locale, 'Não consegui buscar agora. Tente de novo.', 'I could not look it up right now. Try again.'))], effects: [] };
 }
+
+/** A place picked on the explorer map (search, click or example) offered to the chat. */
+export type MapPlace = { latitude: number; longitude: number; label?: string };
+export const mapPlaceName = (place: MapPlace) => place.label ?? `${place.latitude.toFixed(4)}, ${place.longitude.toFixed(4)}`;
+export const mapChoices = (locale: Locale) => ({ yes: pick(locale, 'Sim, é aqui', 'Yes, it is here'), no: pick(locale, 'Não, vou digitar a cidade', 'No, I will type the city'), change: pick(locale, 'Sim, trocar o local', 'Yes, change the location'), keep: pick(locale, 'Não, manter', 'No, keep it') });
+
+/** João's single message when a map place arrives while the chat still waits for the city. */
+export function suggestMapPlace(place: MapPlace, locale: Locale): Reply {
+  const { yes, no } = mapChoices(locale);
+  return reply(pick(locale, `Vi que você marcou **${mapPlaceName(place)}** no mapa. É aí a sua fazenda?`, `I saw you marked **${mapPlaceName(place)}** on the map. Is that where your farm is?`), [yes, no]);
+}
+
+/** After the location step: one small note, no reset; the buttons are shown apart from the current question's chips. */
+export function suggestMapChange(place: MapPlace, locale: Locale): Reply {
+  return reply(pick(locale, `Quer trocar o local para **${mapPlaceName(place)}**?`, `Do you want to change the location to **${mapPlaceName(place)}**?`));
+}
+
+/** Uses the map place as the farm location, exactly like an answer typed in the chat, and moves on to the next open question. */
+export function acceptMapPlace(state: ChatState, place: MapPlace, locale: Locale): Turn {
+  const location: PlaceResult = { latitude: place.latitude, longitude: place.longitude, ...(place.label ? { label: place.label } : {}) };
+  return goTo({ ...state.draft, location }, locale, reply(pick(locale, `Anotado: ${mapPlaceName(place)}.`, `Noted: ${mapPlaceName(place)}.`)));
+}

@@ -4,20 +4,23 @@ import { applyRainChange, deriveRotationCalendar, deriveSeasonInsights, describe
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { WaterBalanceMonth } from '@/lib/climate/indicators';
 import type { AnalysisInput } from '@/lib/schema';
+import { createLabPlan } from '@/lib/lab';
 
-const input: AnalysisInput = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 4, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 3, soil: 2, operations: 1 }, irrigation: 'unknown', futureBaseline: { cropId: 'soybean', confirmed: true } };
+const input: AnalysisInput = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 10, history: [{ cropId: 'soybean', startYearMonth: '2023-10', endYearMonth: '2024-02' }, { cropId: 'maize', startYearMonth: '2024-02', endYearMonth: '2024-06' }, { cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }], priorities: { water: 2, soil: 3, operations: 1 }, irrigation: 'unknown' };
+/** Distinct first-season crops per hypothesis (A soybean, B sorghum, C maize). The default plan gives B and C the same planting-month crop, so the thermal check cannot diverge. */
+const plan = createLabPlan(input, ['soybean', 'sorghum', 'maize']);
 const rain = Array.from({ length: 12 }, (_, index) => ({ month: index + 1, medianTotalMm: 100 + index, validYears: 15, expectedYears: 15, coveragePct: 100 }));
-const climate = (monthlyTemp: (month: number) => number | null): ClimateContext => ({ status: 'available', origin: 'live', monthly: Array.from({ length: 12 }, (_, index) => ({ month: index + 1, tmeanMedianC: monthlyTemp(index + 1), precipMedianMm: 2, validTemperatureDays: 400, validPrecipitationDays: 400 })), plantingMonthPrecipitation: rain[3], historicalPrecipitationByMonth: rain, provenance: { source: 'NASA_POWER', requestedCoordinates: input.location, period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', rawParameterNames: ['T2M'], sourceUrl: 'https://power.larc.nasa.gov/example', timezone: 'UTC', coveragePct: { T2M: 100, T2M_MAX: 100, T2M_MIN: 100, PRECTOTCORR: 100, RH2M: 100, WS2M: 100, ALLSKY_SFC_SW_DWN: 100 }, missingDays: [], warnings: [] }, gaps: [] });
+const climate = (monthlyTemp: (month: number) => number | null): ClimateContext => ({ status: 'available', origin: 'live', monthly: Array.from({ length: 12 }, (_, index) => ({ month: index + 1, tmeanMedianC: monthlyTemp(index + 1), precipMedianMm: 2, validTemperatureDays: 400, validPrecipitationDays: 400 })), plantingMonthPrecipitation: rain[9], historicalPrecipitationByMonth: rain, provenance: { source: 'NASA_POWER', requestedCoordinates: input.location, period: { start: '20110101', end: '20251231' }, fetchedAt: '2026-11-12T00:00:00.000Z', rawParameterNames: ['T2M'], sourceUrl: 'https://power.larc.nasa.gov/example', timezone: 'UTC', coveragePct: { T2M: 100, T2M_MAX: 100, T2M_MIN: 100, PRECTOTCORR: 100, RH2M: 100, WS2M: 100, ALLSKY_SFC_SW_DWN: 100 }, missingDays: [], warnings: [] }, gaps: [] });
 const balance = (values: Array<number | null>): WaterBalanceMonth[] => values.map((value, index) => ({ month: index + 1, precipMedianMm: value === null ? null : 50 + value, et0MedianMm: value === null ? null : 50, balanceMedianMm: value, validYears: value === null ? 0 : 15, expectedYears: 15, coveragePct: value === null ? 0 : 100 }));
-const insightsOf = (temp: (month: number) => number | null) => analyze(input, climate(temp)).nasaInsightByMonth;
+const insightsOf = (temp: (month: number) => number | null) => analyze(input, climate(temp), plan).nasaInsightByMonth;
 
 describe('rotation calendar', () => {
   it('computes states and signed thermal margins from documented ranges', () => {
-    const rows = deriveRotationCalendar(insightsOf((month) => month === 4 ? 35 : 25));
+    const rows = deriveRotationCalendar(insightsOf((month) => month === 10 ? 35 : 25));
     expect(rows.map((row) => row.scenarioId)).toEqual(['A', 'B', 'C']);
-    const april = rows.map((row) => row.cells[3]);
-    expect(april.map((cell) => cell.state)).toEqual(['attention', 'compatible', 'attention']);
-    expect(april.map((cell) => cell.marginC)).toEqual([-5, 3, -5]);
+    const october = rows.map((row) => row.cells[9]);
+    expect(october.map((cell) => cell.state)).toEqual(['attention', 'compatible', 'attention']);
+    expect(october.map((cell) => cell.marginC)).toEqual([-5, 3, -5]);
     expect(rows[0].cells[0]).toMatchObject({ state: 'compatible', marginC: 5, valueC: 25 });
   });
   it('shifts every month by a hypothetical offset without mutating the history', () => {
@@ -34,18 +37,18 @@ describe('rotation calendar', () => {
 
 describe('season insights', () => {
   it('reports thermal contrast with values, ranges and the diverging hypotheses', () => {
-    const calendar = deriveRotationCalendar(insightsOf((month) => month === 4 ? 35 : 25));
-    const insights = deriveSeasonInsights(calendar, balance(Array(12).fill(10)), 4);
-    expect(insights[0]).toMatchObject({ kind: 'thermal_contrast', month: 4, valueC: 35 });
+    const calendar = deriveRotationCalendar(insightsOf((month) => month === 10 ? 35 : 25));
+    const insights = deriveSeasonInsights(calendar, balance(Array(12).fill(10)), 10);
+    expect(insights[0]).toMatchObject({ kind: 'thermal_contrast', month: 10, valueC: 35 });
     const text = describeSeasonInsight(insights[0], 'pt-BR');
-    expect(text.title).toContain('abr');
+    expect(text.title).toContain('out');
     expect(text.detail).toContain('35');
     expect(text.detail).toContain('20–30 °C');
-    expect(describeSeasonInsight(insights[0], 'en').title).toContain('Apr');
+    expect(describeSeasonInsight(insights[0], 'en').title).toContain('Oct');
   });
   it('falls back to the smallest thermal margin when no hypothesis diverges', () => {
     const calendar = deriveRotationCalendar(insightsOf(() => 25));
-    const lead = deriveSeasonInsights(calendar, [], 4)[0];
+    const lead = deriveSeasonInsights(calendar, [], 10)[0];
     expect(lead.kind).toBe('thermal_margin');
     if (lead.kind === 'thermal_margin') {
       expect(lead.tightest).toMatchObject({ scenarioId: 'A', marginC: 5 });

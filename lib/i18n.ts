@@ -8,7 +8,7 @@ export const dictionaries = {
     insufficientEvidence: 'Ainda faltam evidências para comparar este período.',
     sourceHint: 'Veja a fonte e os limites deste dado.',
     tagline: 'Comparação de rotações com clima histórico e limites explícitos.',
-    start: 'Conhecer minha fazenda',
+    start: 'Explorar uma região',
     methodology: 'Metodologia',
     explore: 'Explorar',
     farm: 'Minha fazenda',
@@ -53,6 +53,7 @@ export const dictionaries = {
     evidencePartial: 'parcial',
     evidenceUnavailable: 'indisponível',
     evidenceNoClaims: 'Nenhuma afirmação corresponde a este filtro.',
+    demoBrazil: 'Ver demonstração Brasil',
   },
   en: {
     productName: 'Plantaê',
@@ -63,7 +64,7 @@ export const dictionaries = {
     insufficientEvidence: 'There is still not enough evidence to compare this period.',
     sourceHint: 'See the source and the limits of this data.',
     tagline: 'Compare rotations with historical climate and explicit limits.',
-    start: 'Meet my farm',
+    start: 'Explore a region',
     methodology: 'Methodology',
     explore: 'Explore',
     farm: 'My farm',
@@ -108,6 +109,7 @@ export const dictionaries = {
     evidencePartial: 'partial',
     evidenceUnavailable: 'unavailable',
     evidenceNoClaims: 'No claim matches this filter.',
+    demoBrazil: 'See the Brazil demo',
   },
 } as const;
 

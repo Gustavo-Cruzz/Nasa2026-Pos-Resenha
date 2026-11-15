@@ -68,3 +68,83 @@ button, input, select, textarea { font-family: inherit; }
 .ffs-demo-anim[data-loaded="true"] { opacity: 1; }
 @keyframes joao-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .joao-in { animation: joao-in 220ms ease-out both; }
+
+
+/* PROTOTYPE pixel climate HUD (explore ?variante=d) — remove with the prototype */
+.atlas-layout-d { display: grid; gap: 1rem; }
+.atlas-layout-d .atlas-map-frame, .atlas-layout-d .atlas-map { min-height: 30rem; }
+.atlas-layout-d > div:first-child { min-height: 34rem; }
+.atlas-layout-d > div:first-child > .atlas-map-frame { height: 100%; }
+.atlas-chat-col { position: relative; height: 36rem; }
+.atlas-chat-col > section { position: absolute; inset: 0; height: auto !important; max-width: none !important; min-height: 0 !important; margin: 0 !important; }
+@media (min-width: 1024px) { .atlas-layout-d { grid-template-columns: minmax(0, 60fr) minmax(24rem, 40fr); } .atlas-chat-col { height: auto; } .atlas-layout-d > div:first-child { height: 40rem; } .atlas-chat-col > section { position: static; height: 100% !important; } .atlas-chat-col { height: 40rem; } }
+.hud-pixel { image-rendering: pixelated; }
+.hud-card { background: rgb(2 6 23 / .8); border: 2px solid #84cc16; box-shadow: 0 0 0 2px #020617, 4px 4px 0 2px rgb(0 0 0 / .45); }
+.hud-card-sm { border-color: #475569; }
+.hud-card-err { border-color: #f59e0b; }
+.hud-btn { background: #fbbf24; color: #020617; border: 2px solid #020617; box-shadow: 2px 2px 0 #92400e; }
+.hud-col { height: 5.25rem; }
+.hud-sq { display: block; width: 100%; max-width: 1.1rem; height: 8px; }
+.hud-sq-on { background: #22d3ee; box-shadow: inset -1px -1px 0 #0e7490; }
+.hud-sq-on-cur { background: #a3e635; box-shadow: inset -1px -1px 0 #4d7c0f; }
+.hud-sq-off { background: rgb(51 65 85 / .5); }
+.hud-dot { position: absolute; left: 50%; width: 6px; height: 6px; margin-left: -3px; background: #fbbf24; border: 1px solid #020617; box-shadow: 0 0 0 1px #fbbf24; z-index: 1; }
+.hud-key { display: inline-block; width: 6px; height: 6px; vertical-align: baseline; }
+.hud-live { display: inline-block; width: 6px; height: 6px; background: #a3e635; }
+.hud-spinner { width: 12px; height: 12px; border: 3px solid #a3e635; border-right-color: transparent; border-radius: 0; }
+@media (max-width: 639px) {
+  .hud-col { height: 2.75rem; }
+  .hud-sq { height: 4px; }
+  .hud-dot { width: 4px; height: 4px; margin-left: -2px; }
+  .hud-root .hud-card-sm { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hud-rays-a { animation: hud-blink 1s steps(2, end) infinite; }
+  .hud-rays-b { animation: hud-blink 1s steps(2, end) infinite .5s; }
+  .hud-drop { animation: hud-fall .8s steps(4, end) infinite; }
+  .hud-cloud { animation: hud-drift 3s steps(6, end) infinite alternate; }
+  .hud-current .hud-sq-on-cur { animation: hud-pulse 1s steps(2, end) infinite; }
+  .hud-blink { animation: hud-blink 1s steps(2, end) infinite; }
+  .hud-spinner { animation: hud-spin .8s steps(8, end) infinite; }
+  .hud-live { animation: hud-blink 1.2s steps(2, end) infinite; }
+}
+@keyframes hud-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .25; } }
+@keyframes hud-fall { from { transform: translateY(0); opacity: 1; } to { transform: translateY(5px); opacity: 0; } }
+@keyframes hud-drift { from { transform: translateX(-1px); } to { transform: translateX(1px); } }
+@keyframes hud-pulse { 0%, 49% { filter: none; } 50%, 100% { filter: brightness(1.5); } }
+@keyframes hud-spin { to { transform: rotate(360deg); } }
+/* PROTOTYPE farm weather fx (explore ?variante=d) */
+.atlas-layout-d .absolute.list-none { bottom: 10rem !important; }
+@media (max-width: 639px) {
+  .atlas-layout-d .absolute.list-none { bottom: 7.5rem !important; }
+  .hud-month > svg { display: none; }
+}
+.fx-sway { transform-box: fill-box; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .fx-drop { animation: fx-fall .7s steps(5, end) infinite; }
+  .fx-streak { animation: fx-streak 1.4s steps(10, end) infinite; }
+  .fx-heat { animation: fx-heat .8s steps(2, end) infinite alternate; }
+  .fx-glint { animation: hud-blink 1.6s steps(2, end) infinite; }
+  .fx-sway { animation: fx-sway 2s steps(2, end) infinite alternate; }
+  .fx-cloud { animation: fx-cloud 16s steps(48, end) infinite; }
+  .fx-march { animation: fx-march 1s steps(5, end) infinite; }
+}
+@keyframes fx-fall { from { transform: translateY(0); opacity: 1; } to { transform: translateY(22px); opacity: 0; } }
+@keyframes fx-streak { from { transform: translateX(-20px); opacity: 0; } 30%, 70% { opacity: 1; } to { transform: translateX(90px); opacity: 0; } }
+@keyframes fx-heat { from { transform: translate(0, 0); } to { transform: translate(6px, -3px); } }
+@keyframes fx-sway { from { transform: skewX(-8deg) translateX(calc(var(--sway, 1px) * -1)); } to { transform: skewX(8deg) translateX(var(--sway, 1px)); } }
+@keyframes fx-cloud { from { transform: translateX(0); } to { transform: translateX(var(--run, 300px)); } }
+@keyframes fx-march { to { stroke-dashoffset: -15; } }
+/* Effect chip sits beside the perimeter, never on it: under the month badge on desktop, above the 12-month strip on mobile. */
+.fx-chip { position: absolute; z-index: 1; left: .75rem; right: .75rem; bottom: 8.75rem; }
+@media (min-width: 640px) { .fx-chip { left: auto; right: .75rem; top: 8rem; bottom: auto; width: 13rem; } }
+
+/* Explore side column: tabs (data / chat) above one body. On desktop it is exactly as tall as the map, and only the data scrolls. */
+.atlas-side-col { display: flex; min-width: 0; flex-direction: column; gap: .75rem; }
+.atlas-side-body { position: relative; min-width: 0; flex: 1 1 auto; }
+@media (min-width: 1024px) {
+  .atlas-side-col { height: 40rem; }
+  .atlas-side-body { min-height: 0; }
+  .atlas-side-body > .atlas-panel { height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+  .atlas-side-body > .atlas-chat-col { height: 100%; }
+}
