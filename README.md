@@ -1,7 +1,7 @@
 # Plantaê — From Space to Soil. Farmers Decide.
 
 <p align="center">
-  <img src="public/assets/team/silknasa-plantae.png" alt="SilkNASA team, creators of the Plantaê project" width="620" />
+  <img src="public/assets/team/plantae-platform-en.png" alt="Plantaê platform home page in English, showing its crop-rotation exploration experience" width="960" />
 </p>
 
 <p align="center">
@@ -352,3 +352,13 @@ Some creative illustrations, animations, and videos used by the project were gen
 Plantaê is an independent, non-commercial hackathon project created by the **SilkNASA** team as its solution to the **Field Shift challenge** in the **2026 NASA International Space Apps Challenge**. **Plantaê** is the project name; **Field Shift** is the challenge name. This repository is not an official NASA repository, product, certification, or endorsement. NASA names, missions, and public datasets are referenced only to identify the challenge and the sources used by the project.
 
 The team has no commercial intent for this hackathon submission.
+
+## Meet SilkNASA
+
+<p align="center">
+  <img src="public/assets/team/silknasa-plantae.png" alt="SilkNASA team, creators of the Plantaê project" width="620" />
+</p>
+
+<p align="center">
+  <strong>SilkNASA · Creators of Plantaê</strong>
+</p>

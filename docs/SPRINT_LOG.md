@@ -969,3 +969,13 @@ Implemented: each cycle's scene now steps through the months of the crop window 
 Evidence (2026-11-15): tsc and eslint pass; vitest `future-farm*.test.ts` (20 tests) and Playwright `future-stories.spec.ts` (4 tests) pass. Rio Verde check: Jan–Feb and Nov rain, Mar–Apr and Dec cloudy, May–Aug drought, Sep–Oct heat. These months came from a run with the earlier storm cut (250 mm, 18 rain days); with the final cut (200 mm, 20 rain days) January (~205 mm, 28 rain days) should be storm, but this was not re-run.
 
 Limitations / next: thresholds are fixed national values; Jun–Aug show as drought rather than sunny and Oct as heat in Rio Verde. `npm run build` was not run.
+
+## README platform and team imagery
+
+Status: complete.
+
+Implemented: generated a real 1440×900 desktop capture of the Plantaê home page with the English locale active and placed it at the beginning of the README. Moved the real SilkNASA team photograph to the final `Meet SilkNASA` section, after the license and disclaimers. Both images include descriptive English alternative text.
+
+Checks: visually inspected the generated screenshot and verified that the English headline, navigation, accessibility controls, calls to action, and platform artwork render cleanly. README links and Markdown formatting pass `git diff --check`.
+
+Limitations: the screenshot represents the current desktop home page and should be refreshed if the hero layout changes materially.
