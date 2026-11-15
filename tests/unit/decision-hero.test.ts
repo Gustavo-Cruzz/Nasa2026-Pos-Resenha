@@ -38,7 +38,7 @@ describe('decision hero', () => {
   it('never turns missing evidence into compatible', () => {
     expect(deriveDecisionHero(analyze(input, unavailable))).toMatchObject({ state: 'unknown', observedValue: null, nextCheck: 'provide_data' });
     expect(deriveDecisionHero(analyze(input, climate(null))).state).toBe('unknown');
-    const precipitationOnly = deriveDecisionHero(analyze(input, climate(25), createLabPlan(input, ['common_bean', 'upland_rice', 'ruziziensis'])));
+    const precipitationOnly = deriveDecisionHero(analyze(input, climate(25), createLabPlan(input, ['cassava', 'pumpkin', 'sweet_potato'])));
     expect(precipitationOnly.state).toBe('unknown');
     expect(precipitationOnly.observedValue).toBeNull();
   });

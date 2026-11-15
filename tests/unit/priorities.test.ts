@@ -45,7 +45,7 @@ describe('regional soil in the engine (audit 1.5)', () => {
   it('states the regional origin in the pH indicator and never calls it local', () => {
     const maize = cropById.get('maize'); const indicator = assessCropIndicators(maize, undefined, input, unavailable, regional).find((item) => item.id === 'soil_context');
     expect(indicator?.origin).toBe('regional_estimate'); expect(indicator?.detail).toContain('Estimativa regional (SoilGrids, média municipal 0–30 cm), não é análise do talhão'); expect(indicator?.detail).toContain('pH regional 5,2'); expect(indicator?.detail).not.toMatch(/informado/);
-    const noRange = assessCropIndicators(cropById.get('ruziziensis'), undefined, input, unavailable, regional).find((item) => item.id === 'soil_context');
+    const noRange = assessCropIndicators(cropById.get('cassava'), undefined, input, unavailable, regional).find((item) => item.id === 'soil_context');
     expect(noRange?.state).toBe('unknown'); expect(noRange?.detail).toContain('pH regional 5,2 — faixa da cultura não documentada');
   });
   it('farmer soil takes precedence over regional soil', () => {

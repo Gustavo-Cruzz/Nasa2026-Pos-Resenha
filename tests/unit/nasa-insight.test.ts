@@ -24,7 +24,7 @@ describe('NASA causal insight', () => {
   });
 
   it('keeps precipitation observational when thermal evidence is absent', () => {
-    const plan = createLabPlan(input, ['common_bean', 'upland_rice', 'ruziziensis']);
+    const plan = createLabPlan(input, ['cassava', 'pumpkin', 'sweet_potato']);
     const result = analyze(input, climate, plan);
     expect(result.nasaInsight.status).toBe('observational');
     expect(result.nasaInsight.metric).toBe('precipitation');

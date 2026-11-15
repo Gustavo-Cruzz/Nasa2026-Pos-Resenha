@@ -1502,6 +1502,510 @@
         "institution": "Embrapa",
         "accessedAt": "2026-11-15"
       }
+    },
+    {
+      "cropId": "maize",
+      "field": "residuePotential",
+      "value": "alta — 14,49 t/ha de matéria seca de palhada de milho antes da semeadura do feijão (Cerrado)",
+      "unit": null,
+      "context": "maize crop residue on the soil surface before bean sowing; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Palhada de cobertura do solo no sistema plantio direto (cap. 8 de Fundamentos para uma agricultura sustentável, com ênfase na cultura do feijoeiro)",
+        "year": 2009,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/658109/1/cap8-2009-fundamentos.pdf",
+        "institution": "Embrapa",
+        "pageOrSection": "Tabela 1 (Aidar et al., 2000), pp. 120-121",
+        "snippet": "Milho 14,49 bc 6,30 ab 57",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "soybean",
+      "field": "residuePotential",
+      "value": "baixa — 4,06 t/ha de matéria seca de palhada de soja antes da semeadura do feijão; redução de 60% em 107 dias",
+      "unit": null,
+      "context": "soybean crop residue on the soil surface before bean sowing; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Palhada de cobertura do solo no sistema plantio direto (cap. 8 de Fundamentos para uma agricultura sustentável, com ênfase na cultura do feijoeiro)",
+        "year": 2009,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/658109/1/cap8-2009-fundamentos.pdf",
+        "institution": "Embrapa",
+        "pageOrSection": "Tabela 1 (Aidar et al., 2000), pp. 120-121",
+        "snippet": "Soja 4,06 c 1,62 c 60",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "residuePotential",
+      "value": "média — 6,02 t/ha de matéria seca de palhada de arroz antes da semeadura do feijão; redução de 30% em 107 dias",
+      "unit": null,
+      "context": "rice crop residue on the soil surface before bean sowing (Embrapa table row \"Arroz\"; not specific to upland ecotype); qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Palhada de cobertura do solo no sistema plantio direto (cap. 8 de Fundamentos para uma agricultura sustentável, com ênfase na cultura do feijoeiro)",
+        "year": 2009,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/658109/1/cap8-2009-fundamentos.pdf",
+        "institution": "Embrapa",
+        "pageOrSection": "Tabela 1 (Aidar et al., 2000), pp. 120-121",
+        "snippet": "Arroz 6,02 c 4,22 bc 30",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "residuePotential",
+      "value": "média a alta — de cerca de 5 t/ha na safrinha até 15 t/ha em semeadura de outubro-novembro",
+      "unit": null,
+      "context": "pearl millet as cover crop in Cerrado no-till; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Palhada de cobertura do solo no sistema plantio direto (cap. 8 de Fundamentos para uma agricultura sustentável, com ênfase na cultura do feijoeiro)",
+        "year": 2009,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/658109/1/cap8-2009-fundamentos.pdf",
+        "institution": "Embrapa",
+        "pageOrSection": "p. 119-120 (texto sobre milheto)",
+        "snippet": "Trata-se de cultura de verão que, em semeaduras de outubro e novembro, pode produzir até 15 t ha-1 de matéria seca, podendo limitar-se a cerca de 5 t ha-1 na safrinha (SALTON; KICHEL, 1998).",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "residuePotential",
+      "value": "alta — 15.700 kg/ha de matéria seca aos 123 dias após a emergência",
+      "unit": null,
+      "context": "pigeon pea (guandu) dry matter at 123 days after emergence, Santo Antônio de Goiás, GO; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Palhada de cobertura do solo no sistema plantio direto (cap. 8 de Fundamentos para uma agricultura sustentável, com ênfase na cultura do feijoeiro)",
+        "year": 2009,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/658109/1/cap8-2009-fundamentos.pdf",
+        "institution": "Embrapa",
+        "pageOrSection": "Fig. 7 e texto, p. 130 (Braz, 2003)",
+        "snippet": "A produção de matéria seca do guandu foi de 15.700 kg ha-1, aos 123 DAE.",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "residuePotential",
+      "value": "alta — 10.300 kg/ha de matéria seca em cultivo solteiro após a soja; 8.183 kg/ha 30 dias antes da semeadura do algodoeiro",
+      "unit": null,
+      "context": "Brachiaria ruziziensis solteira as cover crop; sown after soybean harvest, Cerrado; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Espécies Vegetais de Cobertura do Solo para o Sistema de Semeadura Direta do Algodoeiro (Circular Técnica 132)",
+        "year": 2011,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/916194/1/CIRTEC132.pdf",
+        "institution": "Embrapa Algodão",
+        "pageOrSection": "p. 2 (Lamas e Staut, 2005) e Tabela 2 (Ferreira e Lamas, 2010)",
+        "snippet": "a planta produziu 10.300 kg/ha de matéria seca",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "residuePotential",
+      "value": "média a alta — 5.033 kg/ha (Tabela 2) a 13.837 kg/ha (Tabela 1, S. bicolor BRS 700) de biomassa seca como cobertura",
+      "unit": null,
+      "context": "forage/cover sorghum biomass (Sorghum bicolor) as cover crop, not grain-crop residue; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Espécies Vegetais de Cobertura do Solo para o Sistema de Semeadura Direta do Algodoeiro (Circular Técnica 132)",
+        "year": 2011,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/916194/1/CIRTEC132.pdf",
+        "institution": "Embrapa Algodão",
+        "pageOrSection": "Tabelas 1 e 2, pp. 3-4",
+        "snippet": "Sorghum bicolor cv. BRS 700 13.837 ab 4.546 a 2.896 a 2.423 abc",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "residuePotential",
+      "value": "baixa — 4.517 kg/ha de biomassa seca de Crotalaria juncea 30 dias antes da semeadura do algodoeiro",
+      "unit": null,
+      "context": "Crotalaria juncea solteira as cover crop; qualitative class (project rule: alta >= 7 t/ha, the amount Embrapa cites for full soil protection; media 5 to <7; baixa <5); dry matter of residue/biomass, not a recommendation",
+      "cultivar": null,
+      "location": "Brazilian Cerrado experiments cited by Embrapa; not Rio Verde validation",
+      "source": {
+        "title": "Espécies Vegetais de Cobertura do Solo para o Sistema de Semeadura Direta do Algodoeiro (Circular Técnica 132)",
+        "year": 2011,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/916194/1/CIRTEC132.pdf",
+        "institution": "Embrapa Algodão",
+        "pageOrSection": "Tabela 2, p. 4 (Ferreira e Lamas, 2010)",
+        "snippet": "Crotalaria juncea 4517 b - - 67,5 c",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 60,
+        "max": 90
+      },
+      "unit": "days",
+      "context": "emergence to physiological maturity; envelope of the \"Ciclo de maturação\" listed for the released cultivars in Table 1 (lower BRS Itaim 60-65, upper Riso do Ano 70-90); a \"tardio\" class above 90 days exists without upper bound",
+      "cultivar": null,
+      "location": "Brazilian cultivars recommended for North, Northeast and Center-West; not a universal calendar nor Rio Verde",
+      "source": {
+        "title": "Cultivo de Feijão-Caupi (Sistema de Produção 2, capítulo Cultivares)",
+        "year": 2017,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1071691/1/SistemaProducaoCaupiCapituloCultivares.pdf",
+        "pageOrSection": "Cultivares, \"Ciclo de maturação\" e Tabela 1",
+        "snippet": "Ciclo médio: maturação entre 71 e 90 dias. ... BRS Itaim 2009 ... ER 60-65 Fradinho ... Riso do Ano 1990 RN SPR 70-90 Branco Liso",
+        "institution": "Embrapa",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "viableTempC",
+      "value": {
+        "min": 7,
+        "max": 32
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Phaseolus vulgaris",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1668",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 16 | 25 | 7 | 32",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "viableTempC",
+      "value": {
+        "min": 10,
+        "max": 36
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation (Oryza sativa, not specific to upland ecotype)",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Oryza sativa",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1574",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 20 | 30 | 10 | 36",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 4.5-9 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation (Oryza sativa, not specific to upland ecotype)",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Oryza sativa",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1574",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 5.5 | 7 | 4.5 | 9",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "maize",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 7
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 4.5-8.5 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Zea mays",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2175",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 5 | 7 | 4.5 | 8.5",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 4-8.8 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Vigna unguiculata",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2153",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 5.5 | 7.5 | 4 | 8.8",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "viableTempC",
+      "value": {
+        "min": 12,
+        "max": 40
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Pennisetum glaucum",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=8418",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 25 | 35 | 12 | 40",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 4.5-8.3 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Pennisetum glaucum",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=8418",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 5 | 6.5 | 4.5 | 8.3",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "viableTempC",
+      "value": {
+        "min": 19,
+        "max": 40
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation (Brachiaria ruziziensis = Urochloa ruziziensis)",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Brachiaria ruziziensis",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=543",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 25 | 33 | 19 | 40",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 4.5-7.5 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation (Brachiaria ruziziensis = Urochloa ruziziensis)",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Brachiaria ruziziensis",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=543",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 5.5 | 6.5 | 4.5 | 7.5",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "viableTempC",
+      "value": {
+        "min": 4,
+        "max": 40
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Crotalaria juncea",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=801",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 20 | 30 | 4 | 40",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 5-8.4 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Crotalaria juncea",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=801",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 6 | 7 | 5 | 8.4",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "viableTempC",
+      "value": {
+        "min": 10,
+        "max": 45
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Cajanus cajan",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=576",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 18 | 38 | 10 | 45",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 7
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 4.5-8.4 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Cajanus cajan",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=576",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 5 | 7 | 4.5 | 8.4",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cotton",
+      "field": "viableTempC",
+      "value": {
+        "min": 15,
+        "max": 42
+      },
+      "unit": "°C",
+      "context": "air temperature; ECOCROP absolute (not optimal) minimum and maximum",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Gossypium hirsutum",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1160",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Temperat. requir. (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Temperat. requir. | 22 | 36 | 15 | 42",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cotton",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "context": "soil pH; ECOCROP optimal range (absolute range 5-9.5 not used)",
+      "cultivar": null,
+      "location": "Global species-level ECOCROP entry; not calibrated for Brazil, not Rio Verde validation",
+      "source": {
+        "title": "FAO ECOCROP data sheet — Gossypium hirsutum",
+        "year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1160",
+        "institution": "FAO",
+        "pageOrSection": "Ecology table, row Soil PH (columns: optimal min, optimal max, absolute min, absolute max)",
+        "snippet": "Soil PH | 6 | 7.5 | 5 | 9.5",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
     }
   ]
 }
