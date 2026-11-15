@@ -12,8 +12,14 @@ a { text-underline-offset: 4px; }
 .atlas-shell { margin-top: 1.5rem; display: grid; gap: 1rem; }
 .atlas-toolbar, .atlas-panel { border: 1px solid #405840; border-radius: .9rem; background: #1e2d20; padding: 1.25rem; box-shadow: 0 10px 30px rgb(0 0 0 / .12); }
 .atlas-layout { display: grid; gap: 1rem; }
-.atlas-map-frame { position: relative; z-index: 0; min-height: 32rem; overflow: hidden; border: 1px solid #405840; border-radius: .9rem; background: #142018; }
-.atlas-map { min-height: 32rem; height: 100%; }
+.atlas-map-frame { position: relative; z-index: 0; min-height: 22rem; overflow: hidden; border: 1px solid #405840; border-radius: .9rem; background: #142018; }
+.atlas-map { min-height: 22rem; height: 100%; }
+/* Desktop: the map and the results share one fixed-height row, so only the results scroll; the page itself stays put. */
+@media (min-width: 1024px) {
+  .atlas-layout { height: clamp(30rem, calc(100dvh - 19rem), 70rem); grid-template-rows: minmax(0, 1fr); }
+  .atlas-layout > div:first-child .atlas-map-frame, .atlas-layout > div:first-child .atlas-map { height: 100%; min-height: 0; }
+  .atlas-layout > .atlas-panel { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+}
 .atlas-pin { background: none; border: 0; }
 .atlas-pin svg { display: block; filter: drop-shadow(0 2px 3px rgb(0 0 0 / .5)); }
 .atlas-pin-label { border: 0; border-radius: .5rem; background: #fdf6e3; color: #142018; font-weight: 700; font-size: .75rem; box-shadow: 0 2px 6px rgb(0 0 0 / .35); }

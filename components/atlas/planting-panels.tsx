@@ -1,31 +1,34 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import type { AtlasPoint, ClimateApiResponse } from '@/lib/atlas';
-import type { BrazilRegionalContext } from '@/lib/brazil/types';
-import { seasonMonths, type EnsoState } from '@/lib/climate/enso';
-import { useJson, type JsonState } from '@/components/atlas/use-json';
+import { ChevronDown } from 'lucide-react';
+import type { ClimateApiResponse } from '@/lib/atlas';
+import { seasonMonths } from '@/lib/climate/enso';
+import type { JsonState } from '@/components/atlas/use-json';
+import { useExtras } from '@/components/atlas/explore-extras';
 
 type Climate = Extract<ClimateApiResponse, { status: 'ok' }>;
-type ForecastBody = { issuedAt: string; days: Array<{ date: string; precipitationMm: number | null }>; source: { name: string; url: string; license: string } };
 
 const MONTHS = {
   'pt-BR': { short: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], long: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'] },
   en: { short: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], long: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] },
 } as const;
 
-const acceptForecast = (body: unknown): ForecastBody | undefined => { const value = body as { status?: string } & Partial<ForecastBody>; return value?.status === 'ok' && Array.isArray(value.days) && value.source ? (value as ForecastBody) : undefined; };
-const acceptEnso = (body: unknown): EnsoState | undefined => { const value = body as { status?: string; state?: EnsoState }; return value?.status === 'ok' && value.state ? value.state : undefined; };
-const acceptRegional = (body: unknown): BrazilRegionalContext | undefined => { const value = body as { status?: string; context?: BrazilRegionalContext }; return value?.status === 'ok' && value.context ? value.context : undefined; };
-
 const numberFormat = (value: number, digits: number, en: boolean) => value.toLocaleString(en ? 'en-US' : 'pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
-function Card({ title, children, note }: { title: string; children: ReactNode; note?: ReactNode }) {
-  return <section className="rounded-lg border border-slate-700 bg-slate-950/60 p-3">
-    <h4 className="text-sm font-bold text-lime-200">{title}</h4>
-    <div className="mt-2 text-sm">{children}</div>
-    {note ? <p className="mt-2 text-xs text-slate-400">{note}</p> : null}
-  </section>;
+/** Collapsible card: the title and one headline value are always visible, the detail and its caveats open on demand. */
+function Card({ id, title, headline, children, note }: { id: string; title: string; headline?: ReactNode; children: ReactNode; note?: ReactNode }) {
+  const { isOpen, setOpen } = useExtras();
+  return <details className="group scroll-mt-2 rounded-lg border border-slate-700 bg-slate-950/60" id={`card-${id}`} onToggle={(event) => setOpen(id, event.currentTarget.open)} open={isOpen(id)}>
+    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 p-3 [&::-webkit-details-marker]:hidden">
+      <span className="min-w-0"><span className="block text-sm font-bold text-lime-200">{title}</span>{headline ? <span className="mt-0.5 block text-sm text-slate-200">{headline}</span> : null}</span>
+      <ChevronDown aria-hidden="true" className="shrink-0 text-slate-400 transition-transform group-open:rotate-180 motion-reduce:transition-none" size={18} />
+    </summary>
+    <div className="border-t border-slate-800 p-3 text-sm">
+      {children}
+      {note ? <p className="mt-2 text-xs text-slate-400">{note}</p> : null}
+    </div>
+  </details>;
 }
 
 const Waiting = ({ state, en, children }: { state: JsonState<unknown>; en: boolean; children: ReactNode }) =>
@@ -71,10 +74,13 @@ export function MonthSeriesChart({ series, band, domain, unit, ariaLabel, en, di
   </div>;
 }
 
-function ForecastCard({ point, en }: { point: AtlasPoint; en: boolean }) {
-  const state = useJson<ForecastBody>(`/api/forecast?lat=${point.latitude}&lon=${point.longitude}`, acceptForecast);
+const sumNext = (days: Array<{ precipitationMm: number | null }>) => days.length && days.every((day) => day.precipitationMm !== null) ? Math.round(days.reduce((sum, day) => sum + (day.precipitationMm as number), 0)) : null;
+
+function ForecastCard({ en }: { en: boolean }) {
+  const { forecast: state } = useExtras();
   const weekday = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString(en ? 'en-US' : 'pt-BR', { weekday: 'short', timeZone: 'UTC' }).replace('.', '');
-  return <Card title={en ? 'Rain forecast: next days' : 'Previsão de chuva: próximos dias'} note={state.kind === 'ready' ? <>{en ? 'Weather-model forecast, not a measurement and not advice for planting. ' : 'Previsão de modelo meteorológico: não é medição nem recomendação de plantio. '}<a className="underline" href={state.data.source.url} rel="noreferrer" target="_blank">{state.data.source.name}</a> ({state.data.source.license}).</> : undefined}>
+  const sevenDay = state.kind === 'ready' ? sumNext(state.data.days.slice(0, 7)) : null;
+  return <Card id="forecast" headline={state.kind === 'ready' ? (sevenDay === null ? 'N/D' : `${sevenDay} mm ${en ? 'in 7 days' : 'em 7 dias'}`) : undefined} title={en ? 'Rain forecast: next days' : 'Previsão de chuva: próximos dias'} note={state.kind === 'ready' ? <>{en ? 'Weather-model forecast, not a measurement and not advice for planting. ' : 'Previsão de modelo meteorológico: não é medição nem recomendação de plantio. '}<a className="underline" href={state.data.source.url} rel="noreferrer" target="_blank">{state.data.source.name}</a> ({state.data.source.license}).</> : undefined}>
     <Waiting en={en} state={state}>{state.kind === 'ready' ? (() => {
       const days = state.data.days.slice(0, 7);
       const known = (list: typeof days) => list.flatMap((day) => day.precipitationMm === null ? [] : [day.precipitationMm]);
@@ -90,7 +96,7 @@ function ForecastCard({ point, en }: { point: AtlasPoint; en: boolean }) {
             <span className="mt-1 text-slate-400">{weekday(day.date)}</span>
           </li>)}
         </ol>
-        <p className="mt-1 text-center text-xs text-slate-400">mm</p>
+        <p className="mt-2 text-xs text-slate-400">{en ? 'Rain per day, in mm' : 'Chuva por dia, em mm'}</p>
       </>;
     })() : null}</Waiting>
   </Card>;
@@ -103,12 +109,12 @@ function SeasonCards({ data, en }: { data: Climate; en: boolean }) {
   const hasSeasonality = data.climateSummary.seasonality !== undefined;
   const years = `${data.provenance.period.start.slice(0, 4)}–${data.provenance.period.end.slice(0, 4)}`;
   return <>
-    <Card title={en ? 'Rainy season' : 'Estação chuvosa'} note={en ? `Months where typical rain (median ${years}) exceeds FAO-56 reference evapotranspiration. A historical pattern, not a forecast of when rain will start.` : `Meses em que a chuva típica (mediana ${years}) supera a evapotranspiração de referência FAO-56. É um padrão histórico, não previsão de quando a chuva começa.`}>
+    <Card id="rainy-season" headline={!hasSeasonality ? 'N/D' : season ? (season.lengthMonths === 12 ? (en ? 'All year' : 'O ano todo') : `${names[season.startMonth - 1]} ${en ? 'to' : 'a'} ${names[season.endMonth - 1]}`) : (en ? 'No rainy season' : 'Sem estação chuvosa')} title={en ? 'Rainy season' : 'Estação chuvosa'} note={en ? `Months where typical rain (median ${years}) exceeds FAO-56 reference evapotranspiration. A historical pattern, not a forecast of when rain will start.` : `Meses em que a chuva típica (mediana ${years}) supera a evapotranspiração de referência FAO-56. É um padrão histórico, não previsão de quando a chuva começa.`}>
       {!hasSeasonality ? <p className="text-slate-300">N/D</p>
-        : season ? <p><strong className="text-lg text-cyan-200">{season.lengthMonths === 12 ? (en ? 'All year' : 'O ano todo') : `${names[season.startMonth - 1]} ${en ? 'to' : 'a'} ${names[season.endMonth - 1]}`}</strong> <span className="text-slate-300">· {season.lengthMonths} {en ? 'months' : 'meses'}</span></p>
+        : season ? null
           : <p className="text-slate-300">{en ? 'No month has typical rain above evapotranspiration here.' : 'Nenhum mês tem chuva típica acima da evapotranspiração neste ponto.'}</p>}
     </Card>
-    {season ? <Card title={en ? 'Dry spells inside the rainy season' : 'Veranicos na estação chuvosa'} note={spells ? (en ? `Dry day = under ${spells.definition.precipitationBelowMm} mm. A dry spell = ${spells.definition.consecutiveDays}+ dry days in a row. Counts only seasons with every day measured: ${spells.seasonsAnalyzed} within ${years}. Historical, not a forecast.` : `Dia seco = menos de ${spells.definition.precipitationBelowMm} mm. Veranico = ${spells.definition.consecutiveDays} ou mais dias secos seguidos. Conta só as estações com todos os dias medidos: ${spells.seasonsAnalyzed} entre ${years}. Histórico, não previsão.`) : undefined}>
+    {season ? <Card id="dry-spells" headline={spells && spells.seasonsAnalyzed > 0 && spells.medianLongestRunDays !== null ? `${numberFormat(spells.medianLongestRunDays, spells.medianLongestRunDays % 1 === 0 ? 0 : 1, en)} ${en ? 'days typical pause' : 'dias de pausa típica'} · ${spells.seasonsWithSpell}/${spells.seasonsAnalyzed}` : 'N/D'} title={en ? 'Dry spells inside the rainy season' : 'Veranicos na estação chuvosa'} note={spells ? (en ? `Dry day = under ${spells.definition.precipitationBelowMm} mm. A dry spell = ${spells.definition.consecutiveDays}+ dry days in a row. Counts only seasons with every day measured: ${spells.seasonsAnalyzed} within ${years}. Historical, not a forecast.` : `Dia seco = menos de ${spells.definition.precipitationBelowMm} mm. Veranico = ${spells.definition.consecutiveDays} ou mais dias secos seguidos. Conta só as estações com todos os dias medidos: ${spells.seasonsAnalyzed} entre ${years}. Histórico, não previsão.`) : undefined}>
       {!spells || spells.seasonsAnalyzed === 0 || spells.medianLongestRunDays === null || spells.maxRunDays === null ? <p className="text-slate-300">{en ? 'Not enough complete seasons to count dry spells (N/D).' : 'Estações completas insuficientes para contar veranicos (N/D).'}</p> : <dl className="grid grid-cols-2 gap-2">
         <div><dt className="text-xs text-slate-400">{en ? 'Longest pause, typical year' : 'Maior pausa, ano típico'}</dt><dd className="font-semibold">{numberFormat(spells.medianLongestRunDays, spells.medianLongestRunDays % 1 === 0 ? 0 : 1, en)} {en ? 'days' : 'dias'}</dd></div>
         <div><dt className="text-xs text-slate-400">{en ? 'Longest on record' : 'Pior caso registrado'}</dt><dd className="font-semibold">{spells.maxRunDays} {en ? 'days' : 'dias'}{spells.maxRunSeasonStartYear === null ? '' : ` · ${spells.maxRunSeasonStartYear}${season.startMonth > season.endMonth ? `/${String(spells.maxRunSeasonStartYear + 1).slice(2)}` : ''}`}</dd></div>
@@ -123,7 +129,8 @@ function RootZoneCard({ data, en }: { data: Climate; en: boolean }) {
   const lastYear = data.climateSummary.lastYear?.year;
   const known = months?.some((item) => item.medianWetness !== null) ?? false;
   const years = `${data.provenance.period.start.slice(0, 4)}–${data.provenance.period.end.slice(0, 4)}`;
-  return <Card title={en ? 'Root-zone soil moisture, through the year' : 'Umidade da raiz, ao longo do ano'} note={en ? 'NASA POWER root-zone wetness: 0 = dry, 1 = saturated. Modelled for a grid cell of roughly 50 km, not measured in your field. Not a soil analysis.' : 'Umidade da zona de raiz do NASA POWER: 0 = seco, 1 = saturado. Modelada para uma célula de cerca de 50 km, não medida no seu campo. Não é análise de solo.'}>
+  const monthNow = months?.[new Date().getMonth()];
+  return <Card id="root-zone" headline={monthNow && monthNow.medianWetness !== null ? `${en ? 'Typical this month' : 'Típico neste mês'}: ${numberFormat(monthNow.medianWetness, 2, en)}${monthNow.lastYearWetness !== null && lastYear ? ` · ${lastYear}: ${numberFormat(monthNow.lastYearWetness, 2, en)}` : ''}` : undefined} title={en ? 'Root-zone soil moisture, through the year' : 'Umidade da raiz, ao longo do ano'} note={en ? 'NASA POWER root-zone wetness: 0 = dry, 1 = saturated. Modelled for a grid cell of roughly 50 km, not measured in your field. Not a soil analysis.' : 'Umidade da zona de raiz do NASA POWER: 0 = seco, 1 = saturado. Modelada para uma célula de cerca de 50 km, não medida no seu campo. Não é análise de solo.'}>
     {!months || !known ? <p className="text-slate-300">{en ? 'N/D for this point.' : 'N/D para este ponto.'}</p> : <MonthSeriesChart
       ariaLabel={en ? 'Root-zone soil moisture by month: median of the years compared with the last year' : 'Umidade da raiz por mês: mediana dos anos comparada ao último ano'}
       digits={2} domain={[0, 1]} en={en} unit=""
@@ -139,7 +146,9 @@ function TemperatureCard({ data, en }: { data: Climate; en: boolean }) {
   const hasAir = low.some((value) => value !== null) && high.some((value) => value !== null);
   const hasSoil = soil.some((value) => value !== null);
   const domain: [number, number] = all.length ? [Math.floor(Math.min(...all) / 4) * 4, Math.ceil(Math.max(...all) / 4) * 4] : [0, 40];
-  return <Card title={en ? 'Minimum and maximum temperature, by month' : 'Temperatura mínima e máxima, mês a mês'} note={en ? 'Median of the daily minimum and maximum of the air at 2 m (NASA POWER). Soil temperature: POWER soil layer 1 (near-surface soil), modelled for the grid cell, not a probe reading.' : 'Mediana das mínimas e máximas diárias do ar a 2 m (NASA POWER). Solo: camada 1 do POWER (solo próximo da superfície), modelada para a célula, não é leitura de sonda.'}>
+  const m = new Date().getMonth();
+  const range = low[m] !== null && high[m] !== null ? `${numberFormat(low[m] as number, 1, en)} – ${numberFormat(high[m] as number, 1, en)} °C ${en ? 'air this month' : 'de ar neste mês'}` : undefined;
+  return <Card id="temperature" headline={range} title={en ? 'Minimum and maximum temperature, by month' : 'Temperatura mínima e máxima, mês a mês'} note={en ? 'Median of the daily minimum and maximum of the air at 2 m (NASA POWER). Soil temperature: POWER soil layer 1 (near-surface soil), modelled for the grid cell, not a probe reading.' : 'Mediana das mínimas e máximas diárias do ar a 2 m (NASA POWER). Solo: camada 1 do POWER (solo próximo da superfície), modelada para a célula, não é leitura de sonda.'}>
     {!hasAir ? <p className="text-slate-300">N/D</p> : <MonthSeriesChart
       ariaLabel={en ? 'Typical minimum and maximum air temperature by month, with soil temperature when available' : 'Temperatura mínima e máxima típica do ar por mês, com a do solo quando disponível'}
       band={{ label: en ? 'Air: min to max' : 'Ar: mínima a máxima', color: '#8dc8cf', lo: low, hi: high }} domain={domain} en={en} unit="°C"
@@ -155,11 +164,11 @@ const PHASE = {
 const STRENGTH = { 'pt-BR': { weak: 'fraco', moderate: 'moderado', strong: 'forte', very_strong: 'muito forte' }, en: { weak: 'weak', moderate: 'moderate', strong: 'strong', very_strong: 'very strong' } } as const;
 
 function EnsoCard({ en }: { en: boolean }) {
-  const state = useJson<EnsoState>('/api/enso', acceptEnso);
+  const { enso: state } = useExtras();
   const names = MONTHS[en ? 'en' : 'pt-BR'].short;
   const label = (season: string, year: number) => { const range = seasonMonths(season); return range ? `${names[range[0] - 1].toLowerCase()}–${names[range[1] - 1].toLowerCase()} ${year}` : `${season} ${year}`; };
   const signed = (value: number) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${numberFormat(Math.abs(value), 2, en)} °C`;
-  return <Card title={en ? 'El Niño / La Niña now' : 'El Niño / La Niña agora'} note={state.kind === 'ready' ? <>{en ? 'Global Pacific index (NOAA CPC, RONI). How it affects rain varies by region, and it is not a forecast for this point. ' : 'Índice global do Pacífico (NOAA CPC, RONI). O efeito na chuva varia por região e não é previsão para este ponto. '}<a className="underline" href={state.data.sourceUrl} rel="noreferrer" target="_blank">{en ? 'Source' : 'Fonte'}</a>.</> : undefined}>
+  return <Card id="enso" headline={state.kind === 'ready' ? `${PHASE[en ? 'en' : 'pt-BR'][state.data.phase]}${state.data.strength ? ` ${STRENGTH[en ? 'en' : 'pt-BR'][state.data.strength]}` : ''} · ${signed(state.data.latest.value)}` : undefined} title={en ? 'El Niño / La Niña now' : 'El Niño / La Niña agora'} note={state.kind === 'ready' ? <>{en ? 'Global Pacific index (NOAA CPC, RONI). How it affects rain varies by region, and it is not a forecast for this point. ' : 'Índice global do Pacífico (NOAA CPC, RONI). O efeito na chuva varia por região e não é previsão para este ponto. '}<a className="underline" href={state.data.sourceUrl} rel="noreferrer" target="_blank">{en ? 'Source' : 'Fonte'}</a>.</> : undefined}>
     <Waiting en={en} state={state}>{state.kind === 'ready' ? <>
       <p><strong className="text-lg text-cyan-200">{PHASE[en ? 'en' : 'pt-BR'][state.data.phase]}{state.data.strength ? ` ${STRENGTH[en ? 'en' : 'pt-BR'][state.data.strength]}` : ''}</strong> <span className="text-slate-300">· {signed(state.data.latest.value)} · {label(state.data.latest.season, state.data.latest.year)}</span></p>
       {state.data.previous.length ? <p className="mt-1 text-xs text-slate-300">{en ? 'Before: ' : 'Antes: '}{state.data.previous.map((item) => `${label(item.season, item.year)} ${signed(item.value)}`).join(' · ')}</p> : null}
@@ -167,9 +176,10 @@ function EnsoCard({ en }: { en: boolean }) {
   </Card>;
 }
 
-function CropsCard({ point, en }: { point: AtlasPoint; en: boolean }) {
-  const state = useJson<BrazilRegionalContext>(`/api/regional-context?lat=${point.latitude}&lon=${point.longitude}`, acceptRegional);
-  return <Card title={en ? 'Crops harvested in the municipality' : 'Culturas colhidas no município'}>
+function CropsCard({ en }: { en: boolean }) {
+  const { regional: state } = useExtras();
+  const top = state.kind === 'ready' ? [...(state.data.pam?.products ?? [])].filter((item) => item.harvestedAreaHa !== null && item.harvestedAreaHa > 0).sort((a, b) => (b.harvestedAreaHa ?? 0) - (a.harvestedAreaHa ?? 0))[0] : undefined;
+  return <Card id="crops" headline={top ? `${top.productLabel.replace(/\s*\(.*\)$/, '')} · ${numberFormat(top.harvestedAreaHa ?? 0, 0, en)} ha` : undefined} title={en ? 'Crops harvested in the municipality' : 'Culturas colhidas no município'}>
     <Waiting en={en} state={state}>{state.kind === 'ready' ? (() => {
       const { municipality, pam } = state.data;
       if (state.data.country !== 'BR' || !municipality) return <p className="text-slate-300">{en ? 'Municipal data covers Brazil only; this point was not matched to a municipality.' : 'Os dados municipais cobrem só o Brasil; este ponto não foi associado a um município.'}</p>;
@@ -186,17 +196,17 @@ function CropsCard({ point, en }: { point: AtlasPoint; en: boolean }) {
 }
 
 /** Soil-and-planting context for the selected place. Every card says where its data comes from and what it does not mean. */
-export function PlantingPanels({ point, data, en }: { point: AtlasPoint; data: Climate; en: boolean }) {
+export function PlantingPanels({ data, en }: { data: Climate; en: boolean }) {
   return <div className="mt-6">
-    <h3 className="text-base font-bold">{en ? 'Soil and planting context' : 'Contexto de solo e plantio'}</h3>
-    <p className="mt-1 text-xs text-slate-400">{en ? 'Context for reading the place. It does not say what to plant or when.' : 'Contexto para ler o lugar. Não diz o que plantar nem quando.'}</p>
+    <h3 className="text-base font-bold">{en ? 'The numbers' : 'Os números'}</h3>
+    <p className="mt-1 text-xs text-slate-400">{en ? 'Everything João used, with its source and limits. It does not say what to plant or when.' : 'Tudo o que o João usou, com a fonte e os limites. Não diz o que plantar nem quando.'}</p>
     <div className="mt-3 grid gap-3">
-      <ForecastCard en={en} point={point} />
+      <ForecastCard en={en} />
       <SeasonCards data={data} en={en} />
       <RootZoneCard data={data} en={en} />
       <TemperatureCard data={data} en={en} />
       <EnsoCard en={en} />
-      <CropsCard en={en} point={point} />
+      <CropsCard en={en} />
     </div>
   </div>;
 }

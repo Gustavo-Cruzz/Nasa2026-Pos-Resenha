@@ -14,6 +14,8 @@ import { useLiveWeather } from '@/components/atlas/use-live-weather';
 import { PlaceSearch } from '@/components/atlas/place-search';
 import { MonthlyChart, type MonthPoint } from '@/components/atlas/monthly-chart';
 import { PlantingPanels } from '@/components/atlas/planting-panels';
+import { ExploreExtrasProvider } from '@/components/atlas/explore-extras';
+import { JoaoExplains, JoaoThinking } from '@/components/atlas/joao-panel';
 import { BoundarySummary } from '@/components/boundary/boundary-summary';
 import { GeoJsonImport } from '@/components/boundary/geojson-import';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
@@ -24,6 +26,7 @@ type ClimateState = { kind: 'idle' } | { kind: 'loading' } | { kind: 'ready'; da
 const MONTHS = { 'pt-BR': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'], en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] } as const;
 /** Opening view: a farming hub in western Bahia, so the page is never empty. */
 const BAHIA: AtlasPoint = { label: 'Luís Eduardo Magalhães (BA)', latitude: -12.1979, longitude: -46.0192 };
+const oneDecimal = (value: number, en: boolean) => value.toLocaleString(en ? 'en-US' : 'pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const coordinateLabel = (point: AtlasPoint) => `${point.latitude.toFixed(4)}, ${point.longitude.toFixed(4)}`;
 
 export function LocationExplorer() {
@@ -38,6 +41,8 @@ export function LocationExplorer() {
   const [drawingPolygon, setDrawingPolygon] = useState(false);
   const [layers, setLayers] = useState<MapLayers>({ smap: false, rain: false, modis: false });
   const requestId = useRef(0);
+  const panelRef = useRef<HTMLElement>(null);
+  const scrollToPanel = useRef(false);
   const live = useLiveWeather(point);
 
   const settle = useCallback((next: AtlasPoint) => {
@@ -47,6 +52,12 @@ export function LocationExplorer() {
   const fetchClimate = useCallback((next: AtlasPoint) => { setState({ kind: 'loading' }); return settle(next); }, [settle]);
   // Opening view: Bahia is already selected (state starts as "loading") and its climate loads right away.
   useEffect(() => { void settle(BAHIA); }, [settle]);
+  useEffect(() => {
+    if (state.kind !== 'ready' || !scrollToPanel.current) return;
+    scrollToPanel.current = false;
+    if (!window.matchMedia('(max-width: 1023px)').matches) return;
+    panelRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }, [state]);
 
   const setSelectedPoint = useCallback((next: AtlasPoint) => {
     setPoint(next); setLatitude(String(next.latitude)); setLongitude(String(next.longitude)); void fetchClimate(next);
@@ -56,7 +67,8 @@ export function LocationExplorer() {
       if (found) setPoint((current) => current && current.latitude === next.latitude && current.longitude === next.longitude ? { ...current, label: `${found.name} (${found.uf})` } : current);
     }).catch(() => { /* the point simply keeps showing coordinates */ });
   }, [fetchClimate]);
-  const pickPlace = (place: PlaceMatch) => setSelectedPoint({ latitude: place.latitude, longitude: place.longitude, label: `${place.name} (${place.uf})` });
+  /** On narrow screens the results sit below the map: after a city search, bring them into view once they have loaded. */
+  const pickPlace = (place: PlaceMatch) => { scrollToPanel.current = true; setSelectedPoint({ latitude: place.latitude, longitude: place.longitude, label: `${place.name} (${place.uf})` }) };
   const importBoundary = (boundary: AtlasPolygon) => { setPolygon(boundary); setDrawingPolygon(false); const center = analyzeBoundary(boundary).centroid; if (center) setSelectedPoint({ latitude: Number(center.latitude.toFixed(6)), longitude: Number(center.longitude.toFixed(6)) }); };
   const submitCoordinates = () => { const parsed = atlasPointSchema.safeParse({ latitude: Number(latitude), longitude: Number(longitude) }); if (!parsed.success) { setState({ kind: 'error', message: en ? 'Enter latitude between −90 and 90 and longitude between −180 and 180.' : 'Informe latitude entre −90 e 90 e longitude entre −180 e 180.' }); return; } setSelectedPoint(parsed.data); };
   const registerFarm = () => {
@@ -69,22 +81,25 @@ export function LocationExplorer() {
   return <section className="grid gap-4">
     <PlaceSearch onPick={pickPlace} />
     <div className="atlas-layout">
-      <div className="relative">
+      <div className="relative lg:h-full lg:min-h-0">
         <WorldMap point={point} polygon={polygon} drawingPolygon={drawingPolygon} layers={layers} onPointChange={setSelectedPoint} onPolygonChange={setPolygon} />
         {point ? <MapOverlay live={<LiveStrip state={live} />} coordinates={coordinateLabel(point)} layers={layers} name={point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')} onToggle={(layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }))} /> : null}
       </div>
-      <aside aria-live="polite" className="atlas-panel">
+      <ExploreExtrasProvider point={point}>
+      <aside aria-live="polite" className="atlas-panel scroll-mt-4" ref={panelRef}>
         {!point ? <p className="text-slate-300">{en ? 'Search a city or tap the map.' : 'Busque uma cidade ou toque no mapa.'}</p> : <>
           <h2 className="text-2xl font-bold leading-tight">{point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')}</h2>
           <p className="mt-1 font-mono text-xs text-slate-400">{coordinateLabel(point)}</p>
-          {state.kind === 'loading' ? <p className="mt-5 text-slate-300" role="status">{en ? 'Loading NASA climate history…' : 'Buscando o histórico climático da NASA…'}</p> : null}
+          {state.kind === 'loading' ? <><JoaoThinking en={en} /><PanelSkeleton label={en ? 'Loading NASA climate history…' : 'Buscando o histórico climático da NASA…'} /></> : null}
           {state.kind === 'error' ? <div className="mt-5 rounded-lg border border-amber-300/50 bg-amber-950/30 p-3"><p className="flex gap-2 text-amber-100"><AlertCircle aria-hidden="true" className="mt-0.5 shrink-0" size={18} />{state.message}</p><Button className="mt-3" type="button" variant="secondary" onClick={() => void fetchClimate(point)}><RefreshCw aria-hidden="true" size={16} />{en ? 'Try again' : 'Tentar novamente'}</Button></div> : null}
+          {state.kind === 'ready' ? <JoaoExplains climate={state.data} point={point} /> : null}
           {state.kind === 'ready' ? <ClimateView data={state.data} en={en} /> : null}
-          {state.kind === 'ready' ? <PlantingPanels data={state.data} en={en} point={point} /> : null}
+          {state.kind === 'ready' ? <PlantingPanels data={state.data} en={en} /> : null}
           <LiveWeatherPanel state={live} />
           <Button className="mt-6 w-full justify-center" type="button" onClick={registerFarm}>{en ? 'Register my farm here' : 'Cadastrar minha fazenda aqui'}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Button>
         </>}
       </aside>
+      </ExploreExtrasProvider>
     </div>
     <details className="rounded-xl border border-slate-700 bg-slate-900/60 p-4">
       <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold"><SlidersHorizontal aria-hidden="true" size={16} />{en ? 'More options' : 'Mais opções'}</summary>
@@ -96,6 +111,12 @@ export function LocationExplorer() {
     </details>
     <p className="text-xs text-slate-400">{en ? 'Historical NASA POWER climate. Not a forecast or an agronomic recommendation.' : 'Clima histórico NASA POWER. Não é previsão nem recomendação agronômica.'} <Link className="underline" href="/methodology">{en ? 'How it works' : 'Como funciona'}</Link></p>
   </section>;
+}
+
+/** Placeholder blocks with the shape of the results, so the panel does not jump when the data arrives. */
+function PanelSkeleton({ label }: { label: string }) {
+  const block = 'rounded-lg bg-slate-800/70 motion-reduce:animate-none animate-pulse';
+  return <div aria-live="polite" className="mt-5" role="status"><p className="text-sm text-slate-300">{label}</p><div aria-hidden="true" className="mt-3 grid gap-2"><div className="grid grid-cols-2 gap-2"><div className={`${block} h-16`} /><div className={`${block} h-16`} /></div><div className={`${block} h-44`} /><div className="grid grid-cols-2 gap-2"><div className={`${block} h-12`} /><div className={`${block} h-12`} /></div></div></div>;
 }
 
 function ClimateView({ data, en }: { data: Climate; en: boolean }) {
@@ -112,15 +133,15 @@ function ClimateView({ data, en }: { data: Climate; en: boolean }) {
   return <div className="mt-5">
     <p className="text-sm font-semibold text-lime-200">{en ? `Typical in ${names[currentMonth - 1]}` : `Típico em ${names[currentMonth - 1]}`}</p>
     <dl className="mt-2 grid grid-cols-2 gap-2">
-      <div className="rounded-lg border border-cyan-300/30 bg-slate-950/60 p-3"><dt className="text-xs text-slate-400">{en ? 'Temperature' : 'Temperatura'}</dt><dd className="mt-0.5 text-2xl font-bold text-cyan-200">{now.tempC === null ? 'N/D' : `${now.tempC.toFixed(1)} °C`}</dd></div>
+      <div className="rounded-lg border border-cyan-300/30 bg-slate-950/60 p-3"><dt className="text-xs text-slate-400">{en ? 'Temperature' : 'Temperatura'}</dt><dd className="mt-0.5 text-2xl font-bold text-cyan-200">{now.tempC === null ? 'N/D' : `${oneDecimal(now.tempC, en)} °C`}</dd></div>
       <div className="rounded-lg border border-cyan-300/30 bg-slate-950/60 p-3"><dt className="text-xs text-slate-400">{en ? 'Rain in the month' : 'Chuva no mês'}</dt><dd className="mt-0.5 text-2xl font-bold text-cyan-200">{now.rainMm === null ? 'N/D' : `${Math.round(now.rainMm)} mm`}</dd></div>
     </dl>
     <div className="mt-5"><MonthlyChart currentMonth={currentMonth} history={en ? `median ${history}` : `mediana ${history}`} points={points} previousYear={previousYear} /></div>
     {wet.length >= 2 || hot.length >= 2 ? <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
       {wet.length >= 2 ? fact(en ? 'Rainiest month' : 'Mês mais chuvoso', `${names[wet[0].month - 1]} · ${Math.round(wet[0].rainMm ?? 0)} mm`) : null}
       {wet.length >= 2 ? fact(en ? 'Driest month' : 'Mês mais seco', `${names[wet[wet.length - 1].month - 1]} · ${Math.round(wet[wet.length - 1].rainMm ?? 0)} mm`) : null}
-      {hot.length >= 2 ? fact(en ? 'Warmest month' : 'Mês mais quente', `${names[hot[0].month - 1]} · ${(hot[0].tempC ?? 0).toFixed(1)} °C`) : null}
-      {hot.length >= 2 ? fact(en ? 'Coolest month' : 'Mês mais frio', `${names[hot[hot.length - 1].month - 1]} · ${(hot[hot.length - 1].tempC ?? 0).toFixed(1)} °C`) : null}
+      {hot.length >= 2 ? fact(en ? 'Warmest month' : 'Mês mais quente', `${names[hot[0].month - 1]} · ${oneDecimal(hot[0].tempC ?? 0, en)} °C`) : null}
+      {hot.length >= 2 ? fact(en ? 'Coolest month' : 'Mês mais frio', `${names[hot[hot.length - 1].month - 1]} · ${oneDecimal(hot[hot.length - 1].tempC ?? 0, en)} °C`) : null}
     </dl> : null}
     <p className="mt-4 text-xs text-slate-400">NASA POWER · {data.provenance.period.start.slice(0, 4)}–{data.provenance.period.end.slice(0, 4)} · {en ? 'median of the historical years' : 'mediana dos anos históricos'}. <a className="underline" href={data.provenance.sourceUrl} rel="noreferrer" target="_blank">{en ? 'Source' : 'Fonte'}</a></p>
   </div>;

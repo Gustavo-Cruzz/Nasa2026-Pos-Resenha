@@ -48,6 +48,8 @@ function Caption({ layers, locale }: { layers: MapLayers; locale: 'pt-BR' | 'en'
   if (!active.length) return null;
   return <ul className="pointer-events-auto absolute bottom-16 left-0 m-0 md:bottom-7 max-w-[calc(100%-4.5rem)] list-none space-y-1 rounded-lg border border-slate-600 bg-slate-950/85 p-2.5 text-[11px] leading-snug text-slate-200 backdrop-blur">
     {active.map((chip) => <li key={chip.key}>{chip.key === 'smap' ? chip.caption : <><span aria-hidden="true" className="mr-1.5 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300 align-middle" />{chip.caption}</>}</li>)}
-    <li className="text-slate-400">{locale === 'en' ? 'Visual layers, about one day behind. Not a measurement of your farm.' : 'Camadas visuais, com cerca de 1 dia de atraso. Não são medição da sua fazenda.'}</li>
+    {active.some((chip) => chip.key !== 'smap') ? <li className="text-slate-400">{locale === 'en' ? 'Rain and cloud layers are about one day behind.' : 'Chuva e nuvens têm cerca de 1 dia de atraso.'}</li> : null}
+    {active.some((chip) => chip.key === 'smap') ? <li className="text-slate-400">{locale === 'en' ? `Soil moisture is a reference image from ${shortDate(SMAP_GIBS_DATE, locale)} ${SMAP_GIBS_DATE.slice(0, 4)}, not today's.` : `Umidade do solo é uma imagem de referência de ${shortDate(SMAP_GIBS_DATE, locale)} ${SMAP_GIBS_DATE.slice(0, 4)}, não a de hoje.`}</li> : null}
+    <li className="text-slate-400">{locale === 'en' ? 'Visual layers: not a measurement of your farm.' : 'Camadas visuais: não são medição da sua fazenda.'}</li>
   </ul>;
 }
