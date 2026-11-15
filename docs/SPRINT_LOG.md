@@ -1039,3 +1039,13 @@ Updated E2E coverage verifies simple-by-default, one `/api/analyze` request acro
 Evidence (2026-11-15): full unit suite (62 files / 424 tests), typecheck, lint, production build; targeted Playwright coverage for simple/advanced, Stories, technical evidence, map fallback and laboratory return (5 tests) pass.
 
 Limitations / next: the complete Playwright suite was started; two pre-existing timing-sensitive navigation checks initially failed during a parallel run, then passed when rerun in isolation after the affected results-flow assertion was updated. No scientific calculation, source, API route or cache contract was changed.
+
+## Sprint F20 — Correções da revisão da comparação
+
+Status: complete.
+
+Fixed: `/results` now reuses a saved analysis only when both the complete analysis input and all four A/B/C laboratory slots still match the current draft. This prevents Simple comparison from combining stale scientific results with a newer live plan. A compatible saved-result notice and the demo-data notice are visible in both modes. Simple comparison receives the same draft snapshot that produced the loaded state, including declared cropping systems, and localizes scenario explanations instead of exposing raw Portuguese in English. Its crop icons wrap safely on narrow screens. Advanced-only explanation requests and technical block construction no longer run while Simple mode is active.
+
+Tests: added unit coverage for compatible cache reuse and rejection after input or laboratory-plan changes. Full `npm run test -- --run` passes (63 files / 425 tests); `npm run typecheck`, `npm run lint` and `npm run build` pass. Targeted Playwright coverage for embedded Future Stories, advanced provenance, one analysis request across mode switching and results/laboratory return passes (4 tests).
+
+Limitations: the complete Playwright suite was not rerun; only the four directly affected end-to-end flows were exercised. Production build emits Node's existing experimental SQLite warning, without failing.

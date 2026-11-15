@@ -4,8 +4,8 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MapPin, Sparkles, TriangleAlert } from 'lucide-react';
-import { loadDraft } from '@/lib/storage';
-import { loadLastAnalysis, saveLastAnalysis } from '@/lib/analysis-cache';
+import { loadDraft, type Draft } from '@/lib/storage';
+import { analysisMatchesDraft, loadLastAnalysis, saveLastAnalysis } from '@/lib/analysis-cache';
 import type { AnalysisResult } from '@/lib/engine/types';
 import { Button } from '@/components/ui/button';
 import { CropSprite } from '@/components/crops/crop-sprite';
@@ -23,7 +23,7 @@ import type { Locale } from '@/lib/i18n';
 import { cropDisplayName } from '@/lib/presentation';
 import { SimpleComparison } from '@/components/results/simple-comparison';
 
-type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult; cachedAt?: string };
+type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult; draft: Draft; cachedAt?: string };
 type ExplainState = { kind: 'loading' } | { kind: 'ready'; sections: Record<ExplanationSectionId, BlockComment>; origin: 'gemini' | 'fallback'; warning?: string };
 const IDS: string[] = [...blockIds];
 
@@ -48,13 +48,15 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   useEffect(() => {
     const draft = loadDraft();
     if (!draft) { void Promise.resolve().then(() => setState({ kind: 'empty' })); return; }
+    const cached = loadLastAnalysis();
+    if (cached && analysisMatchesDraft(cached.data, draft.data, draft.labPlan)) { void Promise.resolve().then(() => setState({ kind: 'ready', data: cached.data, draft, cachedAt: cached.savedAt })); return; }
     void fetch('/api/analyze', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ input: draft.data, ...(draft.labPlan ? { labPlan: draft.labPlan } : {}) }) })
-      .then(async (response) => { const body: unknown = await response.json(); if (!response.ok) throw new Error(typeof body === 'object' && body && 'message' in body ? String(body.message) : 'Não foi possível analisar o rascunho.'); const result = body as AnalysisResult; saveLastAnalysis(result); setState({ kind: 'ready', data: result }); })
-      .catch((error: unknown) => { const cached = loadLastAnalysis(); if (cached) setState({ kind: 'ready', data: cached.data, cachedAt: cached.savedAt }); else setState({ kind: 'error', message: error instanceof Error ? error.message : 'Não foi possível analisar o rascunho.' }); });
+      .then(async (response) => { const body: unknown = await response.json(); if (!response.ok) throw new Error(typeof body === 'object' && body && 'message' in body ? String(body.message) : 'Não foi possível analisar o rascunho.'); const result = body as AnalysisResult; saveLastAnalysis(result); setState({ kind: 'ready', data: result, draft }); })
+      .catch((error: unknown) => setState({ kind: 'error', message: error instanceof Error ? error.message : 'Não foi possível analisar o rascunho.' }));
   }, []);
   useEffect(() => { if (state.kind === 'ready') recordJourneyCompletion(); }, [state.kind]);
   useEffect(() => {
-    if (state.kind !== 'ready') return;
+    if (state.kind !== 'ready' || mode !== 'advanced') return;
     let cancelled = false;
     let context: ReturnType<typeof buildFarmExplanationContext>;
     try { context = buildFarmExplanationContext(state.data); } catch { void Promise.resolve().then(() => { if (!cancelled) setExplain({ kind: 'ready', locale, sections: builtInSections(state.data, locale), origin: 'fallback' }); }); return () => { cancelled = true; }; }
@@ -62,15 +64,15 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
       .then(async (response) => { if (!response.ok) throw new Error('explain failed'); const raw: unknown = await response.json(); const parsed = farmExplanationSchema.parse(raw); const meta = raw as { origin?: unknown; warning?: unknown }; if (!cancelled) setExplain({ kind: 'ready', locale, sections: toSections(parsed.sections), origin: meta.origin === 'gemini' ? 'gemini' : 'fallback', ...(typeof meta.warning === 'string' ? { warning: meta.warning } : {}) }); })
       .catch(() => { if (!cancelled) setExplain({ kind: 'ready', locale, sections: builtInSections(state.data, locale), origin: 'fallback', warning: en ? 'The automatic explanation is temporarily unavailable.' : 'A explicação automática está temporariamente indisponível.' }); });
     return () => { cancelled = true; };
-  }, [state, locale, en]);
+  }, [state, locale, en, mode]);
   const data = state.kind === 'ready' ? state.data : null;
   const blocks = useMemo(() => {
-    if (!data) return [];
+    if (!data || mode !== 'advanced') return [];
     const sections = explain.kind === 'ready' && explain.locale === locale ? explain.sections : builtInSections(data, locale);
     const local = localBlockComments(data, locale);
     const comments = Object.fromEntries(blockIds.map((id) => { const section = sectionForBlock[id]; return [id, section ? sections[section] : local[id as keyof typeof local]]; })) as Record<BlockId, BlockComment>;
     return buildBlocks(data, comments, locale);
-  }, [data, explain, locale]);
+  }, [data, explain, locale, mode]);
   const active = blocks.find((block) => block.id === activeId) ?? null;
   if (state.kind === 'loading') return <p role="status" className="mt-6 flex items-center gap-3 text-slate-300"><PixelAnimation fallback="/assets/interactions/analysis-loading-static.png" frames={8} loop sheet="/assets/interactions/analysis-loading-sheet.png" />{en ? 'Analyzing climate and scenarios…' : 'Analisando clima e cenários…'}</p>;
   if (state.kind === 'empty') return <Empty message={en ? 'No valid draft was found in this browser.' : 'Nenhum rascunho válido foi encontrado neste navegador.'} />;
@@ -84,10 +86,10 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   return <section className="mx-auto max-w-6xl pb-28 lg:pb-0" id="results-readable">
     <ReviewTransition />
     <div className="mt-5" role="tablist" aria-label={en ? 'Comparison mode' : 'Modo de comparação'} onKeyDown={(event) => { if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return; event.preventDefault(); const next = event.key === 'ArrowLeft' || event.key === 'Home' ? 'simple' : 'advanced'; setMode(next); window.setTimeout(() => document.getElementById(`${next}-comparison-tab`)?.focus()); }}><button aria-controls="results-mode-panel" aria-selected={mode === 'simple'} className={`min-h-11 rounded-l-lg border px-4 text-sm font-semibold ${mode === 'simple' ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 bg-slate-900 hover:border-lime-300'}`} id="simple-comparison-tab" role="tab" tabIndex={mode === 'simple' ? 0 : -1} type="button" onClick={() => setMode('simple')}>🌱 {en ? 'Simple comparison' : 'Comparação simples'}</button><button aria-controls="results-mode-panel" aria-selected={mode === 'advanced'} className={`-ml-px min-h-11 rounded-r-lg border px-4 text-sm font-semibold ${mode === 'advanced' ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 bg-slate-900 hover:border-lime-300'}`} id="advanced-comparison-tab" role="tab" tabIndex={mode === 'advanced' ? 0 : -1} type="button" onClick={() => setMode('advanced')}>📊 {en ? 'Advanced comparison' : 'Comparação avançada'}</button></div>
+    {demo ? <aside className="mt-5 rounded-xl border border-cyan-300/60 bg-cyan-500/10 p-4"><p className="font-bold text-cyan-100">{en ? 'Brazil demonstration' : 'Demonstração Brasil'}</p><p className="mt-1 text-sm text-slate-200">Rio Verde · NASA POWER + {en ? 'municipal ZARC context' : 'contexto ZARC municipal'}.</p></aside> : null}
+    {state.cachedAt ? <p className="mt-5 flex gap-2 rounded-xl border border-amber-300 bg-amber-950/40 p-4 text-sm" role="status"><TriangleAlert aria-hidden="true" className="mt-0.5 shrink-0" size={18} /><span><b>{en ? 'Saved analysis.' : 'Análise salva.'}</b> {en ? `Reusing the compatible analysis saved on this device (${new Date(state.cachedAt).toLocaleString('en-US')}).` : `Reutilizando a análise compatível salva neste dispositivo (${new Date(state.cachedAt).toLocaleString('pt-BR')}).`}</span></p> : null}
     <div aria-labelledby={mode === 'simple' ? 'simple-comparison-tab' : 'advanced-comparison-tab'} id="results-mode-panel" role="tabpanel">
     {mode === 'advanced' ? <><header className="mt-6 max-w-3xl"><p className="text-sm font-semibold text-lime-200">{en ? 'Advanced comparison' : 'Comparação avançada'}</p><h2 className="mt-1 text-3xl font-bold">{en ? 'Complete scientific analysis' : 'Análise científica completa'}</h2><p className="mt-2 text-slate-300">{en ? 'Explore the indicators, sources, methods and uncertainties used in this comparison.' : 'Explore os indicadores, fontes, métodos e incertezas utilizados na comparação.'}</p><button className="mt-3 text-sm font-semibold underline" type="button" onClick={() => setMode('simple')}>{en ? 'Back to simple comparison' : 'Voltar à comparação simples'}</button></header>
-    {demo ? <aside className="mt-5 rounded-xl border border-cyan-300/60 bg-cyan-500/10 p-4"><p className="font-bold text-cyan-100">{en ? 'Brazil demonstration' : 'Demonstração Brasil'}</p><p className="mt-1 text-sm text-slate-200">Rio Verde · NASA POWER + {en ? 'municipal ZARC context' : 'contexto ZARC municipal'}.</p></aside> : null}
-    {state.cachedAt ? <p className="mt-5 flex gap-2 rounded-xl border border-amber-300 bg-amber-950/40 p-4 text-sm" role="status"><TriangleAlert aria-hidden="true" className="mt-0.5 shrink-0" size={18} /><span><b>{en ? 'Offline or NASA unreachable.' : 'Sem rede ou NASA inacessível.'}</b> {en ? `Showing the last analysis saved on this device (${new Date(state.cachedAt).toLocaleString('en-US')}). It may not reflect later edits or newer data.` : `Mostrando a última análise salva neste dispositivo (${new Date(state.cachedAt).toLocaleString('pt-BR')}). Ela pode não refletir edições posteriores nem dados mais novos.`}</span></p> : null}
     <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
       <ul className="flex flex-wrap gap-2 text-sm"><li className="inline-flex items-center gap-1.5 rounded-full border border-slate-600 bg-slate-900/70 px-3 py-1.5"><MapPin aria-hidden="true" className="text-lime-300" size={14} />{place}</li><li className="inline-flex items-center gap-1.5 rounded-full border border-slate-600 bg-slate-900/70 px-3 py-1.5"><CropSprite cropId={last?.cropId ?? 'unknown'} name={lastCrop} size={18} />{en ? 'Last crop' : 'Último cultivo'}: {lastCrop}</li></ul>
       <button aria-checked={guide} className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold hover:border-lime-300 ${guide ? 'border-lime-300/70 bg-lime-300/10' : 'border-slate-600'}`} onClick={() => setGuide((value) => !value)} role="switch" type="button"><Sparkles aria-hidden="true" size={16} />{en ? 'João’s explanations' : 'Explicações do João'}</button>
@@ -103,7 +105,7 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
       {guide ? <JoaoRail active={activeId === block.id} comment={block.comment} title={block.title} tone={joaoToneOf(block.tone)} /> : null}
     </Fragment>)}</div>
     {guide ? <JoaoDock block={dock} /> : null}
-    </> : <SimpleComparison data={ready} plan={loadDraft()?.labPlan} onAdvanced={() => setMode('advanced')} />}
+    </> : <SimpleComparison croppingSystems={state.draft.data.croppingSystems} data={ready} plan={state.draft.labPlan} onAdvanced={() => setMode('advanced')} />}
     </div>
   </section>;
 }

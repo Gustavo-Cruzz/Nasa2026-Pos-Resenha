@@ -1,7 +1,24 @@
 import type { AnalysisResult } from '@/lib/engine/types';
+import type { AnalysisInput } from '@/lib/schema';
+import type { LabPlan } from '@/lib/lab';
 
 const KEY = 'field-shift:last-analysis';
 export type CachedAnalysis = { savedAt: string; data: AnalysisResult };
+
+function stable(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stable).join(',')}]`;
+  if (value && typeof value === 'object') return `{${Object.keys(value).sort().filter((key) => (value as Record<string, unknown>)[key] !== undefined).map((key) => `${JSON.stringify(key)}:${stable((value as Record<string, unknown>)[key])}`).join(',')}}`;
+  return JSON.stringify(value);
+}
+
+/** Cache is reusable only when both farmer input and every configured lab slot still match. */
+export function analysisMatchesDraft(data: AnalysisResult, input: AnalysisInput, labPlan?: LabPlan): boolean {
+  if (stable(data.input) !== stable(input)) return false;
+  if (!labPlan) return true;
+  const analysed = data.strategies.map((strategy) => ({ id: strategy.id, cropIds: Array.from({ length: 4 }, (_, index) => strategy.slots.find((slot) => slot.slotIndex === index)?.cropId ?? null) }));
+  const planned = labPlan.scenarios.map((scenario) => ({ id: scenario.id, cropIds: scenario.slots.map((slot) => slot.cropId) }));
+  return stable(analysed) === stable(planned);
+}
 
 /** Keeps the latest server analysis so the app can still show it without network. Failure to store is harmless. */
 export function saveLastAnalysis(data: AnalysisResult): void {
