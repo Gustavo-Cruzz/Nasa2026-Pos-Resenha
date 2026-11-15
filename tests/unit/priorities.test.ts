@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { analyze } from '@/lib/engine';
-import { dominantPriorities } from '@/lib/engine/priorities';
+import { dominantPriorities, pickCover, pickThird, selectionNote } from '@/lib/engine/priorities';
 import { assessCropIndicators } from '@/lib/engine/indicators';
 import { assessSoilHealth } from '@/lib/engine/soil-health';
 import { deriveDataQuality } from '@/lib/engine/data-quality';
@@ -45,7 +45,7 @@ describe('regional soil in the engine (audit 1.5)', () => {
   it('states the regional origin in the pH indicator and never calls it local', () => {
     const maize = cropById.get('maize'); const indicator = assessCropIndicators(maize, undefined, input, unavailable, regional).find((item) => item.id === 'soil_context');
     expect(indicator?.origin).toBe('regional_estimate'); expect(indicator?.detail).toContain('Estimativa regional (SoilGrids, média municipal 0–30 cm), não é análise do talhão'); expect(indicator?.detail).toContain('pH regional 5,2'); expect(indicator?.detail).not.toMatch(/informado/);
-    const noRange = assessCropIndicators(cropById.get('ruziziensis'), undefined, input, unavailable, regional).find((item) => item.id === 'soil_context');
+    const noRange = assessCropIndicators(cropById.get('cassava'), undefined, input, unavailable, regional).find((item) => item.id === 'soil_context');
     expect(noRange?.state).toBe('unknown'); expect(noRange?.detail).toContain('pH regional 5,2 — faixa da cultura não documentada');
   });
   it('farmer soil takes precedence over regional soil', () => {
@@ -67,5 +67,37 @@ describe('regional soil in the engine (audit 1.5)', () => {
     expect(records.find((item) => item.id === 'regional_soil')?.classification).toBe('estimated');
     expect(records.find((item) => item.id === 'farmer_soil')?.classification).toBe('unknown');
     expect(deriveDataQuality(input, unavailable).find((item) => item.id === 'regional_soil')?.classification).toBe('unknown');
+  });
+});
+
+describe('family rule: B/C avoid the safra crop family', () => {
+  const crops = (ids: string[]) => ids.map((id) => cropById.get(id as never)!);
+  const soy = cropById.get('soybean' as never)!;
+  it('soil priority after a legume picks a different-family candidate, B and C stay distinct', () => {
+    const pool = crops(['cowpea', 'common_bean', 'ruziziensis', 'pearl_millet', 'sorghum']);
+    const b = pickCover(pool, soy, new Set<'soil'>(['soil']), ['soybean', 'maize']);
+    expect(b.crop?.family).not.toBe(soy.family); expect(['soil_n_fixation', 'soil_residue']).toContain(b.rule);
+    const c = pickThird(pool, soy, ['soybean', 'maize', b.crop!.id], new Set<'soil'>(['soil']));
+    expect(c.crop?.family).not.toBe(soy.family); expect(c.crop?.id).not.toBe(b.crop?.id);
+    expect(selectionNote(b, soy)?.message).toContain('Família diferente da cultura da safra (soja)');
+  });
+  it('falls back to the same family only when no different-family candidate exists', () => {
+    expect(pickCover(crops(['cowpea', 'sunn_hemp']), soy, new Set<'soil'>(['soil']), []).crop?.family).toBe('Fabaceae');
+  });
+});
+
+describe('ZARC calendar in B/C selection', () => {
+  const soy = cropById.get('soybean' as never)!;
+  const pool = ['sorghum', 'pearl_millet', 'ruziziensis'].map((id) => cropById.get(id as never)!);
+  it('puts not_indicated candidates after all others and does not penalise unknown', () => {
+    const filter = (crop: { id: string }) => crop.id === 'sorghum' || crop.id === 'pearl_millet' ? 'not_indicated' as const : 'unknown' as const;
+    const b = pickCover(pool, soy, new Set<'soil'>(['soil']), [], filter);
+    expect(b.crop?.id).toBe('ruziziensis');
+    expect(pickCover(pool, soy, new Set<'soil'>(['soil']), [], () => 'not_indicated').crop).toBeDefined();
+  });
+  it('note says indicated in ZARC with risk, or unknown not penalised', () => {
+    const status = { status: 'indicated', month: 2, riskLevelPct: 20 } as never;
+    expect(selectionNote({ crop: pool[0], rule: 'soil_residue' }, soy, status)?.message).toContain('indicada no ZARC para fev (risco 20%)');
+    expect(selectionNote({ crop: pool[0], rule: 'soil_residue' }, soy, { status: 'unknown', month: 2 } as never)?.message).toContain('não foi penalizada');
   });
 });

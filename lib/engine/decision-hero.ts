@@ -2,7 +2,7 @@ import type { AnalysisResult } from '@/lib/engine/types';
 
 export type HeroState = 'attention' | 'compatible' | 'unknown';
 export type NextCheck = 'confirm_baseline' | 'review_with_technician' | 'provide_data';
-export type HeroItem = { scenarioId: 'A' | 'B' | 'C'; cropId: string | null; cropName: string | null; state: 'attention' | 'compatible' | 'unknown' | 'observed'; rangeC: { min: number; max: number } | null; ruleId: string; sourceRefs: string[] };
+export type HeroItem = { scenarioId: 'A' | 'B' | 'C'; cropId: string | null; cropName: string | null; state: 'attention' | 'compatible' | 'unknown' | 'observed'; rangeC: { min: number; max: number } | null; ruleId: string; sourceRefs: string[]; /** Month and Tmean read for this scenario's crop when it was evaluated in its own (safrinha) window; absent for the planting-month reading. */ evaluatedMonth?: number | null; observedValueC?: number | null };
 export type DecisionHero = {
   state: HeroState;
   month: number;
@@ -39,7 +39,7 @@ export function deriveDecisionHero(data: AnalysisResult): DecisionHero {
     unit: thermal ? insight.unit : null,
     period: insight.period,
     sourceUrl: insight.sourceUrl,
-    items: shown.map((effect) => ({ scenarioId: effect.scenarioId, cropId: effect.cropId, cropName: effect.cropName, state: effect.state, rangeC: effect.documentedRangeC, ruleId: effect.ruleId, sourceRefs: effect.sourceRefs })),
+    items: shown.map((effect) => ({ scenarioId: effect.scenarioId, cropId: effect.cropId, cropName: effect.cropName, state: effect.state, rangeC: effect.documentedRangeC, ruleId: effect.ruleId, sourceRefs: effect.sourceRefs, ...(effect.ownWindow ? { evaluatedMonth: effect.evaluatedMonth ?? null, observedValueC: effect.observedValueC ?? null } : {}) })),
     unreadScenarioIds: unread.map((effect) => effect.scenarioId),
     nextCheck,
   };

@@ -5,7 +5,7 @@ import { satelliteAttribution, satelliteTileUrl } from '@/lib/atlas-map-style';
 describe('atlas contracts', () => {
   it('pins the official dated SMAP GIBS visual layer', () => { expect(SMAP_GIBS_LAYER).toBe('SMAP_L4_Analyzed_Root_Zone_Soil_Moisture'); expect(SMAP_GIBS_DATE).toBe('2025-06-30'); expect(SMAP_GIBS_TILE_URL).toContain('gibs.earthdata.nasa.gov'); expect(SMAP_GIBS_TILE_URL).toContain('{z}/{y}/{x}.png'); });
   it('offers globally separated examples within coordinate bounds', () => {
-    expect(ATLAS_EXAMPLES.map((point) => point.label)).toEqual(['Rio Verde (GO), Brasil', 'Acra, Gana', 'Nova Délhi, Índia']);
+    expect(ATLAS_EXAMPLES.map((point) => point.label)).toEqual(['Rio Verde (GO), zona rural', 'Sorriso (MT), zona rural', 'Luís Eduardo Magalhães (BA), zona rural', 'Cascavel (PR), zona rural', 'Acra, Gana', 'Nova Délhi, Índia']);
     expect(ATLAS_EXAMPLES.every((point) => atlasPointSchema.safeParse(point).success)).toBe(true);
   });
   it('rejects a coordinate outside global bounds', () => expect(atlasPointSchema.safeParse({ latitude: 91, longitude: 0 }).success).toBe(false));

@@ -63,9 +63,11 @@ export const crops = z.array(cropSchema).parse(mergedCropRecords.map((crop) => {
   const records = cropEvidence.filter((record) => record.cropId === crop.id && isActive(record));
   const values = Object.fromEntries(records.filter((record) => (rangeFields.has(record.field) && isRange(record.value)) || (record.field === 'kcStages' && z.array(kcStageSchema).safeParse(record.value).success)).map((record) => [record.field, record.value]));
   const nitrogen = records.find((record) => record.field === 'nitrogenFixationPotential' && typeof record.value === 'string');
+  /** Residue is projected only for classes the engine may treat as a "documented residue" candidate (alta / média); `baixa` stays as provenance so soil_residue never selects a low-residue crop. */
+  const residue = records.find((record) => record.field === 'residuePotential' && typeof record.value === 'string' && /^(alta|média)/.test(record.value));
   const diseaseNotes = records.flatMap((record) => diseaseNote(record) ?? []);
   const sourceRefs = [...new Set([...crop.sourceRefs, ...records.flatMap((record) => record.source.url ? [record.source.url] : [])])];
-  return { ...crop, ...values, ...(nitrogen ? { nitrogenFixationPotential: nitrogen.value as string } : {}), ...(diseaseNotes.length > 0 ? { diseaseNotes } : {}), sourceRefs };
+  return { ...crop, ...values, ...(nitrogen ? { nitrogenFixationPotential: nitrogen.value as string } : {}), ...(residue ? { residuePotential: residue.value as string } : {}), ...(diseaseNotes.length > 0 ? { diseaseNotes } : {}), sourceRefs };
 }));
 export const cropById = new Map(crops.map((crop) => [crop.id, crop]));
 const cropMetadataSchema = z.object({ version: z.number(), newCrops: z.array(z.object({ cropId: z.string(), catalogTier: z.enum(['P0', 'P1', 'P2']), lifeCycle: z.enum(['annual', 'annual_management_long_cycle', 'perennial_grown_as_annual', 'biennial_grown_as_annual', 'biennial_often_perennial_management', 'perennial']), rotationEngineEligible: z.boolean(), taxonResolution: z.string(), profileStatus: z.string(), origin: z.string(), usageRestrictions: z.string() })), existingCropAliases: z.array(z.object({ id: z.string(), ptBRAliases: z.array(z.string()), taxonNote: z.string() })) });

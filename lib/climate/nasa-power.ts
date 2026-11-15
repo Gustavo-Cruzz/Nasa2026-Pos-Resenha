@@ -4,7 +4,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { coordinatesSchema, type Coordinates } from '@/lib/schema';
 import { isPilotLocation } from '@/lib/region';
-import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, monthlyForYear, historicalWaterBalanceByMonth, historicalWaterContextForMonth, monthlyClimatology, type HistoricalCalendarDay, type YearMonth, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth } from '@/lib/climate/indicators';
+import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, monthlyForYear, historicalWaterBalanceByMonth, historicalWaterContextForMonth, historicalWaterContextByMonth, frostByMonth, monthlyClimatology, type HistoricalCalendarDay, type YearMonth, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth, type FrostMonth } from '@/lib/climate/indicators';
 import { dayOfYear, et0Daily } from '@/lib/climate/et0';
 import type { NdviContext } from '@/lib/climate/ndvi';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
@@ -37,6 +37,10 @@ export type ClimateContext = {
   /** Last complete year of the NASA POWER window, month by month (N/D where any day is missing). */
   lastYear?: { year: number; months: YearMonth[] };
   waterContext?: HistoricalWaterContextMonth | null;
+  /** IMERG rain days and root-zone wetness for all 12 calendar months, so slots outside the planting month (safrinha) are evaluated in their own window. */
+  waterContextByMonth?: HistoricalWaterContextMonth[];
+  /** Share of years with at least one day of T2M_MIN <= 2 C per month (screening threshold; no crop-specific damage model). */
+  frostByMonth?: FrostMonth[];
   /** Monthly median of precipitation minus FAO-56 ET0: a climate indicator, not crop demand or an irrigation need. */
   waterBalanceByMonth?: WaterBalanceMonth[];
   /** Arnoldus Modified Fournier Index of rainfall aggressiveness; not soil loss. */
@@ -173,7 +177,7 @@ function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, orig
   const waterBalance = historicalWaterBalanceByMonth(dataset.daily);
   const rainySeason = rainySeasonFromBalance(waterBalance);
   const lastYear = Number(NASA_POWER_PERIOD.end.slice(0, 4));
-  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), lastYear: { year: Number(NASA_POWER_PERIOD.end.slice(0, 4)), months: monthlyForYear(dataset.daily, Number(NASA_POWER_PERIOD.end.slice(0, 4))) }, waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterBalanceByMonth: waterBalance, seasonality: { rainySeason, drySpells: drySpellsInRainySeason(dataset.daily, rainySeason) }, rootZoneByMonth: rootZoneByMonth(dataset.daily, lastYear), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
+  return { status: 'available', origin, monthly: monthlyClimatology(dataset.daily), plantingMonthPrecipitation: historicalPrecipitationForMonth(dataset.daily, plantingMonth), historicalPrecipitationByMonth: historicalPrecipitationByMonth(dataset.daily), lastYear: { year: Number(NASA_POWER_PERIOD.end.slice(0, 4)), months: monthlyForYear(dataset.daily, Number(NASA_POWER_PERIOD.end.slice(0, 4))) }, waterContext: historicalWaterContextForMonth(dataset.daily, plantingMonth), waterContextByMonth: historicalWaterContextByMonth(dataset.daily), frostByMonth: frostByMonth(dataset.daily), waterBalanceByMonth: waterBalance, seasonality: { rainySeason, drySpells: drySpellsInRainySeason(dataset.daily, rainySeason) }, rootZoneByMonth: rootZoneByMonth(dataset.daily, lastYear), erosivity: historicalErosivity(dataset.daily), calendarDayContext: calendarDay ? historicalContextForCalendarDay(dataset.daily, plantingMonth, calendarDay) : null, provenance: dataset.provenance, gaps: dataset.provenance.warnings };
 }
 
 function normalizedOptionalValue(value: number | null | undefined, range: readonly [number, number], fillValue: number | undefined): number | null {

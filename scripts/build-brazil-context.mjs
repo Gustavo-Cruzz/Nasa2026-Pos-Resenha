@@ -45,27 +45,59 @@ function bbox(geometry) {
   return coordinates.reduce(([minX, minY, maxX, maxY], [x, y]) => [Math.min(minX, x), Math.min(minY, y), Math.max(maxX, x), Math.max(maxY, y)], [Infinity, Infinity, -Infinity, -Infinity]);
 }
 
+const base64Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+// 36 decêndios -> 12 characters (one per month): each decêndio is 2 bits (0 none, 1/2/3 = CSV 20/30/40), 3 decêndios per base64 char.
+function packRisk(riskString) {
+  let out = '';
+  for (let month = 0; month < 12; month += 1) {
+    let bits = 0;
+    for (let k = 0; k < 3; k += 1) bits = (bits << 2) | { 0: 0, 2: 1, 3: 2, 4: 3 }[riskString[month * 3 + k]];
+    out += base64Alphabet[bits];
+  }
+  return out;
+}
+function packWindows(item, cultures, managements) {
+  const groups = new Map();
+  for (const w of item.windows.values()) {
+    const key = [w.culture, w.management ?? '', w.cycle ?? '', w.riskString].join('|');
+    const group = groups.get(key) ?? { culture: w.culture, management: w.management, cycle: w.cycle, riskString: w.riskString, soils: new Set() };
+    if (w.soil !== null) group.soils.add(w.soil);
+    groups.set(key, group);
+  }
+  const merged = new Map();
+  for (const g of groups.values()) {
+    const soils = sortNumbers(g.soils);
+    const key = [g.culture, g.management ?? '', soils.join(','), g.riskString].join('|');
+    const target = merged.get(key) ?? { culture: g.culture, management: g.management, cycles: new Set(), soils, riskString: g.riskString };
+    if (g.cycle !== null) target.cycles.add(g.cycle);
+    merged.set(key, target);
+  }
+  return [...merged.values()]
+    .map((g) => [cultures.indexOf(g.culture), g.management === null ? -1 : managements.indexOf(g.management), sortNumbers(g.cycles), g.soils, packRisk(g.riskString)])
+    .sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2].join().localeCompare(b[2].join()) || a[4].localeCompare(b[4]));
+}
 function sortStrings(values) { return [...values].sort((a, b) => a.localeCompare(b, 'pt-BR')); }
 function sortNumbers(values) { return [...values].sort((a, b) => a - b); }
 function numberOrNull(value) { const parsed = Number(value); return value === '' || !Number.isFinite(parsed) ? null : parsed; }
 
-const [geojson, localityList, extraGeojson] = await Promise.all([
+const zarcOnly = process.env.ZARC_ONLY === '1';
+const [geojson, localityList, extraGeojson] = zarcOnly ? [{ type: 'FeatureCollection', features: [] }, [], { features: [] }] : await Promise.all([
   readFile(municipalityGeometryPath, 'utf8').then(JSON.parse),
   readFile(municipalityNamesPath, 'utf8').then(JSON.parse),
   readFile(extraMunicipalityGeometryPath, 'utf8').then(JSON.parse),
 ]);
-if (geojson.type !== 'FeatureCollection' || !Array.isArray(geojson.features)) throw new Error('Invalid IBGE municipality GeoJSON.');
-if (!Array.isArray(localityList)) throw new Error('Invalid IBGE locality list.');
+if (!zarcOnly && (geojson.type !== 'FeatureCollection' || !Array.isArray(geojson.features))) throw new Error('Invalid IBGE municipality GeoJSON.');
+if (!zarcOnly && !Array.isArray(localityList)) throw new Error('Invalid IBGE locality list.');
 const localityByCode = new Map(localityList.map((item) => [String(item.id), { name: item.nome, uf: item.microrregiao?.mesorregiao?.UF?.sigla ?? item['regiao-imediata']?.['regiao-intermediaria']?.UF?.sigla }]));
 const featuresByCode = new Map([...geojson.features, ...(extraGeojson.features ?? [])].map((feature) => [String(feature.properties?.codarea ?? ''), feature]));
-const municipalities = [...featuresByCode.values()].map((feature) => {
+const municipalities = zarcOnly ? JSON.parse(await readFile(municipalityOutput, 'utf8')).municipalities : [...featuresByCode.values()].map((feature) => {
   const code = String(feature.properties?.codarea ?? '');
   const locality = localityByCode.get(code);
   if (!/^\d{7}$/.test(code) || !locality?.name || !locality.uf || !feature.geometry) throw new Error(`Incomplete municipality feature ${code}.`);
   return { code, name: locality.name, uf: locality.uf, bbox: bbox(feature.geometry), geometry: feature.geometry };
 }).sort((a, b) => a.code.localeCompare(b.code));
 
-const municipalityDocument = {
+const municipalityDocument = zarcOnly ? null : {
   version: 1,
   source: {
     institution: 'Instituto Brasileiro de Geografia e Estatística (IBGE)',
@@ -115,7 +147,7 @@ for await (const line of reader) {
   const key = `${municipalityCode}:${cropId}`;
   let item = aggregate.get(key);
   if (!item) {
-    item = { municipalityCode, cropId, rowCount: 0, zarcCultures: new Set(), cycleCodes: new Set(), soilCodes: new Set(), climateCodes: new Set(), managements: new Set(), ordinances: new Set(), riskCodes: new Set(), decendiosWithRiskCode: new Set() };
+    item = { municipalityCode, cropId, rowCount: 0, zarcCultures: new Set(), cycleCodes: new Set(), soilCodes: new Set(), climateCodes: new Set(), managements: new Set(), ordinances: new Set(), riskCodes: new Set(), decendiosWithRiskCode: new Set(), windows: new Map() };
     aggregate.set(key, item);
   }
   item.rowCount += 1;
@@ -125,10 +157,16 @@ for await (const line of reader) {
   const climate = numberOrNull(at('Cod_Clima')); if (climate !== null) item.climateCodes.add(climate);
   if (at('Nome_Outros_Manejos')) item.managements.add(at('Nome_Outros_Manejos'));
   if (at('Portaria')) item.ordinances.add(at('Portaria'));
+  let riskString = '';
   for (let decendio = 1; decendio <= 36; decendio += 1) {
     const riskCode = numberOrNull(at(`dec${decendio}`));
     if (riskCode !== null && riskCode !== 0) { item.riskCodes.add(riskCode); item.decendiosWithRiskCode.add(decendio); }
+    // One character per decêndio: '0' = no code (not indicated); otherwise the first digit of the raw code (2/3/4 = 20/30/40).
+    if (riskCode === null || riskCode === 0) riskString += '0';
+    else if ([20, 30, 40].includes(riskCode)) riskString += String(riskCode / 10);
+    else throw new Error(`Unexpected ZARC risk code ${riskCode} (${municipalityCode} ${at('Nome_cultura')}).`);
   }
+  item.windows.set([at('Nome_cultura'), at('Nome_Outros_Manejos'), cycle ?? '', soil ?? '', riskString].join('|'), { culture: at('Nome_cultura'), management: at('Nome_Outros_Manejos') || null, cycle, soil, riskString });
 }
 
 const entries = [...aggregate.values()].map((item) => ({
@@ -143,6 +181,8 @@ const entries = [...aggregate.values()].map((item) => ({
   ordinances: sortStrings(item.ordinances),
   riskCodes: sortNumbers(item.riskCodes),
   decendiosWithRiskCode: sortNumbers(item.decendiosWithRiskCode),
+  // Compact per-decêndio table: [cultureIndex, managementIndex|-1, cycleCode, soilCode, 36-char string] indexes refer to zarcCultures/managements.
+  windows: packWindows(item, sortStrings(item.zarcCultures), sortStrings(item.managements)),
 })).sort((a, b) => a.municipalityCode.localeCompare(b.municipalityCode) || a.cropId.localeCompare(b.cropId));
 const municipalityCodes = new Set(municipalities.map((item) => item.code));
 const unmatchedMunicipalityCodes = sortStrings(new Set(entries.map((item) => item.municipalityCode).filter((code) => !municipalityCodes.has(code))));
@@ -154,7 +194,7 @@ if (!zarcSourceUrl) throw new Error('ZARC_SOURCE_URL is required when building a
 const zarcDocument = {
   version: 1,
   safra,
-  status: 'official_MAPA_rows_aggregated_by_municipality_and_P0_crop_raw_codes_not_interpreted',
+  status: 'official_MAPA_rows_with_per_decendio_risk_windows_20_30_40_interpreted_from_MAPA_Painel_manual',
   source: {
     institution: 'Ministério da Agricultura e Pecuária (MAPA)',
     title: `Zoneamento Agrícola de Risco Climático (Zarc) — Tábua de Risco — Safra ${safra}`,
@@ -163,6 +203,8 @@ const zarcDocument = {
     accessedAt,
     sha256: hash.digest('hex'),
   },
+  windowsEncoding: 'entries[].windows[] = [cultureIndex (into zarcCultures), managementIndex (into managements, -1 if none), Cod_Ciclo[] sharing this table, Cod_Solo[] sharing this table, 12-char packed table]; the packed table has one base64 character per month (alphabet A-Za-z0-9+/), 6 bits = three 2-bit decêndio values (0 = CSV 0, not indicated; 1/2/3 = CSV 20/30/40). Identical rows are de-duplicated; Cod_Clima is not retained per window.',
+  legendSource: { riskLevels: 'MAPA, Manual de Instruções do novo Painel do Zarc, p. 4: "o risco de 20% é representado pela cor verde, 30% amarelo e 40% vermelho".', decendios: 'Portaria SPA/MAPA nº 386/2025, Anexo item 3.3 (tabela de períodos decendiais).' },
   aggregation: 'All matching source rows are counted. Dimension codes, ordinances, non-zero raw risk codes and decêndios are unique sorted sets; correlation between dimensions is intentionally not reconstructed or interpreted.',
   sourceRowCount: rowCount,
   entryCount: entries.length,
@@ -181,7 +223,7 @@ function serializeZarc(document) {
 }
 
 await Promise.all([
-  writeFile(municipalityOutput, `${JSON.stringify(municipalityDocument)}\n`),
+  ...(municipalityDocument ? [writeFile(municipalityOutput, `${JSON.stringify(municipalityDocument)}\n`)] : []),
   writeFile(zarcOutput, serializeZarc(zarcDocument)),
 ]);
 console.log(JSON.stringify({ municipalities: municipalities.length, zarcRows: rowCount, zarcEntries: entries.length, zarcMunicipalities: zarcDocument.municipalityCount }, null, 2));

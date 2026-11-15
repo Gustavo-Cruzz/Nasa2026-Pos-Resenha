@@ -63,7 +63,7 @@ describe('NDVI fixture reader', () => {
 
 describe('committed NDVI fixtures', () => {
   it('load, verify their hashes and cover the full 2011-2025 series for every demonstration point', async () => {
-    for (const site of [{ latitude: -17.798, longitude: -50.919 }, { latitude: 5.6037, longitude: -0.187 }, { latitude: 28.6139, longitude: 77.209 }]) {
+    for (const site of [{ latitude: -17.798, longitude: -50.919 }, { latitude: -17.9, longitude: -50.85 }, { latitude: -12.6, longitude: -55.9 }, { latitude: -12.2, longitude: -45.9 }, { latitude: -24.9, longitude: -53.25 }, { latitude: 5.6037, longitude: -0.187 }, { latitude: 28.6139, longitude: 77.209 }]) {
       const context = await readNdviFixture(site);
       expect(context).toBeDefined();
       expect(context).toMatchObject({ origin: 'verified_fixture', product: 'MOD13Q1', band: '250m_16_days_NDVI', coveragePct: 100 });

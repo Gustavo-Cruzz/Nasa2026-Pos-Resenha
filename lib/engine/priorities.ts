@@ -1,5 +1,7 @@
 import { cropById, type Crop } from '@/lib/catalog';
 import type { AnalysisInput } from '@/lib/schema';
+import { MONTH_ABBR } from '@/lib/engine/slot-season';
+import type { ZarcWindowStatus } from '@/lib/brazil/zarc';
 import type { Explanation, PriorityAlignment, PriorityKey, Rotation } from '@/lib/engine/types';
 
 /**
@@ -27,6 +29,8 @@ export function peakKcOf(crop: Crop | undefined): { kc: number; stage: string } 
 export function cycleMaxOf(crop: Crop | undefined): number | null { return crop?.cycleDaysRange?.max ?? null; }
 
 export type SelectionRule = 'default' | 'soil_n_fixation' | 'soil_residue' | 'soil_unapplied' | 'water_kc' | 'water_cycle' | 'water_unapplied' | 'ops_cycle' | 'ops_unapplied';
+/** ZARC status of a candidate in the safrinha month; `not_indicated` candidates are only used when no other candidate exists. */
+export type ZarcFilter = (crop: Crop) => 'indicated' | 'not_indicated' | 'unknown';
 export type Selection = { crop: Crop | undefined; rule: SelectionRule };
 
 const num = (value: number) => String(value);
@@ -34,10 +38,12 @@ const num = (value: number) => String(value);
 const byLowest = (pool: Crop[], value: (crop: Crop) => number | null): Crop | undefined => pool.reduce<Crop | undefined>((best, crop) => { const v = value(crop); if (v === null) return best; const b = best ? value(best) : null; return b === null || v < b ? crop : best; }, undefined);
 /** Soil rule: documented N fixation first, then documented residue; within each tier a different family wins, and a documented attribute beats an undocumented different-family crop. */
 function soilPick(pool: Crop[], last: Crop | undefined): Selection | undefined {
-  const diff = (crop: Crop) => !last || crop.family !== last.family;
-  const nFix = pool.filter((crop) => crop.nitrogenFixationPotential); const residue = pool.filter((crop) => crop.residuePotential);
-  const nCrop = nFix.find(diff) ?? nFix[0]; if (nCrop) return { crop: nCrop, rule: 'soil_n_fixation' };
-  const rCrop = residue.find(diff) ?? residue[0]; if (rCrop) return { crop: rCrop, rule: 'soil_residue' };
+  /** Functional diversity first: candidates of the same family as the safra crop only count after every different-family candidate. */
+  const tiers = [pool.filter((crop) => !last || crop.family !== last.family), pool.filter((crop) => last && crop.family === last.family)];
+  for (const tier of tiers) {
+    const nCrop = tier.find((crop) => crop.nitrogenFixationPotential); if (nCrop) return { crop: nCrop, rule: 'soil_n_fixation' };
+    const rCrop = tier.find((crop) => crop.residuePotential); if (rCrop) return { crop: rCrop, rule: 'soil_residue' };
+  }
   return undefined;
 }
 function waterPick(pool: Crop[]): Selection | undefined {
@@ -46,7 +52,15 @@ function waterPick(pool: Crop[]): Selection | undefined {
 }
 
 /** B (cover alternative to the current safrinha). Soil dominant -> soilPick; else water dominant -> lowest documented kc/cycle; else default (different family first). Crops in `excluded` (current pattern) are never offered. */
-export function pickCover(selectable: Crop[], last: Crop | undefined, dominant: Set<PriorityKey>, excludedCropIds: string[] = []): Selection {
+export function pickCover(selectable: Crop[], last: Crop | undefined, dominant: Set<PriorityKey>, excludedCropIds: string[] = [], zarc?: ZarcFilter): Selection {
+  return zarcTiers(selectable, zarc, (pool) => pickCoverIn(pool, last, dominant, excludedCropIds));
+}
+/** Tries candidates not marked `not_indicated` first, then the rest. */
+function zarcTiers(pool: Crop[], zarc: ZarcFilter | undefined, pick: (pool: Crop[]) => Selection): Selection {
+  if (!zarc) return pick(pool);
+  const first = pick(pool.filter((crop) => zarc(crop) !== 'not_indicated')); return first.crop ? first : pick(pool);
+}
+function pickCoverIn(selectable: Crop[], last: Crop | undefined, dominant: Set<PriorityKey>, excludedCropIds: string[]): Selection {
   const covers = selectable.filter((crop) => crop.purposes.includes('cover') && !excludedCropIds.includes(crop.id));
   const different = covers.filter((crop) => !last || crop.family !== last.family);
   const fallback = (different.length ? different : covers)[0];
@@ -56,7 +70,10 @@ export function pickCover(selectable: Crop[], last: Crop | undefined, dominant: 
 }
 
 /** C. Water dominant -> lowest documented peak kc, else shortest cycle; else soil dominant -> documented N fixation/residue (different from B); else operations dominant -> shortest cycle (proxy), else commercial crop. */
-export function pickThird(selectable: Crop[], last: Crop | undefined, excludedCropIds: string[], dominant: Set<PriorityKey>): Selection {
+export function pickThird(selectable: Crop[], last: Crop | undefined, excludedCropIds: string[], dominant: Set<PriorityKey>, zarc?: ZarcFilter): Selection {
+  return zarcTiers(selectable, zarc, (pool) => pickThirdIn(pool, last, excludedCropIds, dominant));
+}
+function pickThirdIn(selectable: Crop[], last: Crop | undefined, excludedCropIds: string[], dominant: Set<PriorityKey>): Selection {
   const candidates = selectable.filter((crop) => !excludedCropIds.includes(crop.id) && (crop.commercial || crop.purposes.includes('cover')) && crop.viableTempC);
   const different = candidates.filter((crop) => !last || crop.family !== last.family);
   const pool = different.length ? different : candidates;
@@ -74,13 +91,14 @@ export function selectionTitle(id: 'B' | 'C', rule: SelectionRule): string {
   return rule === 'water_kc' || rule === 'water_cycle' ? 'Menor exposição hídrica documentada' : rule === 'ops_cycle' ? 'Ciclo mais curto documentado' : 'Diversificação';
 }
 
-export function selectionNote(selection: Selection): Explanation | undefined {
+/** `safra` is the safra crop of the pattern; when the pick has a different family the note says so. */
+export function selectionNote(selection: Selection, safra?: Crop, zarc?: ZarcWindowStatus | null): Explanation | undefined {
   const { crop, rule } = selection; if (!crop || rule === 'default') return undefined;
   const applied = rule === 'soil_n_fixation' || rule === 'soil_residue' || rule === 'water_kc' || rule === 'water_cycle' || rule === 'ops_cycle';
   const kc = peakKcOf(crop); const cycle = crop.cycleDaysRange;
   const messages: Record<Exclude<SelectionRule, 'default'>, string> = {
     soil_n_fixation: `Prioridade “solo” dominante: entre as candidatas, foi escolhida uma com fixação de N documentada (${crop.nitrogenFixationPotential}). Critério qualitativo; não estima kg de N.`,
-    soil_residue: `Prioridade “solo” dominante: nenhuma candidata tem fixação de N documentada; foi escolhida uma com potencial de palha documentado (${crop.residuePotential}). Critério qualitativo.`,
+    soil_residue: `Prioridade “solo” dominante: nenhuma candidata de família diferente tem fixação de N documentada; foi escolhida uma com potencial de palha documentado (${crop.residuePotential}). Critério qualitativo.`,
     soil_unapplied: 'Prioridade “solo” dominante, mas nenhuma candidata tem fixação de N ou potencial de palha documentados no catálogo; o critério não pôde ser aplicado e vale a regra padrão (família diferente).',
     water_kc: `Prioridade “água” dominante: foi escolhida a cultura com menor pico de Kc documentado (${kc ? `${num(kc.kc)} na fase “${kc.stage}”` : 'N/D'}), usado só como indicador de exposição hídrica; não calcula ETc, consumo nem irrigação.`,
     water_cycle: `Prioridade “água” dominante: sem Kc documentado nas candidatas, foi escolhida a de menor ciclo documentado (até ${cycle ? num(cycle.max) : 'N/D'} dias), usado só como indicador de menor tempo de exposição.`,
@@ -88,7 +106,9 @@ export function selectionNote(selection: Selection): Explanation | undefined {
     ops_cycle: `Prioridade “operação” dominante: foi escolhida a cultura de menor ciclo documentado (até ${cycle ? num(cycle.max) : 'N/D'} dias). É apenas um proxy de operação mais simples; não mede mão de obra, máquinas ou custo.`,
     ops_unapplied: 'Prioridade “operação” dominante, mas nenhuma candidata tem ciclo documentado; usado apenas o proxy “cultura comercial” quando disponível. Não mede mão de obra, máquinas ou custo.',
   };
-  return { kind: 'limitation', message: messages[rule], ruleId: applied ? 'PRIORITY_RULE_APPLIED' : 'PRIORITY_CRITERION_NOT_APPLIED', sourceRefs: crop.sourceRefs, certainty: applied ? 'medium' : 'high', missingData: applied ? [] : ['documented_priority_attribute'] };
+  const zarcNote = !zarc ? '' : zarc.status === 'indicated' ? ` Cultura indicada no ZARC para ${MONTH_ABBR[zarc.month - 1]} (risco ${zarc.riskLevelPct}%).` : zarc.status === 'unknown' ? ' Sem registro ZARC para esta cultura neste mês; não foi penalizada, mas o calendário permanece desconhecido.' : ' Atenção: o ZARC não indica este mês para a cultura (nenhuma alternativa indicada foi encontrada).';
+  const familyNote = safra && crop.family !== safra.family ? ` Família diferente da cultura da safra (${safra.commonNames['pt-BR']}).` : '';
+  return { kind: 'limitation', message: messages[rule] + familyNote + zarcNote, ruleId: applied ? 'PRIORITY_RULE_APPLIED' : 'PRIORITY_CRITERION_NOT_APPLIED', sourceRefs: crop.sourceRefs, certainty: applied ? 'medium' : 'high', missingData: applied ? [] : ['documented_priority_attribute'] };
 }
 
 type Level = PriorityAlignment['level'];

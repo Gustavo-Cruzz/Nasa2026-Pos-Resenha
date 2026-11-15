@@ -51,7 +51,7 @@ export function EvidenceCenterDrawer({ manifest, open, onClose, filter }: { mani
   const sourceTitle = (source: EvidenceManifest['sources'][number]) => locale !== 'en' ? source.title : ({ nasa: 'NASA POWER historical climate', farmer: 'Farmer input', catalog: 'Crop evidence catalog', regional: 'IBGE/ZARC regional context' }[source.kind]);
   const claimText = (claim: EvidenceManifest['claims'][number]) => {
     if (locale !== 'en') return { label: claim.label, observation: claim.observation };
-    const known = ['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'documented_water_response', 'cover_potential', 'functional_diversity', 'soil_context'].includes(claim.indicatorId);
+    const known = ['thermal_compatibility', 'historical_precipitation', 'rainfall_distribution', 'root_zone_wetness', 'window_water_balance', 'frost_risk', 'documented_water_response', 'cover_potential', 'functional_diversity', 'soil_context'].includes(claim.indicatorId);
     if (!known) return { label: `Traceable claim${claim.scenarioId ? ` — scenario ${claim.scenarioId}` : ''}`, observation: 'See the rule, result, sources, and remaining gaps below.' };
     const display = indicatorDisplay({ id: claim.indicatorId as QualitativeIndicator['id'], label: claim.label, detail: claim.observation, state: claim.result as IndicatorState, sourceRefs: [] }, locale);
     return { label: `${display.label}${claim.scenarioId ? ` — scenario ${claim.scenarioId}${claim.slotIndex === null ? '' : `, slot ${claim.slotIndex + 1}`}` : ''}`, observation: display.detail };

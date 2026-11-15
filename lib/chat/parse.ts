@@ -1,5 +1,4 @@
 import { coordinatesSchema, type SoilObservation } from '@/lib/schema';
-import { ATLAS_EXAMPLES } from '@/lib/atlas';
 
 /** Lowercase, accent-free, with the unicode minus folded to "-": parsers only ever see this form. */
 export function normalize(text: string): string {
@@ -11,9 +10,9 @@ const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // ---------- location ----------
 // Brazilian cities go through the IBGE city lookup (/api/places); only the two foreign examples are matched by name here.
-const PLACES: Array<{ aliases: string[]; point: (typeof ATLAS_EXAMPLES)[number] }> = [
-  { aliases: ['acra', 'accra'], point: ATLAS_EXAMPLES[1] },
-  { aliases: ['nova delhi', 'new delhi', 'nova deli', 'delhi', 'deli'], point: ATLAS_EXAMPLES[2] },
+const PLACES: Array<{ aliases: string[]; point: { label: string; latitude: number; longitude: number } }> = [
+  { aliases: ['acra', 'accra'], point: { label: 'Acra, Gana', latitude: 5.6037, longitude: -0.187 } },
+  { aliases: ['nova delhi', 'new delhi', 'nova deli', 'delhi', 'deli'], point: { label: 'Nova Délhi, Índia', latitude: 28.6139, longitude: 77.209 } },
 ];
 
 export type PlaceResult = { latitude: number; longitude: number; label?: string };

@@ -24,7 +24,7 @@ describe('evidence coverage assessment', () => {
     expect(coverage.status).toBe('partial');
   });
   it('does not convert missing values into zero', () => {
-    const coverage = evidenceCoverageAssessment({ latitude: 28.6139, longitude: 77.209 }, 'ruziziensis');
+    const coverage = evidenceCoverageAssessment({ latitude: 28.6139, longitude: 77.209 }, 'cassava');
     expect(coverage.indicators.find((item) => item.id === 'temperature')?.value).toBeNull();
   });
 });

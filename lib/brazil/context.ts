@@ -2,14 +2,28 @@ import municipalitiesData from '@/data/brazil-municipalities.json';
 import zarcData from '@/data/brazil-zarc-index.json';
 import pamData from '@/data/brazil-pam-index.json';
 import type { Coordinates } from '@/lib/schema';
-import type { BrazilRegionalContext, MunicipalityContext, PamProductContext, ZarcCropContext } from '@/lib/brazil/types';
+import type { BrazilRegionalContext, MunicipalityContext, PamProductContext, ZarcCropContext, ZarcWindow } from '@/lib/brazil/types';
 
 export type Position = [number, number];
 type Ring = Position[];
 type PolygonCoordinates = Ring[];
 export type Geometry = { type: 'Polygon'; coordinates: PolygonCoordinates } | { type: 'MultiPolygon'; coordinates: PolygonCoordinates[] };
 type MunicipalityRecord = MunicipalityContext & { bbox: [number, number, number, number]; geometry: Geometry };
-type ZarcIndexEntry = ZarcCropContext & { municipalityCode: string };
+type PackedZarcWindow = [cultureIndex: number, managementIndex: number, cycleCodes: number[], soilCodes: number[], packedRisk: string];
+type ZarcIndexEntry = Omit<ZarcCropContext, 'windows'> & { municipalityCode: string; windows: PackedZarcWindow[] };
+const base64Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+const riskByBits = [0, 20, 30, 40] as const;
+
+/** Decodes the 12-character table (one base64 char per month, three 2-bit decêndio values each) written by scripts/build-brazil-context.mjs. */
+export function unpackZarcRisk(packed: string): ZarcWindow['risk'] {
+  const risk: ZarcWindow['risk'] = [];
+  for (let month = 0; month < 12; month += 1) {
+    const bits = base64Alphabet.indexOf(packed[month] ?? '');
+    if (bits < 0) throw new Error(`Invalid packed ZARC table: ${packed}`);
+    for (let k = 2; k >= 0; k -= 1) risk.push(riskByBits[(bits >> (k * 2)) & 3]);
+  }
+  return risk;
+}
 const municipalityDocument = municipalitiesData as unknown as { source: { geometryUrl: string; officialMeshUrl: string; officialMeshSha256: string; accessedAt: string; referenceSystem: string }; municipalities: MunicipalityRecord[] };
 const zarcDocument = zarcData as unknown as { safra: string; source: { url: string; dictionaryUrl: string; accessedAt: string; sha256: string }; entries: ZarcIndexEntry[] };
 type PamIndexEntry = PamProductContext & { municipalityCode: string };
@@ -73,6 +87,13 @@ export function resolveBrazilRegionalContext(coordinates: Coordinates): BrazilRe
     ordinances: entry.ordinances,
     riskCodes: entry.riskCodes,
     decendiosWithRiskCode: entry.decendiosWithRiskCode,
+    windows: entry.windows.map(([cultureIndex, managementIndex, cycleCodes, soilCodes, packedRisk]) => ({
+      culture: entry.zarcCultures[cultureIndex],
+      management: managementIndex >= 0 ? entry.managements[managementIndex] : null,
+      cycleCodes,
+      soilCodes,
+      risk: unpackZarcRisk(packedRisk),
+    })),
   }]));
   return {
     country: 'BR',
