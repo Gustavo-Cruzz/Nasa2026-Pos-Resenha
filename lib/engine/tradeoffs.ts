@@ -30,8 +30,8 @@ export function orderAxes(priorities: AnalysisInput['priorities']): TradeoffAxis
 }
 
 const getCrop = (id: string | null | undefined): Crop | undefined => id ? cropById.get(id as Crop['id']) : undefined;
-const nPt = (value: number, digits = 0) => String(Number(value.toFixed(digits))).replace('.', ',');
-const nEn = (value: number, digits = 0) => String(Number(value.toFixed(digits)));
+const nPt = (value: number, digits = 0) => Number(value.toFixed(digits)).toLocaleString('pt-BR', { maximumFractionDigits: digits });
+const nEn = (value: number, digits = 0) => Number(value.toFixed(digits)).toLocaleString('en-US', { maximumFractionDigits: digits });
 const joinUnique = (items: string[]) => [...new Set(items)].join(', ');
 const slotCrops = (scenario: Rotation): Crop[] => scenario.slots.flatMap((slot) => { const crop = getCrop(slot.cropId); return crop ? [crop] : []; });
 const distinguishing = (scenario: Rotation): Crop | undefined => getCrop(scenario.slots[1]?.cropId) ?? getCrop(scenario.proposedCrop?.cropId);

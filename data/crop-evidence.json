@@ -2006,6 +2006,295 @@
         "verification": "verified",
         "accessedAt": "2026-11-15"
       }
+    },
+    {
+      "cropId": "soybean",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 100,
+        "max": 130
+      },
+      "unit": "days",
+      "context": "sowing/planting to maturation (ZARC simulation phases I establishment to IV maturation); the three cycle classes simulated for the ZARC water balance (100, 115 and 130 days: early, medium, late groups). Cultivars are grouped by relative maturity group (GMR): Grupo I (GMR <= 7.6 / <= 7.9), II, III (>= 8.2 / >= 8.5) per macroregion. Cycle days are ZARC simulation inputs, not a per-cultivar measurement",
+      "cultivar": "Cycle classes 100, 115 and 130 days (Groups I-III by GMR)",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar",
+      "source": {
+        "title": "Portaria SPA/MAPA nº 198, de 30 de junho de 2026 - ZARC soja, Goiás, ano-safra 2026/2027",
+        "year": 2026,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/pdf/PORTN198SOJAGO.ret.pdf",
+        "pageOrSection": "Anexo, item 1.9.2 (Ciclo e fases fenológicas) e item 4.1 (grupos GMR)",
+        "snippet": "cultivares dos ciclos de 100, 115 e 130 dias; os quais foram divididos em 4 fases fenológicas: Fase I: Estabelecimento, que inclui plantio, germinação/emergência e surgimento das primeiras folhas verdadeiras; ... e, Fase IV: Maturação.",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sunflower",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 100,
+        "max": 120
+      },
+      "unit": "days",
+      "context": "sowing to harvest point (ZARC table); Group I average 100-110 days (representative 105), Group II 111-120 (representative 115)",
+      "cultivar": "Groups I and II",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar",
+      "source": {
+        "title": "Portaria SPA/MAPA nº 100, de 5 de maio de 2026 - ZARC girassol, Goiás, ano-safra 2026/2027",
+        "year": 2026,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/PORTN100GIRASSOLGO.pdf",
+        "pageOrSection": "Anexo, item 1.12 (tabela Grupo de cultivares / Ciclo médio)",
+        "snippet": "As cultivares de girassol foram classificadas em dois grupos de características homogêneas, conforme a duração média do ciclo da semeadura ao ponto de colheita ... Grupo I 105 | 100 – 110 ... Grupo II 115 | 111 – 120",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "common_bean",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 70,
+        "max": 80
+      },
+      "unit": "days",
+      "context": "sowing to physiological maturity; representative cycles of ZARC groups I (short cycle, 65-75 days, representative 70) and II (mean >= 80 days, open-ended: cultivars above 80 days exist, so the upper bound understates late cultivars)",
+      "cultivar": "Groups I and II",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar (dry-farming system)",
+      "source": {
+        "title": "Portaria SPA/MAPA nº 11, de 11 de março de 2026 - ZARC feijão sequeiro, Goiás, ano-safra 2026/2027",
+        "year": 2026,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/pdf/PO186A1.PDF",
+        "pageOrSection": "Anexo, item 1.9.4 (Ciclo e duração das fases fenológicas)",
+        "snippet": "O feijoeiro foi agrupado em dois grupos de cultivares: o Grupo I, classificado como ciclo curto, com uma média de 70 dias entre a semeadura e a maturidade fisiológica, e o Grupo II, com média maior ou igual a 80 dias entre a semeadura e a maturidade fisiológica",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "sorghum",
+      "field": "cycleDaysRange",
+      "value": {
+        "groups": [
+          {
+            "group": "I",
+            "max": 110
+          },
+          {
+            "group": "II",
+            "min": 111,
+            "max": 130
+          },
+          {
+            "group": "III",
+            "min": 130
+          }
+        ]
+      },
+      "unit": "days",
+      "context": "emergence to physiological maturity; ZARC cycle groups (open-ended at both ends, so no bounded min/max is projected)",
+      "cultivar": "Groups I-III (grain sorghum)",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar",
+      "source": {
+        "title": "Portaria SPA/MAPA nº 273, de 20 de julho de 2026 - ZARC sorgo granífero, Goiás, ano-safra 2026/2027",
+        "year": 2026,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/pdf/PO68EB1.PDF",
+        "pageOrSection": "Anexo, item 1.8.2 (Ciclo e Fases fenológicas)",
+        "snippet": "As cultivares de sorgo foram classificadas em três grupos de características homogêneas: Grupo I (n ≤ 110 dias); Grupo II (111 dias ≤ n ≤ 130 dias); e Grupo III (n ≥ 130 dias), onde n expressa o número de dias da emergência à maturação fisiológica.",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "cycleDaysRange",
+      "value": {
+        "groups": [
+          {
+            "group": "I",
+            "max": 115
+          },
+          {
+            "group": "II",
+            "min": 115,
+            "max": 130
+          },
+          {
+            "group": "III",
+            "min": 130
+          }
+        ]
+      },
+      "unit": "days",
+      "context": "emergence to physiological maturity; ZARC cycle groups for rice in dry-farming (upland) system; Group III is open-ended",
+      "cultivar": "Groups I-III",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar",
+      "source": {
+        "title": "Portaria SPA/MAPA nº 53, de 14 de abril de 2026 - ZARC arroz sequeiro, Goiás, ano-safra 2026/2027",
+        "year": 2026,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/PORTN54.PDF",
+        "pageOrSection": "Anexo, item 1.9",
+        "snippet": "As cultivares de arroz foram classificadas em três grupos de características homogêneas: Grupo I (n ≤ 115 dias); Grupo II (115 dias ≤ n ≤ 130 dias); e Grupo III (n ≥ 130 dias), onde n expressa o número de dias da emergência à maturação fisiológica.",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "cycleDaysRange",
+      "value": {
+        "groups": [
+          {
+            "group": "I",
+            "max": 110
+          },
+          {
+            "group": "II",
+            "min": 110,
+            "max": 130
+          },
+          {
+            "group": "III",
+            "min": 130
+          }
+        ]
+      },
+      "unit": "days",
+      "context": "emergence to physiological maturity; ZARC cycle groups (Portaria of 2020, not yet renewed in the current safra list); Group III is open-ended",
+      "cultivar": "Groups I-III",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar",
+      "source": {
+        "title": "Portaria nº 325, de 20 de outubro de 2020 - ZARC milheto, Goiás",
+        "year": 2020,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/pdf/PORTN325MILHETOGO.pdf",
+        "pageOrSection": "Anexo, item c) ciclo e fases fenológicas da cultura",
+        "snippet": "As cultivares foram classificadas em três grupos de características homogêneas: Grupo I (n ≤ 110 dias); Grupo II (110 dias ≤ n ≤ 130 dias); e Grupo III (n ≥ 130 dias), onde n expressa o número de dias da emergência à maturação fisiológica",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cotton",
+      "field": "cycleDaysRange",
+      "value": {
+        "groups": [
+          {
+            "group": "II",
+            "max": 170
+          },
+          {
+            "group": "III",
+            "min": 171
+          }
+        ]
+      },
+      "unit": "days",
+      "context": "emergence to maturation; ZARC cycle groups for herbaceous cotton in Goiás (only Groups II and III are used in this portaria); Group III is open-ended",
+      "cultivar": "Groups II and III",
+      "location": "ZARC Goiás (Brazil, official MAPA); simulation groups, not a Rio Verde calendar",
+      "source": {
+        "title": "Portaria SPA/MAPA nº 172, de 2 de junho de 2026 - ZARC algodão herbáceo, Goiás, ano-safra 2026/2027",
+        "year": 2026,
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/goias/pdf/PO72601.PDF",
+        "pageOrSection": "Anexo, item 1.8.1 (Ciclo e fases fenológicas)",
+        "snippet": "As cultivares foram classificadas em dois grupos de características homogêneas, conforme a região geográfica, sendo: Grupo II (n ≤ 170 dias) e Grupo III (n ≥ 171 dias); onde n expressa o número de dias da emergência à maturação.",
+        "institution": "MAPA",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "cotton",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 100,
+        "max": 180
+      },
+      "unit": "days",
+      "context": "emergence to harvest; Embrapa cycle classes for cerrado cultivars: Precoce 100-130, Mediano 131-160, Tardio 161-180 days",
+      "cultivar": "Cycle classes P, M, T (cultivar table, not a named cultivar)",
+      "location": "Brazilian cerrado cultivars; not Rio Verde validation",
+      "source": {
+        "title": "Cultivares do Algodoeiro para o Cerrado (Circular Técnica 93)",
+        "year": 2006,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/276778/1/CIRTEC93.pdf",
+        "pageOrSection": "Tabela de cultivares, nota 4 (Características agronômicas)",
+        "snippet": "C: Ciclo, sendo, P: Precoce (100 a 130 dias da emergência à colheita); M: mediano (131 a 160 dias da emergência à colheita); T : Tardio (161 a 180 dias da emergência à colheita)",
+        "institution": "Embrapa",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 89,
+        "max": 115
+      },
+      "unit": "days",
+      "context": "'Ciclo cultural' descriptor (Embrapa lists BRS Primavera as 'Ciclo da semeadura a maturação'); envelope of released upland cultivars BRS Soberana 89 to BRSMG Curinga 115 days; longer cultivars (ZARC Group III, >= 130 days emergence to maturity) exist outside this table",
+      "cultivar": "BRS Primavera, Aimoré, Bonança, Talento, Soberana, Aroma, Colosso, BRSMG Curinga (envelope)",
+      "location": "Upland cultivars described for Pará; not a universal calendar nor Rio Verde",
+      "source": {
+        "title": "Cultivares de arroz para terra firme no Estado do Pará",
+        "year": 2006,
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/575461/1/Cultivares-de-arroz-para-terra-firme.pdf",
+        "pageOrSection": "Itens 3 a 10, descritores de fenologia (7.6 BRS Soberana; 10.6 BRSMG Curinga)",
+        "snippet": "Ciclo cultural 89 dias (BRS Soberana) ... Ciclo cultural 115 dias (BRSMG Curinga)",
+        "institution": "Embrapa",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 76,
+        "max": 100
+      },
+      "unit": "days",
+      "context": "planting to physiological maturity or harvest per cultivar table (ENA 1: 'ciclo de 76 dias' dry-season planting / 82 days rainy season; ADR 300: 'ciclo até colheita' 92; ADR 500: 100); bounded envelope of listed cultivars only, ZARC groups reach >= 130 days",
+      "cultivar": "ENA 1, ADR 300, ADR 500 (envelope)",
+      "location": "Cultivars listed by Embrapa Milho e Sorgo; not Rio Verde validation",
+      "source": {
+        "title": "Cultivo do Milheto - Cultivares (Sistema de Produção 3, 5. ed.)",
+        "year": 2016,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/748814/1/Milheto-Cultivares.pdf",
+        "pageOrSection": "ENA 1 e Tabela 3 (ADR 300 e ADR 500)",
+        "snippet": "ciclo de 76 dias com panícula visível aos 46 dias após o plantio ... Ciclo até colheita 92 dias | 100 dias",
+        "institution": "Embrapa",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 173,
+        "max": 180
+      },
+      "unit": "days",
+      "context": "BRS Guatã only: emergence to 75% mature pods 173 days; 'Ciclo até produção de sementes' 180 days (planting in February). Single cultivar of 'ciclo normal'; other cultivars have shorter/longer cycles and do not appear in the source",
+      "cultivar": "BRS Guatã",
+      "location": "Embrapa Pecuária Sudeste (São Carlos, SP); not Rio Verde validation",
+      "source": {
+        "title": "BRS Guatã - nova cultivar de Cajanus cajan (Comunicado Técnico 120)",
+        "year": 2026,
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1188137/1/2026-cppse-com-tec-120-fpm-brs-guata-nova-cultivar-cajanus-cajan.pdf",
+        "pageOrSection": "Descrição da cultivar e tabela de morfologia e fenologia",
+        "snippet": "aos 173 dias após a emergência, 75% das vagens estão maduras ... Ciclo até produção de sementes (dias) 180 (plantio em fevereiro)",
+        "institution": "Embrapa",
+        "verification": "verified",
+        "accessedAt": "2026-11-15"
+      }
     }
   ]
 }

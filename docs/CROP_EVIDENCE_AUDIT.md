@@ -82,3 +82,21 @@ Catalog merge (`lib/catalog.ts`): `residuePotential` is projected only when the 
 - Residue of sunflower, cowpea, common bean: no Embrapa reference figure found.
 
 **Side effects on other tests.** Filling these fields made common bean, upland rice and *ruziziensis* no longer "evidence-free" fixtures. Tests `decision-hero`, `nasa-insight`, `priorities`, `evidence-coverage` now use `cassava`/`pumpkin`/`sweet_potato` for the no-evidence case, and `crop-validation` asserts the new ECOCROP values. New test: `tests/unit/crop-evidence-residue-cycle.test.ts`.
+
+## Update 2026-11-15 (Frente 2: Brazilian `cycleDaysRange`)
+
+`data/crop-evidence.json` gained 11 `cycleDaysRange` records, all fetched 2026-11-15 with URL, section and literal snippet. FAO-56 and ECOCROP totals stay excluded. Primary source: ZARC annexes (Portarias SPA/MAPA, Goiás, safra 2026/2027, `gov.br/agricultura/.../portarias/safra-vigente/goias/`), which are official and renewed each safra; Embrapa Sistemas de Produção/Circulares complete the bounded envelopes.
+
+| Crop | Projected range (d) | Source | Measures |
+|---|---|---|---|
+| Soybean | 100-130 | ZARC soja GO, Port. 198/2026, item 1.9.2 | simulated cycle classes 100/115/130 (groups I-III by GMR), planting to maturation |
+| Sunflower | 100-120 | ZARC girassol GO, Port. 100/2026, item 1.12 | groups I (100-110) and II (111-120), sowing to harvest point |
+| Common bean | 70-80 | ZARC feijão sequeiro GO, Port. 11/2026, item 1.9.4 | representative cycles of groups I (65-75) and II (>= 80, open), sowing to physiological maturity |
+| Upland rice | 89-115 | Embrapa, Cultivares de arroz para terra firme (2006) | "Ciclo cultural" envelope of 8 released cultivars; ZARC groups (<= 115, 115-130, >= 130, emergence to maturity) recorded separately |
+| Pearl millet | 76-100 | Embrapa Milho e Sorgo, Cultivo do Milheto, Cultivares (2016) | planting to maturity/harvest of ENA 1, ADR 300, ADR 500; ZARC groups (<= 110, 110-130, >= 130) recorded separately |
+| Cotton | 100-180 | Embrapa Algodão Circ. Téc. 93 (2006), nota 4 | emergence to harvest, classes P/M/T; ZARC groups II (<= 170) and III (>= 171) recorded separately |
+| Pigeon pea | 173-180 | Embrapa Pecuária Sudeste, Com. Téc. 120 (2026), BRS Guatã | emergence to 75% mature pods (173) and "ciclo até produção de sementes" (180); one cultivar |
+
+Records with a `groups` value (sorghum, upland rice, pearl millet, cotton ZARC) are provenance only: `lib/catalog.ts` projects only `min`/`max` numbers.
+
+**Still null (candidates).** Grain sorghum: ZARC groups (<= 110, 111-130, >= 130 d, emergence to physiological maturity; Port. 273/2026) are open-ended and no bounded Embrapa total was found (Embrapa gives only days to flowering; BRS 373 sheet "Maturação 110 dias" is a single hybrid; RS Circular 123 column "125 d/128 d" has an unconfirmed header). *U. ruziziensis*: perennial, no sowing-to-desiccation duration stated by a fetched source (candidate: Embrapa Soja desiccation-interval trials). Caveats: soybean values are ZARC simulation classes, not cultivar measurements; common bean upper bound understates late cultivars (Embrapa 2013 catalog lists "Normal 85-95 d" and "Tardio > 95 d" without a stated reference point, not used); cotton and pigeon pea windows are long (6 months) by documented cycle.

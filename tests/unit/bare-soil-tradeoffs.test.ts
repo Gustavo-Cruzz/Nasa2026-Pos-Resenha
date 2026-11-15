@@ -30,21 +30,22 @@ const ctx = (regionalContext: Partial<BrazilRegionalContext> = {}) => ({ input, 
 
 describe('bare soil occupancy calendar (audit 2.4)', () => {
   it('flags assumed windows when no cycle is documented', () => {
-    const result = assessBareSoil(input, slots('A', ['soybean', 'soybean', 'soybean', 'soybean']), climate, terrain);
+    // Soybean now has a documented ZARC cycle (100-130 d); sorghum (grain) still has none.
+    const result = assessBareSoil(input, slots('A', ['sorghum', 'sorghum', 'sorghum', 'sorghum']), climate, terrain);
     expect(result.windowsSource).toBe('assumed'); expect(result.detail).toContain('presumidas'); expect(result.detailEn).toContain('assumed');
     expect(result.occupancy).toHaveLength(24);
   });
   it('treats months outside every window as bare and crosses them with erosivity and slope', () => {
-    const result = assessBareSoil(input, slots('A', ['soybean', 'maize', 'soybean', 'maize']), climate, terrain);
+    const result = assessBareSoil(input, slots('A', ['sorghum', 'maize', 'sorghum', 'maize']), climate, terrain);
     expect(result.windowsSource).toBe('mixed');
     expect(result.bareMonths.map((item) => item.month)).toEqual([7, 8, 9, 7, 8, 9]);
     expect(result.bareMonthsInHighErosivity).toEqual([]);
     expect(result.slope?.meanPct).toBe(9); expect(result.state).toBe('attention'); expect(result.detail).toContain('Palha');
-    expect(assessBareSoil(input, slots('A', ['soybean', 'maize', 'soybean', 'maize']), climate).slope).toBeNull();
+    expect(assessBareSoil(input, slots('A', ['sorghum', 'maize', 'sorghum', 'maize']), climate).slope).toBeNull();
   });
   it('a longer documented window or a cover crop fills the gap', () => {
-    const plain = assessBareSoil(input, slots('A', ['soybean', 'soybean', 'soybean', 'soybean']), climate, terrain);
-    const longer = assessBareSoil(input, slots('A', ['soybean', 'maize', 'soybean', 'maize']), climate, terrain);
+    const plain = assessBareSoil(input, slots('A', ['sorghum', 'sorghum', 'sorghum', 'sorghum']), climate, terrain);
+    const longer = assessBareSoil(input, slots('A', ['sorghum', 'maize', 'sorghum', 'maize']), climate, terrain);
     expect(longer.bareMonths.length).toBeLessThan(plain.bareMonths.length);
     const cover = assessBareSoil(input, slots('B', ['soybean', 'pigeon_pea', 'soybean', 'pigeon_pea']), climate, terrain);
     expect(cover.occupancy.slice(0, 8).every((item) => item.covered)).toBe(true);
@@ -74,7 +75,7 @@ describe('trade-off matrix (audit 2.3)', () => {
   it('states local chain from PAM area without price', () => {
     const pam = { year: '2024', sourceUrl: 'https://example.org/pam', accessedAt: '', sha256: '', caveat: 'PAM', products: [{ productCode: '1', productLabel: 'Milho', cropIds: ['maize'], harvestedAreaHa: 1000, producedQuantity: null, productionUnit: null, caveat: null }] };
     const withPam = buildTradeoffs([a, b], ctx({ pam: pam as never })); const market = withPam.get('A')!.cells.find((item) => item.axis === 'market')!;
-    expect(market.summary).toContain('1000 ha colhidos em 2024'); expect(market.summary).toContain('não preço nem lucro'); expect(withPam.get('B')!.cells.find((item) => item.axis === 'market')!.level).toBe('worse');
+    expect(market.summary).toContain('1.000 ha colhidos em 2024'); expect(market.summary).toContain('não preço nem lucro'); expect(withPam.get('B')!.cells.find((item) => item.axis === 'market')!.level).toBe('worse');
   });
   it('orders gains and losses by dominant priority without scores', () => {
     expect(orderAxes({ soil: 3, water: 2, operations: 1 }).slice(0, 2)).toEqual(['soil', 'erosion']);

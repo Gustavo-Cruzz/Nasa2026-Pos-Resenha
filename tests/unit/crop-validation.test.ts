@@ -7,10 +7,10 @@ describe('crop scientific guards', () => {
   it('offers exactly eight P0 crops and preserves unknown scientific parameters', () => {
     const p0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'];
     expect(crops.filter((crop) => p0.includes(crop.id))).toHaveLength(8);
-    expect(crops.find((item) => item.id === 'upland_rice')).toMatchObject({ cycleDaysRange: null, idealTempC: null, viableTempC: { min: 10, max: 36 }, soilPhRange: { min: 5.5, max: 7 }, kcStages: null, parameterStatus: 'missing' });
-    // Common bean gained verified ranges (Embrapa CPATSA and Embrapa Acre); viable temperature comes from FAO ECOCROP (absolute range); cycle stays unknown.
+    expect(crops.find((item) => item.id === 'upland_rice')).toMatchObject({ cycleDaysRange: { min: 89, max: 115 }, idealTempC: null, viableTempC: { min: 10, max: 36 }, soilPhRange: { min: 5.5, max: 7 }, kcStages: null, parameterStatus: 'missing' });
+    // Common bean gained verified ranges (Embrapa CPATSA and Embrapa Acre); viable temperature comes from FAO ECOCROP (absolute range); cycle comes from the ZARC groups (Embrapa/MAPA, Brazil).
     // FAO-56 cycle totals are not projected (product decision 15/11/2026: they mix climates).
-    expect(crops.find((item) => item.id === 'common_bean')).toMatchObject({ cycleDaysRange: null, viableTempC: { min: 7, max: 32 }, idealTempC: { min: 15, max: 27 }, soilPhRange: { min: 5.5, max: 6.5 }, parameterStatus: 'missing' });
+    expect(crops.find((item) => item.id === 'common_bean')).toMatchObject({ cycleDaysRange: { min: 70, max: 80 }, viableTempC: { min: 7, max: 32 }, idealTempC: { min: 15, max: 27 }, soilPhRange: { min: 5.5, max: 6.5 }, parameterStatus: 'missing' });
   });
   it('does not make a crop eligible when its evidence status is missing', () => {
     expect(crops.every((crop) => !isRecommendationEligible(crop))).toBe(true);
