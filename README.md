@@ -1,11 +1,11 @@
-# Plantaê — from space to soil, farmers decide
+# Plantaê — From Space to Soil. Farmers Decide.
 
 <p align="center">
-  <img src="public/assets/team/silknasa-plantae.png" alt="Equipe SilkNASA, criadora do projeto Plantaê" width="620" />
+  <img src="public/assets/team/silknasa-plantae.png" alt="SilkNASA team, creators of the Plantaê project" width="620" />
 </p>
 
 <p align="center">
-  <strong>Equipe SilkNASA · Projeto Plantaê · NASA Space Apps Challenge 2026</strong>
+  <strong>SilkNASA Team · Plantaê Project · NASA Space Apps Challenge 2026</strong>
 </p>
 
 > **What if farmers could explore their choices before planting?**
@@ -14,277 +14,277 @@
 >
 > **But behind every pixel, there is science.**
 >
-> We combine NASA observations with soil estimates covering more than 5,000 Brazilian municipalities. Our solar-powered, low-cost IoT prototype measures soil moisture, rainfall and temperature directly in the field, complementing the spatial limits of satellite data. A virtual assistant makes complex evidence easier to understand.
+> We combine NASA observations with soil estimates covering more than 5,000 Brazilian municipalities. Our solar-powered, low-cost IoT prototype measures soil moisture, rainfall, and temperature directly in the field, complementing the spatial limits of satellite data. A virtual assistant makes complex evidence easier to understand.
 >
-> Farmers swap crops, compare trade-offs and explore four stages.
+> Farmers swap crops, compare trade-offs, and explore four stages.
 >
 > **Plantaê. From space to soil. Farmers decide.**
 
-Plantaê (codinome técnico **Field Shift**) é um MVP visual e bilíngue de apoio à decisão agrícola. O projeto da equipe **SilkNASA** ajuda produtores brasileiros a explorar hipóteses de rotação antes do plantio, sem esconder incertezas atrás de uma nota única e sem apresentar dados regionais como medições do talhão.
+Plantaê (technical codename **Field Shift**) is a visual, bilingual agricultural decision-support MVP. Created by the **SilkNASA** team, it helps Brazilian farmers explore crop rotation hypotheses before planting without hiding uncertainty behind a single score or presenting regional data as field measurements.
 
-O produto não decide pelo agricultor. Ele organiza histórico climático, contexto municipal, evidências das culturas e prioridades informadas pelo produtor em três cenários comparáveis:
+The product does not decide for the farmer. It organizes climate history, municipal context, crop evidence, and farmer priorities into three comparable scenarios:
 
-- **A — intenção atual:** plano confirmado pelo agricultor ou continuação claramente identificada como hipótese.
-- **B — solo e cobertura:** alternativa entre culturas elegíveis, respeitando restrições do produtor e evidências disponíveis.
-- **C — contexto hídrico:** alternativa com evidência térmica documentada quando possível; não promete tolerância à seca nem menor consumo de água.
+- **A — current intention:** the farmer's confirmed plan, or a continuation clearly labeled as a hypothesis.
+- **B — soil and cover:** an alternative selected from eligible crops while respecting farmer restrictions and available evidence.
+- **C — water context:** an alternative with documented thermal evidence when possible; it does not promise drought tolerance or lower water use.
 
-Dados ausentes permanecem **N/D / desconhecidos**. As comparações são qualitativas e rastreáveis, não probabilidades de sucesso ou recomendações agronômicas.
+Missing data remain **N/A / unknown**. Comparisons are qualitative and traceable, not probabilities of success or agronomic prescriptions.
 
-## O problema
+## The Problem
 
-Uma decisão de rotação reúne perguntas que normalmente estão separadas:
+A crop rotation decision brings together questions that usually live in separate places:
 
-- O que o agricultor já plantou e quais culturas consegue operar ou comercializar?
-- Como o clima costuma se comportar na janela de cada cultivo?
-- Existe registro ZARC para a cultura, município e período?
-- O que está documentado sobre temperatura, ciclo, cobertura, palhada e família botânica?
-- O que muda quando a prioridade é água, solo ou operação?
-- Quais conclusões têm evidência, quais exigem atenção e quais ainda não podem ser respondidas?
+- What has the farmer already planted, and which crops can they operate or sell?
+- How does the climate usually behave during each crop window?
+- Is there a ZARC record for the crop, municipality, and period?
+- What is documented about temperature, cycle, cover, residue, and botanical family?
+- What changes when the priority is water, soil, or operations?
+- Which conclusions have evidence, which require attention, and which cannot yet be answered?
 
-O Plantaê transforma essas perguntas em um laboratório explorável. A pixel art comunica os cenários; o Centro de Evidências mostra regras, fontes, lacunas e limitações.
+Plantaê turns these questions into an explorable laboratory. Pixel art communicates the scenarios; the Evidence Center exposes the rules, sources, gaps, and limitations behind them.
 
-## Um pilar: acesso universal e de baixo custo a dados
+## A Core Pillar: Universal, Low-Cost Access to Data
 
-Dados de satélite tornam possível observar grandes áreas, mas sua resolução espacial e temporal não representa automaticamente o que acontece em cada talhão. Uma média de grade regional não substitui uma leitura feita diretamente no solo.
+Satellite data make it possible to observe large areas, but their spatial and temporal resolution does not automatically represent what happens in each field. A regional grid average cannot replace a reading taken directly from the soil.
 
-Por isso, a visão do Plantaê combina duas escalas:
+Plantaê therefore combines two scales:
 
-- **do espaço:** histórico e contexto regional acessíveis mesmo onde não existe infraestrutura de campo;
-- **no solo:** um protótipo IoT de baixo custo, alimentado por painel solar, com sensores de **umidade do solo, chuva e temperatura**.
+- **from space:** historical and regional context, available even where no field infrastructure exists;
+- **on the ground:** a low-cost, solar-powered IoT prototype with **soil-moisture, rainfall, and temperature sensors**.
 
-O objetivo é democratizar a coleta direta: hardware simples, energia solar e leitura local podem reduzir a barreira de entrada para agricultores com pouca conectividade ou acesso limitado a estações meteorológicas. No MVP atual, o vídeo demonstra a montagem física; as medições ainda não entram automaticamente no motor decisório e permanecem uma camada futura de evidência local.
+The goal is to democratize direct data collection. Simple hardware, solar power, and local readings can lower the barrier for farmers with limited connectivity or access to weather stations. In the current MVP, the video demonstrates the physical assembly; measurements do not yet enter the decision engine automatically and remain a future local-evidence layer.
 
 <p align="center">
-  <video src="public/assets/team/plantae-iot-assembly.mp4" controls width="720" title="Montagem do protótipo IoT Plantaê"></video>
+  <video src="public/assets/team/plantae-iot-assembly.mp4" controls width="720" title="Plantaê IoT prototype assembly"></video>
 </p>
 
-**[Assistir ao vídeo da montagem do IoT Plantaê](public/assets/team/plantae-iot-assembly.mp4)**
+**[Watch the Plantaê IoT assembly video](public/assets/team/plantae-iot-assembly.mp4)**
 
-## Jornada do agricultor
+## Farmer Journey
 
 ```mermaid
 flowchart LR
-    A[Escolher local<br/>mapa, busca ou coordenadas] --> B[Conversar com João<br/>ou preencher a fazenda]
-    B --> C[Informar histórico, solo,<br/>prioridades e restrições]
-    C --> D[Gerar cenários<br/>A, B e C]
-    D --> E[Editar quatro slots<br/>no Laboratório]
-    E --> F[Comparar trade-offs<br/>e evidências]
-    F --> G[Explorar quatro estágios<br/>em histórias pixel art]
-    G --> H[Levar perguntas e evidências<br/>à assistência técnica]
+    A[Choose a location<br/>map, search, or coordinates] --> B[Talk to João<br/>or fill in the farm form]
+    B --> C[Provide history, soil,<br/>priorities, and restrictions]
+    C --> D[Generate scenarios<br/>A, B, and C]
+    D --> E[Edit four slots<br/>in the Rotation Lab]
+    E --> F[Compare trade-offs<br/>and evidence]
+    F --> G[Explore four stages<br/>through pixel-art stories]
+    G --> H[Take questions and evidence<br/>to technical assistance]
 
-    F -. trocar cultura .-> E
-    E -. recalcular análise .-> F
+    F -. swap a crop .-> E
+    E -. recompute analysis .-> F
 ```
 
-Os quatro slots representam **Ano 1/2 × Temporada A/B**. São espaços neutros: nenhum slot recebe data, duração ou calendário inventado. As quatro etapas de Future Farm Stories visualizam as hipóteses; continuam sendo cenários, não previsões.
+The four slots represent **Year 1/2 × Season A/B**. They are neutral planning spaces: no slot receives an invented date, duration, or agricultural calendar. The four Future Farm Stories stages visualize the hypotheses; they remain scenarios, not forecasts.
 
-## Fluxo decisório
+## Decision Flow
 
 ```mermaid
 flowchart TD
-    INPUT[Entrada do produtor<br/>local, histórico, prioridades,<br/>solo, área e culturas] --> VALIDATE{Entrada válida?}
-    VALIDATE -- não --> FIX[Explicar o campo a corrigir]
+    INPUT[Farmer input<br/>location, history, priorities,<br/>soil, area, and crops] --> VALIDATE{Valid input?}
+    VALIDATE -- no --> FIX[Explain the field that needs correction]
     FIX --> INPUT
-    VALIDATE -- sim --> REGION{Ponto no Brasil?}
+    VALIDATE -- yes --> REGION{Point inside Brazil?}
 
-    REGION -- sim --> MUNICIPAL[Resolver município IBGE<br/>e carregar ZARC + PAM]
-    REGION -- não --> GLOBAL[Exploração climática global<br/>sem evidência regional brasileira]
+    REGION -- yes --> MUNICIPAL[Resolve the IBGE municipality<br/>and load ZARC + PAM]
+    REGION -- no --> GLOBAL[Global climate exploration<br/>without Brazilian regional evidence]
 
-    MUNICIPAL --> CLIMATE[Carregar contexto climático NASA]
+    MUNICIPAL --> CLIMATE[Load NASA climate context]
     GLOBAL --> CLIMATE
-    CLIMATE --> CANDIDATES[Construir hipóteses A, B e C]
+    CLIMATE --> CANDIDATES[Build A, B, and C hypotheses]
 
-    CANDIDATES --> FARMER{Cultura aceita pelo produtor<br/>e elegível para rotação anual?}
-    FARMER -- não --> UNAVAILABLE[Manter baseline ou<br/>marcar alternativa indisponível]
-    FARMER -- sim --> EVIDENCE{Há evidência necessária?}
-    EVIDENCE -- não --> ND[Retornar N/D<br/>e registrar a lacuna]
-    EVIDENCE -- sim --> RULES[Aplicar regras puras<br/>por janela e por slot]
+    CANDIDATES --> FARMER{Crop accepted by the farmer<br/>and eligible for annual rotation?}
+    FARMER -- no --> UNAVAILABLE[Keep the baseline or<br/>mark the alternative unavailable]
+    FARMER -- yes --> EVIDENCE{Required evidence available?}
+    EVIDENCE -- no --> ND[Return N/A<br/>and record the gap]
+    EVIDENCE -- yes --> RULES[Apply pure rules<br/>per window and slot]
 
-    RULES --> TRADEOFFS[Comparar com A:<br/>água, solo, erosão,<br/>família, calendário e mercado]
+    RULES --> TRADEOFFS[Compare with A:<br/>water, soil, erosion,<br/>family, calendar, and market]
     ND --> RESULT
     UNAVAILABLE --> RESULT
-    TRADEOFFS --> RESULT[Mostrar cenários, fontes,<br/>limites e próximos passos]
-    RESULT --> DECIDE[O agricultor decide o que explorar,<br/>confirmar ou discutir]
+    TRADEOFFS --> RESULT[Show scenarios, sources,<br/>limits, and next steps]
+    RESULT --> DECIDE[The farmer decides what to explore,<br/>confirm, or discuss]
 ```
 
-### O que pode alterar uma análise
+### What Can Change an Analysis
 
-- plano-base e histórico informados pelo produtor;
-- localização e identidade municipal;
-- culturas disponíveis, aceitas ou bloqueadas;
-- janelas mensais declaradas ou documentadas;
-- prioridades, que mudam a **ordem de atenção**, não os fatos;
-- parâmetros agrícolas documentados;
-- observações climáticas históricas e indicadores reproduzíveis.
+- the farmer's baseline plan and crop history;
+- location and municipal identity;
+- available, accepted, or blocked crops;
+- declared or documented monthly windows;
+- priorities, which change the **order of attention**, not the underlying facts;
+- documented agricultural parameters;
+- historical climate observations and reproducible indicators.
 
-O motor nunca converte ausência em zero e nunca conclui aptidão agrícola apenas pelo clima.
+The engine never turns missing evidence into zero and never infers crop suitability from climate alone.
 
-## Como cada base é usada
+## How Each Data Source Is Used
 
 ```mermaid
 flowchart TB
-    subgraph SPACE[Espaço e clima]
-      POWER[NASA POWER<br/>temperatura, radiação, umidade,<br/>vento, pressão e precipitação]
-      IMERG[GPM IMERG via POWER<br/>chuva e dias chuvosos]
-      MERRA[MERRA-2 GWETROOT<br/>umidade radicular relativa]
-      MODIS[MODIS MOD13Q1<br/>NDVI pré-processado]
-      SRTM[NASA SRTM<br/>elevação e declividade]
-      GIBS[NASA GIBS<br/>camadas visuais]
+    subgraph SPACE[Space and climate]
+      POWER[NASA POWER<br/>temperature, radiation, humidity,<br/>wind, pressure, and precipitation]
+      IMERG[GPM IMERG via POWER<br/>rainfall and rainy days]
+      MERRA[MERRA-2 GWETROOT<br/>relative root-zone wetness]
+      MODIS[MODIS MOD13Q1<br/>preprocessed NDVI]
+      SRTM[NASA SRTM<br/>elevation and slope]
+      GIBS[NASA GIBS<br/>visual layers]
     end
 
-    subgraph BR[Brasil]
-      IBGE[Malha municipal IBGE]
+    subgraph BR[Brazil]
+      IBGE[IBGE municipal mesh]
       ZARC[MAPA ZARC]
       PAM[IBGE PAM]
       SOIL[SoilGrids]
     end
 
-    subgraph FIELD[Produtor e campo]
-      FARMER[Histórico, solo, prioridades,<br/>área e restrições]
-      IOT[Protótipo IoT solar<br/>umidade do solo, chuva<br/>e temperatura]
+    subgraph FIELD[Farmer and field]
+      FARMER[History, soil, priorities,<br/>area, and restrictions]
+      IOT[Solar IoT prototype<br/>soil moisture, rainfall,<br/>and temperature]
     end
 
-    POWER --> DERIVED[ET0, P−ET0,<br/>sazonalidade e erosividade]
-    IMERG --> RULES[Regras rastreáveis]
+    POWER --> DERIVED[ET0, P−ET0,<br/>seasonality, and erosivity]
+    IMERG --> RULES[Traceable rules]
     MERRA --> RULES
     MODIS --> RULES
     SRTM --> RULES
-    GIBS -. contexto visual .-> RESULT[Trade-offs A/B/C]
+    GIBS -. visual context .-> RESULT[A/B/C trade-offs]
     IBGE --> RULES
     ZARC --> RULES
     PAM --> RULES
     SOIL --> RULES
     FARMER --> RULES
-    IOT -. protótipo ainda não integrado .-> FARMER
+    IOT -. prototype not yet integrated .-> FARMER
     DERIVED --> RULES
     RULES --> RESULT
 ```
 
-| Base | Uso atual | Valor para o agricultor | Limite |
+| Source | Current use | Value for the farmer | Important limit |
 | --- | --- | --- | --- |
-| **NASA POWER** | Histórico climático e entradas para ET0 FAO-56 | Mostra como o clima costuma se comportar na janela | Grade regional; não é sensor nem previsão |
-| **GPM IMERG via POWER** | Totais históricos e distribuição de dias com chuva | Separa quantidade de frequência da chuva | Chuva não é demanda da cultura |
-| **MERRA-2 GWETROOT** | Índice relativo de umidade na zona radicular | Acrescenta contexto hídrico além da chuva | Não é umidade volumétrica do talhão |
-| **MODIS MOD13Q1** | NDVI pré-processado e verificado em pontos demonstrativos agrícolas | Acrescenta sinal histórico de verdor | Apenas pontos preparados; não diagnostica a fazenda |
-| **NASA SRTM** | Elevação, classes de declividade e hotspots de relevo | Torna o relevo visível na discussão de solo exposto | Não calcula perda de solo |
-| **NASA GIBS** | Camadas visuais datadas de SMAP, chuva e imagem | Permite explorar o contexto espacial | Cores do raster não viram medições |
-| **Malha IBGE** | Coordenada → município versionado | Conecta o ponto às bases municipais corretas | Município não confirma propriedade ou uso agrícola |
-| **MAPA ZARC** | Registro por cultura, município e período | Mostra o zoneamento oficial aplicável ao slot | Ausência não significa inadequação; não é garantia |
-| **IBGE PAM** | Área colhida municipal por produto | Indica existência de cadeia produtiva registrada | Não informa preço, lucro ou viabilidade |
-| **SoilGrids** | Estimativas 0–30 cm em pontos de referência municipais | Ponto de partida de baixo custo sobre textura, pH e carbono | Estimativa espacial, não análise laboratorial |
-| **Dados do produtor** | Histórico, plano, solo local, culturas e prioridades | Mantém a comparação ligada à realidade operacional | Informação declarada fica separada de observações externas |
-| **Open-Meteo** | Tempo atual e previsão em painel independente | Contexto meteorológico de curto prazo | Não é NASA, medição ou recomendação |
-| **Protótipo IoT solar** | Demonstra coleta direta de umidade do solo, chuva e temperatura com alimentação fotovoltaica | Oferece um caminho universal e de baixo custo para complementar limites dos satélites com evidência local | Ainda não alimenta automaticamente o motor deste repositório |
+| **NASA POWER** | Historical climate and inputs for FAO-56 ET0 | Shows how climate usually behaves during a crop window | Regional grid; not a sensor or forecast |
+| **GPM IMERG via POWER** | Historical totals and rainy-day distribution | Separates rainfall amount from rainfall frequency | Rainfall is not crop water demand |
+| **MERRA-2 GWETROOT** | Relative root-zone wetness index | Adds water context beyond rainfall alone | Not volumetric field soil moisture |
+| **MODIS MOD13Q1** | Verified, preprocessed NDVI at agricultural demonstration points | Adds a historical vegetation-greenness signal | Prepared points only; does not diagnose a farm |
+| **NASA SRTM** | Elevation, slope classes, and relief hotspots | Makes terrain visible when discussing exposed soil | Does not calculate soil loss |
+| **NASA GIBS** | Dated visual SMAP, rain, and imagery layers | Supports visual exploration of spatial context | Raster colors never become measurements |
+| **IBGE municipal mesh** | Versioned coordinate-to-municipality resolution | Connects the point to the correct municipal datasets | A municipality does not confirm ownership or agricultural land use |
+| **MAPA ZARC** | Records by crop, municipality, and period | Exposes official risk-zoning context for each slot | Absence does not mean unsuitable; zoning is not a guarantee |
+| **IBGE PAM** | Municipal harvested area by product | Indicates a recorded local production chain | Does not provide price, profit, or viability |
+| **SoilGrids** | 0–30 cm estimates at municipal reference points | Provides a low-cost starting point for texture, pH, and carbon discussions | Spatial estimate, not a laboratory analysis |
+| **Farmer input** | History, plan, local soil, crops, and priorities | Keeps the comparison grounded in operational reality | Declared information remains separate from external observations |
+| **Open-Meteo** | Current weather and forecast in an independent panel | Adds short-term meteorological context | Not NASA data, a measurement, or a recommendation |
+| **Solar IoT prototype** | Demonstrates direct collection of soil moisture, rainfall, and temperature with photovoltaic power | Offers a universal, low-cost path for complementing satellite limits with local evidence | Does not yet feed the repository's engine automatically |
 
-Fontes, licenças e proveniência: [SOURCES](docs/SOURCES.md) e [METHOD](docs/METHOD.md).
+Sources, licenses, and provenance are documented in [SOURCES](docs/SOURCES.md) and [METHOD](docs/METHOD.md).
 
-## O que o agricultor recebe
+## What the Farmer Receives
 
-### Três alternativas, sem nota opaca
+### Three Alternatives Without an Opaque Score
 
-O produtor vê A/B/C lado a lado. O cenário A continua sendo a referência; B e C não substituem silenciosamente o plano informado.
+The farmer sees A/B/C side by side. Scenario A remains the reference; B and C never silently replace the farmer's stated plan.
 
-### Seis eixos de trade-off
+### Six Explicit Trade-Off Axes
 
-1. **Água:** histórico `P − ET0` na mesma janela e Kc documentado quando disponível. Não calcula ETc ou irrigação.
-2. **Solo:** cobertura, fixação de N documentada, palhada e diversidade de famílias.
-3. **Erosão:** meses potencialmente descobertos, erosividade da chuva e declividade SRTM. Não calcula RUSLE.
-4. **Família/doenças:** repetição botânica imediata; doenças só aparecem com fonte.
-5. **Calendário:** leitura ZARC por cultura, janela e município.
-6. **Mercado/operação:** contexto PAM e restrições do produtor; sem previsão de preço ou lucro.
+1. **Water:** historical `P − ET0` over the same window and documented Kc when available. It does not calculate ETc or irrigation needs.
+2. **Soil:** cover purpose, documented nitrogen-fixation potential, residue, and botanical-family diversity.
+3. **Erosion:** potentially bare months, rainfall erosivity, and SRTM slope. It does not calculate RUSLE soil loss.
+4. **Family/disease:** immediate botanical-family repetition; diseases are named only when documented.
+5. **Calendar:** ZARC reading by crop, window, and municipality.
+6. **Market/operations:** PAM context and farmer restrictions; no price or profit forecast.
 
-Os estados são **referência**, **melhor que A**, **parecido com A**, **pior que A** e **não sabemos**. “Melhor” ou “pior” vale somente para aquele eixo.
+Possible states are **reference**, **better than A**, **similar to A**, **worse than A**, and **unknown**. “Better” or “worse” applies only to that named axis.
 
-### Evidência inspecionável
+### Inspectable Evidence
 
 ```mermaid
 flowchart LR
-    CLAIM[Alegação visível] --> RULE[Regra e cálculo]
-    RULE --> SOURCE[Fonte e período]
-    RULE --> LEVEL{Nível}
-    LEVEL --> CE[Exploração climática]
-    LEVEL --> RC[Contextualização regional]
-    LEVEL --> LV[Validação local]
-    SOURCE --> GAP[Lacunas e limites]
-    LV -. reservado; não emitido<br/>sem validação rastreável .-> GAP
+    CLAIM[Visible claim] --> RULE[Rule and calculation]
+    RULE --> SOURCE[Source and period]
+    RULE --> LEVEL{Evidence level}
+    LEVEL --> CE[Climate exploration]
+    LEVEL --> RC[Regional contextualization]
+    LEVEL --> LV[Local validation]
+    SOURCE --> GAP[Gaps and limits]
+    LV -. reserved; never emitted<br/>without traceable validation .-> GAP
 ```
 
-- **Exploração climática:** há clima, mas não evidência regional suficiente.
-- **Contextualização regional:** existe correspondência entre município e cultura no pacote carregado.
-- **Validação local:** reservada para futura validação rastreável; o MVP não a emite.
+- **Climate exploration:** climate context exists, but regional crop evidence is insufficient.
+- **Regional contextualization:** the loaded package contains a municipality-and-crop match.
+- **Local validation:** reserved for future traceable field validation; the MVP never emits it.
 
-### João explica em linguagem cotidiana
+### João Explains Evidence in Everyday Language
 
-João recebe o ponto do mapa, coleta dados da fazenda e explica evidências sem esconder desconhecidos. O ditado funciona em `pt-BR` e `en-US`, preenche o campo para revisão e não envia automaticamente. O leitor de página oferece iniciar, pausar, continuar, reiniciar e parar.
+João receives the selected map point, collects farm information, and explains evidence without hiding unknowns. Dictation supports `pt-BR` and `en-US`, fills the field for review, and never submits automatically. The page reader can start, pause, resume, restart, and stop.
 
-O Gemini é opcional e usado somente no protótipo `/results3`, com `GEMINI_API_KEY` no servidor. A saída passa por validação de esquema e tem fallback determinístico. O motor A/B/C é baseado em regras e não depende de IA generativa.
+Gemini is optional and used only by the `/results3` prototype when `GEMINI_API_KEY` is configured server-side. Its output is schema-validated and falls back to deterministic text. The core A/B/C engine is rule-based and does not depend on generative AI.
 
-## Arquitetura
+## Architecture
 
 ```mermaid
 flowchart LR
-    UI[Next.js + React<br/>Atlas, João, Fazenda, Lab, Resultados] --> API[APIs validadas<br/>com Zod]
-    API --> NASA[Adaptadores NASA e clima]
-    API --> DATA[Artefatos regionais versionados]
-    API --> ENGINE[Motor TypeScript puro]
-    ENGINE --> EVIDENCE[Manifesto de evidências<br/>fontes, alegações e lacunas]
+    UI[Next.js + React<br/>Atlas, João, Farm, Lab, Results] --> API[Zod-validated APIs]
+    API --> NASA[NASA and climate adapters]
+    API --> DATA[Versioned regional artifacts]
+    API --> ENGINE[Pure TypeScript engine]
+    ENGINE --> EVIDENCE[Evidence manifest<br/>sources, claims, and gaps]
     EVIDENCE --> UI
 
-    UI --> LOCAL[localStorage<br/>rascunho e preferências]
-    UI --> AUTH[Login simples de demonstração]
-    AUTH --> SQLITE[SQLite local da fazenda]
+    UI --> LOCAL[localStorage<br/>draft and preferences]
+    UI --> AUTH[Simple demo login]
+    AUTH --> SQLITE[Local SQLite farm store]
     GEMINI[Gemini REST] --> EXPLAIN[/api/explain-farm]
     EXPLAIN --> UI
 ```
 
-Princípios:
+Core principles:
 
-- TypeScript estrito e Zod nas fronteiras;
-- funções decisórias puras e testáveis;
-- dados preparados com versão, URL e hashes;
-- ausências permanecem `null`/unknown;
-- histórico NASA, previsão, estimativa regional e medição local ficam separados;
-- interface responsiva e acessível por teclado, voz e leitura em voz alta.
+- strict TypeScript and Zod validation at boundaries;
+- pure, testable decision functions;
+- prepared data with versions, source URLs, and hashes;
+- missing values remain `null`/unknown;
+- NASA history, forecasts, regional estimates, and local measurements remain separate;
+- responsive, accessible UI with keyboard, voice, and read-aloud support.
 
-O login e o SQLite são recursos de hackathon. O arquivo SQLite é temporário em ambiente serverless e não representa uma solução de identidade ou persistência de produção.
+The login and SQLite store are hackathon features. The SQLite file is temporary in serverless environments and is not a production identity or persistence solution.
 
-## Rotas
+## Routes
 
-| Rota | Finalidade |
+| Route | Purpose |
 | --- | --- |
-| `/` | Landing page e demonstração Brasil |
-| `/explore` | Atlas, seleção de local, contexto e João |
-| `/chat` | Conversa guiada com ditado |
-| `/cadastro` | Cadastro simples da fazenda |
-| `/entrar` | Login de demonstração |
-| `/painel` | Painel da fazenda salvo em SQLite |
-| `/farm` | Histórico, sistemas, solo e prioridades |
-| `/lab` | Laboratório A/B/C com quatro slots |
-| `/results` | Comparação, trade-offs e evidências |
-| `/results3` | Explicação opcional com Gemini |
-| `/future-stories` | Quatro estágios visuais dos cenários |
-| `/demo` | Demonstração guiada |
-| `/methodology` | Método, fontes e limites |
-| `/settings` | Acessibilidade e dados locais |
+| `/` | Landing page and Brazil demonstration |
+| `/explore` | Atlas, location selection, context, and João |
+| `/chat` | Guided conversation with voice dictation |
+| `/cadastro` | Simple farm registration |
+| `/entrar` | Demo sign-in |
+| `/painel` | SQLite-backed farm dashboard |
+| `/farm` | History, systems, soil, and priorities |
+| `/lab` | Four-slot A/B/C rotation laboratory |
+| `/results` | Comparison, trade-offs, and evidence |
+| `/results3` | Optional Gemini-assisted explanation |
+| `/future-stories` | Four visual stages for the scenarios |
+| `/demo` | Guided demonstration |
+| `/methodology` | Methods, sources, and limits |
+| `/settings` | Accessibility and local-data controls |
 
-`/joao-moods` é uma página interna de revisão visual.
+`/joao-moods` is an internal visual-review page.
 
-## O que o Plantaê não afirma
+## What Plantaê Deliberately Does Not Claim
 
-- qual cultura o agricultor deve plantar;
-- produtividade, renda, preço, NPK ou carbono futuro;
-- ETc, consumo hídrico, irrigação ou déficit do talhão;
-- diagnóstico de praga, doença, fertilidade ou perda de solo;
-- validação local a partir de uma média municipal;
-- probabilidade do experimento de veranico: o modelo não superou a climatologia;
-- garantia baseada em ZARC, PAM, NDVI, SoilGrids ou NASA;
-- integração automática das medições do protótipo IoT.
+- which crop a farmer should plant;
+- future yield, revenue, price, NPK, or soil carbon;
+- ETc, crop water use, irrigation requirement, or field deficit;
+- pest, disease, fertility, or soil-loss diagnosis;
+- local validation from municipal averages;
+- a probability from the dry-spell experiment—the model did not beat climatology;
+- a guarantee based on ZARC, PAM, NDVI, SoilGrids, or NASA;
+- automatic ingestion of IoT prototype measurements.
 
-O Climate Risk Lab pode mostrar previsão Open-Meteo, sempre separada das observações históricas NASA e dos cenários históricos.
+The Climate Risk Lab may display an Open-Meteo forecast, always separated from NASA historical observations and historical scenarios.
 
-## Executar localmente
+## Run Locally
 
-Requisitos: Node.js `>=22.13` e npm.
+Requirements: Node.js `>=22.13` and npm.
 
 ```bash
 git clone <repository-url>
@@ -294,9 +294,9 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Acesse `http://localhost:3000`. A demonstração principal funciona sem Gemini. Para habilitar as explicações opcionais de `/results3`, defina `GEMINI_API_KEY` em `.env.local`; nunca use variável `NEXT_PUBLIC_`.
+Open `http://localhost:3000`. The main demonstration works without Gemini. To enable the optional `/results3` explanations, set `GEMINI_API_KEY` in `.env.local`; never expose it through a `NEXT_PUBLIC_` variable.
 
-### Verificações
+### Quality Checks
 
 ```bash
 npm run lint
@@ -306,7 +306,7 @@ npm run test:e2e
 npm run build
 ```
 
-### Pipelines de dados
+### Data Pipelines
 
 ```bash
 npm run build:brazil-context
@@ -318,27 +318,27 @@ npm run fetch:nasa-fixture -- <site>
 npm run train:dry-spell
 ```
 
-Artefatos preparados são versionados. Nenhum fallback de uma localidade pode ser reutilizado em outra.
+Prepared artifacts are versioned. A fallback from one location must never be reused for another.
 
-## Deploy
+## Deployment
 
-- Aplicação preparada para Next.js/Vercel.
-- `GEMINI_API_KEY` é opcional e exclusivamente server-side.
-- Serviços públicos de clima e relevo possuem limites; falhas devem preservar estados N/D recuperáveis.
-- SQLite é efêmero na Vercel e precisa ser substituído antes de produção.
-- Segredos e credenciais de produção não pertencem ao repositório.
+- The application is designed for Next.js/Vercel.
+- `GEMINI_API_KEY` is optional and server-side only.
+- Public climate and terrain services have limits; failures must preserve recoverable N/A states.
+- SQLite is ephemeral on Vercel and must be replaced before production.
+- Production credentials and secrets do not belong in the repository.
 
-## Documentação
+## Documentation
 
-- [PROJECT_SPEC](fieldshift_codex/PROJECT_SPEC.md) — contrato do produto
-- [METHOD](docs/METHOD.md) — cálculos e método científico
-- [SOURCES](docs/SOURCES.md) — fontes, licenças e proveniência
-- [VALIDATION](docs/VALIDATION.md) — regras de aceitação
-- [DEMO_SCRIPT](docs/DEMO_SCRIPT.md) — demonstração reproduzível
-- [SPRINT_LOG](docs/SPRINT_LOG.md) — histórico e limitações
+- [PROJECT_SPEC](fieldshift_codex/PROJECT_SPEC.md) — product contract
+- [METHOD](docs/METHOD.md) — calculations and scientific method
+- [SOURCES](docs/SOURCES.md) — sources, licenses, and provenance
+- [VALIDATION](docs/VALIDATION.md) — acceptance rules
+- [DEMO_SCRIPT](docs/DEMO_SCRIPT.md) — reproducible demonstration
+- [SPRINT_LOG](docs/SPRINT_LOG.md) — implementation history and limitations
 
-## Princípio do produto
+## Product Principle
 
 > **From space to soil. Farmers decide.**
 
-O Plantaê torna evidências exploráveis. Ele não substitui o agricultor, a observação local ou a assistência técnica.
+Plantaê makes evidence explorable. It does not replace farmers, local observation, or technical assistance.

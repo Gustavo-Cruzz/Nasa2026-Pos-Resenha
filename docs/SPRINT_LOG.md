@@ -12,6 +12,8 @@ Evidence (2026-11-15): foto PNG e vídeo MP4 foram verificados como assets não 
 
 Limitations: o vídeo demonstra montagem física, não integração de telemetria, calibração, precisão, durabilidade ou validação de campo. Nenhuma dessas propriedades é inferida no README.
 
+Improvement (2026-11-15): todo o README foi convertido para inglês, incluindo títulos, texto, tabelas, rótulos dos cinco diagramas Mermaid, descrições da equipe e do IoT, rotas, instruções de execução, limites e documentação relacionada. Nomes próprios de rotas em português foram preservados porque correspondem às URLs reais.
+
 ## Verificação dos botões do explorador
 
 Status: complete — seleção de local, abas Dados/João, confirmação no chat e nova tentativa de clima verificadas no navegador.
