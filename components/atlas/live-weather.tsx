@@ -37,12 +37,3 @@ export function LiveWeatherPanel({ state }: { state: LiveState }) {
   </section>;
 }
 
-/** Compact strip over the map (hidden on small screens, where the panel carries the full set). */
-export function LiveStrip({ state }: { state: LiveState }) {
-  const { locale } = useLocale();
-  const en = locale === 'en';
-  if (state.kind !== 'ready') return null;
-  const w = state.weather;
-  const d = (value: number | null, digits = 0) => value === null ? 'N/D' : (en ? value.toFixed(digits) : value.toFixed(digits).replace('.', ','));
-  return <p aria-hidden="true" className="pointer-events-auto hidden items-center gap-3 rounded-xl border border-slate-600 bg-slate-950/85 px-3.5 py-2.5 text-sm font-semibold shadow-lg backdrop-blur md:flex"><Pulse /><span className="text-cyan-200">{d(w.temperatureC, 1)} °C</span><span>{d(w.humidityPct)} %</span><span>{d(w.windKmh)} km/h</span><span>{d(w.precipitationMm, 1)} mm</span></p>;
-}

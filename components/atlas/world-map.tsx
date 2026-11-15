@@ -9,7 +9,7 @@ import { useLocale } from '@/components/locale-provider';
 type WorldMapProps = { point: AtlasPoint | null; onPointChange: (point: AtlasPoint) => void; polygon: AtlasPolygon; drawingPolygon: boolean; onPolygonChange: (polygon: AtlasPolygon) => void; layers: MapLayers; onDrawFinish?: () => void; onMapReady?: (map: Leaflet.Map | null) => void; pointZoom?: number };
 
 /** Satellite tiles run out above this zoom (Esri shows "Map data not yet available"), so every layer and the map itself stop here. */
-export const MAP_MAX_ZOOM = 17;
+const MAP_MAX_ZOOM = 17;
 
 /** Drop-shaped pin (inline SVG: no default Leaflet marker images to bundle). */
 const pinHtml = (color: string) => `<svg width="34" height="44" viewBox="0 0 34 44" aria-hidden="true"><path d="M17 43C17 43 2 27 2 16a15 15 0 0 1 30 0c0 11-15 27-15 27Z" fill="${color}" stroke="#fdf6e3" stroke-width="2.5"/><circle cx="17" cy="16" r="5.5" fill="#fdf6e3"/></svg>`;

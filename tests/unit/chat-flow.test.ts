@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { acceptMapPlace, suggestMapChange, suggestMapPlace, advance, buildAnalysisInput, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, type ChatState } from '@/lib/chat/flow';
+import { acceptMapPlace, suggestMapChange, suggestMapPlace, advance, buildAnalysisInput, chooseSoil, cropChips, greeting, startWithLocation, initialState, lookupFailed, mergeSoil, prompt, provideLocation, stepNumber, summarize, decisionSummary, pointScenario, type ChatState } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 
 const rioVerde: PlaceMatch = { code: '5218805', name: 'Rio Verde', uf: 'GO', latitude: -17.798, longitude: -50.919 };
@@ -275,5 +275,34 @@ describe('places picked on the explorer map', () => {
     const turn = acceptMapPlace(state, { latitude: 1, longitude: 2 }, 'en');
     expect(turn.state.draft).toMatchObject({ current: 'soybean', location: { latitude: 1, longitude: 2 } });
     expect(turn.state.step).toBe('previous');
+  });
+});
+
+describe('chat closing: decision summary', () => {
+  const soilDraft = (): ChatState['draft'] => ({ location: { latitude: -17.798, longitude: -50.919 }, current: 'soybean', previous: 'maize', soil: { kinds: ['erosion'] }, soilDone: true });
+  it('points to B (soil health) when the farmer reported soil problems', () => {
+    expect(pointScenario(soilDraft())).toEqual({ scenario: 'B', priority: 'soil' });
+    expect(decisionSummary(soilDraft(), 'pt-BR')).toBe('Para proteger o solo sem perder a safrinha, compare B com A na análise.');
+    expect(decisionSummary(soilDraft(), 'en')).toBe('To protect the soil without losing the second crop, compare B with A in the analysis.');
+  });
+  it('points to C (diversification) when the previous crop is the same as the current one', () => {
+    const draft = { ...soilDraft(), soil: null, previous: 'soybean' };
+    expect(pointScenario(draft)).toEqual({ scenario: 'C', priority: 'diversification' });
+    expect(decisionSummary(draft, 'pt-BR')).toContain('compare C com A');
+    expect(decisionSummary(draft, 'en')).toContain('compare C with A');
+  });
+  it('keeps A (current plan) as the reference otherwise, including when the previous crop is skipped', () => {
+    const draft = { ...soilDraft(), soil: null, previous: null };
+    expect(pointScenario(draft)).toEqual({ scenario: 'A', priority: 'plan' });
+    expect(decisionSummary(draft, 'pt-BR')).toContain('o plano atual (A) é a referência');
+    expect(decisionSummary(draft, 'en')).toContain('your current plan (A) is the reference');
+  });
+  it('ends the confirmation with the summary, right before the question and the buttons', () => {
+    const prompted = prompt('confirm', soilDraft(), 'pt-BR')[0];
+    expect(prompted.text).toContain('Para proteger o solo sem perder a safrinha, compare B com A na análise.');
+    expect(prompted.text.indexOf('compare B')).toBeLessThan(prompted.text.indexOf('Tudo certo?'));
+    expect(prompted.text.endsWith('Tudo certo?')).toBe(true);
+    expect(prompted.chips).toContain('Ver minha análise');
+    expect(prompt('confirm', soilDraft(), 'en')[0].text).toContain('compare B with A in the analysis.');
   });
 });

@@ -11,7 +11,7 @@
 3. Explain that the planting month is a shared historical climate window, not a calendar prescription.
 4. Open Laboratory; change one crop slot and show the immediate before/after delta. Emphasize that it reports changed evidence, remaining unknowns and an undo action—not a score or winner.
 5. Use “Ver evidências” from that delta to open the Evidence Center already filtered to the edited scenario and slot. Show NASA, farmer input, catalog/regional sources, rule IDs and gaps in one place.
-6. Open Results; confirm that the four-slot sequence and indicators match the saved laboratory state, then compare A/B/C through mobile tabs or the desktop criteria table.
+6. Open Results. The first block is the decision: "Qual rotação para os próximos 2 anos no seu talhão?" with three cards, A/B/C. Each card shows the 2-year sequence, an A → B (or C) delta such as "B troca X por Y", "Ganha em (vs. A)", "Perde em (vs. A)", "Não sabemos", the priorities, the honesty strip ("O que sabemos / O que falta / O que validar") and "Pergunte ao técnico". Confirm that the sequence matches the saved laboratory state. The criteria table (mobile tabs or desktop table) comes after the cards, and "Detalhes técnicos" (climate, NDVI, data quality, sources) stays collapsed until the audience asks.
 7. Explain that Brazilian sources contextualize the catalog nationally through municipality-level records; neither is field validation nor a universal suitability rule, and raw codes are not percentages.
 8. End with the decision handoff: what is known, what remains unknown and what should be reviewed with technical assistance. State: no forecast, yield, NPK, irrigation prescription, aggregate ranking, or field validation.
 

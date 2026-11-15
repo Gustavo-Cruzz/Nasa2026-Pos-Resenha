@@ -114,6 +114,11 @@ export function CycleEvidencePanel({ scenario, cycle, en, locale }: { scenario: 
       <section><h4 className="font-semibold">{en ? 'Scientific evidence' : 'Evidências científicas'}</h4><p className="mt-1 text-sm"><b>{en ? 'Evidence level' : 'Nível de evidência'}:</b> {cycle.evidenceLevel ? copy.evidenceLevel[cycle.evidenceLevel] : 'N/D'}</p>
         {cycle.evidenceLinks.length ? <ul className="mt-1 space-y-1 text-sm">{cycle.evidenceLinks.map((item) => <li key={item.url}><a className="break-all underline" href={item.url} rel="noreferrer" target="_blank">{item.title}</a></li>)}</ul> : <p className="mt-1 text-sm text-slate-300">{en ? 'No linked source.' : 'Nenhuma fonte vinculada.'}</p>}
       </section>
+      {scenario.tradeoffs.gains.length || scenario.tradeoffs.losses.length || scenario.tradeoffs.unknowns.length ? <section data-testid="scenario-tradeoffs"><h4 className="font-semibold">{en ? 'Scenario trade-offs vs. A' : 'Trade-offs do cenário frente ao A'}</h4>
+        <p className="mt-1 text-sm font-semibold text-lime-200">{en ? 'Gains' : 'Ganha em'}</p><List empty="N/D" items={scenario.tradeoffs.gains} />
+        <p className="mt-1 text-sm font-semibold text-amber-200">{en ? 'Loses' : 'Perde em'}</p><List empty="N/D" items={scenario.tradeoffs.losses} />
+        <p className="mt-1 text-sm font-semibold text-slate-200">{en ? 'We do not know' : 'Não sabemos'}</p><List empty="N/D" items={scenario.tradeoffs.unknowns} /></section> : null}
+      {scenario.bareSoilNote ? <section><h4 className="font-semibold">{en ? 'Bare soil and erosion (24 months)' : 'Solo descoberto e erosão (24 meses)'}</h4><p className="mt-1 text-sm text-slate-200">{scenario.bareSoilNote}</p></section> : null}
       {scenario.scenarioNotes.length ? <details><summary className="cursor-pointer font-semibold">{en ? 'Scenario notes from the comparison' : 'Notas do cenário na comparação'}</summary><List empty="" items={scenario.scenarioNotes} /></details> : null}
       <p className="text-xs text-slate-400">{en ? 'Indicators come from the comparison engine and are independent of the illustration.' : 'Os indicadores vêm do motor de comparação e independem da ilustração.'}</p>
     </div>

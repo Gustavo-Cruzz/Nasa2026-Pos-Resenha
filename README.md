@@ -14,6 +14,29 @@ The dry-spell experiment defines an event as at least seven consecutive days bel
 
 The current flow is Explore → Farm → Laboratory → Compare → Methodology. It remains exploratory: it does not make agricultural recommendations, calculate aggregate scores, or turn missing evidence into zero.
 
+The interface defaults to English; Portuguese (pt-BR) is available from the language selector, and the saved choice is kept in the browser. Voice input and page reading follow the selected language.
+
+## Routes
+
+| Route | What it is |
+| --- | --- |
+| `/` | Landing page with the Brazil demo and entry points |
+| `/explore` | Map-based location selection, climate and regional context (Atlas) |
+| `/cadastro` | Farm registration form |
+| `/entrar` | Simple username/password sign-in for the farm panel |
+| `/painel` | Farm panel for the registered farm (local SQLite store) |
+| `/farm` | Farm timeline: crop history, soil profile and boundary |
+| `/lab` | Rotation laboratory: builds the A/B/C crop hypotheses |
+| `/results` | Strategy comparison with climate and evidence panels |
+| `/results3` | Prototype results view |
+| `/chat` | Guided conversation (João) that fills in the farm data, with voice input |
+| `/demo` | 90-second guided demo |
+| `/future-stories` | Exploratory scenarios for possible futures |
+| `/methodology` | Sources, methods and limits |
+| `/settings` | Accessibility preferences and local data |
+
+`/joao-moods` is an internal review page for the character's art and is not indexed.
+
 ## Development
 
 ```bash
@@ -36,7 +59,7 @@ Runtime pixel art lives under `public/assets/`. Editable generators, manifests, 
 
 ## Map and deployment
 
-`/explore` ships with a navigable real-world MapLibre basemap from OpenFreeMap, derived from OpenStreetMap data. Attribution is visible in the map control. Users can pan, zoom, click and drag the marker to position their farm; latitude/longitude fields remain the keyboard-accessible fallback. The basemap is for location selection only and does not add farm, crop, soil or climate observations.
+`/explore` uses a Leaflet map (`components/atlas/world-map.tsx`) over Esri World Imagery satellite tiles, with an Esri reference layer for borders and place names. Attribution is shown on the map. Users can pan, zoom, click and drag the marker to position their farm; latitude/longitude fields remain the keyboard-accessible fallback. The basemap is for location selection only and does not add farm, crop, soil or climate observations. Optional NASA GIBS overlays (SMAP soil moisture, IMERG rain, MODIS imagery) are visual context only.
 
 Deploy requires an authenticated Vercel account and GitHub write credentials. This repository intentionally contains neither credential nor a map-style URL.
 

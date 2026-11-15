@@ -23,6 +23,19 @@ export interface CropPresence {
 
 export interface EvidenceLink { title: string; url: string }
 
+export type CycleWeather = 'drought' | 'rain' | 'neutral' | 'unknown';
+/** Per-window climate context behind the scene's rain/drought layer. Historical medians, never a forecast. */
+export interface CycleClimate {
+  /** Accumulated median P-ET0 over the crop's own window (mm); null = N/D. */
+  waterBalanceMm: number | null;
+  /** drought: P-ET0 deficit; rain: surplus; neutral: within the tolerance band; unknown: no data (no weather drawn). */
+  weather: CycleWeather;
+  frost: 'attention' | 'observed' | 'unknown';
+  /** Localised reading of the P-ET0 window indicator, or null when absent. */
+  waterDetail: string | null;
+  frostDetail: string | null;
+}
+
 export interface FarmCycleView {
   /** Stable across edits: scenario + original slot index. */
   id: string;
@@ -44,6 +57,8 @@ export interface FarmCycleView {
   /** True when the farmer changed this cycle after the last analysis: evidence is withheld, not guessed. */
   evidenceStale: boolean;
   sceneMode: SceneMode;
+  /** Real per-window climate; null when the evidence is stale or missing. */
+  climate: CycleClimate | null;
   /** Always null: no implied soil or crop condition. */
   measuredFieldCondition: null;
 }
@@ -54,6 +69,10 @@ export interface FarmScenarioView {
   scenarioNotes: string[];
   scenarioMissingData: string[];
   cycles: FarmCycleView[];
+  /** Trade-offs against scenario A from the engine (Ganha / Perde / Não sabemos); empty when not computed. */
+  tradeoffs: { gains: string[]; losses: string[]; unknowns: string[] };
+  /** 24-month bare-soil and erosion screening reading; null when not computed. */
+  bareSoilNote: string | null;
   demoOnly: boolean;
 }
 
