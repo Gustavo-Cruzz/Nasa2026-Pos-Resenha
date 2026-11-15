@@ -1,4 +1,5 @@
 import { coordinatesSchema, type SoilObservation } from '@/lib/schema';
+import { cropAliases, crops } from '@/lib/catalog';
 
 /** Lowercase, accent-free, with the unicode minus folded to "-": parsers only ever see this form. */
 export function normalize(text: string): string {
@@ -52,7 +53,17 @@ export const CHAT_CROPS: Array<{ id: string; aliases: string[] }> = [
   { id: 'sorghum', aliases: ['sorgo', 'sorghum'] },
   { id: 'sunflower', aliases: ['girassol', 'sunflower'] },
 ];
-const ALIASES = CHAT_CROPS.flatMap((crop) => crop.aliases.map((alias) => ({ id: crop.id, alias }))).sort((a, b) => b.alias.length - a.alias.length);
+const catalogAliases = crops.flatMap((crop) => {
+  const names = [crop.id, crop.id.replaceAll('_', ' '), crop.commonNames['pt-BR'], crop.commonNames.en]
+    .flatMap((name) => name.split(/\s*[/,;]\s*/))
+    .map(normalize)
+    .filter(Boolean);
+  return [...new Set(names)].map((alias) => ({ id: crop.id, alias }));
+});
+const metadataAliases = [...cropAliases].map(([alias, id]) => ({ id, alias: normalize(alias) }));
+const ALIASES = [...CHAT_CROPS.flatMap((crop) => crop.aliases.map((alias) => ({ id: crop.id, alias: normalize(alias) }))), ...catalogAliases, ...metadataAliases]
+  .filter((item, index, items) => items.findIndex((candidate) => candidate.id === item.id && candidate.alias === item.alias) === index)
+  .sort((a, b) => b.alias.length - a.alias.length);
 
 /** First crop mentioned in a text (longest alias wins, so "feijão-caupi" is never read as "feijão"). */
 export function findCrop(text: string): string | undefined {

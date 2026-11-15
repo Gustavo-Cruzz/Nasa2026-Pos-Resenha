@@ -3,6 +3,7 @@ import { cropDisplayName } from '@/lib/presentation';
 import { detectCommand, findCrop, isDone, isSkip, normalize, parseLocation, parseSoilAnswer, parseYesNo, SOIL_CHIP_LABELS, type PlaceResult } from '@/lib/chat/parse';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { categoryById, cropCategories, cropCategoryIds } from '@/lib/chat/crop-categories';
+import { cropById } from '@/lib/catalog';
 
 type Locale = 'pt-BR' | 'en';
 /** The chat gathers the minimum context for the analysis presented on the results page. */
@@ -163,7 +164,7 @@ export function chooseCategoryCrops(state: ChatState, ids: string[], locale: Loc
 }
 
 export function chooseNextPlanting(state: ChatState, cropId: string, locale: Locale): Turn {
-  if (state.step !== 'nextPlanting' || !findCrop(cropId)) return { state, replies: [reply(pick(locale, 'Escolha uma cultura válida do catálogo.', 'Choose a valid catalog crop.'))], effects: [] };
+  if (state.step !== 'nextPlanting' || !cropById.has(cropId)) return { state, replies: [reply(pick(locale, 'Escolha uma cultura válida do catálogo.', 'Choose a valid catalog crop.'))], effects: [] };
   const workedCropIds = state.draft.workedCropIds?.includes(cropId) ? state.draft.workedCropIds : [...(state.draft.workedCropIds ?? []), cropId];
   return goTo({ ...state.draft, workedCropIds, nextPlanting: cropId }, locale, reply(pick(locale, `Próximo plantio anotado: ${crop(cropId, locale)}.`, `Next planting noted: ${crop(cropId, locale)}.`)));
 }

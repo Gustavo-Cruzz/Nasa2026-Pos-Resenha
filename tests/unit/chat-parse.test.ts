@@ -34,6 +34,8 @@ describe('chat parsers: crops', () => {
     expect(findCrop('corn')).toBe('maize');
     expect(findCrop('Soja 2024')).toBe('soybean');
     expect(findCrop('braquiária')).toBe('ruziziensis');
+    expect(findCrop('mandioca')).toBe('cassava');
+    expect(findCrop('batata-doce')).toBe('sweet_potato');
     expect(findCrop('trigo')).toBeUndefined();
   });
   it('every crop suggestion, in either language, is read back as its own crop', () => {

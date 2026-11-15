@@ -1071,3 +1071,13 @@ Cleanup: at the user's request, removed the files and directories reported as un
 Checks: React component review, `npm run typecheck`, `npm run lint`, `npm run test -- --run` (63 files / 425 tests), `npm run build` and the targeted embedded Future Farm Stories Playwright flow pass.
 
 Limitations: the full Playwright suite was not rerun. The removed untracked files were not recoverable through Git because they had never been committed.
+
+## Sprint F23 — Resultado direto e catálogo completo no João
+
+Status: complete.
+
+Implemented: removed the `ReviewTransition` pixel-art interstitial from `/results`, so the comparison mode controls follow the Strategy comparison heading directly. Fixed João's next-planting loop: the picker already exposed the complete crop catalog, but `chooseNextPlanting` validated selections through the legacy eight-crop text parser. Selection now validates original IDs through `cropById`. The text parser now derives IDs, Portuguese/English common names and registered metadata aliases from the same combined catalog, while preserving curated aliases such as feijão de corda.
+
+Regression evidence: before the fix, cassava selection stayed on `nextPlanting` and “mandioca” returned no crop. New tests reproduced both failures; after the fix, focused chat tests pass (51/51). Full `npm run test -- --run` passes (63 files / 426 tests); `npm run typecheck`, `npm run lint` and `npm run build` pass.
+
+Limitations: no full Playwright run. The picker-to-flow defect is covered at the real state-transition seam; visual removal is covered by typecheck, lint and build.

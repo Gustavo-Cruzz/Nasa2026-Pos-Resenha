@@ -51,6 +51,14 @@ describe('chat registration: crop inventory', () => {
     state = chooseNextPlanting(state, 'maize', 'pt-BR').state;
     expect(state.draft.nextPlanting).toBe('maize');
   });
+  it('accepts a next planting from the complete catalog instead of repeating the question', () => {
+    let state = chooseCategories(provideLocation(initialState(), [rioVerde], 'Rio Verde', 'pt-BR').state, ['roots'], 'pt-BR').state;
+    state = chooseCategoryCrops(state, ['cassava', 'sweet_potato'], 'pt-BR').state;
+    const turn = chooseNextPlanting(state, 'cassava', 'pt-BR');
+    expect(turn.state.step).toBe('current');
+    expect(turn.state.draft.nextPlanting).toBe('cassava');
+    expect(turn.replies.map((item) => item.text).join(' ')).not.toContain('Escolha uma cultura válida');
+  });
   it('shows names from the complete catalog in the confirmation, never N/D for selected crops', () => {
     const text = summarize({ location: { latitude: -17, longitude: -50 }, workedCropIds: ['cassava', 'sweet_potato'], nextPlanting: 'cassava', current: 'cassava', previous: null, soil: null }, 'pt-BR');
     expect(text).toContain('mandioca / aipim / macaxeira, batata-doce');
