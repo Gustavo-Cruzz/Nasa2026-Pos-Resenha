@@ -12,6 +12,10 @@ The system contract distinguishes `single`, `intercrop`, `succession`, and `rota
 
 ## Versioned regional soil artifacts
 
+For the 30-second national demonstration, a separate compact server artifact samples official SoilGrids 2.0 mean products aggregated at 5 km. It uses a verified interior point per IBGE municipality and combines 0–5, 5–15 and 15–30 cm by thickness into 0–30 cm values. It provides pH in water, SOC, texture fractions, CEC, bulk density and water retention at 33/1500 kPa for 5,456/5,571 municipalities; 115 remain unknown. The lookup is automatic but is neither a municipal zonal statistic nor a field measurement. It cannot drive fertiliser, liming, irrigation or yield prescriptions.
+
+Municipal root-zone moisture context is generated separately from NASA POWER Monthly Regional `GWETROOT`. The artifact stores 2015–2025 monthly medians plus the latest valid dated monthly value through the build year for all 5,571 municipalities, using the nearest native POWER grid cell to the same interior reference point. The displayed percentile compares the latest value only with the same calendar month in 2015–2025. `GWETROOT` is dimensionless modelled wetness, not volumetric moisture, a sensor reading, forecast, soil-water balance or irrigation need.
+
 Regional soil context is only available from reviewed, preprocessed SoilGrids 2.0 WCS artifacts. An artifact records the exact coordinate, native 250 m support, 0–5 cm interval, source and license, conventional unit conversion, retrieval time, WCS query URLs and the Q0.05–Q0.95 90% prediction interval. The application classifies it as `estimated`, keeps it separate from farmer laboratory data and never treats it as a field measurement.
 
 The current Rio Verde artifact is exact-coordinate only. Elsewhere the soil context remains `unknown`; neither nearest-pixel transfer, municipal averaging nor a browser-side call to the paused SoilGrids REST API is allowed. Brazil-wide rollout is produced offline as reviewed tiles or exact-point artifacts organized by UF, with the same sidecars and integrity checks.
