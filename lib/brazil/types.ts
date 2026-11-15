@@ -1,4 +1,13 @@
 export type MunicipalityContext = { code: string; name: string; uf: string };
+export type ZarcRiskLevel = 20 | 30 | 40;
+/** One MAPA Tábua de Risco table shared by the listed cycle groups (Cod_Ciclo) and soil codes (Cod_Solo). `risk[i]` is decêndio i+1: 0 = not indicated (CSV value 0), otherwise 20/30/40. */
+export type ZarcWindow = {
+  culture: string;
+  management: string | null;
+  cycleCodes: number[];
+  soilCodes: number[];
+  risk: Array<0 | ZarcRiskLevel>;
+};
 export type ZarcCropContext = {
   cropId: string;
   rowCount: number;
@@ -10,6 +19,7 @@ export type ZarcCropContext = {
   ordinances: string[];
   riskCodes: number[];
   decendiosWithRiskCode: number[];
+  windows: ZarcWindow[];
 };
 export type PamProductContext = { productCode: string; productLabel: string; cropIds: string[]; harvestedAreaHa: number | null; producedQuantity: number | null; productionUnit: string | null; caveat: string | null };
 export type BrazilRegionalContext = {
