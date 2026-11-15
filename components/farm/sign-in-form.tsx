@@ -20,7 +20,7 @@ export function SignInForm() {
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     setBusy(true); setError(null);
-    const result = await postJson(`/api/auth/${mode}`, credentials);
+    const result = await postJson(`/api/auth/${mode}`, credentials, 'POST', en);
     if (!result.ok) { setError(result.body.message ?? (en ? 'Could not sign in.' : 'Não foi possível entrar.')); setBusy(false); return; }
     router.push('/farm');
     router.refresh();

@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Plantaê',
     short_name: 'Plantaê',
-    description: 'Explore possibilidades. Entenda os limites. Compare hipóteses de rotação de cultura com o clima histórico da NASA.',
+    description: 'Explore possibilities. Understand the limits. Compare crop rotation hypotheses with NASA historical climate.',
     start_url: '/',
     display: 'standalone',
     background_color: '#142018',

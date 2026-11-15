@@ -7,8 +7,9 @@ async function openMoreOptions(page: Page) {
   if ((await details.getAttribute('open')) === null) await details.locator('summary').click();
 }
 async function openTechnicalDetails(page: Page) {
-  const details = page.getByTestId('technical-details');
-  if ((await details.getAttribute('open')) === null) await details.locator('summary').first().click();
+  // Dense technical detail lives in collapsible <details data-technical> inside each result block; open them all.
+  await page.waitForSelector('details[data-technical]');
+  await page.evaluate(() => document.querySelectorAll('details[data-technical]').forEach((item) => item.setAttribute('open', '')));
 }
 async function installDraft(page: Page, futureBaseline?: { cropId: string; confirmed: true }) { await page.addInitScript((saved) => window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)), draft(futureBaseline)); }
 
@@ -89,7 +90,7 @@ test('opens a consistent mobile menu and starts the Brazil demonstration in one 
 
 test('persists a real English language selection for landing and methodology', async ({ page }) => {
   await page.goto('/');
-  await page.getByLabel('Idioma').selectOption('en');
+  await page.getByRole('button', { name: 'English' }).click();
   await expect(page.getByRole('link', { name: 'Explore a region' })).toBeVisible();
   await page.getByRole('link', { name: 'Methodology' }).click();
   await expect(page.getByRole('heading', { name: 'Method and limits' })).toBeVisible();

@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useLocale } from '@/components/locale-provider';
 
 export function ReviewTransition() {
+  const { locale } = useLocale();
   const [frame, setFrame] = useState(0);
   const [reduced, setReduced] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -16,5 +18,5 @@ export function ReviewTransition() {
     return () => { window.clearInterval(timer); window.clearTimeout(revealTimer); };
   }, []);
   if (!visible) return null;
-  return <div aria-label="Transição decorativa: três hipóteses entram em revisão, sem indicar uma vencedora" className="mx-auto aspect-video w-full max-w-lg rounded-xl border border-slate-700 bg-no-repeat [image-rendering:pixelated]" role="img" style={{ backgroundImage: `url(${reduced ? '/assets/transitions/transition-review-static.png' : '/assets/transitions/transition-review-sheet.png'})`, backgroundPosition: reduced ? '0 0' : `${frame / 7 * 100}% 0`, backgroundSize: reduced ? '100% 100%' : '800% 100%' }} />;
+  return <div aria-label={locale === 'en' ? 'Decorative transition: three hypotheses enter review, with no winner indicated' : 'Transição decorativa: três hipóteses entram em revisão, sem indicar uma vencedora'} className="mx-auto aspect-video w-full max-w-lg rounded-xl border border-slate-700 bg-no-repeat [image-rendering:pixelated]" role="img" style={{ backgroundImage: `url(${reduced ? '/assets/transitions/transition-review-static.png' : '/assets/transitions/transition-review-sheet.png'})`, backgroundPosition: reduced ? '0 0' : `${frame / 7 * 100}% 0`, backgroundSize: reduced ? '100% 100%' : '800% 100%' }} />;
 }

@@ -1,4 +1,5 @@
 import type { JoaoTone } from '@/lib/explain/joao';
+import type { Locale } from '@/lib/i18n';
 
 /**
  * João's moods. The mood follows the data, never the crop: it reacts to what a number says about its own normal,
@@ -32,4 +33,20 @@ export const MOODS_MISSING = (Object.entries(JOAO_MOODS) as Array<[JoaoMood, Moo
 /** The mood a line gets from its tone, unless the line asks for a specific one. */
 export function moodForTone(tone: JoaoTone): JoaoMood {
   return { good: 'happy', info: 'neutral', attention: 'alert', unknown: 'sad' }[tone] as JoaoMood;
+}
+
+const MOOD_TEXT_EN: Record<JoaoMood, Pick<MoodSpec, 'label' | 'when' | 'usedIn'>> = {
+  neutral: { label: 'Explaining', when: 'Informative data with no special signal: João just says what is going on.', usedIn: 'Almost every comment' },
+  happy: { label: 'Cheerful', when: 'A favourable signal in the numbers: more water in the soil than usual, few dry spells, or above-normal rain in the rainy season.', usedIn: 'Explore (soil, dry spells, forecast) and the “ok” blocks of /results3' },
+  alert: { label: 'Alert', when: 'The data deserves attention: drier soil than usual, common dry spells, below-normal rain in the rainy season, or the farmer reported something in the soil.', usedIn: 'Explore (soil, dry spells, forecast) and the “attention” blocks of /results3' },
+  sad: { label: 'Sad', when: 'The data is missing: João tried to fetch it and could not, or does not have that information for the place.', usedIn: 'Any “No data” line in Explore' },
+  unsure: { label: 'Unsure', when: 'João says “I cannot tell”: for example, the local effect of El Niño on rain, which he cannot state.', usedIn: 'Explore, El Niño card' },
+  thinking: { label: 'Thinking', when: 'While the data loads.', usedIn: 'Not used yet: today João stays quiet while loading' },
+};
+
+/** Display text (label, when, usedIn) of a mood in the chosen language; English by default. */
+export function moodText(mood: JoaoMood, locale: Locale = 'en'): Pick<MoodSpec, 'label' | 'when' | 'usedIn'> {
+  if (locale === 'en') return MOOD_TEXT_EN[mood];
+  const { label, when, usedIn } = JOAO_MOODS[mood];
+  return { label, when, usedIn };
 }

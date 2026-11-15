@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { explainPlace, type JoaoData, type JoaoExplanation, type Remote } from '@/lib/explain/joao';
+import { explainPlace as explainPlaceDefault, type JoaoData, type JoaoExplanation, type Remote } from '@/lib/explain/joao';
 import type { EnsoState } from '@/lib/climate/enso';
+const explainPlace = (data: JoaoData, locale: 'pt-BR' | 'en' = 'pt-BR') => explainPlaceDefault(data, locale);
 
 const RAIN = [150, 130, 140, 70, 15, 3, 0, 2, 25, 60, 167, 183];
 const TMAX = [29, 29, 29, 30, 30, 30, 31, 33, 35, 36, 30, 29];
@@ -202,5 +203,11 @@ describe('João: mood follows the data', () => {
       expect(flat('pt-BR').every((entry) => !entry.endsWith('undefined'))).toBe(true);
       expect(flat('en')).toEqual(flat('pt-BR'));
     }
+  });
+});
+
+describe('default locale', () => {
+  it('explains in English unless told otherwise', () => {
+    expect(explainPlaceDefault(base()).intro).toBe('Hi! I am João. I looked at the data for Luís Eduardo Magalhães (BA).');
   });
 });

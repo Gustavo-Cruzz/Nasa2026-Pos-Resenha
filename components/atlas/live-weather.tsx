@@ -14,7 +14,7 @@ function Pulse() { return <span aria-hidden="true" className="inline-block h-2 w
 export function LiveWeatherPanel({ state }: { state: LiveState }) {
   const { locale } = useLocale();
   const en = locale === 'en';
-  const decimal = (value: number | null, digits = 0) => en ? (value === null ? 'N/D' : value.toFixed(digits)) : num(value, digits);
+  const decimal = (value: number | null, digits = 0) => en ? (value === null ? 'N/A' : value.toFixed(digits)) : num(value, digits);
   if (state.kind === 'loading') return <p className="mt-5 text-sm text-slate-300" role="status">{en ? 'Loading live conditions…' : 'Buscando as condições de agora…'}</p>;
   if (state.kind === 'error') return <p className="mt-5 rounded-lg border border-amber-300/40 bg-amber-950/20 p-3 text-sm text-amber-100">{en ? 'Live weather is unavailable right now. The historical data below still applies.' : 'O tempo em tempo real está indisponível agora. O histórico abaixo continua valendo.'}</p>;
   const w = state.weather;

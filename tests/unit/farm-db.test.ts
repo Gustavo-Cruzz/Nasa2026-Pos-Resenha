@@ -37,7 +37,7 @@ describe('credentials', () => {
     expect(credentialsSchema.safeParse({ username: 'ab', password: 'abcdef' }).success).toBe(false);
     expect(credentialsSchema.safeParse({ username: 'com espaço', password: 'abcdef' }).success).toBe(false);
     const short = credentialsSchema.safeParse({ username: 'maria', password: '123' });
-    expect(short.success ? '' : short.error.issues[0].message).toContain('6 caracteres');
+    expect(short.success ? '' : short.error.issues[0].message).toContain('6 characters');
   });
 });
 

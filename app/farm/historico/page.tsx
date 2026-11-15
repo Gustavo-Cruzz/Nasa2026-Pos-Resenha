@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
+import { LoadingStatus } from '@/components/loading-status';
 import { FarmTimeline } from '@/components/farm/farm-timeline';
 import { ClientOnly } from '@/components/client-only';
 
-/** The detailed crop timeline (manual form), reached from "Minha fazenda" and from the comparison/lab "edit" links. */
+/** The detailed crop timeline (manual form), reached from "My farm" and from the comparison/lab "edit" links. */
 export default function FarmHistoryPage() {
-  const loading = <p role="status" className="text-slate-300">Carregando histórico da fazenda… / Loading farm history…</p>;
+  const loading = <LoadingStatus en="Loading farm history…" pt="Carregando histórico da fazenda…" />;
   return <Suspense fallback={loading}><ClientOnly fallback={loading}><FarmTimeline /></ClientOnly></Suspense>;
 }

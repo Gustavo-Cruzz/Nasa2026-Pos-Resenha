@@ -14,20 +14,37 @@ const context = farmExplanationContextSchema.parse({
 
 describe('farm explanation contract', () => {
   it('keeps six concise sections and preserves unknown values', () => {
-    const result = fallbackFarmExplanation(context);
+    const result = fallbackFarmExplanation(context, 'pt-BR');
     expect(farmExplanationSchema.parse(result).sections).toHaveLength(6);
     expect(result.sections.find((item) => item.id === 'soil')?.summary).toContain('Não há valores suficientes');
     expect(result.sections.find((item) => item.id === 'water')?.summary).toContain('5 de 12 meses');
   });
 
-  it('rejects duplicated output that omits a required section', () => {
+  it('writes the fallback in English by default and keeps the same validated structure', () => {
     const result = fallbackFarmExplanation(context);
+    expect(farmExplanationSchema.parse(result).sections).toHaveLength(6);
+    expect(result.sections.find((item) => item.id === 'soil')?.summary).toContain('not enough values');
+    expect(result.sections.find((item) => item.id === 'water')?.summary).toContain('5 of 12');
+    expect(result.sections.find((item) => item.id === 'water')?.summary).toContain('ET₀');
+    expect(result.sections.find((item) => item.id === 'climate')?.points[0]).toContain('October');
+  });
+
+  it('rejects English wording that sounds like a field diagnosis', () => {
+    const result = fallbackFarmExplanation(context);
+    const water = result.sections.find((item) => item.id === 'water');
+    if (!water) throw new Error('water section missing');
+    water.summary = 'There is a water deficit; the field needs to irrigate (ET₀).';
+    expect(farmExplanationSchema.safeParse(result).success).toBe(false);
+  });
+
+  it('rejects duplicated output that omits a required section', () => {
+    const result = fallbackFarmExplanation(context, 'pt-BR');
     result.sections[5] = { ...result.sections[0] };
     expect(farmExplanationSchema.safeParse(result).success).toBe(false);
   });
 
   it('rejects water language that sounds like a field diagnosis', () => {
-    const result = fallbackFarmExplanation(context);
+    const result = fallbackFarmExplanation(context, 'pt-BR');
     const water = result.sections.find((item) => item.id === 'water');
     if (!water) throw new Error('water section missing');
     water.summary = 'Existe déficit hídrico e falta água na lavoura.';
@@ -35,7 +52,7 @@ describe('farm explanation contract', () => {
   });
 
   it('requires the water explanation to name ET0 in plain context', () => {
-    const result = fallbackFarmExplanation(context);
+    const result = fallbackFarmExplanation(context, 'pt-BR');
     const water = result.sections.find((item) => item.id === 'water');
     if (!water) throw new Error('water section missing');
     water.summary = 'Cinco meses têm valor negativo.';
@@ -44,7 +61,7 @@ describe('farm explanation contract', () => {
   });
 
   it('rejects unexplained water balance and past crops presented as a future plan', () => {
-    const result = fallbackFarmExplanation(context);
+    const result = fallbackFarmExplanation(context, 'pt-BR');
     const overview = result.sections.find((item) => item.id === 'overview');
     const water = result.sections.find((item) => item.id === 'water');
     if (!overview || !water) throw new Error('required section missing');
@@ -58,10 +75,13 @@ describe('farm explanation contract', () => {
     delete process.env.GEMINI_API_KEY;
     try {
       const response = await POST(new NextRequest('http://localhost/api/explain-farm', { method: 'POST', body: JSON.stringify({ context }), headers: { 'content-type': 'application/json' } }));
-      const body = await response.json() as { origin: string; sections: unknown[] };
+      const body = await response.json() as { origin: string; sections: Array<{ id: string; summary: string }> };
       expect(response.status).toBe(200);
       expect(body.origin).toBe('fallback');
       expect(body.sections).toHaveLength(6);
+      expect(body.sections[0].summary).toContain('The analysis uses');
+      const pt = await POST(new NextRequest('http://localhost/api/explain-farm', { method: 'POST', body: JSON.stringify({ context, locale: 'pt-BR' }), headers: { 'content-type': 'application/json' } }));
+      expect(((await pt.json()) as { sections: Array<{ summary: string }> }).sections[0].summary).toContain('A análise usa');
     } finally {
       if (previous === undefined) delete process.env.GEMINI_API_KEY; else process.env.GEMINI_API_KEY = previous;
     }

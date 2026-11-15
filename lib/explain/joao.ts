@@ -231,7 +231,7 @@ function summarize(data: JoaoData, locale: Locale): string[] {
 }
 
 /** Builds João's explanation of a place. Sections with nothing to say (for example while data loads) are left out. */
-export function explainPlace(data: JoaoData, locale: Locale = 'pt-BR'): JoaoExplanation {
+export function explainPlace(data: JoaoData, locale: Locale = 'en'): JoaoExplanation {
   const sections: JoaoSection[] = (([
     { id: 'rain', title: pick(locale, 'A chuva', 'The rain'), lines: rainLines(data, locale) },
     { id: 'soil', title: pick(locale, 'O solo', 'The soil'), lines: soilLines(data, locale) },

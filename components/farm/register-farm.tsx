@@ -69,10 +69,10 @@ export function RegisterFarm() {
     event.preventDefault();
     setBusy(true); setError(null);
     if (!session.signedIn) {
-      const auth = await postJson(`/api/auth/${mode}`, credentials);
+      const auth = await postJson(`/api/auth/${mode}`, credentials, 'POST', en);
       if (!auth.ok) { setError(auth.body.message ?? (en ? 'Could not sign in.' : 'Não foi possível entrar.')); setBusy(false); return; }
     }
-    const saved = await postJson('/api/farm', { name, ...(placeLabel ? { placeLabel } : {}), input }, 'PUT');
+    const saved = await postJson('/api/farm', { name, ...(placeLabel ? { placeLabel } : {}), input }, 'PUT', en);
     if (!saved.ok) { setError(saved.body.message ?? (en ? 'Could not save the farm.' : 'Não foi possível salvar a fazenda.')); setBusy(false); return; }
     router.push('/farm?chegada=1');
     router.refresh();

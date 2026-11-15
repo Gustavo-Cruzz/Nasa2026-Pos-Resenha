@@ -6,13 +6,14 @@ import { resolveBrazilRegionalContext } from '@/lib/brazil/context';
 describe('evidence coverage assessment', () => {
   it('returns exactly the eight P0 cards', () => expect(p0CropCoverage(null).map((item) => item.crop.id)).toEqual(['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis']));
   it('keeps a non-pilot coordinate insufficient instead of inferring local suitability', () => {
-    const coverage = evidenceCoverageAssessment({ latitude: 5.6037, longitude: -0.187 }, 'soybean');
+    const coverage = evidenceCoverageAssessment({ latitude: 5.6037, longitude: -0.187 }, 'soybean', undefined, 'pt-BR');
     expect(coverage.status).toBe('insufficient_evidence');
     expect(coverage.warnings[0]).toMatch(/não há contexto regional/i);
+    expect(evidenceCoverageAssessment({ latitude: 5.6037, longitude: -0.187 }, 'soybean').warnings[0]).toMatch(/no regional context/i);
   });
   it('marks matching Rio Verde ZARC only as partial regional context', () => {
     const context = resolveBrazilRegionalContext(RIO_VERDE_PILOT.coordinates);
-    const coverage = evidenceCoverageAssessment(RIO_VERDE_PILOT.coordinates, 'soybean', context);
+    const coverage = evidenceCoverageAssessment(RIO_VERDE_PILOT.coordinates, 'soybean', context, 'pt-BR');
     expect(coverage.status).toBe('partial');
     expect(coverage.warnings[0]).toMatch(/códigos brutos/);
   });

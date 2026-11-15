@@ -1,7 +1,6 @@
-import { Results3Page } from '@/components/results3/results3-page';
+import { redirect } from 'next/navigation';
 
-export const metadata = { title: 'Seu próximo plantio · Plantaê (protótipo 3)' };
-
+// The /results3 prototype interface (blocks + João) is now the real /results page.
 export default function Results3() {
-  return <Results3Page />;
+  redirect('/results');
 }

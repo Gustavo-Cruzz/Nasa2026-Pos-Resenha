@@ -10,10 +10,10 @@ export const runtime = 'nodejs';
 export async function POST(request: NextRequest) {
   const body: unknown = await request.json().catch(() => null);
   const parsed = credentialsSchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ status: 'error', code: 'INVALID_CREDENTIALS', message: parsed.error.issues[0]?.message ?? 'Dados inválidos.' }, { status: 422 });
+  if (!parsed.success) return NextResponse.json({ status: 'error', code: 'INVALID_CREDENTIALS', message: parsed.error.issues[0]?.message ?? 'Invalid data.' }, { status: 422 });
   const db = getDb();
   const user = await createUser(db, parsed.data.username, parsed.data.password);
-  if (user === 'taken') return NextResponse.json({ status: 'error', code: 'USERNAME_TAKEN', message: 'Esse usuário já existe. Escolha outro ou entre.' }, { status: 409 });
+  if (user === 'taken') return NextResponse.json({ status: 'error', code: 'USERNAME_TAKEN', message: 'That username already exists. Pick another one or sign in.' }, { status: 409 });
   const session = createSession(db, user.id);
   const response = NextResponse.json({ status: 'ok', user: { username: user.username } }, { status: 201 });
   setSessionCookie(response, session.token, session.expiresAt);

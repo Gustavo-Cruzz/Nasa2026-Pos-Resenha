@@ -11,7 +11,7 @@ export function JoaoFigure({ mood, className = 'h-[108px] w-[72px]' }: { mood: J
   const src = spec.src ?? (JOAO_MOODS.neutral.src as string);
   return <span className={`relative inline-block shrink-0 ${className}`} data-mood={mood} data-mood-status={missing ? 'missing' : 'ready'}>
     <Image alt="" aria-hidden="true" className="h-full w-full select-none object-contain object-bottom" height={360} src={src} width={240} />
-    {missing && process.env.NODE_ENV !== 'production' ? <span className="absolute inset-x-0 -top-1 rounded bg-amber-300 px-1 py-0.5 text-center text-[10px] font-bold leading-tight text-slate-950">Falta arte: {spec.label}</span> : null}
+    {missing && process.env.NODE_ENV !== 'production' ? <span className="absolute inset-x-0 -top-1 rounded bg-amber-300 px-1 py-0.5 text-center text-[10px] font-bold leading-tight text-slate-950">Art missing: {spec.label}</span> : null}
   </span>;
 }
 

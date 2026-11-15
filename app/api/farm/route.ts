@@ -7,7 +7,7 @@ import { farmPayloadSchema } from '@/lib/farm/schema';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const unauthorized = () => NextResponse.json({ status: 'error', code: 'NOT_SIGNED_IN', message: 'Entre para ver a sua fazenda.' }, { status: 401 });
+const unauthorized = () => NextResponse.json({ status: 'error', code: 'NOT_SIGNED_IN', message: 'Sign in to see your farm.' }, { status: 401 });
 
 /** The signed-in user's farm (or null when none is registered yet). */
 export async function GET() {
@@ -22,6 +22,6 @@ export async function PUT(request: NextRequest) {
   if (!user) return unauthorized();
   const body: unknown = await request.json().catch(() => null);
   const parsed = farmPayloadSchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ status: 'error', code: 'INVALID_FARM', message: parsed.error.issues[0]?.message ?? 'Dados da fazenda inválidos.' }, { status: 422 });
+  if (!parsed.success) return NextResponse.json({ status: 'error', code: 'INVALID_FARM', message: parsed.error.issues[0]?.message ?? 'Invalid farm data.' }, { status: 422 });
   return NextResponse.json({ status: 'ok', farm: saveFarm(getDb(), user.id, parsed.data) });
 }

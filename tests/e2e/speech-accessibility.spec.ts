@@ -22,7 +22,7 @@ test('dictates into João chat in Portuguese and English without auto-sending', 
   await expect(page.getByLabel('Sua mensagem')).toHaveValue('Rio Verde');
   expect(await page.evaluate(() => (window as unknown as { __recognitionLang: string }).__recognitionLang)).toBe('pt-BR');
   await expect(page.getByRole('log')).not.toContainText('Rio Verde');
-  await page.getByLabel('Idioma').selectOption('en');
+  await page.getByRole('button', { name: 'English' }).click();
   await page.getByLabel('Your message').fill('');
   await page.getByRole('button', { name: 'Speak your answer' }).click();
   await expect(page.getByLabel('Your message')).toHaveValue('Rio Verde');
@@ -37,7 +37,7 @@ test('reads the main page with bilingual controls and highlights current content
   expect(await page.evaluate(() => (window as unknown as { __spoken: Array<{ text: string; lang: string }> }).__spoken.at(-1)?.lang)).toBe('pt-BR');
   await page.getByRole('button', { name: 'Parar leitura' }).click();
   await expect(page.locator('#main-content')).not.toHaveAttribute('data-reading', 'true');
-  await page.getByLabel('Idioma').selectOption('en');
+  await page.getByRole('button', { name: 'English' }).click();
   await page.getByRole('button', { name: 'Read page' }).click();
   expect(await page.evaluate(() => (window as unknown as { __spoken: Array<{ text: string; lang: string }> }).__spoken.at(-1)?.lang)).toBe('en-US');
 });

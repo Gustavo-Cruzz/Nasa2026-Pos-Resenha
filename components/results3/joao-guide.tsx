@@ -5,6 +5,7 @@ import { ChevronUp } from 'lucide-react';
 import { JoaoNote, type JoaoNoteTone } from '@/components/joao/joao-note';
 import { JoaoFace, JoaoFigure } from '@/components/joao/joao-figure';
 import { moodForTone } from '@/lib/explain/joao-mood';
+import { useLocale } from '@/components/locale-provider';
 
 export type BlockComment = { happening: string; points?: string[]; limit?: string };
 
@@ -52,13 +53,14 @@ export function useActiveBlock(ids: string[]): string | null {
  * (the others fade out) and follows the scroll inside that block's height. Hidden comments stay readable for screen readers, in order.
  */
 export function JoaoRail({ title, comment, active, tone }: { title: string; comment: BlockComment; active: boolean; tone: JoaoNoteTone }) {
+  const en = useLocale().locale === 'en';
   return <div className="hidden lg:block">
-    <aside aria-label={`Comentário do João sobre ${title}`} className={`sticky top-6 transition-[opacity,transform] duration-300 motion-reduce:transition-none ${active ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'}`}>
+    <aside aria-label={en ? `João's comment on ${title}` : `Comentário do João sobre ${title}`} className={`sticky top-6 transition-[opacity,transform] duration-300 motion-reduce:transition-none ${active ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'}`}>
       <div className="relative rounded-2xl border border-lime-300/40 bg-slate-950/90 p-4 text-[0.9375rem] leading-6 shadow-lg">
-        <p className="text-xs font-bold uppercase tracking-wide text-lime-200">João sobre: {title}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-lime-200">{en ? 'João on' : 'João sobre'}: {title}</p>
         <p className="mt-2 text-slate-100">{comment.happening}</p>
         {comment.points?.length ? <ul className="mt-2 grid gap-1.5 text-sm text-slate-300">{comment.points.map((point) => <li className="flex gap-2" key={point}><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-lime-300" />{point}</li>)}</ul> : null}
-        {comment.limit ? <p className="mt-3 rounded-lg border border-slate-700 bg-slate-900/60 p-2.5 text-xs text-slate-400"><b className="text-slate-300">O que isto não diz: </b>{comment.limit}</p> : null}
+        {comment.limit ? <p className="mt-3 rounded-lg border border-slate-700 bg-slate-900/60 p-2.5 text-xs text-slate-400"><b className="text-slate-300">{en ? 'What this does not say: ' : 'O que isto não diz: '}</b>{comment.limit}</p> : null}
         <span aria-hidden="true" className="absolute -bottom-1.5 left-12 h-3 w-3 rotate-45 border-b border-r border-lime-300/40 bg-slate-950" />
       </div>
       <div className="ml-6 mt-1"><JoaoFigure className="h-28 w-[75px]" mood={moodForTone(tone)} /></div>
@@ -75,12 +77,13 @@ export function JoaoDock({ block }: { block: { id: string; title: string; tone: 
 }
 
 function DockBody({ block }: { block: { id: string; title: string; tone: JoaoNoteTone; comment: BlockComment } }) {
+  const en = useLocale().locale === 'en';
   const [open, setOpen] = useState(false);
   return <div className="joao-in fixed inset-x-3 bottom-3 z-30 lg:hidden">
     {open ? <div className="mb-2 max-h-[55vh] overflow-y-auto rounded-2xl border border-lime-300/40 bg-slate-950/95 p-3 shadow-2xl backdrop-blur"><JoaoNote happening={block.comment.happening} limit={block.comment.limit} points={block.comment.points} tone={block.tone} /></div> : null}
     <button aria-expanded={open} className="flex min-h-14 w-full items-center gap-3 rounded-2xl border border-lime-300/50 bg-slate-950/95 p-3 text-left shadow-2xl backdrop-blur" onClick={() => setOpen((current) => !current)} type="button">
       <JoaoFace mood={moodForTone(block.tone)} size={40} />
-      <span className="min-w-0 flex-1"><span className="block text-xs font-bold text-lime-200">João sobre: {block.title}</span><span className={`text-sm text-slate-200 ${open ? 'block' : 'line-clamp-1'}`}>{block.comment.happening}</span></span>
+      <span className="min-w-0 flex-1"><span className="block text-xs font-bold text-lime-200">{en ? 'João on' : 'João sobre'}: {block.title}</span><span className={`text-sm text-slate-200 ${open ? 'block' : 'line-clamp-1'}`}>{block.comment.happening}</span></span>
       <ChevronUp aria-hidden="true" className={`shrink-0 text-slate-400 transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} size={20} />
     </button>
   </div>;

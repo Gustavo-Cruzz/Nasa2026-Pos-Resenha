@@ -24,9 +24,9 @@ export function FormError({ children }: { children: ReactNode }) {
   return <p className="rounded-lg border border-amber-300/50 bg-amber-950/30 p-3 text-sm text-amber-100" role="alert">{children}</p>;
 }
 
-export async function postJson(url: string, body: unknown, method = 'POST'): Promise<{ ok: boolean; body: { message?: string; [key: string]: unknown } }> {
+export async function postJson(url: string, body: unknown, method = 'POST', en = true): Promise<{ ok: boolean; body: { message?: string; [key: string]: unknown } }> {
   try {
     const response = await fetch(url, { method, headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     return { ok: response.ok, body: (await response.json().catch(() => ({}))) as { message?: string } };
-  } catch { return { ok: false, body: { message: 'Sem conexão com o servidor. Tente de novo.' } }; }
+  } catch { return { ok: false, body: { message: en ? 'No connection to the server. Please try again.' : 'Sem conexão com o servidor. Tente de novo.' } }; }
 }

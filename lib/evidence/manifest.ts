@@ -50,3 +50,12 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
   if (boundary?.status === 'spatial_context') gapsById.set('smap_numeric_polygon_history', { id: 'smap_numeric_polygon_history', label: 'Série histórica SMAP numérica agregada ao polígono', scenarioIds: [] });
   return { sources, claims, gaps: [...gapsById.values()], guardrails: ['Não é previsão meteorológica.', 'Precipitação observada não é demanda hídrica.', 'Contexto municipal não é validação do talhão.', 'Cenários exploratórios não são recomendação agronômica.'], sourceHealth: buildSourceHealth({ climate, regionalContext, boundaryAnalysis: boundary ?? analyzeBoundary() }) };
 }
+
+const GUARDRAILS_EN: Record<string, string> = {
+  'Não é previsão meteorológica.': 'Not a weather forecast.',
+  'Precipitação observada não é demanda hídrica.': 'Observed precipitation is not crop water demand.',
+  'Contexto municipal não é validação do talhão.': 'Municipal context is not field validation.',
+  'Cenários exploratórios não são recomendação agronômica.': 'Exploratory scenarios are not an agronomic recommendation.',
+};
+/** The manifest stores guardrails in pt-BR; this gives the display text for a locale (English by default). */
+export const guardrailDisplay = (guardrail: string, locale: 'en' | 'pt-BR' = 'en'): string => (locale === 'en' ? GUARDRAILS_EN[guardrail] ?? guardrail : guardrail);

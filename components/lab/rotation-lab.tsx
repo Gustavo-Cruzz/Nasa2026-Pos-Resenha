@@ -54,7 +54,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
       .catch((error: unknown) => setAnalysisError(error instanceof Error ? error.message : en ? 'Could not load the laboratory assessment.' : 'Não foi possível carregar a avaliação do laboratório.'));
   }, [en, loaded]);
   const regionalContext = analysis?.regionalContext;
-  const coverage = useMemo(() => draft ? permittedCatalogCrops(draft.data.farmerCrops).map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext)) : [], [draft, regionalContext]);
+  const coverage = useMemo(() => draft ? permittedCatalogCrops(draft.data.farmerCrops).map((crop) => evidenceCoverageAssessment(draft.data.location, crop.id, regionalContext, locale)) : [], [draft, regionalContext, locale]);
 
   if (!draft || !plan) return <section className="mt-6 rounded-xl border border-slate-700 p-5"><h1 className="page-title font-bold">{en ? 'Rotation laboratory' : 'Laboratório de rotações'}</h1><p className="mt-3 text-slate-300">{en ? 'Save the farm before assembling scenario hypotheses.' : 'Registre a fazenda antes de montar hipóteses de cenários.'}</p><Button asChild className="mt-5"><Link href="/farm">{en ? 'Go to my farm' : 'Ir para minha fazenda'}</Link></Button></section>;
 
@@ -66,7 +66,7 @@ export function RotationLab({ savedFarm = false }: { savedFarm?: boolean }) {
       const nextAnalysis = analyze(draft.data, analysis.climate, nextPlan, analysis.regionalContext);
       const before = analysis.strategies.find((strategy) => strategy.id === target.scenario)?.slots[target.slot];
       const after = nextAnalysis.strategies.find((strategy) => strategy.id === target.scenario)?.slots[target.slot];
-      if (before && after) setChangeFeedback({ delta: diffLabSlot(before, after), cropName: after.cropName ?? 'Slot vazio', previousPlan });
+      if (before && after) setChangeFeedback({ delta: diffLabSlot(before, after), cropName: after.cropName ?? (locale === 'en' ? 'Empty slot' : 'Slot vazio'), previousPlan });
       setAnalysis(nextAnalysis);
     } else setMessage(en ? 'Slot updated; climate assessment is still loading.' : 'Slot atualizado; avaliação climática ainda está carregando.');
     setPlan(nextPlan);
