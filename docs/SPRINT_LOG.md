@@ -1,5 +1,17 @@
 # Sprint log
 
+## README do pitch e arquitetura de decisão
+
+Status: complete — narrativa do projeto, equipe SilkNASA, fluxos Mermaid, bases de dados e proposta de valor documentados.
+
+Implemented: o README agora parte do pitch de 30 segundos do Plantaê e explica jornada do agricultor, fluxo decisório A/B/C, seis eixos de trade-off, níveis de evidência, arquitetura, rotas, execução, deploy e limites científicos. Uma tabela mostra como cada base NASA, brasileira, meteorológica e declarada é usada e o que agrega ao produtor. A foto da equipe SilkNASA e o vídeo de montagem do protótipo IoT foram adicionados como assets versionados.
+
+Implemented: o IoT é descrito como solução solar de baixo custo para coleta direta de umidade do solo, chuva e temperatura, complementando limitações espaciais dos satélites e apoiando o pilar de acesso universal a dados. O texto distingue a visão do protótipo da implementação atual: suas medições ainda não alimentam automaticamente o motor.
+
+Evidence (2026-11-15): foto PNG e vídeo MP4 foram verificados como assets não vazios; `git diff --check`, `npm run lint`, `npm run typecheck`, 401 testes unitários e `npm run build` passaram.
+
+Limitations: o vídeo demonstra montagem física, não integração de telemetria, calibração, precisão, durabilidade ou validação de campo. Nenhuma dessas propriedades é inferida no README.
+
 ## Verificação dos botões do explorador
 
 Status: complete — seleção de local, abas Dados/João, confirmação no chat e nova tentativa de clima verificadas no navegador.
