@@ -41,6 +41,10 @@ export function LocationExplorer() {
   const [picked, setPicked] = useState(false);
   const [polygon, setPolygon] = useState<AtlasPolygon>([]);
   const [drawingPolygon, setDrawingPolygon] = useState(false);
+  const polygonBeforeDrawing = useRef<AtlasPolygon>([]);
+  const startDrawing = () => { polygonBeforeDrawing.current = polygon; setPolygon([]); setDrawingPolygon(true); };
+  const finishDrawing = () => { if (polygon.length < 3) setPolygon(polygonBeforeDrawing.current); setDrawingPolygon(false); };
+  const cancelDrawing = () => { setPolygon(polygonBeforeDrawing.current); setDrawingPolygon(false); };
   const [layers, setLayers] = useState<MapLayers>({ smap: false, rain: false, modis: false });
   const [leafletMap, setLeafletMap] = useState<Leaflet.Map | null>(null);
   const requestId = useRef(0);
@@ -70,9 +74,9 @@ export function LocationExplorer() {
     <PlaceSearch onPick={pickPlace} />
     <div className="atlas-layout-d">
       <div className="relative">
-        <WorldMap point={point} polygon={polygon} drawingPolygon={drawingPolygon} layers={layers} onPointChange={setSelectedPoint} onPolygonChange={setPolygon} onMapReady={setLeafletMap} pointZoom={typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 15} />
+        <WorldMap point={point} polygon={polygon} drawingPolygon={drawingPolygon} layers={layers} onPointChange={setSelectedPoint} onPolygonChange={setPolygon} onDrawFinish={finishDrawing} onMapReady={setLeafletMap} pointZoom={typeof window !== 'undefined' && window.innerWidth < 640 ? 14 : 15} />
         {point ? <MapOverlay coordinates={coordinateLabel(point)} layers={layers} name={point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')} onToggle={(layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }))} /> : null}
-        <FarmWeatherFx drawing={drawingPolygon} en={en} live={live} map={leafletMap} onDraw={() => setDrawingPolygon(true)} point={point} polygon={polygon} sim={fxSim} /><PixelClimateHud en={en} onRetry={() => { if (point) void fetchClimate(point); }} state={state} />
+        <FarmWeatherFx drawing={drawingPolygon} en={en} live={live} map={leafletMap} onDraw={startDrawing} point={point} polygon={polygon} sim={fxSim} />{drawingPolygon ? <DrawToolbar count={polygon.length} en={en} onCancel={cancelDrawing} onFinish={finishDrawing} onUndo={() => setPolygon((current) => current.slice(0, -1))} /> : <PixelClimateHud en={en} onRetry={() => { if (point) void fetchClimate(point); }} state={state} />}
       </div>
       <div className="atlas-chat-col"><Suspense fallback={chatLoading}><ClientOnly fallback={chatLoading}><ChatDemo mapPoint={picked ? point : null} mapPolygon={polygon} /></ClientOnly></Suspense></div>
     </div>
@@ -80,7 +84,7 @@ export function LocationExplorer() {
       <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold"><SlidersHorizontal aria-hidden="true" size={16} />{en ? 'More options' : 'Mais opções'}</summary>
       <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"><label className="text-sm">Latitude<input aria-label="Latitude" className="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2.5" inputMode="decimal" value={latitude} onChange={(event) => setLatitude(event.target.value)} /></label><label className="text-sm">Longitude<input aria-label="Longitude" className="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2.5" inputMode="decimal" value={longitude} onChange={(event) => setLongitude(event.target.value)} /></label><Button className="self-end" type="button" onClick={submitCoordinates}>{en ? 'Go to point' : 'Ir ao ponto'}</Button></div>
       <div aria-label={en ? 'Location examples' : 'Exemplos de localidade'} className="mt-3 flex flex-wrap gap-2">{ATLAS_EXAMPLES.map((example) => <Button key={example.label} type="button" variant="secondary" onClick={() => setSelectedPoint(example)}>{example.label}</Button>)}</div>
-      <div className="mt-4 flex flex-wrap gap-2"><Button aria-pressed={drawingPolygon} type="button" variant="secondary" onClick={() => setDrawingPolygon((drawing) => !drawing)}><Pentagon aria-hidden="true" size={16} />{drawingPolygon ? (en ? 'Finish area' : 'Encerrar área') : (en ? 'Draw exploratory area' : 'Desenhar área exploratória')}</Button>{polygon.length ? <Button type="button" variant="secondary" onClick={() => { setPolygon([]); setDrawingPolygon(false); }}>{en ? 'Clear area' : 'Limpar área'}</Button> : null}<GeoJsonImport onImport={importBoundary} /></div>
+      <div className="mt-4 flex flex-wrap gap-2"><Button aria-pressed={drawingPolygon} type="button" variant="secondary" onClick={() => (drawingPolygon ? finishDrawing() : startDrawing())}><Pentagon aria-hidden="true" size={16} />{drawingPolygon ? (en ? 'Finish area' : 'Encerrar área') : (en ? 'Draw exploratory area' : 'Desenhar área exploratória')}</Button>{polygon.length ? <Button type="button" variant="secondary" onClick={() => { setPolygon([]); setDrawingPolygon(false); }}>{en ? 'Clear area' : 'Limpar área'}</Button> : null}<GeoJsonImport onImport={importBoundary} /></div>
       {drawingPolygon ? <p className="mt-3 text-sm text-lime-100" role="status">{en ? `Click the map to add vertices (${polygon.length}). Finish after at least 3.` : `Clique no mapa para adicionar vértices (${polygon.length}). Encerre após pelo menos 3.`}</p> : null}
       {polygon.length >= 3 ? <div className="mt-3"><BoundarySummary boundary={polygon} compact /><p className="mt-2 text-xs text-slate-400">{en ? 'Exploratory boundary (drawn or imported); it does not confirm ownership, land use, or a registered field.' : 'Limite exploratório (desenhado ou importado); não confirma propriedade, uso agrícola ou talhão cadastrado.'}</p></div> : null}
     </details>
@@ -96,4 +100,15 @@ async function requestClimate(next: AtlasPoint, en: boolean): Promise<Climate> {
   if (!parsed.success) throw new Error(en ? 'Invalid climate response.' : 'Resposta climática inválida.');
   if (parsed.data.status === 'error') throw new Error(parsed.data.message);
   return parsed.data;
+}
+
+function DrawToolbar({ count, en, onUndo, onFinish, onCancel }: { count: number; en: boolean; onUndo: () => void; onFinish: () => void; onCancel: () => void }) {
+  const ready = count >= 3;
+  const button = 'border-2 px-3 py-1.5 font-mono text-xs font-bold disabled:cursor-not-allowed disabled:opacity-40';
+  return <div className="absolute left-3 right-14 bottom-8 z-[1000] mx-auto flex w-fit flex-wrap items-center justify-center gap-2 border-2 border-lime-300 bg-slate-950/90 p-2 shadow-[4px_4px_0_0_rgba(0,0,0,0.6)]" role="toolbar" aria-label={en ? 'Area drawing' : 'Desenho da área'}>
+    <p className="px-1 font-mono text-xs text-lime-100" role="status">{ready ? (en ? `${count} vertices · click the first one or Finish` : `${count} vértices · clique no primeiro ou em Concluir`) : (en ? `Click the map to add vertices (${count}/3)` : `Clique no mapa para marcar os vértices (${count}/3)`)}</p>
+    <button className={`${button} border-slate-500 text-slate-100`} disabled={count === 0} type="button" onClick={onUndo}>{en ? 'Undo' : 'Desfazer'}</button>
+    <button className={`${button} border-lime-300 bg-lime-300 text-slate-950`} disabled={!ready} type="button" onClick={onFinish}>{en ? 'Finish' : 'Concluir'}</button>
+    <button className={`${button} border-slate-500 text-slate-100`} type="button" onClick={onCancel}>{en ? 'Cancel' : 'Cancelar'}</button>
+  </div>;
 }

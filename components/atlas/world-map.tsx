@@ -6,7 +6,7 @@ import { IMERG_GIBS_TILE_URL, latestNrtDate, MODIS_GIBS_TILE_URL, SMAP_GIBS_TILE
 import { labelsTileUrl, satelliteAttribution, satelliteTileUrl } from '@/lib/atlas-map-style';
 import { useLocale } from '@/components/locale-provider';
 
-type WorldMapProps = { point: AtlasPoint | null; onPointChange: (point: AtlasPoint) => void; polygon: AtlasPolygon; drawingPolygon: boolean; onPolygonChange: (polygon: AtlasPolygon) => void; layers: MapLayers; onMapReady?: (map: Leaflet.Map | null) => void; pointZoom?: number };
+type WorldMapProps = { point: AtlasPoint | null; onPointChange: (point: AtlasPoint) => void; polygon: AtlasPolygon; drawingPolygon: boolean; onPolygonChange: (polygon: AtlasPolygon) => void; layers: MapLayers; onDrawFinish?: () => void; onMapReady?: (map: Leaflet.Map | null) => void; pointZoom?: number };
 
 /** Satellite tiles run out above this zoom (Esri shows "Map data not yet available"), so every layer and the map itself stop here. */
 export const MAP_MAX_ZOOM = 17;
@@ -14,7 +14,9 @@ export const MAP_MAX_ZOOM = 17;
 /** Drop-shaped pin (inline SVG: no default Leaflet marker images to bundle). */
 const pinHtml = (color: string) => `<svg width="34" height="44" viewBox="0 0 34 44" aria-hidden="true"><path d="M17 43C17 43 2 27 2 16a15 15 0 0 1 30 0c0 11-15 27-15 27Z" fill="${color}" stroke="#fdf6e3" stroke-width="2.5"/><circle cx="17" cy="16" r="5.5" fill="#fdf6e3"/></svg>`;
 
-export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPolygonChange, layers, onMapReady, pointZoom = 8 }: WorldMapProps) {
+export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPolygonChange, layers, onMapReady, onDrawFinish, pointZoom = 8 }: WorldMapProps) {
+  const onDrawFinishRef = useRef(onDrawFinish);
+  useEffect(() => { onDrawFinishRef.current = onDrawFinish; }, [onDrawFinish]);
   const onMapReadyRef = useRef(onMapReady);
   useEffect(() => { onMapReadyRef.current = onMapReady; }, [onMapReady]);
   const { locale } = useLocale();
@@ -33,7 +35,11 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
   const [ready, setReady] = useState(false);
   useEffect(() => { onPointChangeRef.current = onPointChange; }, [onPointChange]);
   useEffect(() => { onPolygonChangeRef.current = onPolygonChange; }, [onPolygonChange]);
-  useEffect(() => { drawingRef.current = drawingPolygon; }, [drawingPolygon]);
+  useEffect(() => {
+    drawingRef.current = drawingPolygon;
+    // Double-click would zoom instead of adding vertices while drawing.
+    if (drawingPolygon) map.current?.doubleClickZoom.disable(); else map.current?.doubleClickZoom.enable();
+  }, [drawingPolygon]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -48,7 +54,13 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
       L.control.zoom({ position: 'bottomright' }).addTo(instance);
       instance.on('click', (event: Leaflet.LeafletMouseEvent) => {
         const next = { latitude: Number(event.latlng.lat.toFixed(6)), longitude: Number(event.latlng.lng.toFixed(6)) };
-        if (drawingRef.current) { onPolygonChangeRef.current([...polygonRef.current, [next.longitude, next.latitude]]); return; }
+        if (drawingRef.current) {
+          const vertices = polygonRef.current;
+          // Clicking back on the first vertex closes the area (needs at least 3 vertices).
+          if (vertices.length >= 3 && instance.latLngToContainerPoint([vertices[0][1], vertices[0][0]]).distanceTo(event.containerPoint) <= 14) { onDrawFinishRef.current?.(); return; }
+          onPolygonChangeRef.current([...vertices, [next.longitude, next.latitude]]);
+          return;
+        }
         onPointChangeRef.current(next);
       });
       areaLayer.current = L.layerGroup().addTo(instance);
@@ -96,7 +108,11 @@ export function WorldMap({ point, onPointChange, polygon, drawingPolygon, onPoly
     const latlngs = polygon.map(([lng, lat]) => [lat, lng] as Leaflet.LatLngTuple);
     const style = { color: '#d9ff87', weight: 3, dashArray: '6 4', fillColor: '#b7f34a', fillOpacity: 0.18 };
     if (latlngs.length >= 3) L.polygon(latlngs, style).addTo(group); else if (latlngs.length >= 2) L.polyline(latlngs, style).addTo(group);
-  }, [polygon, ready]);
+    if (drawingPolygon) latlngs.forEach((latlng, index) => {
+      const first = index === 0 && latlngs.length >= 3;
+      L.circleMarker(latlng, { radius: first ? 8 : 4, color: first ? '#fde047' : '#d9ff87', weight: 2, fillColor: '#0f172a', fillOpacity: 1, interactive: false }).addTo(group);
+    });
+  }, [polygon, ready, drawingPolygon]);
 
   return <div className={`atlas-map-frame ${mapError ? 'atlas-map-frame-error' : ''}`}><div className="atlas-map" ref={container} aria-label={drawingPolygon ? (en ? 'Interactive map in area drawing mode; click to add vertices' : 'Mapa interativo em modo de desenho de área; clique para adicionar vértices') : (en ? 'Interactive satellite map; drag, zoom, and click to choose the farm location' : 'Mapa de satélite interativo; arraste, aproxime e clique para escolher a localização da fazenda')} />{mapError ? <p className="atlas-map-error" role="status">{en ? 'Interactive map unavailable in this browser. Use latitude and longitude below.' : 'Mapa interativo indisponível neste navegador. Use latitude e longitude abaixo.'}</p> : null}</div>;
 }
