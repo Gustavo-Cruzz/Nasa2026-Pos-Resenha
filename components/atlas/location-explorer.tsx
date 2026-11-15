@@ -98,11 +98,11 @@ export function LocationExplorer() {
       </div>
       <div className="atlas-side-col" ref={sideRef}>
         <div aria-label={en ? 'Side panel' : 'Painel lateral'} className="flex gap-2" role="tablist">
-          {([['data', en ? 'Data' : 'Dados'], ['chat', en ? 'Chat with João' : 'Conversa com o João']] as const).map(([id, label]) => <button aria-selected={tab === id} className={`min-h-11 flex-1 rounded-lg border px-3 text-sm font-semibold ${tab === id ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 text-slate-100 hover:border-lime-300'}`} key={id} onClick={() => setTab(id)} role="tab" type="button">{label}</button>)}
+          {([['data', en ? 'Data' : 'Dados'], ['chat', en ? 'Chat with João' : 'Conversa com o João']] as const).map(([id, label]) => <button aria-controls={`explore-${id}-panel`} aria-selected={tab === id} className={`min-h-11 flex-1 rounded-lg border px-3 text-sm font-semibold ${tab === id ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 text-slate-100 hover:border-lime-300'}`} id={`explore-${id}-tab`} key={id} onClick={() => setTab(id)} role="tab" type="button">{label}</button>)}
         </div>
         <div className="atlas-side-body">
       <ExploreExtrasProvider point={point}>
-        <aside aria-live="polite" className={`atlas-panel ${tab === 'data' ? '' : 'hidden'}`}>
+        <aside aria-labelledby="explore-data-tab" aria-live="polite" className="atlas-panel" hidden={tab !== 'data'} id="explore-data-panel" role="tabpanel">
           {!point ? <p className="text-slate-300">{en ? 'Search a city or tap the map.' : 'Busque uma cidade ou toque no mapa.'}</p> : <>
             <h2 className="text-2xl font-bold leading-tight">{point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')}</h2>
             <p className="mt-1 font-mono text-xs text-slate-400">{coordinateLabel(point)}</p>
@@ -117,7 +117,7 @@ export function LocationExplorer() {
           </>}
         </aside>
       </ExploreExtrasProvider>
-          <div className={`atlas-chat-col ${tab === 'chat' ? '' : 'hidden'}`}><Suspense fallback={chatLoading}><ClientOnly fallback={chatLoading}><ChatDemo mapPoint={picked ? point : null} mapPolygon={polygon} /></ClientOnly></Suspense></div>
+          <div aria-labelledby="explore-chat-tab" className="atlas-chat-col" hidden={tab !== 'chat'} id="explore-chat-panel" role="tabpanel"><Suspense fallback={chatLoading}><ClientOnly fallback={chatLoading}><ChatDemo mapPoint={picked ? point : null} mapPolygon={polygon} /></ClientOnly></Suspense></div>
         </div>
       </div>
 

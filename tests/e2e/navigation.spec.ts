@@ -103,16 +103,31 @@ test('selects Brazil, Ghana, and India examples globally and updates the coordin
   await page.getByRole('button', { name: 'Nova Délhi, Índia' }).click();
   await expect(page.getByLabel('Longitude')).toHaveValue('77.209');
   await expect(page.getByRole('list', { name: 'Chuva e temperatura típicas por mês' })).toBeVisible();
-  await expect(page.getByText('NASA POWER · 2011–2025 · mediana')).toBeVisible();
+  await expect(page.getByText('NASA POWER · 2011–2025 · mediana', { exact: true })).toBeVisible();
+  await page.getByRole('tab', { name: 'Dados' }).click();
+  const dataPanel = page.getByRole('tabpanel', { name: 'Dados' });
+  await expect(dataPanel.getByRole('heading', { name: 'Nova Délhi, Índia' })).toBeVisible();
+  await expect(dataPanel.getByRole('img', { name: 'Chuva e temperatura típicas por mês' })).toBeVisible();
+  await expect(dataPanel.getByText(/NASA POWER · 2011–2025 · mediana dos anos históricos/)).toBeVisible();
 });
 
 test('shows retryable NASA failure without a fabricated climate metric', async ({ page }) => {
-  await page.route('**/api/climate*', (route) => route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ status: 'error', code: 'NASA_REQUEST_FAILED', message: 'NASA indisponível.' }) }));
+  let climateRequests = 0;
+  await page.route('**/api/climate*', (route) => {
+    climateRequests += 1;
+    return route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ status: 'error', code: 'NASA_REQUEST_FAILED', message: 'NASA indisponível.' }) });
+  });
   await page.goto('/explore');
   await openMoreOptions(page);
   await page.getByRole('button', { name: 'Acra, Gana' }).click();
-  await expect(page.getByText('NASA indisponível.')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Dados' }).click();
+  const dataPanel = page.getByRole('tabpanel', { name: 'Dados' });
+  await expect(dataPanel.getByText('NASA indisponível.', { exact: true })).toBeVisible();
+  const retry = dataPanel.getByRole('button', { name: 'Tentar novamente' });
+  const requestsBeforeRetry = climateRequests;
+  await retry.click();
+  await expect.poll(() => climateRequests).toBeGreaterThan(requestsBeforeRetry);
+  await expect(retry).toBeVisible();
 });
 
 test('renders provenance and source drawers for pilot analysis', async ({ page }) => {

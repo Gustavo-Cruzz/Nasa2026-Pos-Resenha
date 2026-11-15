@@ -1,5 +1,15 @@
 # Sprint log
 
+## Verificação dos botões do explorador
+
+Status: complete — seleção de local, abas Dados/João, confirmação no chat e nova tentativa de clima verificadas no navegador.
+
+Implemented: o merge passou a abrir o João como painel inicial do explorador, mantendo a aba de dados acessível. A regressão cobre Rio Verde oferecido ao João, confirmação “Sim, é aqui” e avanço para a cultura. Os testes de dados agora acionam explicitamente a aba “Dados”, limitam as asserções ao painel visível e clicam em “Tentar novamente”, comprovando uma nova requisição climática em vez de apenas verificar a presença do botão.
+
+Evidence (2026-11-15): o fluxo Rio Verde → João passou duas vezes isoladamente. `npm run lint`, `npm run typecheck`, 341 testes unitários, os 27 testes Playwright e `npm run build` passaram; a suíte de navegador confirma os controles do explorador, voz, leitura, navegação, formulários, laboratório e resultados.
+
+Limitations: serviços externos ainda podem falhar; nesses casos a interface mantém o erro e o botão de nova tentativa, sem fabricar valores climáticos.
+
 ## Voz bilíngue e leitor acessível
 
 Status: complete — ditado no chat do João e leitura em voz alta do conteúdo principal.
