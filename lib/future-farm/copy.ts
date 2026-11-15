@@ -1,7 +1,16 @@
 import type { Locale } from '@/lib/i18n';
-import type { EvidenceLevel } from '@/lib/future-farm/types';
+import type { CycleWeather, EvidenceLevel, MonthWeather } from '@/lib/future-farm/types';
+
+const nd = 'N/D';
+const fmt = (value: number | null, digits = 0) => value === null || value === undefined ? nd : String(Number(value.toFixed(digits))).replace('-', '−');
+const signed = (value: number | null) => value === null || value === undefined ? nd : `${value > 0 ? '+' : ''}${fmt(value)}`;
+function detail(m: MonthWeather, c: { weatherName: Record<CycleWeather, string>; monthName: string[]; rainDaysLabel: string; tmaxLabel: string }): string {
+  const days = m.rainDays === null ? nd : fmt(m.rainDays);
+  return `${c.monthName[m.month - 1]} · ${c.weatherName[m.weather]} · P−ET0 ${signed(m.balanceMm)} mm · ${days} ${c.rainDaysLabel} · ${c.tmaxLabel} ${fmt(m.tmaxC)} °C`;
+}
 
 const pt = {
+  rainDaysLabel: 'dias de chuva', tmaxLabel: 'Tmáx',
   purposes: { commercial: 'produção comercial', cover: 'cobertura do solo', forage: 'forragem' } as Record<string, string>,
   slotMissing: { crop: 'cultura definida', temperature: 'faixa térmica documentada', cycle: 'duração do ciclo documentada', soil_ph: 'pH informado ou faixa verificável', previous_crop_family: 'família da cultura anterior' } as Record<string, string>,
   scenarioMissing: { cycle_duration: 'duração documentada', eligible_crop: 'cultura com critérios mínimos', historical_climate: 'clima histórico', documented_temperature_range: 'faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'etapas ainda não configuradas', futureBaseline: 'plano futuro confirmado' } as Record<string, string>,
@@ -20,10 +29,24 @@ const pt = {
   waterNd: 'Balanço P−ET0 da janela: N/D',
   frostObserved: 'Sem anos com geada de triagem (Tmín ≤ 2 °C) na janela',
   frostUnknown: 'Risco de geada na janela: N/D',
-  weatherCaption: { drought: 'Cena com faixa seca: déficit P−ET0 na janela desta cultura (clima histórico, não previsão).', rain: 'Cena com chuva: P−ET0 positivo na janela desta cultura (clima histórico, não previsão).', neutral: 'Sem chuva nem seca na cena: P−ET0 próximo de zero na janela (clima histórico).', unknown: 'Clima da janela: N/D; nenhuma chuva ou seca é desenhada.' } as Record<string, string>,
+  weatherCaption: {
+    storm: 'Cena com tempestade: mês muito chuvoso e com muitos dias de chuva (clima histórico NASA, medianas; não é previsão).',
+    rain: 'Cena com chuva: P−ET0 positivo no mês (clima histórico NASA, medianas; não é previsão).',
+    cloudy: 'Cena nublada: muitos dias de chuva ou pouca radiação solar no mês (clima histórico NASA, medianas; não é previsão).',
+    sunny: 'Cena ensolarada: mês sem sinal climático extremo (clima histórico NASA, medianas; não é previsão).',
+    drought: 'Cena de seca: déficit P−ET0 no mês (clima histórico NASA, medianas; não é previsão).',
+    frost: 'Cena com geada: parte dos anos teve Tmín ≤ 2 °C no mês (clima histórico NASA; não é previsão).',
+    heat: 'Cena de calor: Tmáx mediana alta no mês (clima histórico NASA, medianas; não é previsão).',
+    neutral: 'Cena sem chuva nem seca: P−ET0 próximo de zero (clima histórico NASA, medianas; não é previsão).',
+    unknown: 'Clima do mês: N/D; nenhum fenômeno é desenhado.',
+  } as Record<CycleWeather, string>,
+  weatherName: { storm: 'Tempestade', rain: 'Chuva', cloudy: 'Nublado', sunny: 'Ensolarado', drought: 'Seca', frost: 'Geada', heat: 'Calor', neutral: 'Ensolarado', unknown: 'N/D' } as Record<CycleWeather, string>,
+  monthName: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+  monthWeatherDetail: (m: MonthWeather) => detail(m, pt),
 };
 
 const en: typeof pt = {
+  rainDaysLabel: 'rain days', tmaxLabel: 'Tmax',
   purposes: { commercial: 'commercial production', cover: 'soil cover', forage: 'forage' },
   slotMissing: { crop: 'defined crop', temperature: 'documented thermal range', cycle: 'documented cycle duration', soil_ph: 'informed pH or verifiable range', previous_crop_family: 'previous crop family' },
   scenarioMissing: { cycle_duration: 'documented duration', eligible_crop: 'crop meeting minimum criteria', historical_climate: 'historical climate', documented_temperature_range: 'documented thermal range', soil_ph_or_verified_range: 'informed pH or verifiable range', unconfigured_lab_slots: 'stages not configured yet', futureBaseline: 'confirmed future plan' },
@@ -42,7 +65,20 @@ const en: typeof pt = {
   waterNd: 'Window P−ET0 balance: N/A',
   frostObserved: 'No years with screening frost (Tmin ≤ 2 °C) in the window',
   frostUnknown: 'Frost risk in the window: N/A',
-  weatherCaption: { drought: 'Dry-spell scene: P−ET0 deficit in this crop window (historical climate, not a forecast).', rain: 'Rain scene: positive P−ET0 in this crop window (historical climate, not a forecast).', neutral: 'No rain or drought drawn: P−ET0 close to zero in the window (historical climate).', unknown: 'Window climate: N/A; no rain or drought is drawn.' },
+  weatherCaption: {
+    storm: 'Storm scene: very wet month with many rain days (NASA historical climate, medians; not a forecast).',
+    rain: 'Rain scene: positive P−ET0 in the month (NASA historical climate, medians; not a forecast).',
+    cloudy: 'Cloudy scene: many rain days or low solar radiation in the month (NASA historical climate, medians; not a forecast).',
+    sunny: 'Sunny scene: month with no extreme climate signal (NASA historical climate, medians; not a forecast).',
+    drought: 'Drought scene: P−ET0 deficit in the month (NASA historical climate, medians; not a forecast).',
+    frost: 'Frost scene: some years had Tmin ≤ 2 °C in the month (NASA historical climate; not a forecast).',
+    heat: 'Heat scene: high median Tmax in the month (NASA historical climate, medians; not a forecast).',
+    neutral: 'No rain or drought drawn: P−ET0 close to zero (NASA historical climate, medians; not a forecast).',
+    unknown: 'Month climate: N/A; no phenomenon is drawn.',
+  },
+  weatherName: { storm: 'Storm', rain: 'Rain', cloudy: 'Cloudy', sunny: 'Sunny', drought: 'Drought', frost: 'Frost', heat: 'Heat', neutral: 'Sunny', unknown: 'N/A' },
+  monthName: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+  monthWeatherDetail: (m: MonthWeather) => detail(m, en),
 };
 
 export function futureFarmCopy(locale: Locale) { return locale === 'en' ? en : pt; }

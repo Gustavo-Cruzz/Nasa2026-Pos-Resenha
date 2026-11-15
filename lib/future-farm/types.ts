@@ -23,13 +23,35 @@ export interface CropPresence {
 
 export interface EvidenceLink { title: string; url: string }
 
-export type CycleWeather = 'drought' | 'rain' | 'neutral' | 'unknown';
-/** Per-window climate context behind the scene's rain/drought layer. Historical medians, never a forecast. */
+/**
+ * Monthly scene weather, classified from NASA POWER/IMERG historical medians of that calendar month.
+ * storm: very wet month (high P and many rain days); rain: P−ET0 surplus; cloudy: frequent rain days or low
+ * solar radiation without surplus; sunny: near-neutral balance; drought: P−ET0 deficit; frost: share of years
+ * with Tmin ≤ 2 °C; heat: high median Tmax; unknown: no data (nothing drawn).
+ */
+export type CycleWeather = 'storm' | 'rain' | 'cloudy' | 'sunny' | 'drought' | 'frost' | 'heat' | 'neutral' | 'unknown';
+export interface MonthWeather {
+  /** Calendar month 1..12. */
+  month: number;
+  weather: CycleWeather;
+  /** Median P−ET0 of the month (mm); null = N/D. */
+  balanceMm: number | null;
+  precipMm: number | null;
+  rainDays: number | null;
+  tmaxC: number | null;
+  tminC: number | null;
+  solarMjM2Day: number | null;
+  /** Share (0..1) of years with Tmin ≤ 2 °C in this month; null = N/D. */
+  frostShare: number | null;
+}
+/** Per-window climate context behind the scene's weather layer. Historical medians, never a forecast. */
 export interface CycleClimate {
   /** Accumulated median P-ET0 over the crop's own window (mm); null = N/D. */
   waterBalanceMm: number | null;
-  /** drought: P-ET0 deficit; rain: surplus; neutral: within the tolerance band; unknown: no data (no weather drawn). */
+  /** Dominant weather of the window (summary); the scene steps through `months`. */
   weather: CycleWeather;
+  /** Month-by-month weather of the crop window, in window order; empty when the window or climate is unknown. */
+  months: MonthWeather[];
   frost: 'attention' | 'observed' | 'unknown';
   /** Localised reading of the P-ET0 window indicator, or null when absent. */
   waterDetail: string | null;

@@ -65,11 +65,72 @@ button, input, select, textarea { font-family: inherit; }
 .ffs-scene[data-animate="false"] .ffs-plant { animation: none; }
 @keyframes ffs-sway { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(1px); } 50% { transform: translateX(2px); } 75% { transform: translateX(-1px); } }
 /* Climate layer of the farm scene: driven by the real P-ET0 of the cycle window (rain = surplus, drought = deficit). */
-.ffs-weather { position: absolute; inset: 0; pointer-events: none; }
-.ffs-weather[data-weather="rain"] { background: linear-gradient(to bottom, rgba(30, 58, 95, .45), rgba(30, 58, 95, .08) 60%), url(/assets/farm-stories/props/prop-rain.png) repeat; background-size: auto, 64px 64px; image-rendering: pixelated; }
-.ffs-weather[data-weather="drought"] { background: linear-gradient(to bottom, rgba(255, 190, 80, .28), rgba(180, 100, 30, .32)), url(/assets/farm-stories/tiles/tile-dry-32.png) repeat-x bottom / 32px 32px; image-rendering: pixelated; }
-@media (prefers-reduced-motion: no-preference) { .ffs-scene[data-animate="true"] .ffs-weather[data-weather="rain"] { animation: ffs-rain .9s linear infinite; } }
-@keyframes ffs-rain { to { background-position: 0 0, -16px 64px; } }
+.ffs-weather { position: absolute; inset: 0; pointer-events: none; overflow: hidden; image-rendering: pixelated; }
+.ffs-weather > span { position: absolute; display: none; image-rendering: pixelated; }
+.ffs-weather[data-weather="rain"] { background: linear-gradient(to bottom, rgba(30, 58, 95, .42), rgba(30, 58, 95, .08) 60%); }
+.ffs-weather[data-weather="storm"] { background: linear-gradient(to bottom, rgba(12, 18, 40, .62), rgba(20, 28, 55, .22) 65%); }
+.ffs-weather[data-weather="cloudy"] { background: linear-gradient(to bottom, rgba(120, 130, 145, .42), rgba(120, 130, 145, .1) 70%); }
+.ffs-weather[data-weather="sunny"], .ffs-weather[data-weather="neutral"] { background: linear-gradient(135deg, rgba(255, 214, 110, .3), rgba(255, 214, 110, 0) 55%); }
+.ffs-weather[data-weather="drought"] { background: linear-gradient(to bottom, rgba(255, 236, 170, .3), rgba(180, 100, 30, .32)); }
+.ffs-weather[data-weather="frost"] { background: linear-gradient(to bottom, rgba(170, 215, 255, .4), rgba(225, 240, 255, .24)); }
+.ffs-weather[data-weather="heat"] { background: linear-gradient(135deg, rgba(255, 140, 40, .38), rgba(255, 90, 20, .22)); }
+.ffs-w-precip { inset: 0; background: url(/assets/farm-stories/props/prop-rain.png) repeat; background-size: 64px 64px; }
+.ffs-weather[data-weather="rain"] .ffs-w-precip { display: block; opacity: .85; }
+.ffs-weather[data-weather="storm"] .ffs-w-precip { display: block; background-size: 40px 40px; background-position: 0 0; }
+.ffs-w-cloud { left: 8%; top: 4%; width: 160px; height: 68px; background: url(/assets/farm-stories/weather/cloud.png) center / 100% 100% no-repeat; }
+.ffs-w-cloud.c2 { left: 42%; top: 1%; width: 200px; height: 85px; }
+.ffs-w-cloud.c3 { left: 74%; top: 8%; width: 120px; height: 51px; }
+.ffs-weather[data-weather="cloudy"] .ffs-w-cloud { display: block; filter: brightness(.9) saturate(.8); }
+.ffs-weather[data-weather="rain"] .ffs-w-cloud { display: block; filter: brightness(.7) saturate(.6); opacity: .9; }
+.ffs-weather[data-weather="storm"] .ffs-w-cloud { display: block; filter: brightness(.4) saturate(.5); }
+.ffs-w-sun { right: 5%; top: 5%; width: 64px; height: 64px; background: url(/assets/farm-stories/props/prop-sun.png) center / contain no-repeat; }
+.ffs-w-sun::before { content: ""; position: absolute; inset: -22px; background: repeating-conic-gradient(rgba(255, 224, 110, .55) 0 9deg, transparent 9deg 30deg); -webkit-mask: radial-gradient(circle, transparent 28%, #000 30%, #000 52%, transparent 54%); mask: radial-gradient(circle, transparent 28%, #000 30%, #000 52%, transparent 54%); }
+.ffs-weather[data-weather="sunny"] .ffs-w-sun, .ffs-weather[data-weather="neutral"] .ffs-w-sun, .ffs-weather[data-weather="heat"] .ffs-w-sun, .ffs-weather[data-weather="drought"] .ffs-w-sun { display: block; }
+.ffs-weather[data-weather="heat"] .ffs-w-sun { transform: scale(1.5); transform-origin: 100% 0; filter: sepia(1) saturate(4) hue-rotate(-20deg) brightness(1.05); }
+.ffs-weather[data-weather="drought"] .ffs-w-sun { filter: sepia(.6) brightness(1.15); opacity: .8; }
+.ffs-w-ground { left: 0; right: 0; bottom: 0; height: 34%; }
+.ffs-weather[data-weather="drought"] .ffs-w-ground { display: block; background: url(/assets/farm-stories/tiles/tile-dry-32.png) repeat-x bottom / 32px 32px; opacity: .9; }
+.ffs-weather[data-weather="frost"] .ffs-w-ground { display: block; background: linear-gradient(to top, rgba(240, 248, 255, .5), rgba(240, 248, 255, 0)), radial-gradient(#fff 0 1.5px, transparent 2px) 0 0 / 23px 17px, radial-gradient(#e6f4ff 0 1px, transparent 1.5px) 9px 7px / 37px 29px; }
+.ffs-w-sparkle { inset: 0; width: 100%; }
+.ffs-weather[data-weather="frost"] .ffs-w-sparkle { display: block; background: radial-gradient(#fff 0 1px, transparent 1.5px) 0 0 / 53px 47px, radial-gradient(#dff1ff 0 1px, transparent 1.5px) 21px 19px / 71px 61px; opacity: .8; }
+.ffs-w-shimmer { left: 0; right: 0; bottom: 0; height: 58%; background: repeating-linear-gradient(to bottom, rgba(255, 230, 170, .07) 0 3px, transparent 3px 14px); }
+.ffs-weather[data-weather="heat"] .ffs-w-shimmer, .ffs-weather[data-weather="drought"] .ffs-w-shimmer { display: block; }
+.ffs-w-flash { inset: 0; background: #fff; opacity: 0; }
+.ffs-weather[data-weather="storm"] .ffs-w-flash { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .ffs-scene[data-animate="true"] .ffs-weather[data-weather="rain"] .ffs-w-precip { animation: ffs-rain .9s linear infinite; }
+  .ffs-scene[data-animate="true"] .ffs-weather[data-weather="storm"] .ffs-w-precip { animation: ffs-storm .5s linear infinite; }
+  .ffs-scene[data-animate="true"] .ffs-w-cloud { animation: ffs-drift 48s steps(96) infinite; }
+  .ffs-scene[data-animate="true"] .ffs-w-cloud.c2 { animation-duration: 64s; animation-delay: -30s; }
+  .ffs-scene[data-animate="true"] .ffs-w-cloud.c3 { animation-duration: 56s; animation-delay: -12s; }
+  .ffs-scene[data-animate="true"] .ffs-w-sun::before { animation: ffs-rays 8s steps(8) infinite; }
+  .ffs-scene[data-animate="true"] .ffs-weather[data-weather="heat"] .ffs-w-sun::before { animation-duration: 4s; }
+  .ffs-scene[data-animate="true"] .ffs-w-flash { animation: ffs-flash 7s steps(1, end) infinite; }
+  .ffs-scene[data-animate="true"] .ffs-weather[data-weather="frost"] .ffs-w-sparkle { animation: ffs-sparkle 6s steps(12) infinite; }
+  .ffs-scene[data-animate="true"] .ffs-weather[data-weather="heat"] .ffs-w-shimmer { animation: ffs-shimmer 1.2s steps(4) infinite; }
+  .ffs-scene[data-animate="true"] .ffs-weather[data-weather="drought"] .ffs-w-shimmer { animation: ffs-shimmer 2.4s steps(4) infinite; }
+}
+@keyframes ffs-rain { to { background-position: -16px 64px; } }
+@keyframes ffs-storm { to { background-position: -22px 40px; } }
+@keyframes ffs-drift { from { left: -25%; } to { left: 105%; } }
+@keyframes ffs-rays { to { transform: rotate(30deg); } }
+@keyframes ffs-flash { 0%, 62% { opacity: 0; } 63% { opacity: .3; } 66% { opacity: .12; } 69%, 100% { opacity: 0; } }
+@keyframes ffs-sparkle { to { background-position: 0 47px, 21px 80px; } }
+@keyframes ffs-shimmer { 0% { transform: translate(0, 0); } 25% { transform: translate(3px, -2px); } 50% { transform: translate(0, -4px); } 75% { transform: translate(-3px, -2px); } 100% { transform: translate(0, 0); } }
+.ffs-strip { display: flex; gap: 4px; margin-top: .5rem; overflow-x: auto; padding-bottom: 2px; }
+.ffs-month { display: flex; flex: 1 0 auto; flex-direction: column; align-items: center; gap: 2px; min-width: 3.6rem; padding: 4px 6px; border: 1px solid #475569; border-radius: .5rem; background: #0f172a; color: #e2e8f0; font-size: .7rem; line-height: 1.1; cursor: pointer; }
+.ffs-month[aria-pressed="true"] { border-color: #fcd34d; background: #1e293b; box-shadow: 0 0 0 1px #fcd34d; }
+.ffs-month:focus-visible { outline: 2px solid #fcd34d; outline-offset: 2px; }
+.ffs-glyph { position: relative; display: block; width: 16px; height: 16px; image-rendering: pixelated; }
+.ffs-glyph::before { content: ""; position: absolute; left: 0; top: 0; width: 2px; height: 2px; }
+.ffs-glyph[data-weather="sunny"]::before, .ffs-glyph[data-weather="neutral"]::before { box-shadow: 6px 0px #ffd23f, 2px 2px #ffd23f, 6px 2px #ffd23f, 10px 2px #ffd23f, 4px 4px #ffd23f, 6px 4px #ffd23f, 8px 4px #ffd23f, 0px 6px #ffd23f, 2px 6px #ffd23f, 4px 6px #ffd23f, 6px 6px #ffd23f, 8px 6px #ffd23f, 10px 6px #ffd23f, 12px 6px #ffd23f, 4px 8px #ffd23f, 6px 8px #ffd23f, 8px 8px #ffd23f, 2px 10px #ffd23f, 6px 10px #ffd23f, 10px 10px #ffd23f, 6px 12px #ffd23f; }
+.ffs-glyph[data-weather="cloudy"]::before { box-shadow: 6px 2px #aab4c0, 8px 2px #aab4c0, 4px 4px #aab4c0, 6px 4px #aab4c0, 8px 4px #aab4c0, 10px 4px #aab4c0, 2px 6px #aab4c0, 4px 6px #aab4c0, 6px 6px #aab4c0, 8px 6px #aab4c0, 10px 6px #aab4c0, 12px 6px #aab4c0, 14px 6px #aab4c0, 0px 8px #aab4c0, 2px 8px #aab4c0, 4px 8px #aab4c0, 6px 8px #aab4c0, 8px 8px #aab4c0, 10px 8px #aab4c0, 12px 8px #aab4c0, 14px 8px #aab4c0, 2px 10px #aab4c0, 4px 10px #aab4c0, 6px 10px #aab4c0, 8px 10px #aab4c0, 10px 10px #aab4c0, 12px 10px #aab4c0; }
+.ffs-glyph[data-weather="rain"]::before { box-shadow: 6px 0px #aab4c0, 8px 0px #aab4c0, 4px 2px #aab4c0, 6px 2px #aab4c0, 8px 2px #aab4c0, 10px 2px #aab4c0, 2px 4px #aab4c0, 4px 4px #aab4c0, 6px 4px #aab4c0, 8px 4px #aab4c0, 10px 4px #aab4c0, 12px 4px #aab4c0, 14px 4px #aab4c0, 0px 6px #aab4c0, 2px 6px #aab4c0, 4px 6px #aab4c0, 6px 6px #aab4c0, 8px 6px #aab4c0, 10px 6px #aab4c0, 12px 6px #aab4c0, 14px 6px #aab4c0, 2px 10px #4aa3ff, 8px 10px #4aa3ff, 14px 10px #4aa3ff, 4px 12px #4aa3ff, 10px 12px #4aa3ff, 2px 14px #4aa3ff, 8px 14px #4aa3ff, 14px 14px #4aa3ff; }
+.ffs-glyph[data-weather="storm"]::before { box-shadow: 6px 0px #5b6572, 8px 0px #5b6572, 4px 2px #5b6572, 6px 2px #5b6572, 8px 2px #5b6572, 10px 2px #5b6572, 2px 4px #5b6572, 4px 4px #5b6572, 6px 4px #5b6572, 8px 4px #5b6572, 10px 4px #5b6572, 12px 4px #5b6572, 14px 4px #5b6572, 0px 6px #5b6572, 2px 6px #5b6572, 4px 6px #5b6572, 6px 6px #5b6572, 8px 6px #5b6572, 10px 6px #5b6572, 12px 6px #5b6572, 14px 6px #5b6572, 6px 8px #ffe14d, 8px 8px #ffe14d, 4px 10px #ffe14d, 6px 10px #ffe14d, 6px 12px #ffe14d, 8px 12px #ffe14d, 10px 12px #ffe14d, 8px 14px #ffe14d; }
+.ffs-glyph[data-weather="drought"]::before { box-shadow: 0px 0px #c9a063, 2px 0px #c9a063, 4px 0px #c9a063, 6px 0px #c9a063, 8px 0px #6b3f1a, 10px 0px #c9a063, 12px 0px #c9a063, 14px 0px #c9a063, 0px 2px #c9a063, 2px 2px #c9a063, 4px 2px #c9a063, 6px 2px #6b3f1a, 8px 2px #c9a063, 10px 2px #c9a063, 12px 2px #c9a063, 14px 2px #c9a063, 0px 4px #c9a063, 2px 4px #6b3f1a, 4px 4px #6b3f1a, 6px 4px #c9a063, 8px 4px #c9a063, 10px 4px #c9a063, 12px 4px #6b3f1a, 14px 4px #c9a063, 0px 6px #c9a063, 2px 6px #c9a063, 4px 6px #c9a063, 6px 6px #c9a063, 8px 6px #6b3f1a, 10px 6px #6b3f1a, 12px 6px #c9a063, 14px 6px #c9a063, 0px 8px #c9a063, 2px 8px #c9a063, 4px 8px #6b3f1a, 6px 8px #c9a063, 8px 8px #c9a063, 10px 8px #c9a063, 12px 8px #c9a063, 14px 8px #c9a063, 0px 10px #c9a063, 2px 10px #c9a063, 4px 10px #6b3f1a, 6px 10px #6b3f1a, 8px 10px #c9a063, 10px 10px #c9a063, 12px 10px #c9a063, 14px 10px #c9a063, 0px 12px #c9a063, 2px 12px #c9a063, 4px 12px #c9a063, 6px 12px #c9a063, 8px 12px #6b3f1a, 10px 12px #6b3f1a, 12px 12px #c9a063, 14px 12px #c9a063, 0px 14px #c9a063, 2px 14px #c9a063, 4px 14px #c9a063, 6px 14px #c9a063, 8px 14px #c9a063, 10px 14px #c9a063, 12px 14px #c9a063, 14px 14px #c9a063; }
+.ffs-glyph[data-weather="frost"]::before { box-shadow: 6px 0px #f4f8ff, 2px 2px #f4f8ff, 6px 2px #f4f8ff, 10px 2px #f4f8ff, 4px 4px #f4f8ff, 6px 4px #f4f8ff, 8px 4px #f4f8ff, 0px 6px #f4f8ff, 2px 6px #f4f8ff, 4px 6px #f4f8ff, 6px 6px #f4f8ff, 8px 6px #f4f8ff, 10px 6px #f4f8ff, 12px 6px #f4f8ff, 4px 8px #f4f8ff, 6px 8px #f4f8ff, 8px 8px #f4f8ff, 2px 10px #f4f8ff, 6px 10px #f4f8ff, 10px 10px #f4f8ff, 6px 12px #f4f8ff; }
+.ffs-glyph[data-weather="heat"]::before { box-shadow: 6px 0px #ff5a36, 8px 0px #ff5a36, 6px 2px #ff5a36, 8px 2px #ff5a36, 6px 4px #ff5a36, 8px 4px #ff5a36, 6px 6px #ff5a36, 8px 6px #ff5a36, 4px 8px #ff5a36, 6px 8px #ff5a36, 8px 8px #ff5a36, 10px 8px #ff5a36, 2px 10px #ff5a36, 4px 10px #ff5a36, 6px 10px #ff5a36, 8px 10px #ff5a36, 10px 10px #ff5a36, 12px 10px #ff5a36, 2px 12px #ff5a36, 4px 12px #ff5a36, 6px 12px #ff5a36, 8px 12px #ff5a36, 10px 12px #ff5a36, 12px 12px #ff5a36, 4px 14px #ff5a36, 6px 14px #ff5a36, 8px 14px #ff5a36, 10px 14px #ff5a36; }
+.ffs-glyph[data-weather="unknown"]::before { box-shadow: 6px 4px #aab4c0, 8px 4px #aab4c0, 4px 6px #aab4c0, 10px 6px #aab4c0, 8px 8px #aab4c0, 8px 12px #aab4c0; }
 .ffs-demo-anim { opacity: 0; transition: opacity 200ms ease-out; }
 .ffs-demo-anim[data-loaded="true"] { opacity: 1; }
 @keyframes joao-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

@@ -7,7 +7,8 @@ import { summarizeCroppingSystem, type CroppingSystem } from '@/lib/intercrops';
 import { explanationDisplay, indicatorDisplay, scenarioDisplayTitle } from '@/lib/presentation';
 import { futureFarmCopy } from '@/lib/future-farm/copy';
 import { WATER_TOLERANCE_MM } from '@/lib/engine/tradeoffs';
-import type { CropPresence, CycleClimate, EvidenceLink, FarmCycleView, FarmScenarioView, ScenarioId } from '@/lib/future-farm/types';
+import type { CropPresence, CycleClimate, CycleWeather, EvidenceLink, FarmCycleView, FarmScenarioView, MonthWeather, ScenarioId } from '@/lib/future-farm/types';
+import { dominantWeather, windowMonthsWeather } from '@/lib/future-farm/weather';
 
 export interface FutureFarmSources {
   /** Server analysis produced by the existing engine (read only). */
@@ -56,13 +57,14 @@ function indicatorLines(indicators: QualitativeIndicator[], states: QualitativeI
 const mm = (value: number) => String(Number(value.toFixed(0))).replace('-', '−');
 
 /** Rain/drought layer from the slot's own window indicators (P-ET0 and frost); never recomputed, null evidence stays unknown. */
-export function cycleClimate(indicators: QualitativeIndicator[], locale: Locale): CycleClimate {
+export function cycleClimate(indicators: QualitativeIndicator[], locale: Locale, months: MonthWeather[] = []): CycleClimate {
   const water = indicators.find((indicator) => indicator.id === 'window_water_balance');
   const frost = indicators.find((indicator) => indicator.id === 'frost_risk');
   const balance = typeof water?.value === 'number' ? water.value : null;
-  const weather = balance === null ? 'unknown' : balance <= -WATER_TOLERANCE_MM ? 'drought' : balance >= WATER_TOLERANCE_MM ? 'rain' : 'neutral';
+  const summed: CycleWeather = balance === null ? 'unknown' : balance <= -WATER_TOLERANCE_MM ? 'drought' : balance >= WATER_TOLERANCE_MM ? 'rain' : 'sunny';
+  const weather = months.length ? dominantWeather(months) : summed;
   return {
-    waterBalanceMm: balance, weather,
+    waterBalanceMm: balance, weather, months,
     frost: frost?.state === 'attention' ? 'attention' : frost?.state === 'observed' ? 'observed' : 'unknown',
     waterDetail: water ? indicatorDisplay(water, locale).detail : null,
     frostDetail: frost ? indicatorDisplay(frost, locale).detail : null,
@@ -73,10 +75,12 @@ export function cycleClimate(indicators: QualitativeIndicator[], locale: Locale)
 function climateLines(climate: CycleClimate, zarc: LabSlotAssessment['zarc'] | undefined, locale: Locale) {
   const copy = futureFarmCopy(locale);
   const benefits: string[] = []; const risks: string[] = [];
-  if (climate.weather === 'drought' && climate.waterBalanceMm !== null) risks.push(copy.waterDeficit(mm(climate.waterBalanceMm)));
-  else if (climate.weather === 'rain' && climate.waterBalanceMm !== null) benefits.push(copy.waterSurplus(mm(climate.waterBalanceMm)));
-  else if (climate.weather === 'neutral' && climate.waterBalanceMm !== null) benefits.push(copy.waterNeutral(mm(climate.waterBalanceMm)));
-  else risks.push(copy.waterNd);
+  // Evidence text follows the accumulated window balance only, never the month-by-month scene states.
+  const balance = climate.waterBalanceMm;
+  if (balance === null) risks.push(copy.waterNd);
+  else if (balance <= -WATER_TOLERANCE_MM) risks.push(copy.waterDeficit(mm(balance)));
+  else if (balance >= WATER_TOLERANCE_MM) benefits.push(copy.waterSurplus(mm(balance)));
+  else benefits.push(copy.waterNeutral(mm(balance)));
   if (climate.frost === 'observed') benefits.push(copy.frostObserved);
   else if (climate.frost === 'unknown') risks.push(copy.frostUnknown);
   if (zarc) {
@@ -89,7 +93,7 @@ function climateLines(climate: CycleClimate, zarc: LabSlotAssessment['zarc'] | u
 
 interface CycleInput { scenarioId: ScenarioId; index: number; period: FarmCycleView['period']; cropId: string; assessment: (Pick<LabSlotAssessment, 'indicators' | 'sourceRefs' | 'missingEvidence' | 'validationLevel'> & { zarc?: LabSlotAssessment['zarc'] }) | null; stale: boolean }
 
-function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale): FarmCycleView {
+function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale, analysis?: AnalysisResult): FarmCycleView {
   const copy = futureFarmCopy(locale);
   const primary: CropPresence = { cropId: input.cropId, ...cropLabel(input.cropId, locale), role: 'primary' };
   const intercrop = intercropCompanions(input.cropId, systems, locale);
@@ -100,7 +104,7 @@ function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale
   const catalogueRefs = catalogue.flatMap((crop) => crop?.sourceRefs ?? []);
   const evidence = input.stale ? null : input.assessment;
   const diversity = evidence?.indicators.find((indicator) => indicator.id === 'functional_diversity');
-  const climate = evidence ? cycleClimate(evidence.indicators, locale) : null;
+  const climate = evidence ? cycleClimate(evidence.indicators, locale, analysis ? windowMonthsWeather(analysis, input.cropId, input.period?.season ?? 'A') : []) : null;
   const climateText = climate ? climateLines(climate, evidence?.zarc, locale) : { benefits: [], risks: [] };
   return {
     id: `${input.scenarioId}-${input.index}`,
@@ -122,22 +126,22 @@ function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale
   };
 }
 
-function scenarioCycles(strategy: Rotation, plan: LabPlan | undefined, systems: CroppingSystem[], locale: Locale): FarmCycleView[] {
+function scenarioCycles(strategy: Rotation, plan: LabPlan | undefined, systems: CroppingSystem[], locale: Locale, analysis?: AnalysisResult): FarmCycleView[] {
   const planned = plan?.scenarios.find((scenario) => scenario.id === strategy.id);
   if (planned) {
     return planned.slots.flatMap((slot, index) => {
       if (!slot.cropId) return []; // never invent a crop for an empty stage
       const analysed = strategy.slots.find((item) => item.slotIndex === index);
       const stale = !analysed || analysed.cropId !== slot.cropId;
-      return [buildCycle({ scenarioId: strategy.id, index, period: { year: slot.year, season: slot.season }, cropId: slot.cropId, assessment: analysed ?? null, stale }, systems, locale)];
+      return [buildCycle({ scenarioId: strategy.id, index, period: { year: slot.year, season: slot.season }, cropId: slot.cropId, assessment: analysed ?? null, stale }, systems, locale, analysis)];
     });
   }
   if (strategy.slots.length) {
-    return strategy.slots.flatMap((slot) => slot.cropId ? [buildCycle({ scenarioId: strategy.id, index: slot.slotIndex, period: { year: slot.year, season: slot.season }, cropId: slot.cropId, assessment: slot, stale: false }, systems, locale)] : []);
+    return strategy.slots.flatMap((slot) => slot.cropId ? [buildCycle({ scenarioId: strategy.id, index: slot.slotIndex, period: { year: slot.year, season: slot.season }, cropId: slot.cropId, assessment: slot, stale: false }, systems, locale, analysis)] : []);
   }
   if (!strategy.proposedCrop) return [];
   const sourceRefs = unique(strategy.indicators.flatMap((indicator) => indicator.sourceRefs));
-  return [buildCycle({ scenarioId: strategy.id, index: 0, period: null, cropId: strategy.proposedCrop.cropId, assessment: { indicators: strategy.indicators, sourceRefs, missingEvidence: [], validationLevel: strategy.validationLevel }, stale: false }, systems, locale)];
+  return [buildCycle({ scenarioId: strategy.id, index: 0, period: null, cropId: strategy.proposedCrop.cropId, assessment: { indicators: strategy.indicators, sourceRefs, missingEvidence: [], validationLevel: strategy.validationLevel }, stale: false }, systems, locale, analysis)];
 }
 
 /**
@@ -156,7 +160,7 @@ export function buildFarmScenarioViews({ analysis, currentPlan, croppingSystems 
       title: scenarioDisplayTitle(strategy, locale),
       scenarioNotes: strategy.explanations.map((item) => explanationDisplay(item, locale)),
       scenarioMissingData: unique(strategy.missingData.map((item) => copy.scenarioMissing[item] ?? item)),
-      cycles: scenarioCycles(strategy, currentPlan, systems, locale),
+      cycles: scenarioCycles(strategy, currentPlan, systems, locale, analysis),
       tradeoffs: strategy.tradeoffs ? (locale === 'en' ? { gains: strategy.tradeoffs.summary.gainsEn, losses: strategy.tradeoffs.summary.lossesEn, unknowns: strategy.tradeoffs.summary.unknownsEn } : { gains: strategy.tradeoffs.summary.gains, losses: strategy.tradeoffs.summary.losses, unknowns: strategy.tradeoffs.summary.unknowns }) : { gains: [], losses: [], unknowns: [] },
       bareSoilNote: strategy.bareSoil ? (locale === 'en' ? strategy.bareSoil.detailEn : strategy.bareSoil.detail) : null,
       demoOnly: false,

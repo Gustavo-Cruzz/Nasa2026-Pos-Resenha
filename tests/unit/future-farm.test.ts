@@ -150,7 +150,7 @@ describe('Future Farm Stories climate and decision data (3.4)', () => {
   it('maps window P-ET0 to drought, rain, neutral or unknown without inventing weather', () => {
     expect(cycleClimate([ind('window_water_balance', 'observed', -169)], 'pt-BR').weather).toBe('drought');
     expect(cycleClimate([ind('window_water_balance', 'observed', 101)], 'en').weather).toBe('rain');
-    expect(cycleClimate([ind('window_water_balance', 'observed', 5)], 'en').weather).toBe('neutral');
+    expect(cycleClimate([ind('window_water_balance', 'observed', 5)], 'en').weather).toBe('sunny');
     expect(cycleClimate([ind('window_water_balance', 'unknown', null)], 'en')).toMatchObject({ weather: 'unknown', waterBalanceMm: null, frost: 'unknown' });
     expect(cycleClimate([], 'en').weather).toBe('unknown');
     expect(cycleClimate([ind('frost_risk', 'attention')], 'en').frost).toBe('attention');
@@ -171,11 +171,12 @@ describe('Future Farm Stories climate and decision data (3.4)', () => {
     expect(views[1].tradeoffs.gains.length + views[1].tradeoffs.losses.length + views[1].tradeoffs.unknowns.length).toBeGreaterThan(0);
   });
 
-  it('withholds climate for stale cycles and for the demo', () => {
+  it('withholds climate for stale cycles; demo climate is fictional only', () => {
     const analysed = fourStagePlan();
     const analysis = analyze(base, unavailable, analysed);
     const views = buildFarmScenarioViews({ analysis, currentPlan: changeLabSlot(analysed, 'A', 1, 'cassava') }, 'pt-BR');
     expect(views[0].cycles[1].climate).toBeNull();
-    expect(buildDemoScenarioViews('pt-BR').every((view) => view.cycles.every((cycle) => cycle.climate === null))).toBe(true);
+    // Demo cycles carry fictional illustrative months only: no P−ET0 sum is presented as real NASA data.
+    expect(buildDemoScenarioViews('pt-BR').every((view) => view.cycles.every((cycle) => cycle.climate?.waterBalanceMm === null && (cycle.climate?.months.length ?? 0) > 0))).toBe(true);
   });
 });

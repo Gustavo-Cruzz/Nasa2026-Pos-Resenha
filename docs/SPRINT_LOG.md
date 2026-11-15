@@ -959,3 +959,13 @@ Implemented: added a root MIT license for the original software and documentatio
 Checks: reviewed the rendered Markdown structure, relative links, repository diff, and license text. No application code or runtime behavior changed, so lint, typecheck, unit tests, end-to-end tests, and build were not required for this documentation-only change.
 
 Limitations: the MIT license covers original repository material only. Third-party datasets, services, libraries, and media remain under their own licenses and terms. The team remains responsible for retaining consent for identifiable people and verifying that every submitted asset is covered by the stated provenance.
+
+## Future Farm Stories: month-by-month weather (storm, rain, cloudy, sunny, drought, frost, heat)
+
+Status: complete in code; checked in the browser (demo mode, all 7 states).
+
+Implemented: each cycle's scene now steps through the months of the crop window (`lib/future-farm/weather.ts`). Each month is classified from NASA POWER/IMERG historical medians already in the analysis: P−ET0, monthly precipitation, IMERG rain days, ALLSKY solar (new optional `solarMedianMjM2Day` in `monthlyClimatology`), Tmax and the share of frost years. Priority: frost ≥ 20 % of years; storm ≥ 200 mm and ≥ 20 rain days; rain P−ET0 ≥ +30 mm; heat Tmax ≥ 34 °C; drought P−ET0 ≤ −60 mm; cloudy ≥ 12 rain days or solar ≤ 85 % of the annual median; otherwise sunny. These are scene screening thresholds, not agronomic ones. The evidence text keeps using the accumulated window P−ET0 (±20 mm). `FarmScene` draws CSS pixel-art effects per state, with a clickable month strip and auto-advance (static under reduced motion). The demo gets fictional, clearly labelled months covering all states. New cloud sprite: `scripts/gen-weather-cloud.py` → `public/assets/farm-stories/weather/cloud.png`.
+
+Evidence (2026-11-15): tsc and eslint pass; vitest `future-farm*.test.ts` (20 tests) and Playwright `future-stories.spec.ts` (4 tests) pass. Rio Verde check: Jan–Feb and Nov rain, Mar–Apr and Dec cloudy, May–Aug drought, Sep–Oct heat. These months came from a run with the earlier storm cut (250 mm, 18 rain days); with the final cut (200 mm, 20 rain days) January (~205 mm, 28 rain days) should be storm, but this was not re-run.
+
+Limitations / next: thresholds are fixed national values; Jun–Aug show as drought rather than sunny and Oct as heat in Rio Verde. `npm run build` was not run.

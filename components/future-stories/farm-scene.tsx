@@ -1,11 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { futureFarmCopy } from '@/lib/future-farm/copy';
 import { composeFarmScene, FARM_BASE } from '@/lib/future-farm/composer';
 import type { DemoScene } from '@/lib/future-farm/demo';
-import type { FarmCycleView, ScenarioId } from '@/lib/future-farm/types';
+import { MONTH_ABBR } from '@/lib/engine/slot-season';
+import type { CycleWeather, FarmCycleView, ScenarioId } from '@/lib/future-farm/types';
 
 const query = '(prefers-reduced-motion: reduce)';
 function subscribeMotion(callback: () => void) {
@@ -35,20 +36,56 @@ interface FarmSceneProps { cycle: FarmCycleView; scenarioId: ScenarioId; reduced
  * so an edited crop or intercrop appears immediately. The pre-rendered
  * GIF/WebP is used only in explicit demo mode and only for its own crop.
  */
-export function FarmScene({ cycle, scenarioId, reducedMotion, paused, en, demoScene }: FarmSceneProps) {
+const MONTH_ABBR_EN = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
+const MONTH_ADVANCE_MS = 2500;
+
+/** Remounts per cycle so the selected month and auto-play reset when the cycle changes. */
+export function FarmScene(props: FarmSceneProps) {
+  return <FarmSceneInner key={props.cycle.id} {...props} />;
+}
+
+function FarmSceneInner({ cycle, scenarioId, reducedMotion, paused, en, demoScene }: FarmSceneProps) {
   const animate = !reducedMotion && !paused;
   const alt = sceneAlt(cycle, scenarioId, en);
   const layout = useMemo(() => composeFarmScene(cycle.crops), [cycle.crops]);
-  const weather = demoScene ? 'unknown' : cycle.climate?.weather ?? 'unknown';
-  const caption = cycle.climate ? futureFarmCopy(en ? 'en' : 'pt-BR').weatherCaption[weather] : null;
+  const copy = futureFarmCopy(en ? 'en' : 'pt-BR');
+  const months = useMemo(() => cycle.climate?.months ?? [], [cycle.climate]);
+  const [selected, setSelected] = useState(0);
+  const [manual, setManual] = useState(false);
+  useEffect(() => {
+    if (!animate || manual || months.length < 2) return undefined;
+    const timer = window.setInterval(() => setSelected((value) => (value + 1) % months.length), MONTH_ADVANCE_MS);
+    return () => window.clearInterval(timer);
+  }, [animate, manual, months.length]);
+  const current = months.length ? months[Math.min(selected, months.length - 1)] : null;
+  const weather: CycleWeather = current?.weather ?? cycle.climate?.weather ?? 'unknown';
+  const caption = cycle.climate ? copy.weatherCaption[weather] : null;
+  const monthNames = en ? MONTH_ABBR_EN : MONTH_ABBR;
   const demoMatches = Boolean(demoScene && cycle.crops.length === 1 && cycle.crops[0].cropId === demoScene.cropId);
   return <figure className="m-0">
     <div className="ffs-scene" data-animate={animate} data-scene-kind={demoMatches ? 'demo' : 'composed'} data-testid="farm-scene" role="img" aria-label={alt}>
       <Image alt="" aria-hidden="true" className="object-cover" fill priority sizes="(min-width: 1024px) 66vw, 100vw" src={FARM_BASE} />
       {demoMatches && demoScene ? <DemoPicture animate={animate} key={demoScene.png} scene={demoScene} /> : layout.plants.map((plant) => <span aria-hidden="true" className="ffs-plant" data-crop={plant.cropId} key={plant.key} style={{ left: `${plant.leftPct}%`, top: `${plant.topPct}%`, width: `${plant.widthPct}%`, height: `${plant.heightPct}%`, backgroundImage: `url(${plant.src})`, animationDelay: `-${plant.delayMs}ms` }} />)}
-      {weather === 'rain' || weather === 'drought' ? <div aria-hidden="true" className="ffs-weather" data-testid="farm-weather" data-weather={weather} /> : null}
+      {weather !== 'unknown' ? <div aria-hidden="true" className="ffs-weather" data-month={current?.month} data-testid="farm-weather" data-weather={weather}>
+        <span className="ffs-w-ground" /><span className="ffs-w-shimmer" /><span className="ffs-w-sun" />
+        <span className="ffs-w-cloud" /><span className="ffs-w-cloud c2" /><span className="ffs-w-cloud c3" />
+        <span className="ffs-w-precip" /><span className="ffs-w-sparkle" /><span className="ffs-w-flash" />
+      </div> : null}
     </div>
-    {caption ? <p className="mt-2 text-sm text-slate-200" data-testid="farm-weather-caption">{caption}{cycle.climate?.waterBalanceMm != null ? ` P−ET0: ${Number(cycle.climate.waterBalanceMm.toFixed(0))} mm.` : ''}</p> : null}
+    {months.length ? <div aria-label={en ? 'Scene weather by month (historical medians)' : 'Clima da cena por mês (medianas históricas)'} className="ffs-strip" data-testid="farm-month-strip" role="group">
+      {months.map((item, index) => {
+        const detail = copy.monthWeatherDetail(item);
+        const name = copy.weatherName[item.weather];
+        return <button aria-pressed={index === Math.min(selected, months.length - 1)} className="ffs-month" data-testid="farm-month" data-weather={item.weather} key={`${item.month}-${index}`} onClick={() => { setManual(true); setSelected(index); }} title={detail} type="button">
+          <span aria-hidden="true" className="ffs-glyph" data-weather={item.weather} />
+          <b>{monthNames[item.month - 1]}</b>
+          <span className="text-slate-300">{name}</span>
+          <span className="sr-only">{detail}</span>
+        </button>;
+      })}
+    </div> : null}
+    {caption ? <p className="mt-2 text-sm text-slate-200" data-testid="farm-weather-caption">{current ? `${copy.monthWeatherDetail(current)}. ` : ''}{demoScene ? '' : caption}{cycle.climate?.waterBalanceMm != null ? ` ${en ? 'Window' : 'Janela'} P−ET0: ${Number(cycle.climate.waterBalanceMm.toFixed(0))} mm.` : ''}</p> : null}
+    {demoScene && cycle.climate?.waterDetail ? <p className="mt-1 text-xs text-amber-200" data-testid="farm-weather-demo-note">{cycle.climate.waterDetail}</p> : null}
     <figcaption className="mt-2 flex flex-wrap gap-2" aria-label={en ? 'Crops shown in the scene' : 'Culturas exibidas na cena'}>
       {layout.legend.map((item) => <span className="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-900 px-2 py-1 text-sm" data-testid="scene-legend-item" key={item.cropId}>
         <span aria-hidden="true" className="inline-block h-7 w-7 bg-contain bg-center bg-no-repeat [image-rendering:pixelated]" style={{ backgroundImage: `url(${item.src})` }} />

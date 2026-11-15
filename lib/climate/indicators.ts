@@ -1,6 +1,6 @@
 import type { ClimateDay } from '@/lib/climate/nasa-power';
 
-export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; tsoilMedianC?: number | null; precipMedianMm: number | null; validTemperatureDays: number; validPrecipitationDays: number };
+export type MonthlyClimateSummary = { month: number; tmeanMedianC: number | null; tminMedianC?: number | null; tmaxMedianC?: number | null; tsoilMedianC?: number | null; precipMedianMm: number | null; /** Median daily ALLSKY_SFC_SW_DWN (MJ/m2/day); optional, used only for scene cloudiness. */ solarMedianMjM2Day?: number | null; validTemperatureDays: number; validPrecipitationDays: number };
 export type HistoricalPrecipitationMonth = { month: number; medianTotalMm: number | null; validYears: number; expectedYears: number; coveragePct: number };
 export type HistoricalWaterContextMonth = { month: number; imergMedianTotalMm: number | null; medianRainDays: number | null; rootZoneWetnessMedian: number | null; validImergYears: number; expectedYears: number; imergCoveragePct: number; rootZoneCoveragePct: number };
 /** Frost screen per calendar month: share of complete years with at least one day Tmin <= thresholdC, and the median count of such days. */
@@ -25,8 +25,9 @@ export function monthlyClimatology(daily: ClimateDay[]): MonthlyClimateSummary[]
     const minimums = values.flatMap((day) => day.tminC === null ? [] : [day.tminC]);
     const maximums = values.flatMap((day) => day.tmaxC === null ? [] : [day.tmaxC]);
     const precipitation = values.flatMap((day) => day.precipMm === null ? [] : [day.precipMm]);
+    const solar = values.flatMap((day) => day.solarMjM2Day === null || day.solarMjM2Day === undefined ? [] : [day.solarMjM2Day]);
     const soil = values.flatMap((day) => day.soilTempC === null || day.soilTempC === undefined ? [] : [day.soilTempC]);
-    return { month, tmeanMedianC: median(temperatures), tminMedianC: median(minimums), tmaxMedianC: median(maximums), tsoilMedianC: median(soil), precipMedianMm: median(precipitation), validTemperatureDays: temperatures.length, validPrecipitationDays: precipitation.length };
+    return { month, tmeanMedianC: median(temperatures), tminMedianC: median(minimums), tmaxMedianC: median(maximums), tsoilMedianC: median(soil), precipMedianMm: median(precipitation), solarMedianMjM2Day: median(solar), validTemperatureDays: temperatures.length, validPrecipitationDays: precipitation.length };
   });
 }
 
