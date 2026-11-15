@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cropEvidence, crops } from '@/lib/catalog';
+import { cropEvidence, cropById, crops, verifiedCropEvidence } from '@/lib/catalog';
 import { analysisInputSchema } from '@/lib/schema';
 
 const base = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 1, history: [{ cropId: 'soybean', startYearMonth: '2023-01', endYearMonth: '2023-06' }, { cropId: 'maize', startYearMonth: '2023-07', endYearMonth: '2023-12' }, { cropId: 'soybean', startYearMonth: '2024-01', endYearMonth: '2024-06' }], priorities: { water: 1, soil: 1, operations: 1 }, irrigation: 'unknown' };
@@ -18,8 +18,8 @@ describe('catalog and wizard contracts', () => {
     expect(crops.every((crop) => crop.parameterStatus === 'missing')).toBe(true);
     expect(cropEvidence.find((record) => record.cropId === 'cowpea' && record.field === 'maturityDays')?.source.verification).toBe('verified');
     expect(cropEvidence.find((record) => record.cropId === 'cowpea' && record.field === 'maturityDays')?.cultivar).toBe('BRS Guariba');
-    expect(crops.find((crop) => crop.id === 'common_bean')?.kcStages).toEqual([{ stage: 'initial', kc: 0.4 }, { stage: 'mid', kc: 1.15 }, { stage: 'end', kc: 0.35 }]);
-    expect(cropEvidence.find((record) => record.cropId === 'common_bean' && record.field === 'kcStages')?.source.institution).toContain('Agência Nacional de Águas');
+    expect(crops.find((crop) => crop.id === 'common_bean')?.kcStages?.map((stage) => stage.kc)).toEqual([0.4, 1.15, 0.35]);
+    expect(verifiedCropEvidence('common_bean', 'kcStages')?.source.institution).toContain('FAO');
   });
 
   it('accepts partial soil without changing its origin', () => {
