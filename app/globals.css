@@ -142,6 +142,7 @@ button, input, select, textarea { font-family: inherit; }
 /* Explore side column: tabs (data / chat) above one body. On desktop it is exactly as tall as the map, and only the data scrolls. */
 .atlas-side-col { display: flex; min-width: 0; flex-direction: column; gap: .75rem; }
 .atlas-side-body { position: relative; min-width: 0; flex: 1 1 auto; }
+[data-reading="true"] { outline: 3px solid #bef264; outline-offset: 4px; }
 @media (min-width: 1024px) {
   .atlas-side-col { height: 40rem; }
   .atlas-side-body { min-height: 0; }

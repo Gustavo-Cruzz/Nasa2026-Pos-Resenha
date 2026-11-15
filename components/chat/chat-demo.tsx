@@ -9,6 +9,7 @@ import { saveDraft } from '@/lib/storage';
 import type { AtlasPolygon } from '@/lib/atlas';
 import { useLocale } from '@/components/locale-provider';
 import { ASSISTANT_NAME, ChatAvatar } from '@/components/chat/chat-avatar';
+import { VoiceInputButton } from '@/components/chat/voice-input-button';
 
 type Message = { id: number; role: 'bot' | 'user'; text: string };
 const DELAY_MS = 350;
@@ -196,6 +197,7 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     <form className="flex items-center gap-2 border-t border-slate-700 p-3" onSubmit={onSubmit}>
       <label className="sr-only" htmlFor="chat-input">{en ? 'Your message' : 'Sua mensagem'}</label>
       <input aria-activedescendant={activeIndex >= 0 ? `place-${suggestions[activeIndex].code}` : undefined} aria-autocomplete={state.step === 'location' ? 'list' : undefined} aria-controls={suggestions.length ? 'place-suggestions' : undefined} aria-expanded={state.step === 'location' ? suggestions.length > 0 : undefined} autoComplete="off" className="min-h-11 flex-1 rounded-lg border border-slate-600 bg-slate-950 px-3 text-base text-slate-100 placeholder:text-slate-500 focus:border-lime-300 focus:outline-none focus:ring-2 focus:ring-lime-300/30" disabled={busy} id="chat-input" onChange={(event) => setText(event.target.value)} onKeyDown={onKeyDown} placeholder={state.step === 'location' ? (en ? 'Type your city…' : 'Digite sua cidade…') : (en ? 'Type your answer…' : 'Digite sua resposta…')} role={state.step === 'location' ? 'combobox' : undefined} value={text} />
+      <VoiceInputButton disabled={busy} locale={locale} onTranscript={(transcript) => setText((current) => current.trim() ? `${current.trim()} ${transcript}` : transcript)} />
       <button aria-label={en ? 'Send' : 'Enviar'} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-lime-300 text-slate-950 hover:bg-lime-200 disabled:opacity-50" disabled={busy || !text.trim()} type="submit"><SendHorizontal aria-hidden="true" size={18} /></button>
     </form>
   </section>;

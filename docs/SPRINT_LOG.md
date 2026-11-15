@@ -1,5 +1,17 @@
 # Sprint log
 
+## Voz bilíngue e leitor acessível
+
+Status: complete — ditado no chat do João e leitura em voz alta do conteúdo principal.
+
+Implemented: o campo de conversa ao lado do mapa ganhou botão de microfone quando `SpeechRecognition` ou `webkitSpeechRecognition` está disponível. O idioma acompanha a interface (`pt-BR` / `en-US`), a transcrição apenas preenche o campo para revisão e nunca é enviada automaticamente. Escuta, permissão negada, silêncio, ausência de microfone e falha de rede têm estados acessíveis e bilíngues; a captura para ao trocar idioma ou desmontar o chat.
+
+Implemented: o cabeçalho ganhou leitor de página reutilizável via `speechSynthesis`, com iniciar, pausar, continuar, recomeçar, parar e velocidade. O leitor usa voz compatível com o idioma, divide textos longos, destaca e rola até o bloco atual, respeita movimento reduzido e para ao navegar/desmontar ou trocar idioma. `/results3` marca cabeçalho, seis blocos e próximos passos na ordem de leitura; outras páginas usam o conteúdo de `main` como fallback. Navegadores sem suporte mantêm toda digitação, leitura visual e compatibilidade com leitores de tela, sem mostrar controles inoperantes.
+
+Evidence (2026-11-15): testes unitários cobrem idioma, detecção padrão/prefixada, mensagens de erro, divisão de texto e cópia acessível. Playwright Chromium validou ditado pt/en sem envio automático e leitura pt/en com destaque e parada. `npm run lint`, `npm run typecheck`, `npm run test` (321 testes) e `npm run build` passaram.
+
+Limitations: disponibilidade e qualidade das vozes dependem do navegador/sistema. Alguns navegadores processam reconhecimento remotamente; o Field Shift não recebe nem persiste o áudio. Firefox Android e navegadores antigos podem mostrar somente entrada digitada.
+
 ## /results3 — explicação dos resultados reais com Gemini 3.5 Flash-Lite
 
 Status: complete — a página deixou de usar fazenda, clima, solo, relevo e cenários mockados.
