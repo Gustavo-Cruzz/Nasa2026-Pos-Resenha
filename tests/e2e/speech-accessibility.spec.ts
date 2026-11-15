@@ -18,6 +18,8 @@ test.beforeEach(async ({ page }) => {
 
 test('dictates into João chat in Portuguese and English without auto-sending', async ({ page }) => {
   await page.goto('/chat');
+  await page.getByRole('button', { name: 'Mandar mensagem de áudio' }).click();
+  await expect(page.getByText('Toque no microfone e fale.')).toBeVisible();
   await page.getByRole('button', { name: 'Falar sua resposta' }).click();
   await expect(page.getByLabel('Sua mensagem')).toHaveValue('Rio Verde');
   expect(await page.evaluate(() => (window as unknown as { __recognitionLang: string }).__recognitionLang)).toBe('pt-BR');
@@ -39,5 +41,5 @@ test('reads the main page with bilingual controls and highlights current content
   await expect(page.locator('#main-content')).not.toHaveAttribute('data-reading', 'true');
   await page.getByRole('button', { name: 'English' }).click();
   await page.getByRole('button', { name: 'Read page' }).click();
-  expect(await page.evaluate(() => (window as unknown as { __spoken: Array<{ text: string; lang: string }> }).__spoken.at(-1)?.lang)).toBe('en-US');
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: Array<{ text: string; lang: string }> }).__spoken.at(-1)?.lang)).toBe('en-US');
 });

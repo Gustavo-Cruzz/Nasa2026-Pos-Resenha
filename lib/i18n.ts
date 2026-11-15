@@ -2,6 +2,8 @@ export const dictionaries = {
   'pt-BR': {
     productName: 'Plantaê',
     heroTitle: 'Explore possibilidades. Entenda os limites.',
+    analyzeFarm: 'Analisar minha fazenda',
+    chooseOnMap: 'Prefiro escolher o local no mapa',
     registerFarm: 'Cadastrar minha fazenda',
     farmIntro: 'Conte um pouco sobre sua fazenda.',
     compareSubtitle: 'Veja como os cenários se relacionam com o clima histórico.',
@@ -55,10 +57,36 @@ export const dictionaries = {
     evidenceUnavailable: 'indisponível',
     evidenceNoClaims: 'Nenhuma afirmação corresponde a este filtro.',
     demoBrazil: 'Ver demonstração Brasil',
+    chatProgress: {
+      title: 'Sua análise em 4 passos',
+      location: 'Localização',
+      currentCrop: 'Cultura atual',
+      previousCrop: 'Cultura anterior',
+      soil: 'Solo (opcional)',
+      review: 'Revise suas respostas',
+    },
+    chatContact: {
+      title: 'Como você prefere conversar com o João?',
+      intro: 'Você pode escrever no chat ou falar uma mensagem de áudio.',
+      textTitle: 'Continuar no chat',
+      textDescription: 'Digite e escolha as respostas na tela.',
+      audioTitle: 'Mandar mensagem de áudio',
+      audioDescription: 'Fale, revise o texto reconhecido e envie quando quiser.',
+      audioReady: 'Toque no microfone e fale. Sua fala aparece no campo para você revisar antes de enviar.',
+      audioUnavailable: 'Este navegador não permite usar o microfone aqui. Você pode continuar pelo chat escrito.',
+    },
+    voice: {
+      speak: 'Falar sua resposta',
+      stop: 'Parar de ouvir',
+      useMicrophone: 'Usar microfone',
+      listening: 'Ouvindo. Fale agora.',
+    },
   },
   en: {
     productName: 'Plantaê',
     heroTitle: 'Explore possibilities. Understand the limits.',
+    analyzeFarm: 'Analyze my farm',
+    chooseOnMap: 'I prefer to choose the place on a map',
     registerFarm: 'Register my farm',
     farmIntro: 'Tell us a little about your farm.',
     compareSubtitle: 'See how the scenarios relate to the historical climate.',
@@ -112,8 +140,32 @@ export const dictionaries = {
     evidenceUnavailable: 'unavailable',
     evidenceNoClaims: 'No claim matches this filter.',
     demoBrazil: 'See the Brazil demo',
+    chatProgress: {
+      title: 'Your analysis in 4 steps',
+      location: 'Location',
+      currentCrop: 'Current crop',
+      previousCrop: 'Previous crop',
+      soil: 'Soil (optional)',
+      review: 'Review your answers',
+    },
+    chatContact: {
+      title: 'How would you like to talk with João?',
+      intro: 'You can type in the chat or speak an audio message.',
+      textTitle: 'Continue in chat',
+      textDescription: 'Type and choose answers on screen.',
+      audioTitle: 'Send an audio message',
+      audioDescription: 'Speak, review the recognized text, and send it when you are ready.',
+      audioReady: 'Tap the microphone and speak. Your words appear in the field for you to review before sending.',
+      audioUnavailable: 'This browser cannot use the microphone here. You can continue in the written chat.',
+    },
+    voice: {
+      speak: 'Speak your answer',
+      stop: 'Stop listening',
+      useMicrophone: 'Use microphone',
+      listening: 'Listening. Speak now.',
+    },
   },
 } as const;
 
 export type Locale = keyof typeof dictionaries;
-export const defaultLocale: Locale = 'en';
+export const defaultLocale: Locale = 'pt-BR';

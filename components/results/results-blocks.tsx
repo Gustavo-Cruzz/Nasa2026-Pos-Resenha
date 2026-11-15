@@ -49,7 +49,7 @@ export function buildBlocks(data: AnalysisResult, comments: Record<BlockId, Bloc
   const knownBalance = balance.filter((value): value is number => value !== null);
   const below = knownBalance.filter((value) => value < 0).length;
   const rainy = data.climate.seasonality?.rainySeason ?? null;
-  const points: MonthPoint[] = Array.from({ length: 12 }, (_, index) => ({ month: index + 1, rainMm: data.climate.historicalPrecipitationByMonth.find((item) => item.month === index + 1)?.medianTotalMm ?? null, tempC: data.climate.monthly.find((item) => item.month === index + 1)?.tmeanMedianC ?? null }));
+  const points: MonthPoint[] = Array.from({ length: 12 }, (_, index) => ({ month: index + 1, rainMm: data.climate.historicalPrecipitationByMonth?.find((item) => item.month === index + 1)?.medianTotalMm ?? null, tempC: data.climate.monthly?.find((item) => item.month === index + 1)?.tmeanMedianC ?? null }));
   const available = data.climate.status === 'available';
   const terrain = data.terrain?.status === 'available' ? data.terrain : null;
   const health = buildSourceHealth(data);
@@ -111,7 +111,7 @@ export function buildBlocks(data: AnalysisResult, comments: Record<BlockId, Bloc
     { id: 'rotation', title: en ? 'Rotation and cropping systems' : 'Rotação e sistemas de cultivo', takeaway: en ? 'What you grew, and the hypotheses that follow it.' : 'O que você cultivou e as hipóteses que vêm depois.', ...state(en ? `${data.input.history.length} record(s)` : `${data.input.history.length} registro(s)`, 'info'), icon: <Repeat size={24} />, comment: comments.rotation, body: (
       <>
         <RotationVisual data={data} latestCrop={latest ? cropDisplayName(latest.cropId, latest.otherLabel, locale) : 'N/D'} />
-        <TechDetails title={en ? 'Declared cropping systems' : 'Sistemas de cultivo declarados'}><CroppingSystemsSummary data={data} />{data.strategies[0]?.croppingSystems.length ? null : <p className="mt-3 text-sm text-slate-300">{en ? 'No cropping system was declared.' : 'Nenhum sistema de cultivo foi declarado.'}</p>}</TechDetails>
+        <TechDetails title={en ? 'Declared cropping systems' : 'Sistemas de cultivo declarados'}><CroppingSystemsSummary data={data} />{data.strategies[0]?.croppingSystems?.length ? null : <p className="mt-3 text-sm text-slate-300">{en ? 'No cropping system was declared.' : 'Nenhum sistema de cultivo foi declarado.'}</p>}</TechDetails>
         <TechDetails title={en ? 'Per-scenario detail: validation level, sequence, reasons and gaps' : 'Detalhe por cenário: nível de validação, sequência, motivos e lacunas'}><StrategyCards data={data} /></TechDetails>
       </>
     ) },

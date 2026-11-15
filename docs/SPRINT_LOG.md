@@ -1,5 +1,21 @@
 # Sprint log
 
+## Jornada leiga F12 — entrada única, progresso e contato por áudio
+
+Status: complete — a jornada de primeira utilização agora começa pela análise da fazenda, expõe seus quatro passos e permite escolher texto ou áudio ao falar com João.
+
+Implemented: a página inicial passou a destacar uma única ação primária, `Analisar minha fazenda`; a demonstração Brasil continua disponível como ação secundária e a escolha prévia de ponto no mapa fica em um link explicitamente alternativo. O idioma inicial foi alinhado ao contrato do produto: `pt-BR`, mantendo a troca para inglês.
+
+Implemented: antes de responder ao João, o produtor escolhe `Continuar no chat` ou `Mandar mensagem de áudio`. No modo de áudio, o microfone usa reconhecimento de voz do navegador, coloca a transcrição no campo para revisão e nunca envia a mensagem automaticamente ou armazena gravação. O cadastro mostra `Sua análise em 4 passos` com a etapa atual, incluindo a revisão final. Navegadores sem reconhecimento exibem um aviso e preservam o chat escrito.
+
+Reliability: o leitor de página passou a aplicar imediatamente o novo idioma após a troca; a comparação de resultados preserva os cenários quando uma resposta de clima indisponível não contém séries mensais ou sistemas de cultivo opcionais.
+
+Evidence (2026-11-15): inspeção visual desktop da escolha de contato; Playwright simulou reconhecimento de voz pt-BR/en-US, comprovando microfone → texto no campo sem autoenvio. `npm run lint`, `npm run typecheck`, `npm run test` (422 unit tests), `npm run build` e `npm run test:e2e` (26 Playwright tests) passaram.
+
+Limitations: áudio depende de `SpeechRecognition`/`webkitSpeechRecognition`, da permissão do dispositivo e, em alguns navegadores, de serviços de reconhecimento do próprio navegador. O produto não recebe ou guarda o arquivo de áudio; somente o texto revisado entra na conversa.
+
+Next: simplificar o primeiro resumo da comparação em uma decisão curta antes dos detalhes técnicos, mantendo incertezas e evidências acessíveis.
+
 ## README do pitch e arquitetura de decisão
 
 Status: complete — narrativa do projeto, equipe SilkNASA, fluxos Mermaid, bases de dados e proposta de valor documentados.

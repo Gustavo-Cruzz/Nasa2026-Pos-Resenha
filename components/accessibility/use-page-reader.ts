@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useLocale } from '@/components/locale-provider';
 import { speechLanguage, splitForSpeech } from '@/lib/speech';
@@ -23,7 +23,8 @@ export function usePageReader(targetId: string, options: { rate?: number } = {})
   const rateRef = useRef(options.rate ?? 1);
   const localeRef = useRef(locale);
   const stateRef = useRef<PageReaderState>('idle');
-  useEffect(() => { rateRef.current = options.rate ?? 1; localeRef.current = locale; });
+  // Keep the event handler in sync before the browser can expose the new-language button.
+  useLayoutEffect(() => { rateRef.current = options.rate ?? 1; localeRef.current = locale; }, [locale, options.rate]);
   const update = useCallback((next: PageReaderState) => { stateRef.current = next; setState(next); }, []);
   const clearMark = useCallback(() => { if (marked.current) delete marked.current.dataset.reading; marked.current = null; }, []);
   const stop = useCallback(() => { current.current = null; window.speechSynthesis?.cancel(); clearMark(); items.current = []; update('idle'); }, [clearMark, update]);

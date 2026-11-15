@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { saveDraft } from '@/lib/storage';
 import { useLocale } from '@/components/locale-provider';
 
-export function DemoBrazilButton() {
+export function DemoBrazilButton({ variant = 'primary' }: { variant?: 'primary' | 'secondary' }) {
   const router = useRouter();
   const { copy } = useLocale();
   const startDemo = () => {
@@ -22,5 +22,5 @@ export function DemoBrazilButton() {
     });
     router.push('/results?demo=brasil');
   };
-  return <Button type="button" onClick={startDemo}>{copy.demoBrazil}</Button>;
+  return <Button type="button" variant={variant} onClick={startDemo}>{copy.demoBrazil}</Button>;
 }
