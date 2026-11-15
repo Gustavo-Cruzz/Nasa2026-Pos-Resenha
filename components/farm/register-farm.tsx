@@ -3,11 +3,13 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Check, TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLocale } from '@/components/locale-provider';
-import { AuthFields, FormError, postJson, type AuthMode, type Credentials } from '@/components/farm/auth-fields';
+import { FormError, postJson } from '@/components/farm/auth-fields';
 import { RegistrationSummary } from '@/components/farm/registration-summary';
+import { saveLocalFarm } from '@/lib/farm/local-farm';
+import type { FarmRecord } from '@/lib/db/farms';
 import { loadDraft } from '@/lib/storage';
 import { cropDisplayName } from '@/lib/presentation';
 import { suggestedBoundary } from '@/lib/farm/default-boundary';
@@ -32,24 +34,20 @@ function loadFarmInput(): { input: AnalysisInput; placeLabel?: string } | undefi
   return { input, placeLabel };
 }
 
-type Session = { signedIn: boolean; username?: string; ephemeral: boolean };
-
-/** Registers the farm the user described in the chat: creates (or uses) the account, saves the farm, and opens the panel. */
+/** Registers the farm the user described in the chat: saves the farm (no login: the server opens a guest session), and opens the panel. */
 export function RegisterFarm() {
   const { locale } = useLocale();
   const en = locale === 'en';
   const router = useRouter();
   const [stored] = useState(() => loadFarmInput());
   const [name, setName] = useState(() => (stored?.placeLabel ? `${en ? 'Farm in' : 'Fazenda em'} ${stored.placeLabel.replace(/\s*\(.*\)$/, '')}` : en ? 'My farm' : 'Minha fazenda'));
-  const [mode, setMode] = useState<AuthMode>('register');
-  const [credentials, setCredentials] = useState<Credentials>({ username: '', password: '' });
-  const [session, setSession] = useState<Session>({ signedIn: false, ephemeral: false });
+  const [ephemeral, setEphemeral] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/auth/me').then((response) => response.json() as Promise<{ user: { username: string } | null; ephemeralDatabase: boolean }>).then((body) => { if (!cancelled) setSession({ signedIn: Boolean(body.user), username: body.user?.username, ephemeral: body.ephemeralDatabase }); }).catch(() => { /* the form still works */ });
+    fetch('/api/auth/me').then((response) => response.json() as Promise<{ ephemeralDatabase: boolean }>).then((body) => { if (!cancelled) setEphemeral(Boolean(body.ephemeralDatabase)); }).catch(() => { /* the form still works */ });
     return () => { cancelled = true; };
   }, []);
 
@@ -68,12 +66,9 @@ export function RegisterFarm() {
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     setBusy(true); setError(null);
-    if (!session.signedIn) {
-      const auth = await postJson(`/api/auth/${mode}`, credentials, 'POST', en);
-      if (!auth.ok) { setError(auth.body.message ?? (en ? 'Could not sign in.' : 'Não foi possível entrar.')); setBusy(false); return; }
-    }
     const saved = await postJson('/api/farm', { name, ...(placeLabel ? { placeLabel } : {}), input }, 'PUT', en);
     if (!saved.ok) { setError(saved.body.message ?? (en ? 'Could not save the farm.' : 'Não foi possível salvar a fazenda.')); setBusy(false); return; }
+    if (saved.body.farm) saveLocalFarm(saved.body.farm as FarmRecord);
     router.push('/farm?chegada=1');
     router.refresh();
   };
@@ -88,12 +83,7 @@ export function RegisterFarm() {
       <label className="block text-sm font-semibold">{en ? 'Farm name' : 'Nome da fazenda'}
         <input className="mt-1 block w-full rounded-lg border border-slate-600 bg-slate-950 p-2.5 text-base" maxLength={80} onChange={(event) => setName(event.target.value)} required value={name} />
       </label>
-      {session.signedIn ? <p className="flex items-center gap-2 rounded-lg bg-slate-950/60 p-3 text-sm text-slate-200"><Check aria-hidden="true" className="text-lime-300" size={16} />{en ? 'Signed in as' : 'Você entrou como'} <b>{session.username}</b></p> : <>
-        <p className="text-sm font-bold text-lime-200">{mode === 'register' ? (en ? 'Create your login' : 'Crie o seu login') : (en ? 'Sign in' : 'Entre na sua conta')}</p>
-        <AuthFields en={en} mode={mode} onChange={setCredentials} value={credentials} />
-        <button className="justify-self-start text-sm text-slate-300 underline underline-offset-4 hover:text-lime-200" onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError(null); }} type="button">{mode === 'register' ? (en ? 'I already have an account' : 'Já tenho conta') : (en ? 'Create a new account' : 'Criar uma conta nova')}</button>
-      </>}
-      {session.ephemeral ? <p className="flex gap-2 rounded-lg border border-amber-300/40 bg-amber-950/20 p-3 text-xs text-amber-100"><TriangleAlert aria-hidden="true" className="mt-0.5 shrink-0" size={16} />{en ? 'Demo environment: the saved data can be erased at any time.' : 'Ambiente de demonstração: os dados guardados podem ser apagados a qualquer momento.'}</p> : null}
+      {ephemeral ? <p className="flex gap-2 rounded-lg border border-amber-300/40 bg-amber-950/20 p-3 text-xs text-amber-100"><TriangleAlert aria-hidden="true" className="mt-0.5 shrink-0" size={16} />{en ? 'Demo environment: the saved data can be erased at any time.' : 'Ambiente de demonstração: os dados guardados podem ser apagados a qualquer momento.'}</p> : null}
       {error ? <FormError>{error}</FormError> : null}
       <Button disabled={busy} type="submit">{busy ? (en ? 'Saving…' : 'Salvando…') : en ? 'Register farm and enter my farm' : 'Cadastrar e entrar na minha fazenda'}</Button>
     </form>

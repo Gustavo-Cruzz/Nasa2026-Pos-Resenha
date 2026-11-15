@@ -17,6 +17,17 @@ export async function createUser(db: DatabaseSync, username: string, password: s
   return { id: Number(result.lastInsertRowid), username, createdAt };
 }
 
+export const GUEST_PREFIX = 'guest-';
+export const isGuestUsername = (username: string) => username.startsWith(GUEST_PREFIX);
+
+/** An anonymous account with an unguessable password: the farm registration works without asking the user to sign up. */
+export async function createGuestUser(db: DatabaseSync, now = new Date()): Promise<User> {
+  for (;;) {
+    const created = await createUser(db, `${GUEST_PREFIX}${randomBytes(5).toString('hex')}`, randomBytes(24).toString('base64url'), now);
+    if (created !== 'taken') return created;
+  }
+}
+
 /** The same answer for a wrong username and a wrong password, so the login does not say which one failed. */
 export async function checkLogin(db: DatabaseSync, username: string, password: string): Promise<User | null> {
   const row = db.prepare('SELECT id, username, password_hash, created_at FROM users WHERE username = ?').get(username) as UserRow | undefined;
