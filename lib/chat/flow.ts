@@ -75,7 +75,7 @@ export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
         ? [reply(pick(locale, `Anotei: ${soilList(draft.soil, locale)}.\nMais alguma coisa no solo?`, `Noted: ${soilList(draft.soil, locale)}.\nAnything else in the soil?`), chips, multi)]
         : [reply(pick(locale, 'Você notou alguma coisa estranha no solo?\nMarque o que valer, ou escreva do seu jeito.', 'Have you noticed anything unusual in the soil?\nTick what applies, or write it your way.'), chips, multi)];
     }
-    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${pick(locale, 'Tudo certo?', 'All good?')}`, [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Cadastrar minha fazenda', 'Register my farm'), pick(locale, 'Mudar algo', 'Change something')])];
+    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${decisionSummary(draft, locale)}\n\n${pick(locale, 'Tudo certo?', 'All good?')}`,[pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Cadastrar minha fazenda', 'Register my farm'), pick(locale, 'Mudar algo', 'Change something')])];
   }
 }
 
@@ -92,6 +92,23 @@ export function summarize(draft: ChatDraft, locale: Locale): string {
     `• ${pick(locale, 'Cultura anterior', 'Previous crop')}: ${draft.previous ? crop(draft.previous, locale) : pick(locale, 'não informada', 'not informed')}`,
     `• ${pick(locale, 'Solo', 'Soil')}: ${soil}`,
   ].join('\n');
+}
+
+/** The scenario the chat points to. The chat does not run the engine, so this is a pointer, not a result. */
+export type DecisionScenario = 'A' | 'B' | 'C';
+/** Priority from what the farmer said: soil problems reported -> B (soil health); the same crop as before -> C (diversification); otherwise A (current plan). */
+export function pointScenario(draft: ChatDraft): { scenario: DecisionScenario; priority: 'soil' | 'diversification' | 'plan' } {
+  if (draft.soil) return { scenario: 'B', priority: 'soil' };
+  if (draft.previous && draft.previous === draft.current) return { scenario: 'C', priority: 'diversification' };
+  return { scenario: 'A', priority: 'plan' };
+}
+
+/** Short closing message of the chat: which scenario to compare on the results page, and why. No numbers: the analysis holds them. */
+export function decisionSummary(draft: ChatDraft, locale: Locale): string {
+  const { scenario, priority } = pointScenario(draft);
+  if (priority === 'soil') return pick(locale, 'Para proteger o solo sem perder a safrinha, compare B com A na análise.', 'To protect the soil without losing the second crop, compare B with A in the analysis.');
+  if (priority === 'diversification') return pick(locale, 'Para diversificar e não repetir a mesma cultura, compare C com A na análise.', 'To diversify and stop repeating the same crop, compare C with A in the analysis.');
+  return pick(locale, `Pelo que você contou, o plano atual (${scenario}) é a referência. Na análise, veja o que B e C ganham, perdem e o que ainda não sabemos.`, `From what you told me, your current plan (${scenario}) is the reference. In the analysis, see what B and C gain, lose, and what we do not know yet.`);
 }
 
 /**

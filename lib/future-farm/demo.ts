@@ -31,6 +31,8 @@ export function buildDemoScenarioViews(locale: Locale): FarmScenarioView[] {
     scenarioNotes: [en ? 'Fictional farm for demonstration. These sequences were chosen for graphic variety and are not a validated rotation for any location.' : 'Fazenda fictícia de demonstração. As sequências foram escolhidas por variedade gráfica e não são rotação validada para nenhuma localidade.'],
     scenarioMissingData: [en ? 'real farm data (demo mode does not read your farm)' : 'dados reais da fazenda (o modo demonstração não lê sua propriedade)'],
     demoOnly: true,
+    tradeoffs: { gains: [], losses: [], unknowns: [] },
+    bareSoilNote: null,
     cycles: scenario.cycles.map((cycle) => ({
       id: `demo-${scenario.id}-${cycle.cycle - 1}`,
       index: cycle.cycle - 1,
@@ -46,6 +48,7 @@ export function buildDemoScenarioViews(locale: Locale): FarmScenarioView[] {
       intercropNotes: [],
       evidenceStale: false,
       sceneMode: 'illustrative' as const,
+      climate: null,
       measuredFieldCondition: null,
     })),
   }));

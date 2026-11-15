@@ -6,7 +6,8 @@ import type { LabSlotAssessment } from '@/lib/lab/assessment';
 import { summarizeCroppingSystem, type CroppingSystem } from '@/lib/intercrops';
 import { explanationDisplay, indicatorDisplay, scenarioDisplayTitle } from '@/lib/presentation';
 import { futureFarmCopy } from '@/lib/future-farm/copy';
-import type { CropPresence, EvidenceLink, FarmCycleView, FarmScenarioView, ScenarioId } from '@/lib/future-farm/types';
+import { WATER_TOLERANCE_MM } from '@/lib/engine/tradeoffs';
+import type { CropPresence, CycleClimate, EvidenceLink, FarmCycleView, FarmScenarioView, ScenarioId } from '@/lib/future-farm/types';
 
 export interface FutureFarmSources {
   /** Server analysis produced by the existing engine (read only). */
@@ -52,7 +53,41 @@ function indicatorLines(indicators: QualitativeIndicator[], states: QualitativeI
   return indicators.filter((indicator) => indicator.id !== 'functional_diversity' && states.includes(indicator.state)).map((indicator) => { const display = indicatorDisplay(indicator, locale); return `${display.label}: ${display.detail}`; });
 }
 
-interface CycleInput { scenarioId: ScenarioId; index: number; period: FarmCycleView['period']; cropId: string; assessment: Pick<LabSlotAssessment, 'indicators' | 'sourceRefs' | 'missingEvidence' | 'validationLevel'> | null; stale: boolean }
+const mm = (value: number) => String(Number(value.toFixed(0))).replace('-', '−');
+
+/** Rain/drought layer from the slot's own window indicators (P-ET0 and frost); never recomputed, null evidence stays unknown. */
+export function cycleClimate(indicators: QualitativeIndicator[], locale: Locale): CycleClimate {
+  const water = indicators.find((indicator) => indicator.id === 'window_water_balance');
+  const frost = indicators.find((indicator) => indicator.id === 'frost_risk');
+  const balance = typeof water?.value === 'number' ? water.value : null;
+  const weather = balance === null ? 'unknown' : balance <= -WATER_TOLERANCE_MM ? 'drought' : balance >= WATER_TOLERANCE_MM ? 'rain' : 'neutral';
+  return {
+    waterBalanceMm: balance, weather,
+    frost: frost?.state === 'attention' ? 'attention' : frost?.state === 'observed' ? 'observed' : 'unknown',
+    waterDetail: water ? indicatorDisplay(water, locale).detail : null,
+    frostDetail: frost ? indicatorDisplay(frost, locale).detail : null,
+  };
+}
+
+/** Real per-cycle benefits and risks from window climate, frost and ZARC; N/D lines for missing evidence. */
+function climateLines(climate: CycleClimate, zarc: LabSlotAssessment['zarc'] | undefined, locale: Locale) {
+  const copy = futureFarmCopy(locale);
+  const benefits: string[] = []; const risks: string[] = [];
+  if (climate.weather === 'drought' && climate.waterBalanceMm !== null) risks.push(copy.waterDeficit(mm(climate.waterBalanceMm)));
+  else if (climate.weather === 'rain' && climate.waterBalanceMm !== null) benefits.push(copy.waterSurplus(mm(climate.waterBalanceMm)));
+  else if (climate.weather === 'neutral' && climate.waterBalanceMm !== null) benefits.push(copy.waterNeutral(mm(climate.waterBalanceMm)));
+  else risks.push(copy.waterNd);
+  if (climate.frost === 'observed') benefits.push(copy.frostObserved);
+  else if (climate.frost === 'unknown') risks.push(copy.frostUnknown);
+  if (zarc) {
+    if (zarc.status === 'indicated') benefits.push(copy.zarcIndicated(zarc.riskLevelPct !== null ? ` (${locale === 'en' ? 'risk' : 'risco'} ${zarc.riskLevelPct}%)` : ''));
+    else if (zarc.status === 'not_indicated') risks.push(copy.zarcNotIndicated);
+    else risks.push(copy.zarcUnknown);
+  }
+  return { benefits, risks };
+}
+
+interface CycleInput { scenarioId: ScenarioId; index: number; period: FarmCycleView['period']; cropId: string; assessment: (Pick<LabSlotAssessment, 'indicators' | 'sourceRefs' | 'missingEvidence' | 'validationLevel'> & { zarc?: LabSlotAssessment['zarc'] }) | null; stale: boolean }
 
 function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale): FarmCycleView {
   const copy = futureFarmCopy(locale);
@@ -65,6 +100,8 @@ function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale
   const catalogueRefs = catalogue.flatMap((crop) => crop?.sourceRefs ?? []);
   const evidence = input.stale ? null : input.assessment;
   const diversity = evidence?.indicators.find((indicator) => indicator.id === 'functional_diversity');
+  const climate = evidence ? cycleClimate(evidence.indicators, locale) : null;
+  const climateText = climate ? climateLines(climate, evidence?.zarc, locale) : { benefits: [], risks: [] };
   return {
     id: `${input.scenarioId}-${input.index}`,
     index: input.index,
@@ -72,14 +109,15 @@ function buildCycle(input: CycleInput, systems: CroppingSystem[], locale: Locale
     crops,
     functions,
     sequenceNote: diversity ? indicatorDisplay(diversity, locale).detail : null,
-    potentialBenefits: evidence ? indicatorLines(evidence.indicators, ['compatible', 'yes'], locale) : [],
-    risksAndUnknowns: unique([...(evidence ? indicatorLines(evidence.indicators, ['attention'], locale).map((line) => `${copy.attention} — ${line}`) : []), ...knownRisks, ...intercrop.risks]),
+    potentialBenefits: unique([...(evidence ? indicatorLines(evidence.indicators, ['compatible', 'yes'], locale) : []), ...climateText.benefits]),
+    risksAndUnknowns: unique([...(evidence ? indicatorLines(evidence.indicators, ['attention'], locale).map((line) => `${copy.attention} — ${line}`) : []), ...climateText.risks, ...knownRisks, ...intercrop.risks]),
     missingData: evidence ? evidence.missingEvidence.map((item) => copy.slotMissing[item] ?? item) : [],
     evidenceLevel: evidence?.validationLevel ?? null,
     evidenceLinks: unique([...(evidence?.sourceRefs ?? []), ...intercrop.sources, ...catalogueRefs]).map(link),
     intercropNotes: intercrop.notes,
     evidenceStale: input.stale,
-    sceneMode: 'illustrative',
+    climate,
+    sceneMode: climate && climate.weather !== 'unknown' ? 'historical_context' : 'illustrative',
     measuredFieldCondition: null,
   };
 }
@@ -119,6 +157,8 @@ export function buildFarmScenarioViews({ analysis, currentPlan, croppingSystems 
       scenarioNotes: strategy.explanations.map((item) => explanationDisplay(item, locale)),
       scenarioMissingData: unique(strategy.missingData.map((item) => copy.scenarioMissing[item] ?? item)),
       cycles: scenarioCycles(strategy, currentPlan, systems, locale),
+      tradeoffs: strategy.tradeoffs ? (locale === 'en' ? { gains: strategy.tradeoffs.summary.gainsEn, losses: strategy.tradeoffs.summary.lossesEn, unknowns: strategy.tradeoffs.summary.unknownsEn } : { gains: strategy.tradeoffs.summary.gains, losses: strategy.tradeoffs.summary.losses, unknowns: strategy.tradeoffs.summary.unknowns }) : { gains: [], losses: [], unknowns: [] },
+      bareSoilNote: strategy.bareSoil ? (locale === 'en' ? strategy.bareSoil.detailEn : strategy.bareSoil.detail) : null,
       demoOnly: false,
     }];
   });

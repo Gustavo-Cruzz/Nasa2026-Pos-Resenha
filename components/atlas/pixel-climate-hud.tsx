@@ -5,7 +5,7 @@ import { AlertCircle, RefreshCw } from 'lucide-react';
 import type { ClimateApiResponse } from '@/lib/atlas';
 
 type Climate = Extract<ClimateApiResponse, { status: 'ok' }>;
-export type HudClimateState = { kind: 'idle' } | { kind: 'loading' } | { kind: 'ready'; data: Climate } | { kind: 'error'; message: string };
+type HudClimateState = { kind: 'idle' } | { kind: 'loading' } | { kind: 'ready'; data: Climate } | { kind: 'error'; message: string };
 type Month = { month: number; rainMm: number | null; tempC: number | null };
 
 const WET_MM = 50;

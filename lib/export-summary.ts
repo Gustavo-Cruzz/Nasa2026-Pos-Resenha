@@ -1,6 +1,6 @@
 import type { AnalysisResult } from '@/lib/engine/types';
 import type { Locale } from '@/lib/i18n';
-import { cropDisplayName } from '@/lib/presentation';
+import { cropDisplayName, missingLabel } from '@/lib/presentation';
 import { deriveDecisionHero } from '@/lib/engine/decision-hero';
 import { deriveRotationCalendar, deriveSeasonInsights, describeSeasonInsight, monthLabel, seasonCaveat } from '@/lib/engine/season';
 import { relativeLowVegetationMonths } from '@/lib/climate/ndvi';
@@ -98,7 +98,7 @@ export function buildAnalysisSummary(data: AnalysisResult, locale: Locale): stri
   for (const strategy of data.strategies) {
     lines.push('', `### ${strategy.id}. ${strategy.title}`, `${en ? 'Primary hypothesis' : 'Hipótese principal'}: ${strategy.proposedCrop?.name ?? 'N/D'}`, `${en ? 'Evidence level' : 'Nível de evidência'}: ${evidenceLevel(strategy.validationLevel)}`);
     for (const indicator of strategy.indicators) lines.push(`- ${indicator.label}: ${indicator.state} — ${indicator.detail}`);
-    if (strategy.missingData.length) lines.push(`- ${en ? 'Missing' : 'Falta'}: ${strategy.missingData.join(', ')}`);
+    if (strategy.missingData.length) lines.push(`- ${en ? 'Missing' : 'Falta'}: ${strategy.missingData.map((id) => missingLabel(id, locale)).join(', ')}`);
   }
   lines.push('', `## ${en ? 'Limits' : 'Limites'}`, ...data.evidenceManifest.guardrails.map((item) => `- ${item}`), '', data.disclaimer);
   return lines.join('\n');

@@ -1,7 +1,6 @@
-import { Results2Page } from '@/components/results2/results2-page';
+import { redirect } from 'next/navigation';
 
-export const metadata = { title: 'Seu próximo plantio · Plantaê (protótipo)' };
-
+// /results2 was a mock prototype (audit 3.6). The real decision view lives at /results.
 export default function Results2() {
-  return <Results2Page />;
+  redirect('/results');
 }

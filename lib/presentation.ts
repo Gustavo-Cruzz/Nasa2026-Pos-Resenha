@@ -75,3 +75,87 @@ const levelIcons: Record<PriorityAlignment['level'], string> = { supports: '▲'
 export function alignmentDisplay(alignment: PriorityAlignment, locale: Locale): { priority: string; level: string; icon: string; reason: string } {
   return { priority: priorityLabels[locale][alignment.priority], level: levelLabels[locale][alignment.level], icon: levelIcons[alignment.level], reason: locale === 'en' ? alignment.reasonEn : alignment.reason };
 }
+
+const MISSING_LABELS: Record<string, { pt: string; en: string }> = {
+  window_water_balance: { pt: 'balanço hídrico da janela', en: 'window water balance' },
+  documented_kc: { pt: 'Kc documentado', en: 'documented Kc' },
+  residue_potential: { pt: 'potencial de palhada', en: 'residue potential' },
+  documented_nitrogen_fixation: { pt: 'fixação de nitrogênio documentada', en: 'documented nitrogen fixation' },
+  zarc_window: { pt: 'janela ZARC', en: 'ZARC window' },
+  cycle_duration: { pt: 'duração do ciclo', en: 'cycle duration' },
+  eligible_crop: { pt: 'cultura com critérios mínimos', en: 'crop meeting minimum criteria' },
+  historical_climate: { pt: 'clima histórico', en: 'historical climate' },
+  documented_temperature_range: { pt: 'faixa térmica documentada', en: 'documented thermal range' },
+  soil_ph_or_verified_range: { pt: 'pH informado ou faixa verificável', en: 'informed pH or verifiable range' },
+  unconfigured_lab_slots: { pt: 'slots ainda não configurados', en: 'unconfigured slots' },
+  futureBaseline: { pt: 'plano futuro confirmado', en: 'confirmed future plan' },
+  verified_dates: { pt: 'datas de plantio e colheita confirmadas', en: 'confirmed planting and harvest dates' },
+  management: { pt: 'manejo da área', en: 'field management' },
+  field_cover: { pt: 'cobertura do solo no talhão', en: 'field soil cover' },
+  local_soil_analysis: { pt: 'análise de solo do talhão', en: 'local soil analysis' },
+  regional_source: { pt: 'fonte regional de dados', en: 'regional data source' },
+  documented_criteria: { pt: 'critérios mínimos documentados', en: 'documented minimum criteria' },
+  pam_municipal: { pt: 'dados de produção municipal (PAM)', en: 'municipal production data (PAM)' },
+  rainfall_erosivity: { pt: 'erosividade da chuva', en: 'rainfall erosivity' },
+  residue_and_management: { pt: 'palhada e manejo', en: 'residue and management' },
+  terrain_slope: { pt: 'declividade do terreno', en: 'terrain slope' },
+  crop: { pt: 'cultura do slot', en: 'slot crop' },
+  temperature: { pt: 'faixa térmica', en: 'thermal range' },
+  cycle: { pt: 'duração documentada', en: 'documented duration' },
+  soil_ph: { pt: 'contexto de pH', en: 'pH context' },
+  previous_crop_family: { pt: 'família da cultura anterior', en: 'previous crop family' },
+  smap_numeric_polygon_history: { pt: 'série histórica de umidade do solo (SMAP) para o polígono', en: 'soil-moisture history (SMAP) for the polygon' },
+  catalogued_crop: { pt: 'cultura com perfil catalogado', en: 'crop with a cataloged profile' },
+  cover: { pt: 'cobertura do solo', en: 'soil cover' },
+  terrain: { pt: 'relevo do terreno', en: 'terrain' },
+  local_organic_carbon: { pt: 'carbono orgânico ou matéria orgânica do talhão', en: 'local organic carbon or organic matter' },
+  species_diversity: { pt: 'diversidade de espécies', en: 'species diversity' },
+  family_repetition: { pt: 'repetição de família botânica', en: 'botanical family repetition' },
+  cover_presence: { pt: 'presença de cobertura', en: 'cover presence' },
+  nitrogen_fixation_potential: { pt: 'fixação biológica de nitrogênio', en: 'biological nitrogen fixation' },
+  bare_soil_interval: { pt: 'período de solo descoberto', en: 'bare-soil interval' },
+  erosion_protection_context: { pt: 'proteção contra erosão', en: 'erosion protection' },
+  organic_carbon_context: { pt: 'carbono orgânico inicial', en: 'initial organic carbon' },
+};
+
+/** Plain-language label for a raw missing-data key; never exposes the key itself to the farmer. */
+export function missingLabel(id: string, locale: Locale): string {
+  const label = MISSING_LABELS[id];
+  return label ? (locale === 'en' ? label.en : label['pt']) : (locale === 'en' ? 'additional evidence' : 'evidência adicional');
+}
+
+const SOIL_DETAIL_EN: Array<[string, string]> = [
+  ['espécie(s) catalogada(s) na sequência observada + hipótese', 'cataloged species in the observed sequence + hypothesis'],
+  ['espécie(s) catalogada(s) no histórico + sequência de 2 anos', 'cataloged species in the history + 2-year sequence'],
+  [' + sistema composto declarado', ' + declared composite system'],
+  ['não é previsão de desempenho', 'not a performance forecast'],
+  ['A cultura proposta não possui perfil catalogado.', 'The proposed crop has no cataloged profile.'],
+  ['Família da hipótese ou da cultura imediatamente anterior é desconhecida.', 'The family of the hypothesis or of the immediately preceding crop is unknown.'],
+  ['A hipótese repete a família da cultura imediatamente anterior.', 'The hypothesis repeats the family of the immediately preceding crop.'],
+  ['A hipótese muda a família em relação à cultura imediatamente anterior.', 'The hypothesis changes family relative to the immediately preceding crop.'],
+  ['Repetição de família:', 'Family repetition:'],
+  ['Sem repetição de família entre culturas consecutivas', 'No family repetition between consecutive crops'],
+  ['Sem cultura catalogada para avaliar a finalidade.', 'No cataloged crop to assess the purpose.'],
+  ['Finalidade de cobertura catalogada.', 'Cover purpose cataloged.'],
+  ['Cobertura catalogada na sequência:', 'Cover cataloged in the sequence:'],
+  ['Não quantifica biomassa, carbono ou proteção efetiva.', 'Does not quantify biomass, carbon or effective protection.'],
+  ['A finalidade de cobertura não está catalogada para esta hipótese.', 'Cover purpose is not cataloged for this hypothesis.'],
+  ['Nenhuma cultura da sequência', 'No crop in the sequence'],
+  ['tem finalidade de cobertura catalogada', 'has a cataloged cover purpose'],
+  ['Potencial qualitativo; não estima kg de N.', 'Qualitative potential; does not estimate kg of N.'],
+  ['Potencial documentado indisponível para esta hipótese; a família botânica não é usada como substituto.', 'Documented potential unavailable for this hypothesis; botanical family is not used as a substitute.'],
+  ['tem fixação de N documentada; a família botânica não é usada como substituto.', 'has documented N fixation; botanical family is not used as a substitute.'],
+  ['Exige datas compatíveis, duração documentada e manejo informado; não foi inferido.', 'Requires compatible dates, documented duration and reported management; it was not inferred.'],
+  ['Cobertura catalogada pode ser discutida com chuva e relevo; não calcula perda de solo nem proteção efetiva.', 'Cataloged cover can be discussed with rainfall and relief; it does not compute soil loss or effective protection.'],
+  ['Sem cobertura catalogada, chuva/relevo compatíveis e manejo, a proteção permanece desconhecida.', 'Without cataloged cover, compatible rainfall/relief and management, protection remains unknown.'],
+  ['Estimativa regional (SoilGrids, média municipal 0–30 cm), não é análise do talhão', 'Regional estimate (SoilGrids, municipal mean 0–30 cm), not a field soil analysis'],
+  ['Valor local informado', 'Local value reported'],
+  ['carbono orgânico', 'organic carbon'],
+  ['matéria orgânica', 'organic matter'],
+  ['não projeta ganho futuro', 'does not project future gain'],
+  ['Carbono orgânico ou matéria orgânica local não informado.', 'Local organic carbon or organic matter not reported.'],
+];
+/** English rendering of the (pt-BR) soil-health indicator details produced by the engine. */
+export function soilHealthDetailEn(detail: string): string {
+  return SOIL_DETAIL_EN.reduce((text, [pt, en]) => text.split(pt).join(en), detail);
+}

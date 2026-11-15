@@ -13,5 +13,5 @@ export const metadata: Metadata = { title: 'Plantaê', description: 'Explore pos
 export const viewport: Viewport = { themeColor: '#142018' };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html className={`${sans.variable} ${mono.variable}`} lang="pt-BR" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: preferencesBootScript }} /></head><body><LocaleProvider><a className="skip-link" href="#main-content">Ir para o conteúdo / Skip to content</a><SiteHeader /><PwaRegister /><main className="mx-auto min-h-[calc(100vh-65px)] max-w-6xl px-4 py-10" id="main-content" tabIndex={-1}>{children}</main></LocaleProvider></body></html>;
+  return <html className={`${sans.variable} ${mono.variable}`} lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: preferencesBootScript }} /></head><body><LocaleProvider><a className="skip-link" href="#main-content">Ir para o conteúdo / Skip to content</a><SiteHeader /><PwaRegister /><main className="mx-auto min-h-[calc(100vh-65px)] max-w-6xl px-4 py-10" id="main-content" tabIndex={-1}>{children}</main></LocaleProvider></body></html>;
 }

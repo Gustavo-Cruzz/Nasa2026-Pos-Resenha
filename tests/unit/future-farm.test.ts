@@ -5,7 +5,7 @@ import { analyze } from '@/lib/engine';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import { changeLabSlot, createLabPlan, type LabPlan } from '@/lib/lab';
 import { analysisInputSchema, type AnalysisInput } from '@/lib/schema';
-import { buildFarmScenarioViews, cropLabel, stableStringify } from '@/lib/future-farm/adapter';
+import { buildFarmScenarioViews, cropLabel, cycleClimate, stableStringify } from '@/lib/future-farm/adapter';
 import { composeFarmScene, FARM_BASE, farmSpriteSource, GENERIC_CROP_SPRITE } from '@/lib/future-farm/composer';
 import { buildDemoScenarioViews, demoScenes, futureFarmDemo } from '@/lib/future-farm/demo';
 import { FARM_SCENE_DISCLAIMER, type CropPresence } from '@/lib/future-farm/types';
@@ -142,5 +142,40 @@ describe('Future Farm Stories assets and demo isolation', () => {
   it('keeps the permanent disclaimer in both languages', () => {
     expect(FARM_SCENE_DISCLAIMER['pt-BR']).toBe('Visualização ilustrativa da configuração de culturas; não representa produtividade ou condição real do campo.');
     expect(FARM_SCENE_DISCLAIMER.en).toMatch(/not represent yield/);
+  });
+});
+
+describe('Future Farm Stories climate and decision data (3.4)', () => {
+  const ind = (id: 'window_water_balance' | 'frost_risk', state: 'observed' | 'attention' | 'unknown', value?: number | null) => ({ id, label: id, state, detail: id, sourceRefs: [], value });
+  it('maps window P-ET0 to drought, rain, neutral or unknown without inventing weather', () => {
+    expect(cycleClimate([ind('window_water_balance', 'observed', -169)], 'pt-BR').weather).toBe('drought');
+    expect(cycleClimate([ind('window_water_balance', 'observed', 101)], 'en').weather).toBe('rain');
+    expect(cycleClimate([ind('window_water_balance', 'observed', 5)], 'en').weather).toBe('neutral');
+    expect(cycleClimate([ind('window_water_balance', 'unknown', null)], 'en')).toMatchObject({ weather: 'unknown', waterBalanceMm: null, frost: 'unknown' });
+    expect(cycleClimate([], 'en').weather).toBe('unknown');
+    expect(cycleClimate([ind('frost_risk', 'attention')], 'en').frost).toBe('attention');
+  });
+
+  it('fills all four cycles with climate, N/D lines, ZARC and scenario trade-offs from the real analysis', () => {
+    const plan = fourStagePlan();
+    const analysis = analyze(base, unavailable, plan);
+    const views = buildFarmScenarioViews({ analysis, currentPlan: plan }, 'pt-BR');
+    expect(views[0].cycles).toHaveLength(4);
+    for (const cycle of views[0].cycles) {
+      expect(cycle.climate).not.toBeNull();
+      expect(cycle.climate?.weather).toBe('unknown'); // no NASA data in this fixture: nothing is drawn
+      expect(cycle.risksAndUnknowns).toContain('Balanço P−ET0 da janela: N/D');
+    }
+    const en = buildFarmScenarioViews({ analysis, currentPlan: plan }, 'en');
+    expect(en[0].cycles[0].risksAndUnknowns).toContain('Window P−ET0 balance: N/A');
+    expect(views[1].tradeoffs.gains.length + views[1].tradeoffs.losses.length + views[1].tradeoffs.unknowns.length).toBeGreaterThan(0);
+  });
+
+  it('withholds climate for stale cycles and for the demo', () => {
+    const analysed = fourStagePlan();
+    const analysis = analyze(base, unavailable, analysed);
+    const views = buildFarmScenarioViews({ analysis, currentPlan: changeLabSlot(analysed, 'A', 1, 'cassava') }, 'pt-BR');
+    expect(views[0].cycles[1].climate).toBeNull();
+    expect(buildDemoScenarioViews('pt-BR').every((view) => view.cycles.every((cycle) => cycle.climate === null))).toBe(true);
   });
 });

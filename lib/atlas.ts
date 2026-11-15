@@ -3,7 +3,6 @@ import { coordinatesSchema, fieldBoundarySchema, type FieldBoundary } from '@/li
 
 export const atlasPointSchema = coordinatesSchema.extend({ label: z.string().min(1).optional() });
 export type AtlasPoint = z.infer<typeof atlasPointSchema>;
-export const atlasPolygonSchema = fieldBoundarySchema;
 export type AtlasPolygon = FieldBoundary;
 
 export const SMAP_GIBS_DATE = '2025-06-30';
@@ -19,8 +18,6 @@ export function latestNrtDate(now: Date = new Date()): string {
 }
 export type MapLayers = { smap: boolean; rain: boolean; modis: boolean };
 
-export const SMAP_GIBS_LEGEND_URL = 'https://gibs.earthdata.nasa.gov/legends/SMAP_Analyzed_Soil_Moisture_H.svg';
-export const SMAP_GIBS_METADATA_URL = `https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/${SMAP_GIBS_LAYER}.json`;
 
 const monthlyClimateSchema = z.object({ month: z.number().int().min(1).max(12), tmeanMedianC: z.number().nullable(), tminMedianC: z.number().nullable().optional(), tmaxMedianC: z.number().nullable().optional(), tsoilMedianC: z.number().nullable().optional(), precipMedianMm: z.number().nullable(), validTemperatureDays: z.number().int().nonnegative(), validPrecipitationDays: z.number().int().nonnegative() });
 export const climateApiResponseSchema = z.discriminatedUnion('status', [
@@ -41,11 +38,6 @@ export const brazilRegionalContextSchema = z.object({
   pam: z.object({ year: z.string(), sourceUrl: z.string().url(), accessedAt: z.string(), sha256: z.string().length(64), caveat: z.string(), products: z.array(z.object({ productCode: z.string(), productLabel: z.string(), cropIds: z.array(z.string()), harvestedAreaHa: z.number().nullable(), producedQuantity: z.number().nullable(), productionUnit: z.string().nullable(), caveat: z.string().nullable() })) }).nullable(),
   gaps: z.array(z.string()),
 });
-export const regionalContextApiResponseSchema = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('ok'), context: brazilRegionalContextSchema }),
-  z.object({ status: z.literal('error'), code: z.string(), message: z.string() }),
-]);
-export type RegionalContextApiResponse = z.infer<typeof regionalContextApiResponseSchema>;
 
 /** Brazilian examples sit on rural cropland (ESA WorldCover 2021 class 40), away from each municipal centre; Accra and New Delhi stay as global technical examples. */
 export const ATLAS_EXAMPLES: Array<AtlasPoint & { label: string }> = [

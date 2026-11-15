@@ -42,7 +42,7 @@ type Series = { label: string; color: string; dashed?: boolean; data: Array<numb
 type Band = { label: string; color: string; lo: Array<number | null>; hi: Array<number | null> };
 
 /** 12-month line chart with optional min–max band. Missing months leave a gap (N/D); nothing is interpolated. The same numbers are offered as a table. */
-export function MonthSeriesChart({ series, band, domain, unit, ariaLabel, en, digits = 1 }: { series: Series[]; band?: Band; domain: [number, number]; unit: string; ariaLabel: string; en: boolean; digits?: number }) {
+function MonthSeriesChart({ series, band, domain, unit, ariaLabel, en, digits = 1 }: { series: Series[]; band?: Band; domain: [number, number]; unit: string; ariaLabel: string; en: boolean; digits?: number }) {
   const names = MONTHS[en ? 'en' : 'pt-BR'].short;
   const W = 360; const H = 170; const top = 12; const bottom = 24; const left = 38; const right = 8;
   const plotW = W - left - right; const plotH = H - top - bottom;

@@ -6,22 +6,22 @@ import type * as Leaflet from 'leaflet';
 import type { AtlasPolygon } from '@/lib/atlas';
 import type { LiveState } from '@/components/atlas/use-live-weather';
 
-export type FxKind = 'rain' | 'wind' | 'heat' | 'cloud' | 'calm';
-export type FxSim = 'auto' | FxKind;
+type FxKind = 'rain' | 'wind' | 'heat' | 'cloud' | 'calm';
+type FxSim = 'auto' | FxKind;
 const SIM_PARAMS: Record<string, FxKind> = { chuva: 'rain', rain: 'rain', vento: 'wind', wind: 'wind', calor: 'heat', heat: 'heat', nuvens: 'cloud', cloud: 'cloud', calmo: 'calm', calm: 'calm' };
 /** Hidden demo switch (?simular=vento): unknown values mean real weather. */
 export const parseSim = (value: string | null): FxSim => (value && SIM_PARAMS[value]) || 'auto';
 /** Documented thresholds, applied in priority order: rain now > strong wind > heat > clouds > calm. */
-export const FX_RAIN_MM = 0.2;
-export const FX_WIND_KMH = 20;
-export const FX_GUST_KMH = 35;
-export const FX_HEAT_C = 32;
-export const FX_CLOUD_PCT = 70;
+const FX_RAIN_MM = 0.2;
+const FX_WIND_KMH = 20;
+const FX_GUST_KMH = 35;
+const FX_HEAT_C = 32;
+const FX_CLOUD_PCT = 70;
 const MAX_PARTICLES = 40;
 const P = 3; // one "pixel" in screen px
 
 type W = Extract<LiveState, { kind: 'ready' }>['weather'];
-export function pickEffect(w: W): FxKind {
+function pickEffect(w: W): FxKind {
   if ((w.precipitationMm ?? 0) > FX_RAIN_MM) return 'rain';
   if ((w.windKmh ?? 0) >= FX_WIND_KMH || (w.gustsKmh ?? 0) >= FX_GUST_KMH) return 'wind';
   if (w.temperatureC >= FX_HEAT_C) return 'heat';
@@ -32,7 +32,7 @@ export function pickEffect(w: W): FxKind {
 const rng = (seed: number) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 
 /** Irregular quadrilateral of roughly 1.5-2 km, deterministic from the point. */
-export function examplePerimeter(lat: number, lon: number): AtlasPolygon {
+function examplePerimeter(lat: number, lon: number): AtlasPolygon {
   const next = rng(Math.round(lat * 1e4) * 31 + Math.round(lon * 1e4));
   const mLat = 1 / 111320; const mLon = 1 / (111320 * Math.max(0.2, Math.cos(lat * Math.PI / 180)));
   return [45, 135, 225, 315].map((deg) => {
