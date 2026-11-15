@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://planetarycomputer.microsoft.com/dataset/modis-13Q1-061",
+  "provider": "Microsoft Planetary Computer STAC (collection modis-13Q1-061): cloud-optimized copies of NASA LP DAAC MOD13Q1 v061",
+  "fetchedAt": "2026-11-15T15:12:22.666Z",
+  "sha256": "54d1f9a26caa8667d51c5ce9f1b21184c89e77a07b669352ed1a3e0a324f65fc",
+  "requestedCoordinates": {
+    "latitude": -24.9,
+    "longitude": -53.25
+  },
+  "product": "MOD13Q1",
+  "band": "250m_16_days_NDVI"
+}

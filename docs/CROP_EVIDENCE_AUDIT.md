@@ -49,3 +49,54 @@ This closes the review without converting inaccessible, source-free, or non-matc
 Gaps with no source obtained: upland rice (FAO-56 lists only generic Rice) cycle and Kc; cowpea min/max cycle (single Mediterranean row only; Embrapa groups have no upper bound); pigeon pea, sunn hemp and cowpea cycle in FAO-56 (not listed); sunflower disease record verification; pH ranges for maize/soybean (Embrapa pages returned HTTP 403 earlier).
 
 Judgement calls on ranges in Table 12: sunflower and sorghum Kc mid use the upper value of the listed range; cotton Kc mid uses 1.20 and Kc end 0.70 (first value); maize and cowpea Kc end use the "harvested dry" value (0.35) per footnotes 11 and 6.
+
+## Update 2026-11-15 (Frente 2: P3 residue, P4 cycle/thermal/pH)
+
+`data/crop-evidence.json` now holds 82 records (73 `verified`, 9 `not_verified`; 6 superseded). 24 records added, all with URL, page/section and a literal snippet, fetched 2026-11-15.
+
+**`residuePotential` (P3).** Free-text field, qualitative: `alta | média | baixa` plus the documented dry-matter figure. Class rule (project rule, stated in each record's `context`): alta >= 7 t/ha (the amount Embrapa cites for full soil protection), média 5 to <7, baixa <5. Sources: Embrapa Arroz e Feijão, cap. 8 of *Fundamentos para uma agricultura sustentável* (2009, Tabela 1 and text) and Embrapa Algodão Circular Técnica 132 (2011, Tabelas 1-2).
+
+| Crop | Class | Figure |
+|---|---|---|
+| Maize | alta | 14,49 t/ha (Embrapa Arroz e Feijão 2009) |
+| Upland rice | média | 6,02 t/ha, "Arroz" row, not ecotype-specific (idem) |
+| Pearl millet | média a alta | ~5 t/ha safrinha to 15 t/ha (idem) |
+| Pigeon pea | alta | 15.700 kg/ha at 123 DAE (idem) |
+| *U. ruziziensis* | alta | 10.300 / 8.183 kg/ha (CT 132) |
+| Grain/cover sorghum | média a alta | 5.033 to 13.837 kg/ha, cover-crop trials (CT 132) |
+| Soybean | baixa | 4,06 t/ha (2009) |
+| Sunn hemp | baixa | 4.517 kg/ha (CT 132) |
+
+Catalog merge (`lib/catalog.ts`): `residuePotential` is projected only when the record starts with `alta` or `média`. `baixa` records stay as provenance but are NOT projected, because `lib/engine/priorities.ts` (rule `soil_residue`) treats any non-empty `residuePotential` as a "documented residue" candidate; projecting soybean/sunn hemp would let the engine pick a low-residue crop. Still null (no source found): sunflower, cowpea, common bean. Search for Embrapa figures returned only isolated studies (sunflower straw doses, cowpea green-manure trials); not added.
+
+**`cycleDaysRange` (P4).** Cowpea 60-90 days (emergence to physiological maturity; envelope of Table 1 of Embrapa *Cultivo de Feijão-Caupi*, Sistema de Produção 2, 2017; a "tardio" class >90 d has no upper bound). FAO-56 and ECOCROP cycles were deliberately not used (mix climates). Sunn hemp keeps 63-68 d. Stays null: pigeon pea (no verified Brazilian total cycle), soybean, sorghum, sunflower, common bean, upland rice, pearl millet, *ruziziensis*, cotton.
+
+**`viableTempC` / `soilPhRange` from FAO ECOCROP** (`ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=...`; updatable standard reference; species-level, not calibrated for Brazil). Choice: `viableTempC` = ECOCROP absolute min/max; `soilPhRange` = ECOCROP optimal range. Added: common bean viable 7-32 C (id 1668; the P4 pendency), upland rice (*Oryza sativa*, id 1574) 10-36 C and pH 5,5-7, maize pH 5-7 (2175), cowpea pH 5,5-7,5 (2153), pearl millet 12-40 C, pH 5-6,5 (8418), *ruziziensis* 19-40 C, pH 5,5-6,5 (543), sunn hemp 4-40 C, pH 6-7 (801), pigeon pea 10-45 C, pH 5-7 (576), cotton 15-42 C, pH 6-7,5 (1160).
+
+**Stays null and why.** Upland rice Kc: FAO-56 lists only generic rice and no authoritative upland source was found. Pigeon pea cycle, soybean/sorghum/sunflower/rice/bean cycles: see candidates.
+
+**Candidates not added (fetch failed or unverified literally).**
+- Embrapa Pecuária Sudeste, Comunicado Técnico 119 (2025), BRS Guatã pigeon pea (92 d emergence to start of flowering): URL returned HTTP 404.
+- Embrapa Feijão cultivar catalog 2023 (cycle classes SPP <64, P 65-74, SP 75-84, N 85-95, T >95 d): URL returned HTTP 404/blocked; only seen in a search summary.
+- Upland rice cycle (BRS Sertaneja ~110 d, Embrapa 2006/2007) and Embrapa Soja *Cultivares de soja* day tables: search summaries only, not read.
+- Residue of sunflower, cowpea, common bean: no Embrapa reference figure found.
+
+**Side effects on other tests.** Filling these fields made common bean, upland rice and *ruziziensis* no longer "evidence-free" fixtures. Tests `decision-hero`, `nasa-insight`, `priorities`, `evidence-coverage` now use `cassava`/`pumpkin`/`sweet_potato` for the no-evidence case, and `crop-validation` asserts the new ECOCROP values. New test: `tests/unit/crop-evidence-residue-cycle.test.ts`.
+
+## Update 2026-11-15 (Frente 2: Brazilian `cycleDaysRange`)
+
+`data/crop-evidence.json` gained 11 `cycleDaysRange` records, all fetched 2026-11-15 with URL, section and literal snippet. FAO-56 and ECOCROP totals stay excluded. Primary source: ZARC annexes (Portarias SPA/MAPA, Goiás, safra 2026/2027, `gov.br/agricultura/.../portarias/safra-vigente/goias/`), which are official and renewed each safra; Embrapa Sistemas de Produção/Circulares complete the bounded envelopes.
+
+| Crop | Projected range (d) | Source | Measures |
+|---|---|---|---|
+| Soybean | 100-130 | ZARC soja GO, Port. 198/2026, item 1.9.2 | simulated cycle classes 100/115/130 (groups I-III by GMR), planting to maturation |
+| Sunflower | 100-120 | ZARC girassol GO, Port. 100/2026, item 1.12 | groups I (100-110) and II (111-120), sowing to harvest point |
+| Common bean | 70-80 | ZARC feijão sequeiro GO, Port. 11/2026, item 1.9.4 | representative cycles of groups I (65-75) and II (>= 80, open), sowing to physiological maturity |
+| Upland rice | 89-115 | Embrapa, Cultivares de arroz para terra firme (2006) | "Ciclo cultural" envelope of 8 released cultivars; ZARC groups (<= 115, 115-130, >= 130, emergence to maturity) recorded separately |
+| Pearl millet | 76-100 | Embrapa Milho e Sorgo, Cultivo do Milheto, Cultivares (2016) | planting to maturity/harvest of ENA 1, ADR 300, ADR 500; ZARC groups (<= 110, 110-130, >= 130) recorded separately |
+| Cotton | 100-180 | Embrapa Algodão Circ. Téc. 93 (2006), nota 4 | emergence to harvest, classes P/M/T; ZARC groups II (<= 170) and III (>= 171) recorded separately |
+| Pigeon pea | 173-180 | Embrapa Pecuária Sudeste, Com. Téc. 120 (2026), BRS Guatã | emergence to 75% mature pods (173) and "ciclo até produção de sementes" (180); one cultivar |
+
+Records with a `groups` value (sorghum, upland rice, pearl millet, cotton ZARC) are provenance only: `lib/catalog.ts` projects only `min`/`max` numbers.
+
+**Still null (candidates).** Grain sorghum: ZARC groups (<= 110, 111-130, >= 130 d, emergence to physiological maturity; Port. 273/2026) are open-ended and no bounded Embrapa total was found (Embrapa gives only days to flowering; BRS 373 sheet "Maturação 110 dias" is a single hybrid; RS Circular 123 column "125 d/128 d" has an unconfirmed header). *U. ruziziensis*: perennial, no sowing-to-desiccation duration stated by a fetched source (candidate: Embrapa Soja desiccation-interval trials). Caveats: soybean values are ZARC simulation classes, not cultivar measurements; common bean upper bound understates late cultivars (Embrapa 2013 catalog lists "Normal 85-95 d" and "Tardio > 95 d" without a stated reference point, not used); cotton and pigeon pea windows are long (6 months) by documented cycle.

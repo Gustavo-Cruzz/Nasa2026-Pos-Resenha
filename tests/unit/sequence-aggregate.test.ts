@@ -21,10 +21,10 @@ describe('sequence-level scenarios (round 3)', () => {
   });
   it('aggregates rows over the four slots so scenarios differ', () => {
     const [a, b] = result.strategies;
-    expect(row(a, 'cover_potential').state).toBe('no'); expect(row(b, 'cover_potential').state).toBe('yes'); expect(row(b, 'cover_potential').detail).toContain('feijão-caupi');
-    expect(row(a, 'functional_diversity').state).toBe('compatible'); expect(row(b, 'functional_diversity').state).toBe('attention'); expect(row(b, 'functional_diversity').detail).toContain('mesma família');
+    expect(row(a, 'cover_potential').state).toBe('no'); expect(row(b, 'cover_potential').state).toBe('yes'); expect(row(b, 'cover_potential').detail).toContain('sorgo');
+    expect(row(a, 'functional_diversity').state).toBe('compatible'); expect(row(b, 'functional_diversity').state).toBe('compatible'); /* family rule: B no longer repeats soybean's family (was cowpea, Fabaceae) */
     expect(row(a, 'thermal_compatibility').detail).toContain('soja (out)'); expect(row(a, 'thermal_compatibility').detail).toContain('milho (fev)');
-    expect(b.soilHealth.find((item) => item.id === 'nitrogen_fixation_potential')?.detail).toContain('feijão-caupi');
+    expect(b.soilHealth.find((item) => item.id === 'nitrogen_fixation_potential')?.detail).toContain('soja');
     expect(JSON.stringify(result.strategies)).not.toMatch(/"score"/);
   });
   it('never invents a safrinha month: thermal/climate rows become unknown and proposedCrop month is null', () => {

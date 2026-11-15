@@ -32,7 +32,7 @@ export const climateApiResponseSchema = z.discriminatedUnion('status', [
 ]);
 export type ClimateApiResponse = z.infer<typeof climateApiResponseSchema>;
 
-const zarcCropContextSchema = z.object({ cropId: z.string(), rowCount: z.number().int().positive(), zarcCultures: z.array(z.string()), cycleCodes: z.array(z.number()), soilCodes: z.array(z.number()), climateCodes: z.array(z.number()), managements: z.array(z.string()), ordinances: z.array(z.string()), riskCodes: z.array(z.number()), decendiosWithRiskCode: z.array(z.number().int()) });
+const zarcCropContextSchema = z.object({ cropId: z.string(), rowCount: z.number().int().positive(), zarcCultures: z.array(z.string()), cycleCodes: z.array(z.number()), soilCodes: z.array(z.number()), climateCodes: z.array(z.number()), managements: z.array(z.string()), ordinances: z.array(z.string()), riskCodes: z.array(z.number()), decendiosWithRiskCode: z.array(z.number().int()), windows: z.array(z.object({ culture: z.string(), management: z.string().nullable(), cycleCodes: z.array(z.number()), soilCodes: z.array(z.number()), risk: z.array(z.number()) })).default([]) });
 export const brazilRegionalContextSchema = z.object({
   country: z.literal('BR').nullable(),
   municipality: z.object({ code: z.string().regex(/^\d{7}$/), name: z.string(), uf: z.string().length(2) }).nullable(),
@@ -47,8 +47,12 @@ export const regionalContextApiResponseSchema = z.discriminatedUnion('status', [
 ]);
 export type RegionalContextApiResponse = z.infer<typeof regionalContextApiResponseSchema>;
 
+/** Brazilian examples sit on rural cropland (ESA WorldCover 2021 class 40), away from each municipal centre; Accra and New Delhi stay as global technical examples. */
 export const ATLAS_EXAMPLES: Array<AtlasPoint & { label: string }> = [
-  { label: 'Rio Verde (GO), Brasil', latitude: -17.798, longitude: -50.919 },
+  { label: 'Rio Verde (GO), zona rural', latitude: -17.9, longitude: -50.85 },
+  { label: 'Sorriso (MT), zona rural', latitude: -12.6, longitude: -55.9 },
+  { label: 'Luís Eduardo Magalhães (BA), zona rural', latitude: -12.2, longitude: -45.9 },
+  { label: 'Cascavel (PR), zona rural', latitude: -24.9, longitude: -53.25 },
   { label: 'Acra, Gana', latitude: 5.6037, longitude: -0.187 },
   { label: 'Nova Délhi, Índia', latitude: 28.6139, longitude: 77.209 },
 ];

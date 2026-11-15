@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const labPlan = 'input' in parsed.data ? parsed.data.labPlan : undefined;
     const [climate, regionalContext, terrain, soilContext] = await Promise.all([resolveClimateContext(input.location, input.plantingMonth), Promise.resolve(resolveBrazilRegionalContext(input.location)), fetchTerrain(input.location, input.fieldBoundary), Promise.resolve(resolveRegionalSoilAnalysis(input.location))]);
     const regionalSoil = input.soil ? undefined : regionalSoilProfile(soilContext);
-    const result = analyze(input, climate, labPlan, regionalContext, { regionalSoil });
+    const result = analyze(input, climate, labPlan, regionalContext, { regionalSoil, terrain });
     return NextResponse.json({ ...result, terrain, soilContext, evidenceManifest: { ...result.evidenceManifest, sourceHealth: buildSourceHealth({ ...result, terrain }) } });
   } catch (error) { return NextResponse.json({ status: 'error', code: 'INVALID_ANALYSIS_INPUT', message: error instanceof Error ? error.message : 'Invalid input.' }, { status: 422 }); }
 }

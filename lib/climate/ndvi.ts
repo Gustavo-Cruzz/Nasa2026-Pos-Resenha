@@ -8,8 +8,13 @@ export type NdviMonth = { month: number; medianNdvi: number | null; validObserva
 export type NdviContext = { origin: 'verified_fixture'; product: 'MOD13Q1'; band: '250m_16_days_NDVI'; period: { start: string; end: string }; fetchedAt: string; sourceUrl: string; observations: number; validObservations: number; coveragePct: number; months: NdviMonth[] };
 
 /** Demonstration points that may carry a pre-processed NDVI fixture. Exact coordinates only, like the POWER pilot fixture. */
+/** Rural cropland points (ESA WorldCover 2021 class 40, away from the built-up centre of each municipality). */
 export const NDVI_FIXTURE_SITES = [
   { slug: 'rio-verde', latitude: -17.798, longitude: -50.919 },
+  { slug: 'rio-verde-campo', latitude: -17.9, longitude: -50.85 },
+  { slug: 'sorriso-campo', latitude: -12.6, longitude: -55.9 },
+  { slug: 'luis-eduardo-magalhaes-campo', latitude: -12.2, longitude: -45.9 },
+  { slug: 'cascavel-campo', latitude: -24.9, longitude: -53.25 },
   { slug: 'accra', latitude: 5.6037, longitude: -0.187 },
   { slug: 'new-delhi', latitude: 28.6139, longitude: 77.209 },
 ] as const;
