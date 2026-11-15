@@ -1,13 +1,14 @@
 import { analysisInputSchema, type AnalysisInput, type SoilProfile } from '@/lib/schema';
 import { cropById, isAnnualRotationEligible, verifiedCropEvidence, type Crop } from '@/lib/catalog';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
-import type { AnalysisResult, Explanation, Rotation, ValidationLevel } from '@/lib/engine/types';
+import type { AnalysisResult, Explanation, Rotation, SoilHealthIndicator, ValidationLevel } from '@/lib/engine/types';
 import { createDefaultLabPlan, labPrimaryCrop, type LabPlan } from '@/lib/lab';
 import { detectCurrentPattern, detectCurrentPatternDetailed } from '@/lib/lab/sequence';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
 import { deriveNasaInsight, deriveNasaInsights } from '@/lib/engine/nasa-insight';
 import { assessCropIndicators } from '@/lib/engine/indicators';
-import { assessLabPlan } from '@/lib/lab/assessment';
+import { assessLabPlan, farmerZarcTexture } from '@/lib/lab/assessment';
+import { zarcWindowStatus } from '@/lib/brazil/zarc';
 import { buildEvidenceManifest } from '@/lib/evidence/manifest';
 import { analyzeBoundary } from '@/lib/engine/boundary-context';
 import { isBlockedCrop, permittedCatalogCrops } from '@/lib/farmer-profile';
@@ -16,10 +17,13 @@ import { deriveDataQuality } from '@/lib/engine/data-quality';
 import { cropsInSystem, summarizeCroppingSystem } from '@/lib/intercrops';
 import { aggregateIndicators, aggregateSoilHealth } from '@/lib/engine/aggregate';
 import { safrinhaMonth } from '@/lib/engine/slot-season';
+import { assessBareSoil, type BareSoilAssessment } from '@/lib/engine/bare-soil';
+import { buildTradeoffs } from '@/lib/engine/tradeoffs';
+import type { TerrainContext } from '@/lib/terrain/terrain';
 import { alignPriorities, dominantPriorities, pickCover, pickThird, selectionNote, selectionTitle } from '@/lib/engine/priorities';
 
 /** Optional server-side context kept apart from farmer input; regional soil is a municipal estimate, never farmer-declared. */
-export type AnalyzeOptions = { regionalSoil?: SoilProfile };
+export type AnalyzeOptions = { regionalSoil?: SoilProfile; /** SRTM terrain computed server-side; absent in the pure engine (slope then stays unknown). */ terrain?: TerrainContext };
 
 const P0 = ['soybean', 'maize', 'sorghum', 'sunflower', 'cowpea', 'common_bean', 'upland_rice', 'ruziziensis'] as const;
 const EMPTY_CLIMATE: ClimateContext = { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], provenance: null, gaps: ['Climate context was not supplied to the pure engine.'] };
@@ -57,15 +61,18 @@ export function generateCandidates(input: AnalysisInput, climate: ClimateContext
   const regionalSoil = options.regionalSoil; const lastId = input.history.at(-1)?.cropId; const last = lastId ? getCrop(lastId) : undefined; const dominant = dominantPriorities(input.priorities);
   const confirmed = Boolean(input.futureBaseline?.confirmed); const weakPattern = detectCurrentPatternDetailed(input.history, input.futureBaseline).weak; const pattern = detectCurrentPattern(input.history, input.futureBaseline); const patternIds = pattern.flatMap((id) => id ? [id] : []); const patternMain = pattern[0] && isAnnualRotationEligible(pattern[0]) ? getCrop(pattern[0]) : undefined; const baseline = patternMain ?? baselineCrop(input);
   /** B/C are safrinha alternatives replacing A's safrinha crop, so both crops of the current pattern are excluded from their pools. */
-  const patternExcluded = [...patternIds, ...(baseline ? [baseline.id] : [])]; const coverPick = pickCover(selectable(input), last, dominant, patternExcluded); const cover = coverPick.crop; const excluded = [...patternExcluded, ...(cover ? [cover.id] : [])]; const thirdPick = pickThird(selectable(input), last, excluded, dominant); const resilience = thirdPick.crop;
+  const patternExcluded = [...patternIds, ...(baseline ? [baseline.id] : [])]; const safra = patternMain ?? baseline ?? last; /** ZARC calendar of the safrinha month: only active with municipal ZARC and a known safrinha month; `unknown` crops are not penalised. */
+  const sMonth = safrinhaMonth(input); const zarcFor = (crop: Crop) => regionalContext.zarc && sMonth !== null ? zarcWindowStatus(regionalContext, crop.id, sMonth, farmerZarcTexture(input)) : null;
+  const zarcFilter = regionalContext.zarc && sMonth !== null ? (crop: Crop) => zarcFor(crop)!.status : undefined;
+  const coverPick = pickCover(selectable(input), safra, dominant, patternExcluded, zarcFilter); const cover = coverPick.crop; const excluded = [...patternExcluded, ...(cover ? [cover.id] : [])]; const thirdPick = pickThird(selectable(input), safra, excluded, dominant, zarcFilter); const resilience = thirdPick.crop;
   const baseReason = isBlockedCrop(input.farmerCrops, baseline?.id) ? 'A estratégia atual foi preservada, mas esta cultura está marcada como operacionalmente bloqueada para alternativas futuras.' : undefined;
   const noCoverReason = 'Não há cultura de cobertura disponível ou aceita pelo produtor com evidência catalogada para esta alternativa.';
   const noWaterReason = 'Não há outra cultura disponível ou aceita pelo produtor com requisito térmico documentado para esta comparação.';
-  const defaults = [strategy('A', confirmed ? 'Plano do produtor' : weakPattern ? 'Continuidade presumida — confirmar' : 'Plano atual (detectado no histórico)', baseline, input, climate, regionalContext, true, !confirmed && weakPattern, baseReason, [], regionalSoil), strategy('B', selectionTitle('B', coverPick.rule), cover, input, climate, regionalContext, false, false, cover ? undefined : noCoverReason, [selectionNote(coverPick)].filter((note): note is Explanation => Boolean(note)), regionalSoil), strategy('C', selectionTitle('C', thirdPick.rule), resilience, input, climate, regionalContext, false, false, resilience ? undefined : noWaterReason, [selectionNote(thirdPick)].filter((note): note is Explanation => Boolean(note)), regionalSoil)];
+  const defaults = [strategy('A', confirmed ? 'Plano do produtor' : weakPattern ? 'Continuidade presumida — confirmar' : 'Plano atual (detectado no histórico)', baseline, input, climate, regionalContext, true, !confirmed && weakPattern, baseReason, [], regionalSoil), strategy('B', selectionTitle('B', coverPick.rule), cover, input, climate, regionalContext, false, false, cover ? undefined : noCoverReason, [selectionNote(coverPick, safra, coverPick.crop ? zarcFor(coverPick.crop) : null)].filter((note): note is Explanation => Boolean(note)), regionalSoil), strategy('C', selectionTitle('C', thirdPick.rule), resilience, input, climate, regionalContext, false, false, resilience ? undefined : noWaterReason, [selectionNote(thirdPick, safra, thirdPick.crop ? zarcFor(thirdPick.crop) : null)].filter((note): note is Explanation => Boolean(note)), regionalSoil)];
   const isDefaultPlan = !labPlan; const plan = labPlan ?? createDefaultLabPlan(input, defaults);
   const assessments = assessLabPlan(input, plan, climate, regionalContext, regionalSoil);
   const historyCrops = input.history.flatMap((event) => event.cropId ? [getCrop(event.cropId)] : []).filter((item): item is Crop => Boolean(item));
-  return rankCandidates(defaults.map((item) => {
+  const ranked = rankCandidates(defaults.map((item) => {
     const configured = plan.scenarios.find((scenario) => scenario.id === item.id); if (!configured) return item;
     const slotCrop = (index: number) => { const id = configured.slots[index]?.cropId; return id ? getCrop(id) : undefined; };
     /** Default plans are judged by the distinguishing (safrinha) crop; user lab plans keep the first configured slot. */
@@ -77,6 +84,17 @@ export function generateCandidates(input: AnalysisInput, climate: ClimateContext
     const slots = assessments.filter((slot) => slot.scenarioId === item.id); const configuredSlots = slots.filter((slot) => slot.cropId).length;
     return { ...selected, indicators: aggregateIndicators(input, slots, selected.indicators), soilHealth: aggregateSoilHealth(input, slots, selected.soilHealth, historyCrops), slots, configuredSlots, missingData: [...new Set([...selected.missingData, ...(configuredSlots < 4 ? ['unconfigured_lab_slots'] : [])])] };
   }), input);
+  const withBareSoil = ranked.map((item) => { const bareSoil = assessBareSoil(input, item.slots, climate, options.terrain); return { ...item, bareSoil, soilHealth: applyBareSoil(item.soilHealth, bareSoil) }; });
+  const tradeoffs = buildTradeoffs(withBareSoil, { input, climate, regionalContext });
+  return withBareSoil.map((item) => ({ ...item, tradeoffs: tradeoffs.get(item.id) }));
+}
+/** Replaces the always-unknown bare-soil and erosion indicators with the occupancy-calendar result when it could be built. */
+function applyBareSoil(items: SoilHealthIndicator[], bare: BareSoilAssessment): SoilHealthIndicator[] {
+  return items.map((item) => {
+    if (item.id === 'bare_soil_interval' && bare.windowsSource !== 'unknown') return { ...item, state: bare.bareMonths.length ? 'attention' : 'yes', value: bare.bareMonths.length, detail: bare.detail, sourceRefs: bare.sourceRefs, missingData: bare.missing.filter((entry) => entry === 'residue_and_management') };
+    if (item.id === 'erosion_protection_context' && bare.state !== 'unknown') return { ...item, state: bare.state === 'attention' ? 'attention' : 'yes', detail: bare.detail, sourceRefs: [...new Set([...item.sourceRefs, ...bare.sourceRefs])], missingData: bare.missing.filter((entry) => entry !== 'unconfigured_lab_slots' && entry !== 'safrinha_start_month') };
+    return item;
+  });
 }
 export function computeMetrics(candidate: Rotation): Rotation { return candidate; }
 /** Does not reorder: A stays first and ids/positions are stable for the UI. Attaches a qualitative priority alignment to each scenario. */

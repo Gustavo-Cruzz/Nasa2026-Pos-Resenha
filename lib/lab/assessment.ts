@@ -7,8 +7,15 @@ import type { AnalysisInput, SoilProfile } from '@/lib/schema';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
 import type { ValidationLevel } from '@/lib/engine/types';
 import { slotSeasonWindow } from '@/lib/engine/slot-season';
+import { zarcWindowStatus, type ZarcSoilTexture, type ZarcWindowStatus } from '@/lib/brazil/zarc';
 
-export type LabSlotAssessment = { scenarioId: 'A' | 'B' | 'C'; slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string | null; cropName: string | null; previousCropId: string | null; validationLevel: ValidationLevel; indicators: QualitativeIndicator[]; sourceRefs: string[]; missingEvidence: string[] };
+export type LabSlotAssessment = { scenarioId: 'A' | 'B' | 'C'; slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string | null; cropName: string | null; previousCropId: string | null; validationLevel: ValidationLevel; indicators: QualitativeIndicator[]; sourceRefs: string[]; missingEvidence: string[]; /** ZARC status for the slot start month (calendar axis); null when there is no crop or no start month. */ zarc: ZarcWindowStatus | null };
+
+/** MAPA soil Tipo 1/2/3 from farmer-declared clay share (<15 %, 15-35 %, >35 %); null (any soil) when no farmer texture exists. */
+export function farmerZarcTexture(input: AnalysisInput): ZarcSoilTexture | null {
+  const soil = input.soil; if (!soil || soil.origin !== 'farmer_lab' || soil.clayPct === undefined) return null;
+  return soil.clayPct < 15 ? 'sandy' : soil.clayPct <= 35 ? 'medium' : 'clayey';
+}
 
 const getCrop = (id: string | null | undefined): Crop | undefined => id ? cropById.get(id as Crop['id']) : undefined;
 
@@ -26,6 +33,8 @@ export function assessLabPlan(input: AnalysisInput, plan: LabPlan, climate: Clim
       ...(!previousCrop ? ['previous_crop_family'] : []),
     ])];
     const validationLevel: ValidationLevel = crop && regionalContext?.zarc?.crops[crop.id] ? 'regionally_contextualized' : 'climate_exploration';
-    return { scenarioId: scenario.id, slotIndex, year: slot.year, season: slot.season, cropId: crop?.id ?? null, cropName: crop?.commonNames['pt-BR'] ?? null, previousCropId: previousCrop?.id ?? null, validationLevel, indicators, sourceRefs: [...new Set(indicators.flatMap((indicator) => indicator.sourceRefs))], missingEvidence };
+    const startMonth = slotSeasonWindow(input, slot.season).month;
+    const zarc = crop ? zarcWindowStatus(regionalContext, crop.id, startMonth ?? 0, farmerZarcTexture(input)) : null;
+    return { scenarioId: scenario.id, slotIndex, year: slot.year, season: slot.season, cropId: crop?.id ?? null, cropName: crop?.commonNames['pt-BR'] ?? null, previousCropId: previousCrop?.id ?? null, validationLevel, indicators, sourceRefs: [...new Set(indicators.flatMap((indicator) => indicator.sourceRefs))], missingEvidence, zarc };
   }));
 }

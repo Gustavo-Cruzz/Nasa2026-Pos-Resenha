@@ -6,6 +6,8 @@ import type { EvidenceManifest } from '@/lib/evidence/types';
 import type { BoundaryAnalysis } from '@/lib/engine/boundary-context';
 import type { TerrainContext } from '@/lib/terrain/terrain';
 import type { RegionalSoilAnalysis } from '@/lib/soil/regional-analysis';
+import type { BareSoilAssessment } from '@/lib/engine/bare-soil';
+import type { ScenarioTradeoffs } from '@/lib/engine/tradeoffs';
 
 export type ValidationLevel = 'climate_exploration' | 'regionally_contextualized' | 'locally_validated';
 export type IndicatorState = 'compatible' | 'attention' | 'unknown' | 'yes' | 'no' | 'observed';
@@ -17,7 +19,7 @@ export type CroppingSystemContext = { plotId: string; type: 'single' | 'intercro
 export type PriorityKey = 'water' | 'soil' | 'operations';
 /** Qualitative fit between a scenario crop and one farmer priority. No numbers or scores; `reason` cites the concrete crop attribute used. */
 export type PriorityAlignment = { priority: PriorityKey; level: 'supports' | 'neutral' | 'conflicts' | 'unknown'; reason: string; reasonEn: string };
-export type Rotation = { id: 'A' | 'B' | 'C'; title: string; baseline: boolean; baselineAssumed: boolean; horizonMonths: 24; proposedCrop: ProposedCrop | null; validationLevel: ValidationLevel; regionalContextAvailable: boolean; indicators: QualitativeIndicator[]; soilHealth: SoilHealthIndicator[]; croppingSystems: CroppingSystemContext[]; slots: LabSlotAssessment[]; configuredSlots: number; explanations: Explanation[]; missingData: string[]; unavailable?: boolean; priorityAlignment?: PriorityAlignment[] };
+export type Rotation = { id: 'A' | 'B' | 'C'; title: string; baseline: boolean; baselineAssumed: boolean; horizonMonths: 24; proposedCrop: ProposedCrop | null; validationLevel: ValidationLevel; regionalContextAvailable: boolean; indicators: QualitativeIndicator[]; soilHealth: SoilHealthIndicator[]; croppingSystems: CroppingSystemContext[]; slots: LabSlotAssessment[]; configuredSlots: number; explanations: Explanation[]; missingData: string[]; unavailable?: boolean; priorityAlignment?: PriorityAlignment[]; /** 24-month occupancy calendar and erosion screening of the 4 slots. */ bareSoil?: BareSoilAssessment; /** Six-axis trade-off matrix relative to scenario A. */ tradeoffs?: ScenarioTradeoffs };
 export type NasaInsightStatus = 'contrast' | 'shared_signal' | 'observational' | 'unknown';
 export type NasaInsightEffect = { scenarioId: 'A' | 'B' | 'C'; cropId: string | null; cropName: string | null; state: 'compatible' | 'attention' | 'unknown' | 'observed'; ruleId: 'DOCUMENTED_THERMAL_RANGE' | 'HISTORICAL_PRECIPITATION_ONLY' | 'MISSING_CLIMATE_EVIDENCE'; documentedRangeC: { min: number; max: number } | null; sourceRefs: string[]; /** Month (or the first out-of-range window month) in which this scenario's distinguishing crop was read; differs from the insight month for safrinha crops. Null when the crop's window is not informed. */ evaluatedMonth?: number | null; /** Tmean (C) read for `evaluatedMonth`. */ observedValueC?: number | null; /** True when the crop was evaluated over its own safrinha window instead of the insight month. */ ownWindow?: boolean };
 export type AttentionDecision = { scenarioId: 'A' | 'B' | 'C'; cropId: string | null; cropName: string | null; observedValue: number; documentedRangeC: { min: number; max: number }; ruleId: 'DOCUMENTED_THERMAL_RANGE'; sourceRefs: string[] };

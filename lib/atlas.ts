@@ -32,7 +32,7 @@ export const climateApiResponseSchema = z.discriminatedUnion('status', [
 ]);
 export type ClimateApiResponse = z.infer<typeof climateApiResponseSchema>;
 
-const zarcCropContextSchema = z.object({ cropId: z.string(), rowCount: z.number().int().positive(), zarcCultures: z.array(z.string()), cycleCodes: z.array(z.number()), soilCodes: z.array(z.number()), climateCodes: z.array(z.number()), managements: z.array(z.string()), ordinances: z.array(z.string()), riskCodes: z.array(z.number()), decendiosWithRiskCode: z.array(z.number().int()) });
+const zarcCropContextSchema = z.object({ cropId: z.string(), rowCount: z.number().int().positive(), zarcCultures: z.array(z.string()), cycleCodes: z.array(z.number()), soilCodes: z.array(z.number()), climateCodes: z.array(z.number()), managements: z.array(z.string()), ordinances: z.array(z.string()), riskCodes: z.array(z.number()), decendiosWithRiskCode: z.array(z.number().int()), windows: z.array(z.object({ culture: z.string(), management: z.string().nullable(), cycleCodes: z.array(z.number()), soilCodes: z.array(z.number()), risk: z.array(z.number()) })).default([]) });
 export const brazilRegionalContextSchema = z.object({
   country: z.literal('BR').nullable(),
   municipality: z.object({ code: z.string().regex(/^\d{7}$/), name: z.string(), uf: z.string().length(2) }).nullable(),
