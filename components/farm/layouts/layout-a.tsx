@@ -52,6 +52,8 @@ function MiniLine({ insight, noData }: { insight: FarmInsight; noData: string })
   return <p className="text-sm text-slate-200"><span className="font-semibold">{insight.title}:</span> {insight.value ?? noData}{insight.detail ? <span className="text-slate-300"> · {insight.detail}</span> : null}</p>;
 }
 
+const isGuestUsername = (username: string) => username.startsWith('guest-');
+
 export function LayoutA(props: FarmLayoutProps) {
   const { locale } = useLocale();
   const en = locale === 'en';
@@ -73,7 +75,7 @@ export function LayoutA(props: FarmLayoutProps) {
       </div>
       <div className="flex items-center gap-2 text-sm">
         <Link className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 font-semibold text-slate-200 underline underline-offset-4 hover:text-lime-200" href="/farm/historico"><Pencil aria-hidden="true" size={14} />{en ? 'Edit history' : 'Editar histórico'}</Link>
-        <Button className="min-h-11 px-3 text-sm" onClick={onSignOut} type="button" variant="secondary"><LogOut aria-hidden="true" className="mr-1.5" size={14} />{en ? 'Sign out' : 'Sair'}</Button>
+        {isGuestUsername(props.username) || props.username === 'guest' ? null : <Button className="min-h-11 px-3 text-sm" onClick={onSignOut} type="button" variant="secondary"><LogOut aria-hidden="true" className="mr-1.5" size={14} />{en ? 'Sign out' : 'Sair'}</Button>}
       </div>
     </header>
 
