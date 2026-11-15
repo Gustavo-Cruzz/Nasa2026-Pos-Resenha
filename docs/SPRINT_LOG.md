@@ -1049,3 +1049,13 @@ Fixed: `/results` now reuses a saved analysis only when both the complete analys
 Tests: added unit coverage for compatible cache reuse and rejection after input or laboratory-plan changes. Full `npm run test -- --run` passes (63 files / 425 tests); `npm run typecheck`, `npm run lint` and `npm run build` pass. Targeted Playwright coverage for embedded Future Stories, advanced provenance, one analysis request across mode switching and results/laboratory return passes (4 tests).
 
 Limitations: the complete Playwright suite was not rerun; only the four directly affected end-to-end flows were exercised. Production build emits Node's existing experimental SQLite warning, without failing.
+
+## Sprint F21 — Remoção dos atalhos internos da comparação
+
+Status: complete.
+
+Implemented: removed the horizontal in-page navigation bar from Advanced comparison, including the buttons for Decision at a glance, Scenarios A/B/C, Rain and temperature, Rain minus ET₀, Season and calendar, Soil context and the remaining result blocks. The analysis panels, João's contextual guide, sources, export and Simple/Advanced mode navigation remain unchanged.
+
+Checks: `npm run typecheck`, `npm run lint`, `npm run test -- --run` and `npm run build` pass.
+
+Limitations: this change only removes the duplicated section shortcuts; it does not shorten or reorder the advanced report itself.
