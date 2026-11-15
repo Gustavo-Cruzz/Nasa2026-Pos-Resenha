@@ -10,7 +10,7 @@ import { demoScenes } from '@/lib/future-farm/demo';
 import { FARM_SCENE_DISCLAIMER, type FarmCycleView, type FarmScenarioView, type ScenarioId } from '@/lib/future-farm/types';
 import type { Locale } from '@/lib/i18n';
 
-interface ScenarioStoriesProps { scenarios: FarmScenarioView[]; locale: Locale; demo: boolean; initialScenario?: ScenarioId }
+interface ScenarioStoriesProps { scenarios: FarmScenarioView[]; locale: Locale; demo: boolean; initialScenario?: ScenarioId; simple?: boolean }
 
 /** Moves focus with arrow/Home/End keys among sibling buttons (roving focus). */
 function useArrowKeys(count: number, current: number, select: (index: number) => void) {
@@ -23,7 +23,7 @@ function useArrowKeys(count: number, current: number, select: (index: number) =>
   return { refs, onKeyDown };
 }
 
-export function ScenarioStories({ scenarios, locale, demo, initialScenario }: ScenarioStoriesProps) {
+export function ScenarioStories({ scenarios, locale, demo, initialScenario, simple = false }: ScenarioStoriesProps) {
   const en = locale === 'en';
   const [scenarioId, setScenarioId] = useState<ScenarioId>(initialScenario && scenarios.some((item) => item.id === initialScenario) ? initialScenario : scenarios[0]?.id ?? 'A');
   const [cycleByScenario, setCycleByScenario] = useState<Record<string, number>>({});
@@ -50,10 +50,10 @@ export function ScenarioStories({ scenarios, locale, demo, initialScenario }: Sc
               {reducedMotion ? <span className="text-sm text-slate-300">{en ? 'Reduced motion is on: static scene.' : 'Movimento reduzido ativo: cena estática.'}</span> : null}
             </div>
           </div>
-          <CycleEvidencePanel cycle={cycle} en={en} locale={locale} scenario={scenario} />
+          <CycleEvidencePanel cycle={cycle} en={en} locale={locale} scenario={scenario} simple={simple} />
         </div>
       </> : <p className="mt-4 rounded-lg border border-slate-700 p-4 text-slate-200" role="status">{en ? 'This scenario has no crop defined in any stage yet. No scene is drawn and no crop is invented to fill it.' : 'Este cenário ainda não tem cultura definida em nenhuma etapa. Nenhuma cena é desenhada e nenhuma cultura é inventada para preenchê-la.'}</p>}
-      <ScenarioComparisonActions demo={demo} en={en} />
+      <ScenarioComparisonActions demo={demo} en={en} simple={simple} />
     </section>
   </div>;
 }
@@ -96,9 +96,15 @@ function List({ items, empty }: { items: string[]; empty: string }) {
   return items.length ? <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-200">{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p className="mt-1 text-sm text-slate-300">{empty}</p>;
 }
 
-export function CycleEvidencePanel({ scenario, cycle, en, locale }: { scenario: FarmScenarioView; cycle: FarmCycleView; en: boolean; locale: Locale }) {
+export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false }: { scenario: FarmScenarioView; cycle: FarmCycleView; en: boolean; locale: Locale; simple?: boolean }) {
   const copy = futureFarmCopy(locale);
   const noneComputed = en ? 'None computed; missing evidence stays unknown.' : 'Nenhum item calculado; evidência ausente permanece desconhecida.';
+  if (simple) return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
+    <p className="text-sm font-semibold text-lime-200">{cycleName(cycle, en)}</p><h3 className="mt-1 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3>
+    {cycle.evidenceStale ? <p className="mt-3 rounded-lg border border-amber-300 bg-amber-950/50 p-3 text-sm" role="status">{copy.staleEvidence}</p> : null}
+    <div className="mt-4 space-y-4"><section><h4 className="font-semibold">{en ? 'What can this crop offer?' : 'O que esta cultura pode oferecer?'}</h4><List empty={noneComputed} items={cycle.potentialBenefits} /></section><section><h4 className="font-semibold">{en ? 'What deserves attention?' : 'O que merece atenção?'}</h4><List empty={noneComputed} items={cycle.risksAndUnknowns} /></section><section><h4 className="font-semibold">{en ? 'What NASA data shows here' : 'O que os dados NASA mostram nesta comparação'}</h4><p className="mt-1 text-sm text-slate-200">{cycle.climate?.waterDetail ?? (en ? 'No NASA climate reading is available for this stage.' : 'Não há leitura climática NASA disponível para esta etapa.')}</p></section><section><h4 className="font-semibold">{en ? 'What we still need to confirm' : 'O que ainda precisamos confirmar'}</h4><List empty={en ? 'No cataloged gap for this stage.' : 'Nenhuma lacuna catalogada para esta etapa.'} items={[...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))]} /></section>
+      <details className="border-t border-slate-700 pt-3"><summary className="cursor-pointer font-semibold">{en ? 'See sources and details' : 'Ver fontes e detalhes'}</summary><p className="mt-3 text-sm"><b>{en ? 'Evidence level' : 'Nível de evidência'}:</b> {cycle.evidenceLevel ? copy.evidenceLevel[cycle.evidenceLevel] : 'N/D'}</p>{cycle.evidenceLinks.length ? <ul className="mt-2 space-y-1 text-sm">{cycle.evidenceLinks.map((item) => <li key={item.url}><a className="break-all underline" href={item.url} rel="noreferrer" target="_blank">{item.title}</a></li>)}</ul> : <p className="mt-2 text-sm text-slate-300">{en ? 'No linked source.' : 'Nenhuma fonte vinculada.'}</p>}{scenario.scenarioNotes.length ? <List empty="" items={scenario.scenarioNotes} /> : null}</details>
+    </div></aside>;
   return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
     <p className="text-sm font-semibold text-lime-200">{cycleName(cycle, en)}</p>
     <h3 className="mt-1 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3>
@@ -125,10 +131,10 @@ export function CycleEvidencePanel({ scenario, cycle, en, locale }: { scenario: 
   </aside>;
 }
 
-export function ScenarioComparisonActions({ demo, en }: { demo: boolean; en: boolean }) {
+export function ScenarioComparisonActions({ demo, en, simple = false }: { demo: boolean; en: boolean; simple?: boolean }) {
   return <div className="mt-5 flex flex-wrap gap-3 border-t border-slate-700 pt-4">
     {demo ? <Button asChild><Link href="/future-stories">{en ? 'Leave demonstration' : 'Sair da demonstração'}</Link></Button> : <>
-      <Button asChild><Link href="/results#comparison-heading">{en ? 'Compare' : 'Comparar'}</Link></Button>
+      <Button asChild><Link href={simple ? '/results?mode=advanced#comparison-heading' : '/results#comparison-heading'}>{en ? 'Compare' : 'Comparar'}</Link></Button>
       <Button asChild variant="secondary"><Link href="/lab">{en ? 'Edit rotation' : 'Editar rotação'}</Link></Button>
     </>}
   </div>;

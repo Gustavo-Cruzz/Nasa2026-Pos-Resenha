@@ -11,12 +11,11 @@ const data = { location: { latitude: -17.798, longitude: -50.919 }, plantingMont
 const draft = (a: Array<string | null>) => ({ version: 2, savedAt: '2026-11-14T12:00:00.000Z', data, labPlan: labPlan(a) });
 async function installDraft(page: Page, a: Array<string | null>) { await page.addInitScript((saved) => { if (!window.sessionStorage.getItem('ffs-installed')) { window.localStorage.setItem('field-shift:draft', JSON.stringify(saved)); window.sessionStorage.setItem('ffs-installed', '1'); } }, draft(a)); }
 
-test('opens Future Farm Stories from the A/B/C comparison and walks the four cycles', async ({ page }) => {
+test('embeds Future Farm Stories in the simple A/B/C comparison and walks the four cycles', async ({ page }) => {
   test.setTimeout(40_000);
   await installDraft(page, ['maize', 'soybean', 'maize', 'ruziziensis']);
   await page.goto('/results');
-  await page.getByRole('link', { name: 'Explore seus futuros possíveis' }).click();
-  await expect(page.getByRole('heading', { name: 'Explore seus futuros possíveis' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Explore suas possibilidades' })).toBeVisible();
   await expect(page.getByRole('tab', { name: /Cenário A/ })).toHaveAttribute('aria-selected', 'true');
   const steps = page.getByRole('navigation', { name: 'Ciclos do cenário A' });
   await expect(steps.getByRole('button', { name: /Ciclo 1/ })).toHaveAttribute('aria-current', 'step');
@@ -30,8 +29,8 @@ test('opens Future Farm Stories from the A/B/C comparison and walks the four cyc
   await expect(page.locator('.ffs-plant:not([data-crop="soybean"])')).toHaveCount(0);
   await steps.getByRole('button', { name: /Ciclo 2/ }).press('End');
   await expect(steps.getByRole('button', { name: /Ciclo 4/ })).toHaveAttribute('aria-current', 'step');
-  await expect(page.getByRole('heading', { name: 'Benefícios potenciais' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Evidências científicas' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'O que esta cultura pode oferecer?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'O que os dados NASA mostram nesta comparação' })).toBeVisible();
   await page.getByRole('tab', { name: /Cenário B/ }).click();
   await expect(page.getByRole('navigation', { name: 'Ciclos do cenário B' }).getByRole('button')).toHaveCount(5); // prev + 3 real stages + next
   await page.getByRole('button', { name: 'Pausar animação' }).click();

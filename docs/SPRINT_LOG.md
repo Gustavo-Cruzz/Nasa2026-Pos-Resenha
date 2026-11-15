@@ -1027,3 +1027,15 @@ Status: complete.
 Fixed: the conversation summary rendered `N/D` for selected family-farm crops because the presentation formatter only consulted the older P0 evidence list. It now resolves names from the complete catalog first, retaining P0 as compatibility fallback. The regression test confirms mandioca/aipim/macaxeira, batata-doce and the next planting display by name.
 
 Evidence (2026-11-15): focused chat and visual-asset tests (42 assertions), typecheck and lint pass.
+
+## Sprint F19 — Comparação simples e avançada
+
+Status: complete.
+
+Implemented: `/results` now defaults to an accessible Simple/Advanced tab control, with direct `?mode=simple` and `?mode=advanced` links. Simple comparison reuses the already loaded `AnalysisResult`, current laboratory plan and `buildFarmScenarioViews`: scenario cards, pixel-art `ScenarioStories`, A/B/C selection, configured stages, animation controls and reduced-motion behavior are embedded without a second analysis request. Its cycle evidence panel leads with potential offering, attention, NASA context and remaining confirmation needs; sources remain available under “Ver fontes e detalhes”. Advanced comparison retains the prior complete technical result blocks, evidence center, export, indicators and trade-off table, with an explicit scientific-analysis introduction and a return control.
+
+Updated E2E coverage verifies simple-by-default, one `/api/analyze` request across mode switching, direct advanced technical panels, embedded Stories and results-to-lab return flow. Existing `/future-stories` remains unchanged as a compatible standalone route.
+
+Evidence (2026-11-15): full unit suite (62 files / 424 tests), typecheck, lint, production build; targeted Playwright coverage for simple/advanced, Stories, technical evidence, map fallback and laboratory return (5 tests) pass.
+
+Limitations / next: the complete Playwright suite was started; two pre-existing timing-sensitive navigation checks initially failed during a parallel run, then passed when rerun in isolation after the affected results-flow assertion was updated. No scientific calculation, source, API route or cache contract was changed.

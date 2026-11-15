@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MapPin, Sparkles, TriangleAlert } from 'lucide-react';
 import { loadDraft } from '@/lib/storage';
 import { loadLastAnalysis, saveLastAnalysis } from '@/lib/analysis-cache';
@@ -20,6 +21,7 @@ import { recordJourneyCompletion } from '@/lib/journey-metrics';
 import { buildFarmExplanationContext, explanationSectionIds, farmExplanationSchema, fallbackFarmExplanation, type ExplanationSectionId } from '@/lib/gemini/farm-explanation';
 import type { Locale } from '@/lib/i18n';
 import { cropDisplayName } from '@/lib/presentation';
+import { SimpleComparison } from '@/components/results/simple-comparison';
 
 type State = { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; message: string } | { kind: 'ready'; data: AnalysisResult; cachedAt?: string };
 type ExplainState = { kind: 'loading' } | { kind: 'ready'; sections: Record<ExplanationSectionId, BlockComment>; origin: 'gemini' | 'fallback'; warning?: string };
@@ -36,6 +38,9 @@ function builtInSections(data: AnalysisResult, locale: Locale): Record<Explanati
 export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   const { locale } = useLocale();
   const en = locale === 'en';
+  const router = useRouter(); const pathname = usePathname(); const searchParams = useSearchParams();
+  const mode = searchParams.get('mode') === 'advanced' ? 'advanced' : 'simple';
+  const setMode = (next: 'simple' | 'advanced') => { const params = new URLSearchParams(searchParams.toString()); if (next === 'simple') params.delete('mode'); else params.set('mode', next); router.replace(`${pathname}${params.size ? `?${params}` : ''}`, { scroll: false }); };
   const [state, setState] = useState<State>({ kind: 'loading' });
   const [explain, setExplain] = useState<ExplainState & { locale?: Locale }>({ kind: 'loading' });
   const [guide, setGuide] = useState(true);
@@ -78,6 +83,9 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   const origin = explain.kind === 'loading' ? (en ? 'João is preparing a short explanation of the data…' : 'João está preparando uma explicação curta dos dados…') : explain.origin === 'gemini' ? (en ? 'Explanations generated with Gemini 3.5 Flash-Lite from this result.' : 'Explicações geradas com Gemini 3.5 Flash-Lite a partir deste resultado.') : `${en ? 'Safe built-in explanation.' : 'Explicação segura do aplicativo.'} ${explain.warning ?? ''}`;
   return <section className="mx-auto max-w-6xl pb-28 lg:pb-0" id="results-readable">
     <ReviewTransition />
+    <div className="mt-5" role="tablist" aria-label={en ? 'Comparison mode' : 'Modo de comparação'} onKeyDown={(event) => { if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return; event.preventDefault(); const next = event.key === 'ArrowLeft' || event.key === 'Home' ? 'simple' : 'advanced'; setMode(next); window.setTimeout(() => document.getElementById(`${next}-comparison-tab`)?.focus()); }}><button aria-controls="results-mode-panel" aria-selected={mode === 'simple'} className={`min-h-11 rounded-l-lg border px-4 text-sm font-semibold ${mode === 'simple' ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 bg-slate-900 hover:border-lime-300'}`} id="simple-comparison-tab" role="tab" tabIndex={mode === 'simple' ? 0 : -1} type="button" onClick={() => setMode('simple')}>🌱 {en ? 'Simple comparison' : 'Comparação simples'}</button><button aria-controls="results-mode-panel" aria-selected={mode === 'advanced'} className={`-ml-px min-h-11 rounded-r-lg border px-4 text-sm font-semibold ${mode === 'advanced' ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 bg-slate-900 hover:border-lime-300'}`} id="advanced-comparison-tab" role="tab" tabIndex={mode === 'advanced' ? 0 : -1} type="button" onClick={() => setMode('advanced')}>📊 {en ? 'Advanced comparison' : 'Comparação avançada'}</button></div>
+    <div aria-labelledby={mode === 'simple' ? 'simple-comparison-tab' : 'advanced-comparison-tab'} id="results-mode-panel" role="tabpanel">
+    {mode === 'advanced' ? <><header className="mt-6 max-w-3xl"><p className="text-sm font-semibold text-lime-200">{en ? 'Advanced comparison' : 'Comparação avançada'}</p><h2 className="mt-1 text-3xl font-bold">{en ? 'Complete scientific analysis' : 'Análise científica completa'}</h2><p className="mt-2 text-slate-300">{en ? 'Explore the indicators, sources, methods and uncertainties used in this comparison.' : 'Explore os indicadores, fontes, métodos e incertezas utilizados na comparação.'}</p><button className="mt-3 text-sm font-semibold underline" type="button" onClick={() => setMode('simple')}>{en ? 'Back to simple comparison' : 'Voltar à comparação simples'}</button></header>
     {demo ? <aside className="mt-5 rounded-xl border border-cyan-300/60 bg-cyan-500/10 p-4"><p className="font-bold text-cyan-100">{en ? 'Brazil demonstration' : 'Demonstração Brasil'}</p><p className="mt-1 text-sm text-slate-200">Rio Verde · NASA POWER + {en ? 'municipal ZARC context' : 'contexto ZARC municipal'}.</p></aside> : null}
     {state.cachedAt ? <p className="mt-5 flex gap-2 rounded-xl border border-amber-300 bg-amber-950/40 p-4 text-sm" role="status"><TriangleAlert aria-hidden="true" className="mt-0.5 shrink-0" size={18} /><span><b>{en ? 'Offline or NASA unreachable.' : 'Sem rede ou NASA inacessível.'}</b> {en ? `Showing the last analysis saved on this device (${new Date(state.cachedAt).toLocaleString('en-US')}). It may not reflect later edits or newer data.` : `Mostrando a última análise salva neste dispositivo (${new Date(state.cachedAt).toLocaleString('pt-BR')}). Ela pode não refletir edições posteriores nem dados mais novos.`}</span></p> : null}
     <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -95,6 +103,8 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
       {guide ? <JoaoRail active={activeId === block.id} comment={block.comment} title={block.title} tone={joaoToneOf(block.tone)} /> : null}
     </Fragment>)}</div>
     {guide ? <JoaoDock block={dock} /> : null}
+    </> : <SimpleComparison data={ready} plan={loadDraft()?.labPlan} onAdvanced={() => setMode('advanced')} />}
+    </div>
   </section>;
 }
 

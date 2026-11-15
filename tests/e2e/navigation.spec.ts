@@ -130,7 +130,7 @@ test('shows retryable NASA failure without a fabricated climate metric', async (
 test('renders provenance and source drawers for pilot analysis', async ({ page }) => {
   test.setTimeout(25_000);
   await installDraft(page);
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   await expect(page.getByRole('heading', { name: 'Comparação de estratégias', level: 1 })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
   await expect(page.getByText('Indicadores disponíveis lado a lado.')).toBeVisible();
@@ -159,10 +159,24 @@ test('renders provenance and source drawers for pilot analysis', async ({ page }
   await expect(page.getByRole('link', { name: 'Editar linha de base' }).first()).toBeVisible();
 });
 
+test('opens results in simple mode and preserves the result while switching to advanced mode', async ({ page }) => {
+  await installDraft(page);
+  let analyses = 0;
+  await page.route('**/api/analyze', async (route) => { analyses += 1; await route.continue(); });
+  await page.goto('/results');
+  await expect(page.getByRole('tab', { name: '🌱 Comparação simples' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('heading', { name: 'Explore suas possibilidades' })).toBeVisible();
+  await expect(page.getByTestId('farm-scene')).toBeVisible();
+  await page.getByRole('tab', { name: '📊 Comparação avançada' }).click();
+  await expect(page).toHaveURL(/mode=advanced/);
+  await expect(page.getByRole('heading', { name: 'Análise científica completa' })).toBeVisible();
+  await expect(analyses).toBe(1);
+});
+
 test('shows forecast provenance and never turns an unvalidated ML experiment into a probability', async ({ page }) => {
   await installDraft(page);
   await page.route('**/api/climate-risk*', (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ status: 'ok', forecast: { source: 'Open-Meteo Forecast API', sourceUrl: 'https://example.test/forecast', issuedAt: '2026-11-14T00:00:00.000Z', model: 'best_match', timezone: 'UTC', horizonDays: 16, limitations: [] }, waterPressure: { sevenDays: { horizonDays: 7, precipitationTotalMm: 12, et0TotalMm: 24, climateBalanceMm: -12, negativeBalanceDays: 5, validDays: 7, expectedDays: 7, historicalEquivalentBalanceMm: -8, historicalComparison: 'drier_than_historical', limitations: [] }, fifteenDays: { horizonDays: 15, precipitationTotalMm: 20, et0TotalMm: 50, climateBalanceMm: -30, negativeBalanceDays: 11, validDays: 15, expectedDays: 15, historicalEquivalentBalanceMm: -18, historicalComparison: 'drier_than_historical', limitations: [] } }, drySpell: [{ horizonDays: 7, validationStatus: 'not_validated', climatologyReference: 0.4, probability: null, evaluation: { baseline: { brierScore: 0.1 }, model: { brierScore: 0.11 } }, limitations: [] }], strategyExposure: { status: 'not_applicable', reason: 'Sem calendário.' } }) }));
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   await openTechnicalDetails(page);
   await expect(page.getByRole('heading', { name: 'Climate Risk Lab' })).toBeVisible();
   await expect(page.getByText('Open-Meteo Forecast API')).toBeVisible();
@@ -176,7 +190,7 @@ test('shows forecast provenance and never turns an unvalidated ML experiment int
 test('uses static review art when reduced motion is requested', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await installDraft(page);
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   const transition = page.getByRole('img', { name: /três hipóteses entram em revisão/i });
   await expect(transition).toBeVisible();
   await expect(transition).toHaveCSS('background-image', /transition-review-static/);
@@ -185,7 +199,7 @@ test('uses static review art when reduced motion is requested', async ({ page })
 test('edits confirmed baseline through the result link using the keyboard', async ({ page }) => {
   test.setTimeout(25_000);
   await installDraft(page, { cropId: 'maize', confirmed: true });
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   const edit = page.getByRole('link', { name: 'Editar linha de base' });
   await edit.focus();
   await page.keyboard.press('Enter');
@@ -198,7 +212,7 @@ test('edits confirmed baseline through the result link using the keyboard', asyn
   await page.getByRole('link', { name: 'Revisar comparação' }).click();
   await expect(page.getByRole('heading', { name: 'Comparação de estratégias', level: 1 })).toBeVisible();
   await expect(page.getByRole('main')).toContainText('girassol');
-  await expect(page.locator('[data-scenario="A"]').getByLabel('Sequência de 2 anos')).toBeVisible();
+  await expect(page.getByTestId('farm-scene')).toBeVisible();
 });
 
 test('migrates a V1 draft on the farm timeline and preserves its data at 375px', async ({ page }) => {
@@ -291,7 +305,7 @@ test('keeps the core farm, laboratory, and results flow in English', async ({ pa
   await expect(page.getByRole('heading', { name: 'Rotation laboratory' })).toBeVisible();
   await expect(page.getByText('Crops accepted for alternatives')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Review comparison' })).toBeVisible();
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   await expect(page.getByRole('heading', { name: 'Strategy comparison' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Compare criteria' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Take this conversation forward' })).toBeVisible();
@@ -302,7 +316,7 @@ test('shows three stacked global scenarios and unknown climate after NASA failur
   await installDraft(page);
   await page.route('**/api/analyze', async (route) => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ input: draft().data, climate: { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, provenance: null, gaps: ['NASA indisponível para esta coordenada.'] }, regionalContext: { country: null, municipality: null, municipalitySource: null, zarc: null, gaps: ['Fora do Brasil.'] }, warnings: ['NASA indisponível para esta coordenada.'], regionalContextAvailable: false, disclaimer: 'Cenários exploratórios; não são recomendação agronômica, validação local, previsão ou prescrição.', priorityHighlights: ['historical_precipitation', 'cover_potential', 'functional_diversity'], nasaInsight: { status: 'unknown', month: 4, metric: 'unavailable', observedValue: null, unit: null, period: null, coveragePct: null, changesComparison: false, effects: [], attentionDecision: null, limitations: ['NASA indisponível para esta coordenada.'], sourceUrl: null }, nasaInsightByMonth: [], boundaryAnalysis: { status: 'not_provided', vertexCount: 0, areaHa: null, centroid: null, smapHistorical: { product: 'SPL4SMGP', version: 8, temporalCoverage: '2015-03-31/present', temporalResolution: '3 hours', nominalResolutionKm: 9, numericStatus: 'requires_earthdata_preprocessing', spatialInterpretation: 'no_boundary', sourceUrl: 'https://example.test/smap' } }, strategies: ['A', 'B', 'C'].map((id) => ({ id, title: `Cenário ${id}`, baseline: id === 'A', baselineAssumed: id === 'A', horizonMonths: 24, proposedCrop: null, validationLevel: 'climate_exploration', regionalContextAvailable: false, indicators: [], explanations: [], missingData: ['historical_climate'], unavailable: true })) }) }));
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   await openTechnicalDetails(page);
   await page.getByText('Detalhes técnicos de clima e contexto regional').click();
   await expect(page.getByText('Indisponível: cenários preservados com métricas climáticas desconhecidas.')).toBeVisible();
@@ -316,7 +330,7 @@ test('shows three stacked global scenarios and unknown climate after NASA failur
 test('compares scenarios with mobile tabs on a 375px viewport', async ({ page }) => {
   await installDraft(page);
   await page.setViewportSize({ width: 375, height: 844 });
-  await page.goto('/results');
+  await page.goto('/results?mode=advanced');
   await expect(page.getByRole('tab', { name: 'Cenário A' })).toHaveAttribute('aria-selected', 'true');
   await page.getByRole('tab', { name: 'Cenário B' }).click();
   await expect(page.getByRole('tab', { name: 'Cenário B' })).toHaveAttribute('aria-selected', 'true');
