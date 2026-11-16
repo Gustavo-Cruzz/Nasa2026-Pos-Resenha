@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useRef, useState, type KeyboardEvent } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CircleHelp, Pause, Play, Sprout, TriangleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { JoaoFigure } from '@/components/joao/joao-figure';
+import { JoaoReaderButton } from '@/components/joao/joao-reader-button';
 import { FarmScene, usePrefersReducedMotion } from '@/components/future-stories/farm-scene';
 import type { JoaoMood } from '@/lib/explain/joao-mood';
 import { futureFarmCopy } from '@/lib/future-farm/copy';
@@ -45,7 +46,7 @@ export function ScenarioStories({ scenarios, locale, demo, initialScenario, simp
         <div className="mt-4 grid gap-5 lg:grid-cols-3">
           <div className="lg:sticky lg:top-4 lg:col-span-2 lg:self-start">
             <FarmScene cycle={cycle} demoScene={demo ? demoScenes.get(`${scenario.id}-${cycle.index}`) : undefined} en={en} paused={paused} reducedMotion={reducedMotion} scenarioId={scenario.id} />
-            <p className="mt-3 rounded-lg border border-amber-300/60 bg-amber-950/40 p-3 text-sm text-amber-50" data-testid="farm-scene-disclaimer">{FARM_SCENE_DISCLAIMER[locale]}</p>
+            {simple ? null : <p className="mt-3 rounded-lg border border-amber-300/60 bg-amber-950/40 p-3 text-sm text-amber-50" data-testid="farm-scene-disclaimer">{FARM_SCENE_DISCLAIMER[locale]}</p>}
             <CycleStepper cycles={scenario.cycles} en={en} position={cyclePosition} scenarioId={scenario.id} onSelect={setCycle} />
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <Button aria-pressed={paused || reducedMotion} className="gap-2" disabled={reducedMotion} type="button" variant="secondary" onClick={() => setPaused((value) => !value)}>{paused || reducedMotion ? <Play aria-hidden="true" size={18} /> : <Pause aria-hidden="true" size={18} />}{paused || reducedMotion ? (en ? 'Play animation' : 'Retomar animação') : (en ? 'Pause animation' : 'Pausar animação')}</Button>
@@ -109,23 +110,37 @@ export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false
     const mood: JoaoMood = benefits.length ? 'happy' : attention.length ? 'alert' : 'sad';
     const sentence = (text: string) => (/[.!?]$/.test(text) ? text : `${text}.`);
     const benefitLine = benefits.length
-      ? (en ? `This plan can offer: ${sentence(benefits[0])}` : `Este plano pode oferecer: ${sentence(benefits[0])}`)
+      ? (en ? sentence(benefits[0]) : sentence(benefits[0]))
       : (en ? 'No benefit was calculated for this stage.' : 'Nenhum benefício foi calculado para esta etapa.');
     const attentionLine = attention.length
-      ? (en ? `Worth attention: ${sentence(attention[0])}` : `Merece atenção: ${sentence(attention[0])}`)
+      ? (en ? sentence(attention[0]) : sentence(attention[0]))
       : (en ? 'No attention point was calculated for this stage.' : 'Nenhum ponto de atenção foi calculado para esta etapa.');
     const missingLine = missing.length === 0
       ? (en ? 'No pending data is cataloged for this stage.' : 'Nenhum dado pendente está catalogado para esta etapa.')
       : missing.length === 1
         ? (en ? 'There is still 1 data point to confirm.' : 'Ainda falta 1 dado para confirmar.')
         : (en ? `There are still ${missing.length} data points to confirm.` : `Ainda faltam ${missing.length} dados para confirmar.`);
+    const cropsText = cycle.crops.map((crop) => crop.label).join(' + ');
+    const rows = [
+      { label: en ? 'Strength' : 'Ponto forte', text: benefitLine, Icon: Sprout, tone: 'bg-lime-300/20 text-lime-200' },
+      { label: en ? 'Watch out' : 'Fique de olho', text: attentionLine, Icon: TriangleAlert, tone: 'bg-amber-300/20 text-amber-200' },
+      { label: en ? 'Still to confirm' : 'Falta confirmar', text: missingLine, Icon: CircleHelp, tone: 'bg-sky-300/20 text-sky-200' }
+    ];
     return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-lime-300/30 bg-slate-950/60 p-4">
     <div className="flex items-start gap-3">
       <JoaoFigure className="h-[96px] w-[64px]" mood={mood} />
-      <div className="relative min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-lime-300/30 bg-slate-900 p-3.5 text-[0.9375rem] leading-6">
-        <span aria-hidden="true" className="absolute -left-1.5 top-5 h-3 w-3 rotate-45 border-b border-l border-lime-300/30 bg-slate-900" />
-        <p className="text-sm font-semibold text-lime-200">{en ? `João explains plan ${scenario.id}` : `João explica o plano ${scenario.id}`}</p>
-        <p className="mt-1 text-slate-100" data-testid="cycle-short-explanation">{benefitLine} {attentionLine} {missingLine}</p>
+      <div className="min-w-0 flex-1">
+        <div className="relative rounded-2xl rounded-tl-sm border border-lime-300/30 bg-slate-900 p-3.5" id="joao-cycle-speech">
+          <span aria-hidden="true" className="absolute -left-1.5 top-5 h-3 w-3 rotate-45 border-b border-l border-lime-300/30 bg-slate-900" />
+          <p className="text-sm font-semibold leading-6 text-lime-200" data-readable>{en ? `In this stage you plant ${cropsText}.` : `Nesta etapa você planta ${cropsText}.`}</p>
+          <div className="mt-3 space-y-3" data-testid="cycle-short-explanation">
+            {rows.map((row) => <div className="flex items-start gap-3" data-readable key={row.label}>
+              <span aria-hidden="true" className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${row.tone}`}><row.Icon size={18} /></span>
+              <p className="min-w-0 flex-1"><span className="block text-xs font-bold uppercase tracking-wide text-slate-300">{row.label}<span className="sr-only">:</span></span><span className="block text-sm leading-6 text-slate-100">{row.text}</span></p>
+            </div>)}
+          </div>
+        </div>
+        <JoaoReaderButton className="mt-2" key={`${scenario.id}-${cycle.id}`} targetId="joao-cycle-speech" />
       </div>
     </div>
     <h3 className="mt-4 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3><p className="mt-1 text-xs text-slate-400">{cycleName(cycle, en)}</p>

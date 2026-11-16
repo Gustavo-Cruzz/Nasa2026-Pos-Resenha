@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { TriangleAlert } from 'lucide-react';
 import { loadDraft, type Draft } from '@/lib/storage';
 import { analysisMatchesDraft, loadLastAnalysis, saveLastAnalysis } from '@/lib/analysis-cache';
 import type { AnalysisResult } from '@/lib/engine/types';
@@ -39,11 +38,10 @@ export function AnalysisResults({ demo = false }: { demo?: boolean }) {
   return <section className="mx-auto max-w-6xl pb-28 lg:pb-0" id="results-readable">
     <div className="mt-5" role="tablist" aria-label={en ? 'Comparison mode' : 'Modo de comparação'} onKeyDown={(event) => { if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight' && event.key !== 'Home' && event.key !== 'End') return; event.preventDefault(); const next = event.key === 'ArrowLeft' || event.key === 'Home' ? 'simple' : 'advanced'; setMode(next); window.setTimeout(() => document.getElementById(`${next}-comparison-tab`)?.focus()); }}><button aria-controls="results-mode-panel" aria-selected={mode === 'simple'} className={`min-h-11 rounded-l-lg border px-4 text-sm font-semibold ${mode === 'simple' ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 bg-slate-900 hover:border-lime-300'}`} id="simple-comparison-tab" role="tab" tabIndex={mode === 'simple' ? 0 : -1} type="button" onClick={() => setMode('simple')}>🌱 {en ? 'Simple comparison' : 'Comparação simples'}</button><button aria-controls="results-mode-panel" aria-selected={mode === 'advanced'} className={`-ml-px min-h-11 rounded-r-lg border px-4 text-sm font-semibold ${mode === 'advanced' ? 'border-lime-300 bg-lime-300 text-slate-950' : 'border-slate-600 bg-slate-900 hover:border-lime-300'}`} id="advanced-comparison-tab" role="tab" tabIndex={mode === 'advanced' ? 0 : -1} type="button" onClick={() => setMode('advanced')}>📊 {en ? 'Advanced comparison' : 'Comparação avançada'}</button></div>
     {demo ? <aside className="mt-5 rounded-xl border border-cyan-300/60 bg-cyan-500/10 p-4"><p className="font-bold text-cyan-100">{en ? 'Brazil demonstration' : 'Demonstração Brasil'}</p><p className="mt-1 text-sm text-slate-200">Rio Verde · NASA POWER + {en ? 'municipal ZARC context' : 'contexto ZARC municipal'}.</p></aside> : null}
-    {state.cachedAt ? <p className="mt-5 flex gap-2 rounded-xl border border-amber-300 bg-amber-950/40 p-4 text-sm" role="status"><TriangleAlert aria-hidden="true" className="mt-0.5 shrink-0" size={18} /><span><b>{en ? 'Saved analysis.' : 'Análise salva.'}</b> {en ? `Reusing the compatible analysis saved on this device (${new Date(state.cachedAt).toLocaleString('en-US')}).` : `Reutilizando a análise compatível salva neste dispositivo (${new Date(state.cachedAt).toLocaleString('pt-BR')}).`}</span></p> : null}
     <div aria-labelledby={mode === 'simple' ? 'simple-comparison-tab' : 'advanced-comparison-tab'} id="results-mode-panel" role="tabpanel">
     {mode === 'advanced' ? <RotationTimelineView data={ready} /> : <SimpleComparison croppingSystems={state.draft.data.croppingSystems} data={ready} plan={state.draft.labPlan} onAdvanced={() => setMode('advanced')} />}
     </div>
   </section>;
 }
 
-function Empty({ message }: { message: string }) { const { locale } = useLocale(); return <section className="mt-6 rounded-xl border border-slate-700 p-5"><p>{message}</p><Button asChild className="mt-5"><Link href="/explore">{locale === 'en' ? 'Start analysis' : 'Preencher análise'}</Link></Button></section>; }
+function Empty({ message }: { message: string }) { const { locale } = useLocale(); return <section className="mt-6 rounded-xl border border-slate-700 p-5"><p>{message}</p><Button asChild className="mt-5"><Link href="/farm">{locale === 'en' ? 'Start analysis' : 'Preencher análise'}</Link></Button></section>; }

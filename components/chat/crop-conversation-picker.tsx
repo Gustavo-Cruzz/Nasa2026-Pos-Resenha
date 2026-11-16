@@ -6,9 +6,9 @@ import { categoryById } from '@/lib/chat/crop-categories';
 import { cropById } from '@/lib/catalog';
 import { CropSprite } from '@/components/crops/crop-sprite';
 
-type Props = { picker: CropPicker; selected: string[]; locale: 'pt-BR' | 'en'; onToggle: (id: string) => void; onContinue: () => void; onChoose: (id: string) => void; disabled?: boolean };
+type Props = { picker: CropPicker; selected: string[]; locale: 'pt-BR' | 'en'; onToggle: (id: string) => void; onContinue: () => void; onChoose: (id: string) => void; onSkip?: () => void; disabled?: boolean };
 
-export function CropConversationPicker({ picker, selected, locale, onToggle, onContinue, onChoose, disabled }: Props) {
+export function CropConversationPicker({ picker, selected, locale, onToggle, onContinue, onChoose, onSkip, disabled }: Props) {
   const multi = picker.kind !== 'next';
   const label = locale === 'en' ? 'Multiple selection — choose as many as you want' : 'Seleção múltipla — escolha quantas opções quiser';
   const count = locale === 'en' ? `${selected.length} selected` : `${selected.length} ${selected.length === 1 ? 'selecionada' : 'selecionadas'}`;
@@ -28,6 +28,7 @@ export function CropConversationPicker({ picker, selected, locale, onToggle, onC
         </button>;
       })}
     </div>
+    {picker.skippable && onSkip ? <button className="mt-3 min-h-10 w-full rounded-lg border border-slate-600 px-3 text-sm font-semibold text-slate-100 hover:border-lime-300" disabled={disabled} type="button" onClick={onSkip}>{locale === 'en' ? 'Skip' : 'Pular'}</button> : null}
     {picker.kind === 'next' ? <button className="mt-3 min-h-10 w-full rounded-lg border border-slate-600 px-3 text-sm font-semibold text-slate-100 hover:border-lime-300" disabled={disabled} type="button" onClick={() => onChoose('__catalog__')}>{locale === 'en' ? 'Choose another crop' : 'Quero escolher outra cultura'}</button> : <button className="mt-3 min-h-11 w-full rounded-lg bg-lime-300 px-4 text-sm font-bold text-slate-950 hover:bg-lime-200 disabled:opacity-50" disabled={disabled || (picker.kind === 'categories' && !selected.length)} type="button" onClick={onContinue}>{locale === 'en' ? 'Continue with my choices' : 'Continuar com minhas escolhas'}</button>}
   </section>;
 }

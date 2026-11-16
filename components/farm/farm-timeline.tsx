@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useRef, useState, type ReactNode } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronDown, Plus, Trash2 } from 'lucide-react';
@@ -81,7 +80,7 @@ export function FarmTimeline() {
   const error = (key: string): ReactNode => errors[key] ? <p className="mt-1 text-sm font-medium text-amber-100" id={`${key}-error`} role="alert">{errors[key]}</p> : null;
 
   return <section className="mx-auto max-w-5xl">
-    <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-semibold text-lime-200">{en ? 'My farm' : 'Minha fazenda'}</p><h1 className="page-title font-bold">{en ? 'Farm timeline' : 'Linha do tempo da fazenda'}</h1></div><Link className="text-sm font-semibold underline" href="/explore">{en ? 'Change location in the atlas' : 'Trocar local no atlas'}</Link></div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-semibold text-lime-200">{en ? 'My farm' : 'Minha fazenda'}</p><h1 className="page-title font-bold">{en ? 'Farm timeline' : 'Linha do tempo da fazenda'}</h1></div></div>
     <p className="mt-3 max-w-3xl text-slate-200">{en ? 'Start with your crops and goals. Add location when you are ready to use climate context; no duration is inferred.' : 'Comece pelas suas culturas e objetivos. Informe o local quando quiser usar o contexto climático; nenhuma duração é inferida.'}</p>
     <FarmerCrops form={form} locale={locale} onChange={setForm} />
     <CroppingSystemsForm errors={errors} field={field} error={error} form={form} locale={locale} onChange={setForm} />

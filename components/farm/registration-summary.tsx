@@ -69,7 +69,7 @@ export function RegistrationSummary({ input, mode, name, placeLabel, username, c
     </dl>
 
     {gaps.length ? <p className="mt-4 rounded-lg border border-amber-300/40 bg-amber-950/20 p-3 text-sm text-amber-100">
-      <b>{en ? 'Still missing: ' : 'Ainda falta: '}</b>{gaps.map((gap) => GAP_LABEL[gap][locale]).join(', ')}. <Link className="underline underline-offset-4" href={gaps.includes('area') && gaps.length === 1 ? '/explore' : '/farm'}>{gaps.includes('area') && gaps.length === 1 ? (en ? 'Adjust it on the map' : 'Ajustar no mapa') : en ? 'Complete it in the chat' : 'Completar na conversa'}</Link>
+      <b>{en ? 'Still missing: ' : 'Ainda falta: '}</b>{gaps.map((gap) => GAP_LABEL[gap][locale]).join(', ')}. <Link className="underline underline-offset-4" href={'/farm'}>{gaps.includes('area') && gaps.length === 1 ? (en ? 'Adjust it on the map' : 'Ajustar no mapa') : en ? 'Complete it in the chat' : 'Completar na conversa'}</Link>
     </p> : null}
   </article>;
 }

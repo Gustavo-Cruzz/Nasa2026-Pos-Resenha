@@ -330,7 +330,7 @@ describe('chat closing: decision summary', () => {
     const prompted = prompt('confirm', soilDraft(), 'pt-BR')[0];
     expect(prompted.text).toContain('Para proteger o solo sem perder a safrinha, compare B com A na análise.');
     expect(prompted.text.indexOf('compare B')).toBeLessThan(prompted.text.indexOf('Tudo certo?'));
-    expect(prompted.text).toContain('Tudo certo? Toque em “Ver minha análise” para seguir');
+    expect(prompted.text).toContain('Tudo certo? Veja a fazenda no mapa');
     expect(prompted.chips).toContain('Ver minha análise');
     expect(prompt('confirm', soilDraft(), 'en')[0].text).toContain('compare B with A in the analysis.');
   });

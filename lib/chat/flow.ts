@@ -12,9 +12,9 @@ export type Step = 'location' | 'categories' | 'categoryCrops' | 'nextPlanting' 
 export type ChatDraft = { location?: PlaceResult; categoryIds?: string[]; workedCropIds?: string[]; categoryIndex?: number; nextPlanting?: string; current?: string; previous?: string | null; soil?: SoilObservation | null; soilDone?: boolean };
 export type ChatState = { step: Step; draft: ChatDraft };
 /** `multi`: the chips can be ticked several at a time; `finishLabel` is the button shown while none is ticked (with some ticked it confirms them). */
-export type CropPicker = { kind: 'categories' | 'crops' | 'next'; ids: string[]; categoryId?: string };
+export type CropPicker = { kind: 'categories' | 'crops' | 'next'; ids: string[]; categoryId?: string; skippable?: boolean };
 export type Reply = { text: string; chips?: string[]; multi?: { finishLabel: string }; picker?: CropPicker };
-export type Effect = { type: 'lookup'; query: string } | { type: 'go' } | { type: 'restart' };
+export type Effect = { type: 'lookup'; query: string } | { type: 'go'; to?: 'farm' } | { type: 'restart' };
 export type Turn = { state: ChatState; replies: Reply[]; effects: Effect[] };
 export const TOTAL_STEPS = 6;
 
@@ -70,6 +70,9 @@ export function startWithLocation(place: PlaceResult, locale: Locale): Turn {
   return { state: { step: nextStep(draft), draft }, replies: [greeting(locale)[0], reply(pick(locale, `Anotado: ${where}.`, `Noted: ${where}.`)), ...prompt(nextStep(draft), draft, locale)], effects: [] };
 }
 
+/** Crops shown as icons for the current/previous steps: the ones the farmer already named, else the common list. */
+function pickerCropIds(draft: ChatDraft): string[] { return draft.workedCropIds?.length ? draft.workedCropIds : [...CHIP_ORDER]; }
+
 export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
   switch (step) {
     case 'location': return [reply(pick(locale, 'Em que cidade fica a sua fazenda?\nComece a digitar e escolha na lista. Fora do Brasil, envie latitude e longitude.', 'Which city is your farm in?\nStart typing and pick from the list. Outside Brazil, send latitude and longitude.'))];
@@ -80,15 +83,15 @@ export function prompt(step: Step, draft: ChatDraft, locale: Locale): Reply[] {
       return [{ text: pick(locale, `Você selecionou ${category.name['pt-BR']}! ${category.icon} Quais dessas culturas você planta ou já trabalha?\nSeleção múltipla — marque todas as culturas com que você trabalha.`, `You selected ${category.name.en}! ${category.icon} Which of these crops do you grow or work with?\nMultiple selection — select all that apply.`), picker: { kind: 'crops', ids: category.cropIds, categoryId: category.id } }];
     }
     case 'nextPlanting': return [{ text: pick(locale, 'Perfeito! Já conheço melhor as culturas com que você trabalha. Agora vamos planejar seu próximo plantio.\n\nQual cultura você pretende plantar a seguir?', 'Great! I know more about the crops you work with. Now let us plan your next planting.\n\nWhich crop do you plan to plant next?'), picker: { kind: 'next', ids: draft.workedCropIds ?? [] } }];
-    case 'current': return [reply(pick(locale, 'O que você está plantando agora?', 'What are you growing now?'), cropChips(locale))];
-    case 'previous': return [reply(pick(locale, 'E o que você plantou antes?\nSe não lembra, toque em "pular".', 'And what did you grow before?\nIf you do not remember, tap "skip".'), [...cropChips(locale), pick(locale, 'pular', 'skip')])];
+    case 'current': return [{ ...reply(pick(locale, 'O que você está plantando agora?', 'What are you growing now?'), cropChips(locale)), picker: { kind: 'next', ids: pickerCropIds(draft) } }];
+    case 'previous': return [{ ...reply(pick(locale, 'E o que você plantou antes?\nSe não lembra, toque em "pular".', 'And what did you grow before?\nIf you do not remember, tap "skip".'), [...cropChips(locale), pick(locale, 'pular', 'skip')]), picker: { kind: 'next', ids: pickerCropIds(draft), skippable: true } }];
     case 'soil': {
       const { chips, multi } = soilChips(locale, draft.soil);
       return draft.soil
         ? [reply(pick(locale, `Anotei: ${soilList(draft.soil, locale)}.\nMais alguma coisa no solo?`, `Noted: ${soilList(draft.soil, locale)}.\nAnything else in the soil?`), chips, multi)]
         : [reply(pick(locale, 'Você notou alguma coisa estranha no solo?\nMarque o que valer, ou escreva do seu jeito.', 'Have you noticed anything unusual in the soil?\nTick what applies, or write it your way.'), chips, multi)];
     }
-    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${decisionSummary(draft, locale)}\n\n${pick(locale, 'Tudo certo? Toque em “Ver minha análise” para seguir, ou mude uma resposta.', 'All good? Tap “See my analysis” to continue, or change an answer.')}`,[pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')])];
+    case 'confirm': return [reply(`${summarize(draft, locale)}\n\n${decisionSummary(draft, locale)}\n\n${pick(locale, 'Tudo certo? Veja a fazenda no mapa, abra a análise, ou mude uma resposta.', 'All good? See the farm on the map, open the analysis, or change an answer.')}`,[pick(locale, 'Ver minha fazenda no mapa', 'See my farm on the map'), pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')])];
   }
 }
 
@@ -169,6 +172,13 @@ export function chooseNextPlanting(state: ChatState, cropId: string, locale: Loc
   return goTo({ ...state.draft, workedCropIds, nextPlanting: cropId }, locale, reply(pick(locale, `Próximo plantio anotado: ${crop(cropId, locale)}.`, `Next planting noted: ${crop(cropId, locale)}.`)));
 }
 
+/** Icon-picker answer for the 'current' and 'previous' steps (`null` = skip the previous crop). */
+export function chooseCropForStep(state: ChatState, cropId: string | null, locale: Locale): Turn {
+  if (state.step === 'previous' && cropId === null) return goTo({ ...state.draft, previous: null }, locale, reply(pick(locale, 'Tudo bem, sigo sem essa.', 'Fine, I will go without it.')));
+  if ((state.step !== 'current' && state.step !== 'previous') || !cropId || !cropById.has(cropId)) return { state, replies: [reply(pick(locale, 'Escolha uma cultura válida do catálogo.', 'Choose a valid catalog crop.'))], effects: [] };
+  return goTo({ ...state.draft, [state.step]: cropId }, locale, reply(pick(locale, `Anotado: ${crop(cropId, locale)}.`, `Noted: ${crop(cropId, locale)}.`)));
+}
+
 export function helpText(locale: Locale): string {
   return pick(locale, 'Eu pergunto sobre cidade, o que você planta, o que plantou antes e o solo. Depois, comparo três caminhos possíveis.\nDiga "recomeçar" para começar de novo ou "mudar a cidade" para corrigir uma resposta.', 'I ask about your location, crops, previous crop, and soil. Then I compare three possible paths.\nSay "restart" to start over, or "change the city" to fix an answer.');
 }
@@ -195,11 +205,12 @@ export function advance(state: ChatState, rawText: string, locale: Locale): Turn
   if (command === 'help') return keep([reply(helpText(locale))]);
 
   if (state.step === 'confirm') {
+    if (/\b(mapa|map)\b/.test(normalize(text))) return { state, replies: [reply(pick(locale, 'Pronto! Abrindo a sua fazenda no mapa…', 'Done! Opening your farm on the map…'))], effects: [{ type: 'go', to: 'farm' }] };
     const target = changeTarget(text);
     if (target) { const draft = target === 'soil' ? { ...state.draft, soil: undefined, soilDone: false } : state.draft; return { state: { step: target, draft }, replies: prompt(target, draft, locale), effects: [] }; }
     if (parseYesNo(text) === 'yes') return { state, replies: [reply(pick(locale, 'Pronto! Abrindo a sua análise…', 'Done! Opening your analysis…'))], effects: [{ type: 'go' }] };
     if (/\b(mudar|change|algo|something|nao|no)\b/.test(normalize(text))) return keep([reply(pick(locale, 'O que você quer mudar?', 'What do you want to change?'), [pick(locale, 'Mudar a cidade', 'Change the city'), pick(locale, 'Mudar a cultura atual', 'Change the current crop'), pick(locale, 'Mudar a cultura anterior', 'Change the previous crop'), pick(locale, 'Mudar o solo', 'Change the soil')])]);
-    const ok = [pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')];
+    const ok = [pick(locale, 'Ver minha fazenda no mapa', 'See my farm on the map'), pick(locale, 'Ver minha análise', 'See my analysis'), pick(locale, 'Mudar algo', 'Change something')];
     if (/\b(plantar|adicionar|incluir|quero|want|plant|add)\b/.test(normalize(text))) return keep([reply(pick(locale, 'Por enquanto eu uso o que você já plantou como ponto de partida.\nNa análise você compara os caminhos possíveis.', 'For now I use what you have already grown as the starting point.\nIn the analysis you compare the possible paths.'), ok)]);
     return keep([reply(pick(locale, 'Não entendi.\nToque em "Ver minha análise" ou diga o que mudar.', 'I did not understand.\nTap "See my analysis" or tell me what to change.'), ok)]);
   }

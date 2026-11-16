@@ -26,14 +26,15 @@ describe('rotation read', () => {
 describe('chat: finish analysis setup', () => {
   const confirm: ChatState = { step: 'confirm', draft: { location: { latitude: -17.798, longitude: -50.919, label: 'Rio Verde (GO)' }, current: 'soybean', previous: 'maize', soil: null, soilDone: true } };
 
-  it('offers only analysis or answer editing at the confirm step', () => {
+  it('offers map, analysis or answer editing at the confirm step', () => {
     const chips = prompt('confirm', confirm.draft, 'pt-BR').at(-1)?.chips ?? [];
-    expect(chips).toEqual(['Ver minha análise', 'Mudar algo']);
-    expect(prompt('confirm', confirm.draft, 'en').at(-1)?.chips).toEqual(['See my analysis', 'Change something']);
+    expect(chips).toEqual(['Ver minha fazenda no mapa', 'Ver minha análise', 'Mudar algo']);
+    expect(prompt('confirm', confirm.draft, 'en').at(-1)?.chips).toEqual(['See my farm on the map', 'See my analysis', 'Change something']);
     expect(prompt('confirm', confirm.draft, 'pt-BR').at(-1)?.text).toContain('Na próxima tela, eu vou comparar três caminhos de rotação');
   });
   it('opens the analysis directly after confirmation', () => {
     expect(advance(confirm, 'Ver minha análise', 'pt-BR').effects).toEqual([{ type: 'go' }]);
+    expect(advance(confirm, 'Ver minha fazenda no mapa', 'pt-BR').effects).toEqual([{ type: 'go', to: 'farm' }]);
   });
   it('keeps a valid analysis input', () => {
     expect(buildAnalysisInput(confirm.draft)).toMatchObject({ location: { latitude: -17.798 }, irrigation: expect.any(String) });

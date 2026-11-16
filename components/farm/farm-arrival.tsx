@@ -9,7 +9,17 @@ import { useLocale } from '@/components/locale-provider';
  * four are the loop's fade-out) are packed in one sprite sheet, 10 columns of 128×128, played once at 80 ms per frame.
  * Then the view zooms into the house and the farm opens.
  */
-const SHEET_SRC = '/assets/arrival/globo-boneco-sheet.png';
+const SHEET_NIGHT = '/assets/arrival/globo-boneco-sheet.png';
+const SHEET_DAY = '/assets/arrival/globo-boneco-sheet-dia.png';
+
+/** Day (06:00–17:59 local) plays the daytime sheet; `?ceu=dia|noite` overrides it for demos. */
+function isDaytime() {
+  const forced = new URLSearchParams(window.location.search).get('ceu');
+  if (forced === 'dia') return true;
+  if (forced === 'noite') return false;
+  const hour = new Date().getHours();
+  return hour >= 6 && hour < 18;
+}
 const FRAME = 128;
 const COLUMNS = 10;
 const FRAMES = 86;
@@ -32,6 +42,7 @@ export function FarmArrival({ placeLabel, onDone }: { placeLabel: string; latitu
   useEffect(() => { onDoneRef.current = onDone; }, [onDone]);
   const [arrived, setArrived] = useState(false);
   const [entering, setEntering] = useState(false);
+  const [day, setDay] = useState(false);
 
   const finish = () => {
     if (doneRef.current) return;
@@ -44,6 +55,8 @@ export function FarmArrival({ placeLabel, onDone }: { placeLabel: string; latitu
     const context = canvas?.getContext('2d');
     if (!canvas || !context) { const timer = window.setTimeout(finish, 0); return () => window.clearTimeout(timer); }
     context.imageSmoothingEnabled = false;
+    const daytime = isDaytime();
+    setDay(daytime);
     const timers: number[] = [];
     let interval: number | undefined;
     const draw = (sheet: HTMLImageElement, index: number) => {
@@ -73,7 +86,7 @@ export function FarmArrival({ placeLabel, onDone }: { placeLabel: string; latitu
     };
     // Without the artwork the farm simply opens.
     sheet.onerror = () => { timers.push(window.setTimeout(finish, 600)); };
-    sheet.src = SHEET_SRC;
+    sheet.src = daytime ? SHEET_DAY : SHEET_NIGHT;
     return () => {
       sheet.onload = null;
       sheet.onerror = null;
@@ -87,8 +100,8 @@ export function FarmArrival({ placeLabel, onDone }: { placeLabel: string; latitu
     ? en ? "We're here! Entering your farm…" : 'Chegamos! Entrando na sua fazenda…'
     : en ? `Heading to ${place}…` : `Indo até ${place}…`;
 
-  return <div aria-label={en ? 'Arriving at your farm' : 'Chegando na sua fazenda'} aria-modal="true" className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 overflow-hidden bg-[#0b1030] p-4" role="dialog">
-    <button className="absolute right-4 top-4 min-h-11 rounded-lg border border-slate-500 bg-slate-900/80 px-4 text-sm font-semibold text-slate-100 hover:border-lime-300" onClick={finish} type="button">{en ? 'Skip' : 'Pular'}</button>
+  return <div aria-label={en ? 'Arriving at your farm' : 'Chegando na sua fazenda'} aria-modal="true" className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 overflow-hidden p-4 ${day ? 'bg-[#87cefa]' : 'bg-[#0b1030]'}`} role="dialog">
+    <button className={`absolute right-4 top-4 min-h-11 rounded-lg border px-4 text-sm font-semibold ${day ? 'border-sky-700 bg-white/80 text-slate-900 hover:border-green-700' : 'border-slate-500 bg-slate-900/80 text-slate-100 hover:border-lime-300'}`} onClick={finish} type="button">{en ? 'Skip' : 'Pular'}</button>
     <canvas
       aria-hidden="true"
       className="aspect-square h-auto w-[min(80vmin,640px)]"
@@ -104,6 +117,6 @@ export function FarmArrival({ placeLabel, onDone }: { placeLabel: string; latitu
       }}
       width={FRAME}
     />
-    <p aria-live="polite" className="max-w-md text-center font-mono text-base font-bold text-lime-200 sm:text-lg" role="status">{caption}</p>
+    <p aria-live="polite" className={`max-w-md text-center font-mono text-base font-bold sm:text-lg ${day ? 'text-green-900' : 'text-lime-200'}`} role="status">{caption}</p>
   </div>;
 }

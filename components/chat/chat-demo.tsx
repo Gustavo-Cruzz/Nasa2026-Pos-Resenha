@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, MapPin, MessageCircle, Mic, RotateCcw, SendHorizontal } from 'lucide-react';
-import { acceptMapPlace, advance, buildAnalysisInput, mapChoices, suggestMapChange, suggestMapPlace, type MapPlace, chooseSoil, chooseCategories, chooseCategoryCrops, chooseNextPlanting, geoChoices, geoFallback, geoFound, geoGreeting, greeting, initialState, startWithLocation, lookupFailed, provideLocation, prompt, stepNumber, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
+import { acceptMapPlace, advance, buildAnalysisInput, mapChoices, suggestMapChange, suggestMapPlace, type MapPlace, chooseSoil, chooseCategories, chooseCategoryCrops, chooseNextPlanting, chooseCropForStep, geoChoices, geoFallback, geoFound, geoGreeting, greeting, initialState, startWithLocation, lookupFailed, provideLocation, prompt, stepNumber, type ChatState, type Effect, type Reply, type Turn } from '@/lib/chat/flow';
 import type { PlaceMatch } from '@/lib/brazil/places';
 import { saveDraft } from '@/lib/storage';
+import { saveLocalFarm } from '@/lib/farm/local-farm';
+import type { FarmRecord } from '@/lib/db/farms';
 import type { AtlasPolygon } from '@/lib/atlas';
 import { useLocale } from '@/components/locale-provider';
 import { ASSISTANT_NAME, ChatAvatar } from '@/components/chat/chat-avatar';
@@ -152,10 +154,31 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
       if (!input) { addBot([{ text: en ? 'Something is missing in my notes. Say "restart" to begin again.' : 'Faltou algo nas minhas anotações. Diga "recomeçar" para começar de novo.' }]); setBusy(false); return; }
       saveDraft(input);
       persistAtlas(turn.state.draft.location, mapPolygonRef.current);
-      router.push('/results');
+      if (effect.to !== 'farm') { router.push('/results'); return; }
+      void registerFarm(input, turn.state.draft.location);
       return;
     }
     void lookup(effect.query, turn.state);
+  };
+
+  /** Saves the farm straight from the chat answers (the server opens a guest session) and opens the arrival animation. */
+  const registerFarm = async (input: NonNullable<ReturnType<typeof buildAnalysisInput>>, location: MapPlace | undefined) => {
+    const polygon = mapPolygonRef.current;
+    const drawn = polygon && polygon.length >= 3;
+    const boundary = drawn ? polygon : input.fieldBoundary ?? suggestedBoundary(location ?? input.location);
+    const placeLabel = location?.label;
+    const name = placeLabel ? `${en ? 'Farm in' : 'Fazenda em'} ${placeLabel.replace(/\s*\(.*\)$/, '')}` : en ? 'My farm' : 'Minha fazenda';
+    try {
+      const response = await fetch('/api/farm', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, ...(placeLabel ? { placeLabel } : {}), input: { ...input, fieldBoundary: boundary, fieldBoundaryOrigin: drawn || input.fieldBoundary ? 'drawn' : 'suggested' } }) });
+      const body = await response.json() as { farm?: FarmRecord; message?: string };
+      if (!response.ok || !body.farm) throw new Error(body.message);
+      saveLocalFarm(body.farm);
+      router.push('/farm?chegada=1');
+      router.refresh();
+    } catch {
+      addBot([{ text: en ? 'I could not save your farm. Try the last step again.' : 'Não consegui salvar a sua fazenda. Tente o último passo de novo.' }]);
+      setBusy(false);
+    }
   };
 
   const respond = (turn: Turn) => {
@@ -240,8 +263,9 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
     if (!crop) return;
     setMessages((current) => [...current, { id: nextId(), role: 'user', text: crop.commonNames[locale] }]);
     setCatalogOpen(false);
-    respond(chooseNextPlanting(state, id, locale));
+    respond(state.step === 'nextPlanting' ? chooseNextPlanting(state, id, locale) : chooseCropForStep(state, id, locale));
   };
+  const skipPicker = () => { setMessages((current) => [...current, { id: nextId(), role: 'user', text: en ? 'skip' : 'pular' }]); setCatalogOpen(false); respond(chooseCropForStep(state, null, locale)); };
 
   const choosePlace = (place: PlaceMatch) => {
     if (busy) return;
@@ -276,7 +300,7 @@ export function ChatDemo({ mapPoint = null, mapPolygon }: { mapPoint?: MapPlace 
       </div>)}
       {busy ? <div className="flex items-end gap-2" role="status"><span aria-hidden="true" className="shrink-0"><ChatAvatar size={32} /></span><span className="chat-typing rounded-2xl rounded-bl-sm border border-slate-700 bg-slate-800 px-4 py-3"><span className="sr-only">{en ? 'Typing…' : 'Digitando…'}</span><i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" /></span></div> : null}
     </div>
-    {picker && !busy ? <CropConversationPicker locale={locale} picker={picker} selected={picked} disabled={busy} onChoose={selectNext} onContinue={finishPicker} onToggle={togglePicker} /> : suggestions.length ? <ul aria-label={en ? 'City suggestions' : 'Sugestões de cidades'} className="max-h-56 overflow-y-auto border-t border-slate-700 bg-slate-900 py-1" id="place-suggestions" role="listbox">
+    {picker && !busy ? <CropConversationPicker locale={locale} picker={picker} selected={picked} disabled={busy} onChoose={selectNext} onSkip={skipPicker} onContinue={finishPicker} onToggle={togglePicker} /> : suggestions.length ? <ul aria-label={en ? 'City suggestions' : 'Sugestões de cidades'} className="max-h-56 overflow-y-auto border-t border-slate-700 bg-slate-900 py-1" id="place-suggestions" role="listbox">
       {suggestions.map((place, index) => <li aria-selected={index === activeIndex} id={`place-${place.code}`} key={place.code} role="option">
         <button className={`flex min-h-11 w-full items-center gap-3 px-4 text-left text-sm ${index === activeIndex ? 'bg-lime-300/15' : 'hover:bg-slate-800'}`} tabIndex={-1} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => choosePlace(place)}><MapPin aria-hidden="true" className="shrink-0 text-lime-300" size={16} /><span className="font-semibold">{place.name}</span><span className="text-slate-400">· {place.uf}</span></button>
       </li>)}
