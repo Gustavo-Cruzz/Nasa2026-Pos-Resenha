@@ -33,7 +33,7 @@ export function placeLabel(data: AnalysisResult): string {
 export function buildStatusLine(data: AnalysisResult, model: TimelineModel, whatIf: WhatIf, locale: Locale): string {
   const en = locale === 'en';
   const place = placeLabel(data);
-  const hypo = isHypothetical(whatIf) ? (en ? ' (with the hypothetical what-if applied)' : ' (com o “E se?” hipotético aplicado)') : '';
+  const hypo = isHypothetical(whatIf) ? (en ? ' (with the hypothetical simulator applied)' : ' (com o simulador hipotético aplicado)') : '';
   if (data.climate.status !== 'available' || !model.series.has.balance) return en ? `${place}: ${model.lanes.length} scenarios over 24 months. Historical P−ET₀ is N/D for this location, so the water bands stay empty; crop windows and bare soil are still shown.` : `${place}: ${model.lanes.length} cenários em 24 meses. O P−ET₀ histórico está N/D neste local, então as faixas de água ficam vazias; janelas de cultura e solo descoberto continuam visíveis.`;
   const sums = model.lanes.map((lane) => { const segment = secondCropSegment(lane, 1); const sum = segment ? windowBalanceSum(model.series, segment.months, whatIf).sumMm : null; return `${lane.id} ${sum === null ? 'N/D' : `${formatNumber(sum, 0, locale)} mm`}`; });
   const bare = model.lanes.map((lane) => { const count = bareMonthCount(lane); return `${lane.id} ${count === null ? 'N/D' : count}`; });

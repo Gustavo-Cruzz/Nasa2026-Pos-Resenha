@@ -49,7 +49,8 @@ function Thermometer({ tempC }: { tempC: number | null }) {
 
 const fmt = (v: number | null, digits: number, en: boolean) => v === null ? 'N/D' : en ? v.toFixed(digits) : v.toFixed(digits).replace('.', ',');
 
-export function PixelClimateHud({ state, en, onRetry }: { state: HudClimateState; en: boolean; onRetry: () => void }) {
+type HudData = { points: Month[]; period: string; currentMonth: number; names: readonly string[] };
+function useHudData(state: HudClimateState, en: boolean): HudData {
   const names = NAMES[en ? 'en' : 'pt-BR'];
   const currentMonth = new Date().getMonth() + 1;
   let points: Month[] = [];
@@ -60,21 +61,70 @@ export function PixelClimateHud({ state, en, onRetry }: { state: HudClimateState
     points = Array.from({ length: 12 }, (_, i) => ({ month: i + 1, rainMm: rain.get(i + 1) ?? null, tempC: data.climateSummary.monthly.find((m) => m.month === i + 1)?.tmeanMedianC ?? null }));
     period = `${data.provenance.period.start.slice(0, 4)}–${data.provenance.period.end.slice(0, 4)}`;
   }
-  const now = points[currentMonth - 1];
+  return { points, period, currentMonth, names };
+}
+
+function LoadingCard({ en, className }: { en: boolean; className: string }) {
+  return <div className={`hud-card pointer-events-auto flex items-center gap-3 px-3 py-2 text-xs text-lime-200 ${className}`} role="status">
+    <span aria-hidden="true" className="hud-spinner" /><span className="hud-blink">{en ? 'Loading NASA data…' : 'Carregando dados da NASA…'}</span>
+  </div>;
+}
+function ErrorCard({ en, message, onRetry, className }: { en: boolean; message: string; onRetry: () => void; className: string }) {
+  return <div className={`hud-card hud-card-err pointer-events-auto flex flex-wrap items-center gap-3 px-3 py-2 text-xs text-amber-100 ${className}`} role="alert">
+    <AlertCircle aria-hidden="true" className="shrink-0" size={16} /><span className="min-w-0 flex-1">{message}</span>
+    <button className="hud-btn inline-flex items-center gap-1.5 px-2 py-1 font-bold" onClick={onRetry} type="button"><RefreshCw aria-hidden="true" size={12} />{en ? 'Retry' : 'Tentar novamente'}</button>
+  </div>;
+}
+
+function MonthChart({ data, en }: { data: HudData; en: boolean }) {
+  const { points, period, currentMonth, names } = data;
   const maxRain = Math.max(1, ...points.map((p) => p.rainMm ?? 0));
   const temps = points.map((p) => p.tempC).filter((t): t is number => t !== null);
   const minT = Math.min(...temps); const maxT = Math.max(...temps);
   const SQUARES = 8;
+  return <div className="hud-card px-2 pb-1.5 pt-2 sm:px-3">
+    <div className="flex items-end justify-between gap-[2px] sm:gap-1.5" role="list" aria-label={en ? 'Typical rain and temperature by month' : 'Chuva e temperatura típicas por mês'}>
+      {points.map((p, i) => {
+        const filled = p.rainMm === null ? 0 : p.rainMm <= 0 ? 0 : Math.max(1, Math.round((p.rainMm / maxRain) * SQUARES));
+        const tFrac = p.tempC === null || maxT === minT ? 0.5 : (p.tempC - minT) / (maxT - minT);
+        const label = `${names[i]}: ${p.rainMm === null ? 'N/D' : `${Math.round(p.rainMm)} mm`}, ${p.tempC === null ? 'N/D' : `${p.tempC.toFixed(1)} °C`}`;
+        const current = p.month === currentMonth;
+        return <div aria-label={label} className={`flex flex-1 flex-col items-center ${current ? 'hud-current' : ''}`} key={p.month} role="listitem" title={label}>
+          <div className="hud-col relative flex w-full flex-col-reverse items-center gap-[1px]">
+            {Array.from({ length: SQUARES }, (_, s) => <span className={`hud-sq ${s < filled ? (current ? 'hud-sq-on-cur' : 'hud-sq-on') : 'hud-sq-off'}`} key={s} />)}
+            {p.tempC !== null ? <span aria-hidden="true" className="hud-dot" style={{ bottom: `calc(${(tFrac * 100).toFixed(1)}% - 2px)` }} /> : null}
+          </div>
+          <span className={`mt-1 text-[10px] font-bold leading-none ${current ? 'text-lime-300' : 'text-slate-400'}`}>{INITIALS[en ? 'en' : 'pt-BR'][i]}</span>
+        </div>;
+      })}
+    </div>
+    <p className="mt-1 flex flex-wrap items-center justify-between gap-x-3 text-[9px] leading-tight text-slate-400">
+      <span><i aria-hidden="true" className="hud-key bg-cyan-300" /> {en ? 'rain' : 'chuva'} <i aria-hidden="true" className="hud-key ml-1.5 bg-amber-300" /> {en ? 'temp.' : 'temp.'}</span>
+      <span>NASA POWER · {period} · {en ? 'median' : 'mediana'}</span>
+    </p>
+  </div>;
+}
+
+/** 12-month chart as a full-width strip outside the map (farm page); also shows the loading / error state. */
+export function PixelClimateStrip({ state, en, onRetry }: { state: HudClimateState; en: boolean; onRetry: () => void }) {
+  const data = useHudData(state, en);
+  return <div className="hud-root border-t border-slate-700 bg-slate-950 p-3 font-mono">
+    {state.kind === 'loading' || state.kind === 'idle' ? <LoadingCard className="" en={en} /> : null}
+    {state.kind === 'error' ? <ErrorCard className="" en={en} message={state.message} onRetry={onRetry} /> : null}
+    {state.kind === 'ready' ? <MonthChart data={data} en={en} /> : null}
+  </div>;
+}
+
+/** `layout="split"`: only the month card stays on the map; render <PixelClimateStrip> elsewhere for the chart and loading/error states. */
+export function PixelClimateHud({ state, en, onRetry, layout = 'overlay' }: { state: HudClimateState; en: boolean; onRetry: () => void; layout?: 'overlay' | 'split' }) {
+  const data = useHudData(state, en);
+  const { points, currentMonth, names } = data;
+  const now = points[currentMonth - 1];
+  const split = layout === 'split';
 
   return <div className="hud-root pointer-events-none absolute inset-0 z-[11] font-mono">
-    {state.kind === 'loading' || state.kind === 'idle' ? <div className="hud-card pointer-events-auto absolute bottom-6 left-3 right-3 flex items-center gap-3 px-3 py-2 text-xs text-lime-200 sm:right-auto" role="status">
-      <span aria-hidden="true" className="hud-spinner" /><span className="hud-blink">{en ? 'Loading NASA data…' : 'Carregando dados da NASA…'}</span>
-    </div> : null}
-    {state.kind === 'error' ? <div className="hud-card hud-card-err pointer-events-auto absolute bottom-6 left-3 right-3 flex flex-wrap items-center gap-3 px-3 py-2 text-xs text-amber-100 sm:right-auto" role="alert">
-      <AlertCircle aria-hidden="true" className="shrink-0" size={16} /><span className="min-w-0 flex-1">{state.message}</span>
-      <button className="hud-btn inline-flex items-center gap-1.5 px-2 py-1 font-bold" onClick={onRetry} type="button"><RefreshCw aria-hidden="true" size={12} />{en ? 'Retry' : 'Tentar novamente'}</button>
-    </div> : null}
-
+    {!split && (state.kind === 'loading' || state.kind === 'idle') ? <LoadingCard className="absolute bottom-6 left-3 right-3 sm:right-auto" en={en} /> : null}
+    {!split && state.kind === 'error' ? <ErrorCard className="absolute bottom-6 left-3 right-3 sm:right-auto" en={en} message={state.message} onRetry={onRetry} /> : null}
     <div className="absolute right-3 top-3 flex flex-col items-end gap-2">
       {now ? <div className="hud-card hud-month flex items-center gap-2 px-2.5 py-2" role="group" aria-label={en ? `Typical ${names[currentMonth - 1]}` : `Típico em ${names[currentMonth - 1]}`}>
         {now.rainMm !== null && now.rainMm >= WET_MM ? <RainScene /> : now.rainMm !== null ? <SunScene /> : <span aria-hidden="true" className="h-14 w-14" />}
@@ -88,28 +138,6 @@ export function PixelClimateHud({ state, en, onRetry }: { state: HudClimateState
       </div> : null}
     </div>
 
-    {now ? <div className="absolute inset-x-3 bottom-6 sm:right-16">
-      <div className="hud-card px-2 pb-1.5 pt-2 sm:px-3">
-        <div className="flex items-end justify-between gap-[2px] sm:gap-1.5" role="list" aria-label={en ? 'Typical rain and temperature by month' : 'Chuva e temperatura típicas por mês'}>
-          {points.map((p, i) => {
-            const filled = p.rainMm === null ? 0 : p.rainMm <= 0 ? 0 : Math.max(1, Math.round((p.rainMm / maxRain) * SQUARES));
-            const tFrac = p.tempC === null || maxT === minT ? 0.5 : (p.tempC - minT) / (maxT - minT);
-            const label = `${names[i]}: ${p.rainMm === null ? 'N/D' : `${Math.round(p.rainMm)} mm`}, ${p.tempC === null ? 'N/D' : `${p.tempC.toFixed(1)} °C`}`;
-            const current = p.month === currentMonth;
-            return <div aria-label={label} className={`flex flex-1 flex-col items-center ${current ? 'hud-current' : ''}`} key={p.month} role="listitem" title={label}>
-              <div className="hud-col relative flex w-full flex-col-reverse items-center gap-[1px]">
-                {Array.from({ length: SQUARES }, (_, s) => <span className={`hud-sq ${s < filled ? (current ? 'hud-sq-on-cur' : 'hud-sq-on') : 'hud-sq-off'}`} key={s} />)}
-                {p.tempC !== null ? <span aria-hidden="true" className="hud-dot" style={{ bottom: `calc(${(tFrac * 100).toFixed(1)}% - 2px)` }} /> : null}
-              </div>
-              <span className={`mt-1 text-[10px] font-bold leading-none ${current ? 'text-lime-300' : 'text-slate-400'}`}>{INITIALS[en ? 'en' : 'pt-BR'][i]}</span>
-            </div>;
-          })}
-        </div>
-        <p className="mt-1 flex flex-wrap items-center justify-between gap-x-3 text-[9px] leading-tight text-slate-400">
-          <span><i aria-hidden="true" className="hud-key bg-cyan-300" /> {en ? 'rain' : 'chuva'} <i aria-hidden="true" className="hud-key ml-1.5 bg-amber-300" /> {en ? 'temp.' : 'temp.'}</span>
-          <span>NASA POWER · {period} · {en ? 'median' : 'mediana'}</span>
-        </p>
-      </div>
-    </div> : null}
+    {!split && now ? <div className="absolute inset-x-3 bottom-6 sm:right-16"><MonthChart data={data} en={en} /></div> : null}
   </div>;
 }

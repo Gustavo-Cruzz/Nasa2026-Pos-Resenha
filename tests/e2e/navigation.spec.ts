@@ -150,11 +150,11 @@ test('renders the rotation timeline with evidence bands, month cursor, glossary 
   await page.keyboard.press('Escape');
   await expect(page.getByRole('tooltip')).toHaveCount(0);
   // Hypothetical what-if is labelled and resettable.
-  await page.getByLabel(/E se\? Chuva/).focus();
+  await page.getByLabel(/Simulador: Chuva/).focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByText('hipotético: não é previsão; ET₀ não é recalculada')).toBeVisible();
-  await page.getByRole('button', { name: 'Zerar E se?' }).click();
-  await expect(page.getByRole('button', { name: 'Zerar E se?' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Zerar simulador' }).click();
+  await expect(page.getByRole('button', { name: 'Zerar simulador' })).toBeDisabled();
   // Clicking a bar opens the scenario card with a link to the laboratory.
   await page.getByRole('button', { name: /^Cenário B: .*Abrir o cartão do cenário/ }).first().click();
   await expect(page.getByRole('tab', { name: 'Cenário', exact: true })).toHaveAttribute('aria-selected', 'true');

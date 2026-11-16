@@ -33,7 +33,7 @@ export function RotationTimelineView({ data }: { data: AnalysisResult }) {
   const selectScenario = (id: ScenarioId) => { setScenario(id); setTab('scenario'); setSheetOpen(true); };
   if (!model.lanes.length) return <p className="mt-6 rounded-xl border border-slate-700 p-4 text-sm" role="status">{en ? 'N/D: no scenario was produced for this analysis, so there is no timeline to draw.' : 'N/D: nenhum cenário foi produzido nesta análise, então não há linha do tempo para desenhar.'}</p>;
   return <div className="pb-16 lg:pb-0">
-    <SummaryHeader data={data} model={model} whatIf={whatIf} />
+    <SummaryHeader data={data} />
     <div className="mt-3"><WhatIfControls view={view} whatIf={whatIf} onView={setView} onWhatIf={setWhatIf} /></div>
     <div className="mt-3 grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_21rem]">
       <TimelineCard cursor={cursor} hover={hover} lanes={lanes} model={model} openBands={openBands} pin={pin} selected={scenario} thermalSc={lanes.some((lane) => lane.id === thermalSc) ? thermalSc : 'A'} whatIf={whatIf} onHover={setHover} onOpenBands={setOpenBands} onPin={(offset) => { setHover(null); setPin(offset); }} onSelectScenario={selectScenario} onThermalSc={setThermalSc} />

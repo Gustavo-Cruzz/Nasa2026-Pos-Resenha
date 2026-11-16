@@ -10,7 +10,7 @@ const SOURCES: Node[] = [
   { title: { pt: 'NASA POWER + IMERG', en: 'NASA POWER + IMERG' }, simple: { pt: 'Clima diário 2011–2025', en: 'Daily climate 2011–2025' }, technical: { pt: 'T2M·PRECTOTCORR·RH2M·WS2M', en: 'T2M·PRECTOTCORR·RH2M·WS2M' } },
   { title: { pt: 'NASA SRTM', en: 'NASA SRTM' }, simple: { pt: 'Altitude do terreno', en: 'Terrain elevation' }, technical: { pt: 'GL1 v003 · 1″ (~30 m)', en: 'GL1 v003 · 1″ (~30 m)' } },
   { title: { pt: 'Embrapa · FAO', en: 'Embrapa · FAO' }, simple: { pt: 'Faixas de cada cultura', en: 'Each crop’s ranges' }, technical: { pt: 'viableTempC · ciclo · Kc · pH', en: 'viableTempC · cycle · Kc · pH' } },
-  { title: { pt: 'Você', en: 'You' }, simple: { pt: 'Histórico e prioridades', en: 'History and priorities' }, technical: { pt: 'Zod · análise de solo opcional', en: 'Zod · optional soil analysis' } },
+  { title: { pt: 'Usuário', en: 'User' }, simple: { pt: 'Histórico e prioridades', en: 'History and priorities' }, technical: { pt: 'Zod · análise de solo opcional', en: 'Zod · optional soil analysis' } },
   { title: { pt: 'Dados oficiais do Brasil', en: 'Brazil official data' }, simple: { pt: 'IBGE · ZARC · PAM · SoilGrids', en: 'IBGE · ZARC · PAM · SoilGrids' }, technical: { pt: 'decêndio · SIDRA 5457 · 5 km', en: '10-day · SIDRA 5457 · 5 km' } },
   { title: { pt: 'NASA MODIS NDVI', en: 'NASA MODIS NDVI' }, simple: { pt: 'Verde da vegetação', en: 'Vegetation greenness' }, technical: { pt: 'MOD13Q1 · 250 m · 5.571 municípios', en: 'MOD13Q1 · 250 m · 5,571 municipalities' } },
 ];

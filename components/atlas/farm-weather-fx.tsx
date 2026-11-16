@@ -45,7 +45,21 @@ const inside = (x: number, y: number, pts: [number, number][]) => { let c = fals
 const CARD_PT = ['N', 'NE', 'L', 'SE', 'S', 'SO', 'O', 'NO']; const CARD_EN = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 const cardinal = (deg: number, en: boolean) => (en ? CARD_EN : CARD_PT)[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
 
-export function FarmWeatherFx({ map, polygon, point, live, sim, drawing, onDraw, en }: { map: Leaflet.Map | null; polygon: AtlasPolygon; point: { latitude: number; longitude: number } | null; live: LiveState; sim: FxSim; drawing: boolean; onDraw: () => void; en: boolean }) {
+const FX_LABELS = (en: boolean) => ({ rain: en ? 'raining' : 'chovendo', wind: en ? 'windy' : 'ventando', heat: en ? 'hot' : 'calor', cloud: en ? 'cloudy' : 'nublado', calm: en ? 'calm' : 'tempo calmo' }) as const;
+
+/** The "Now at the farm" line (text + source), or null while there is no weather and no simulation. */
+export function describeNow(live: LiveState, sim: FxSim, en: boolean): { text: string; source: string } | null {
+  const weather = live.kind === 'ready' ? live.weather : null;
+  const kind: FxKind | null = sim !== 'auto' ? sim : weather ? pickEffect(weather) : null;
+  if (!kind) return null;
+  const num = (v: number | null | undefined, digits: number, unit: string) => v === null || v === undefined ? 'N/D' : `${en ? v.toFixed(digits) : v.toFixed(digits).replace('.', ',')} ${unit}`;
+  const detail = kind === 'calm' ? '' : kind === 'rain' ? ` · ${num(weather?.precipitationMm, 1, 'mm')}` : kind === 'wind' ? ` · ${num(weather?.windKmh, 0, 'km/h')}${weather?.windDirectionDeg != null ? ` ${cardinal(weather.windDirectionDeg, en)}` : ''}` : kind === 'heat' ? ` · ${num(weather?.temperatureC, 0, '°C')}` : ` · ${num(weather?.cloudPct, 0, '%')}`;
+  const text = `${sim !== 'auto' ? (en ? '[sim] ' : '[sim.] ') : ''}${en ? 'Now at the farm: ' : 'Agora na fazenda: '}${FX_LABELS(en)[kind]}${detail}`;
+  const source = `${sim !== 'auto' ? (en ? 'Prototype simulation' : 'Simulação do protótipo') : 'Open-Meteo'} · ${en ? 'context only' : 'só contexto'}`;
+  return { text, source };
+}
+
+export function FarmWeatherFx({ map, polygon, point, live, sim, drawing, onDraw, en, chip = true }: { map: Leaflet.Map | null; polygon: AtlasPolygon; point: { latitude: number; longitude: number } | null; live: LiveState; sim: FxSim; drawing: boolean; onDraw: () => void; en: boolean; /** Show the floating "now" card (default). The farm page shows it in its footer instead. */ chip?: boolean }) {
   const [, setTick] = useState(0);
   useEffect(() => {
     if (!map) return;
@@ -88,18 +102,16 @@ export function FarmWeatherFx({ map, polygon, point, live, sim, drawing, onDraw,
   if (kind === 'cloud') { const bw = Math.max(60, w * 0.8); body = <g className="fx-cloud" style={{ ['--run' as string]: `${w + bw}px` }}><g transform={`translate(${minX - bw} ${cy - bw * 0.3})`} fill="#020617" opacity=".26"><rect height={bw * 0.28} width={bw} y={bw * 0.18} rx="0" /><rect height={bw * 0.2} width={bw * 0.6} x={bw * 0.1} y={bw * 0.02} /><rect height={bw * 0.28} width={bw * 0.35} x={bw * 0.5} y={bw * 0.04} /></g></g>; }
   if (kind === 'calm') body = <><g>{scatter(17, Math.min(9, count)).map((t, i) => tuft(t, i, false))}</g><g>{scatter(19, 5).map((t, i) => <rect className="fx-glint" fill="#fef9c3" height={P} key={i} style={{ animationDelay: `${-t.r * 3}s` }} width={P} x={t.x} y={t.y} />)}</g></>;
 
-  const label = kind && ({ rain: en ? 'raining' : 'chovendo', wind: en ? 'windy' : 'ventando', heat: en ? 'hot' : 'calor', cloud: en ? 'cloudy' : 'nublado', calm: en ? 'calm' : 'tempo calmo' } as const)[kind];
-  const num = (v: number | null | undefined, digits: number, unit: string) => v === null || v === undefined ? 'N/D' : `${en ? v.toFixed(digits) : v.toFixed(digits).replace('.', ',')} ${unit}`;
-  const detail = !kind || kind === 'calm' ? '' : kind === 'rain' ? ` · ${num(weather?.precipitationMm, 1, 'mm')}` : kind === 'wind' ? ` · ${num(weather?.windKmh, 0, 'km/h')}${weather?.windDirectionDeg != null ? ` ${cardinal(weather.windDirectionDeg, en)}` : ''}` : kind === 'heat' ? ` · ${num(weather?.temperatureC, 0, '°C')}` : ` · ${num(weather?.cloudPct, 0, '%')}`;
+  const now = describeNow(live, sim, en);
   return <div className="fx-root pointer-events-none absolute inset-0 z-[10] overflow-hidden font-mono">
     {visible ? <svg aria-hidden="true" className="hud-pixel absolute inset-0 h-full w-full" shapeRendering="crispEdges">
       <defs><clipPath id={clipId}><polygon points={d} /></clipPath></defs>
       {isExample ? <><polygon fill="rgb(163 230 53 / .08)" points={d} /><polygon fill="none" points={d} stroke="#020617" strokeWidth="5" /><polygon className="fx-march" fill="none" points={d} stroke="#d9ff87" strokeDasharray="9 6" strokeWidth="3" /></> : null}
       <g clipPath={`url(#${clipId})`}>{body}</g>
     </svg> : null}
-    {kind || isExample ? <div className="fx-chip hud-card hud-card-sm px-2 py-1.5 text-[10px] leading-snug text-slate-200">
-      {kind ? <p className="text-[11px] font-bold text-lime-300">{sim !== 'auto' ? (en ? '[sim] ' : '[sim.] ') : ''}{en ? 'Now at the farm: ' : 'Agora na fazenda: '}{label}{detail}</p> : null}
-      {kind ? <p className="text-slate-400">{sim !== 'auto' ? (en ? 'Prototype simulation' : 'Simulação do protótipo') : 'Open-Meteo'} · {en ? 'context only' : 'só contexto'}</p> : null}
+    {chip && (kind || isExample) ? <div className="fx-chip hud-card hud-card-sm px-2 py-1.5 text-[10px] leading-snug text-slate-200">
+      {now ? <p className="text-[11px] font-bold text-lime-300">{now.text}</p> : null}
+      {now ? <p className="text-slate-400">{now.source}</p> : null}
       {isExample ? <p className="mt-0.5 text-amber-300">{en ? 'Example perimeter — draw yours' : 'Perímetro de exemplo — desenhe o seu'} <button className="hud-btn pointer-events-auto ml-1 px-1.5 py-0.5 text-[10px] font-bold" onClick={onDraw} type="button">{en ? 'Draw' : 'Desenhar'}</button></p> : null}
     </div> : null}
   </div>;

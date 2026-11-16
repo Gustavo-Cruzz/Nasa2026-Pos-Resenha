@@ -29,7 +29,26 @@ export function sceneAlt(cycle: FarmCycleView, scenarioId: ScenarioId, en: boole
     : `Ilustração da fazenda do cenário ${scenarioId}, ciclo ${cycle.index + 1}, com ${list}${layout}. Apenas ilustrativa; sem significado preditivo.`;
 }
 
-interface FarmSceneProps { cycle: FarmCycleView; scenarioId: ScenarioId; reducedMotion: boolean; paused: boolean; en: boolean; demoScene?: DemoScene }
+export type SceneHighlight = 'strength' | 'attention' | 'missing';
+interface FarmSceneProps { cycle: FarmCycleView; scenarioId: ScenarioId; reducedMotion: boolean; paused: boolean; en: boolean; demoScene?: DemoScene; highlight?: SceneHighlight }
+
+const HL = {
+  strength: { pt: 'Ponto forte', en: 'Strength', glyph: '+', ring: 'ring-lime-300/80 shadow-[inset_0_0_60px_rgba(190,242,100,0.35)]', pill: 'bg-lime-300 text-slate-950', mark: 'bg-lime-300 text-slate-950', dashed: false },
+  attention: { pt: 'Fique de olho', en: 'Watch out', glyph: '!', ring: 'ring-amber-300/90 shadow-[inset_0_0_60px_rgba(252,211,77,0.35)]', pill: 'bg-amber-300 text-slate-950', mark: 'bg-amber-300 text-slate-950', dashed: false },
+  missing: { pt: 'Falta confirmar', en: 'Still to confirm', glyph: '?', ring: 'ring-sky-300/90', pill: 'bg-sky-300 text-slate-950', mark: 'bg-sky-300 text-slate-950', dashed: true }
+} as const;
+const HL_SPOTS = [[18, 38], [42, 56], [68, 42], [82, 66], [30, 72]] as const;
+
+function HighlightOverlay({ kind, animate, en }: { kind: SceneHighlight; animate: boolean; en: boolean }) {
+  const h = HL[kind];
+  const pulse = animate ? (kind === 'attention' ? 'animate-pulse' : '') : '';
+  return <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10" data-highlight={kind} data-testid="farm-highlight" key={kind}>
+    <div className={`absolute inset-1 rounded-lg ${h.dashed ? 'border-4 border-dashed border-sky-300/90 bg-sky-300/10' : `ring-4 ring-inset ${h.ring}`} ${pulse}`} />
+    {HL_SPOTS.map(([left, top], index) => <span className={`absolute flex h-7 w-7 items-center justify-center rounded-full text-sm font-black shadow-lg ${h.mark} ${animate ? (kind === 'strength' ? 'animate-bounce' : kind === 'attention' ? 'animate-ping' : 'animate-pulse') : ''}`} key={index} style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${index * 180}ms`, opacity: kind === 'attention' && index > 1 ? 0 : 1 }}>{h.glyph}</span>)}
+    {kind === 'attention' ? <span className="absolute flex h-8 w-8 items-center justify-center rounded-full bg-amber-300 text-base font-black text-slate-950 shadow-lg" style={{ left: '18%', top: '38%' }}>!</span> : null}
+    <span className={`absolute left-2 top-2 rounded-full px-3 py-1 text-xs font-bold shadow-lg ${h.pill}`}>{h.glyph} {en ? h.en : h.pt}</span>
+  </div>;
+}
 
 /**
  * Real scenarios are composed live from the base landscape and crop sprites,
@@ -44,7 +63,7 @@ export function FarmScene(props: FarmSceneProps) {
   return <FarmSceneInner key={props.cycle.id} {...props} />;
 }
 
-function FarmSceneInner({ cycle, scenarioId, reducedMotion, paused, en, demoScene }: FarmSceneProps) {
+function FarmSceneInner({ cycle, scenarioId, reducedMotion, paused, en, demoScene, highlight }: FarmSceneProps) {
   const animate = !reducedMotion && !paused;
   const alt = sceneAlt(cycle, scenarioId, en);
   const layout = useMemo(() => composeFarmScene(cycle.crops), [cycle.crops]);
@@ -71,6 +90,7 @@ function FarmSceneInner({ cycle, scenarioId, reducedMotion, paused, en, demoScen
         <span className="ffs-w-cloud" /><span className="ffs-w-cloud c2" /><span className="ffs-w-cloud c3" />
         <span className="ffs-w-precip" /><span className="ffs-w-sparkle" /><span className="ffs-w-flash" />
       </div> : null}
+      {highlight ? <HighlightOverlay animate={!reducedMotion} en={en} kind={highlight} /> : null}
     </div>
     {months.length ? <div aria-label={en ? 'Scene weather by month (historical medians)' : 'Clima da cena por mês (medianas históricas)'} className="ffs-strip" data-testid="farm-month-strip" role="group">
       {months.map((item, index) => {

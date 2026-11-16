@@ -28,6 +28,18 @@ export const JOAO_MOODS: Record<JoaoMood, MoodSpec> = {
   thinking: { src: null, status: 'missing', label: 'Pensando', when: 'Enquanto os dados carregam.', usedIn: 'Ainda não usado: hoje o João fica quieto durante o carregamento' },
 };
 
+/** Moods that show one of several arts, picked at random on mount. List more files here to add variants. Moods with meaning stay out. */
+export const MOOD_VARIANTS: Partial<Record<JoaoMood, string[]>> = {
+  neutral: ['/assets/brand/joao/neutral.webp', '/assets/brand/joao/happy.webp'],
+};
+
+/** The art for a mood: the fixed one, or a random variant when the mood has variants (pass `random` for tests). */
+export function pickMoodSrc(mood: JoaoMood, random: () => number = Math.random): string | null {
+  const variants = MOOD_VARIANTS[mood];
+  if (!variants?.length) return JOAO_MOODS[mood].src;
+  return variants[Math.min(variants.length - 1, Math.floor(random() * variants.length))];
+}
+
 export const MOODS_MISSING = (Object.entries(JOAO_MOODS) as Array<[JoaoMood, MoodSpec]>).filter(([, spec]) => spec.status === 'missing').map(([mood]) => mood);
 
 /** The mood a line gets from its tone, unless the line asks for a specific one. */

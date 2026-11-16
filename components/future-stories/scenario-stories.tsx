@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, CircleHelp, Pause, Play, Sprout, TriangleAle
 import { Button } from '@/components/ui/button';
 import { JoaoFigure } from '@/components/joao/joao-figure';
 import { JoaoReaderButton } from '@/components/joao/joao-reader-button';
-import { FarmScene, usePrefersReducedMotion } from '@/components/future-stories/farm-scene';
+import { FarmScene, usePrefersReducedMotion, type SceneHighlight } from '@/components/future-stories/farm-scene';
 import type { JoaoMood } from '@/lib/explain/joao-mood';
 import { futureFarmCopy } from '@/lib/future-farm/copy';
 import { demoScenes } from '@/lib/future-farm/demo';
@@ -31,12 +31,16 @@ export function ScenarioStories({ scenarios, locale, demo, initialScenario, simp
   const [scenarioId, setScenarioId] = useState<ScenarioId>(initialScenario && scenarios.some((item) => item.id === initialScenario) ? initialScenario : scenarios[0]?.id ?? 'A');
   const [cycleByScenario, setCycleByScenario] = useState<Record<string, number>>({});
   const [paused, setPaused] = useState(false);
+  const [topicPick, setTopicPick] = useState<{ key: string; topic: SceneHighlight } | null>(null);
   const reducedMotion = usePrefersReducedMotion();
   const scenario = scenarios.find((item) => item.id === scenarioId) ?? scenarios[0];
   const cyclePosition = Math.min(cycleByScenario[scenario?.id ?? 'A'] ?? 0, Math.max(0, (scenario?.cycles.length ?? 1) - 1));
   const cycle = scenario?.cycles[cyclePosition];
   const setCycle = (position: number) => setCycleByScenario((current) => ({ ...current, [scenario.id]: position }));
   if (!scenario) return null;
+  const topicKey = cycle ? `${scenario.id}-${cycle.id}` : '';
+  const topics = cycle && simple ? simpleTopics(scenario, cycle) : null;
+  const topic: SceneHighlight | undefined = topics ? (topicPick?.key === topicKey && topics[topicPick.topic].length ? topicPick.topic : defaultTopic(topics)) : undefined;
   return <div className="mt-6">
     <ScenarioSelector en={en} scenarios={scenarios} selected={scenario.id} simple={simple} onSelect={setScenarioId} />
     <section aria-labelledby="ffs-scenario-heading" className="mt-4 rounded-xl border border-slate-700 bg-slate-900 p-4 sm:p-5" id={`ffs-panel-${scenario.id}`} role="tabpanel">
@@ -53,7 +57,7 @@ export function ScenarioStories({ scenarios, locale, demo, initialScenario, simp
               {reducedMotion ? <span className="text-sm text-slate-300">{en ? 'Reduced motion is on: static scene.' : 'Movimento reduzido ativo: cena estática.'}</span> : null}
             </div>
           </div>
-          <CycleEvidencePanel cycle={cycle} en={en} locale={locale} scenario={scenario} simple={simple} />
+          <CycleEvidencePanel cycle={cycle} en={en} locale={locale} scenario={scenario} simple={simple} topic={topic} onTopic={(next) => setTopicPick({ key: topicKey, topic: next })} reducedMotion={reducedMotion} />
         </div>
       </> : <p className="mt-4 rounded-lg border border-slate-700 p-4 text-slate-200" role="status">{en ? 'This scenario has no crop defined in any stage yet. No scene is drawn and no crop is invented to fill it.' : 'Este cenário ainda não tem cultura definida em nenhuma etapa. Nenhuma cena é desenhada e nenhuma cultura é inventada para preenchê-la.'}</p>}
       <ScenarioComparisonActions demo={demo} en={en} simple={simple} />
@@ -99,48 +103,76 @@ function List({ items, empty }: { items: string[]; empty: string }) {
   return items.length ? <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-slate-200">{items.map((item) => <li key={item}>{item}</li>)}</ul> : <p className="mt-1 text-sm text-slate-300">{empty}</p>;
 }
 
-export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false }: { scenario: FarmScenarioView; cycle: FarmCycleView; en: boolean; locale: Locale; simple?: boolean }) {
+type Topics = Record<SceneHighlight, string[]>;
+
+export function simpleTopics(scenario: FarmScenarioView, cycle: FarmCycleView): Topics {
+  return {
+    strength: scenario.tradeoffs.gains.length ? scenario.tradeoffs.gains : cycle.potentialBenefits,
+    attention: scenario.tradeoffs.losses.length ? scenario.tradeoffs.losses : cycle.risksAndUnknowns,
+    missing: [...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))]
+  };
+}
+function defaultTopic(topics: Topics): SceneHighlight {
+  return topics.strength.length ? 'strength' : topics.attention.length ? 'attention' : topics.missing.length ? 'missing' : 'strength';
+}
+
+const TOPIC_META: Record<SceneHighlight, { pt: string; en: string; Icon: typeof Sprout; mood: JoaoMood; chip: string; chipOn: string; badge: string; text: string; emptyPt: string; emptyEn: string }> = {
+  strength: { pt: 'Ponto forte', en: 'Strength', Icon: Sprout, mood: 'happy', chip: 'border-lime-300/40 text-lime-100 hover:bg-lime-300/10', chipOn: 'border-lime-300 bg-lime-300/20 ring-2 ring-lime-300/60', badge: 'bg-lime-300 text-slate-950', text: 'text-lime-300', emptyPt: 'Nenhum benefício calculado para esta etapa.', emptyEn: 'No benefit calculated for this stage.' },
+  attention: { pt: 'Fique de olho', en: 'Watch out', Icon: TriangleAlert, mood: 'alert', chip: 'border-amber-300/40 text-amber-100 hover:bg-amber-300/10', chipOn: 'border-amber-300 bg-amber-300/20 ring-2 ring-amber-300/60', badge: 'bg-amber-300 text-slate-950', text: 'text-amber-300', emptyPt: 'Nenhum ponto de atenção calculado para esta etapa.', emptyEn: 'No attention point calculated for this stage.' },
+  missing: { pt: 'Falta confirmar', en: 'Still to confirm', Icon: CircleHelp, mood: 'sad', chip: 'border-sky-300/40 text-sky-100 hover:bg-sky-300/10', chipOn: 'border-sky-300 bg-sky-300/20 ring-2 ring-sky-300/60', badge: 'bg-sky-300 text-slate-950', text: 'text-sky-300', emptyPt: 'Nenhum dado pendente catalogado para esta etapa.', emptyEn: 'No pending data cataloged for this stage.' }
+};
+const TOPIC_ORDER: SceneHighlight[] = ['strength', 'attention', 'missing'];
+
+/** Wraps numbers and percentages in a bold colored span. */
+function Highlighted({ text, tone }: { text: string; tone: string }) {
+  return <>{text.split(/(\d+(?:[.,]\d+)?\s?%?)/).map((part, index) => index % 2 === 1 ? <b className={`${tone} font-extrabold`} key={index}>{part}</b> : part)}</>;
+}
+
+function TopicBody({ items, meta, en, reducedMotion }: { items: string[]; meta: (typeof TOPIC_META)[SceneHighlight]; en: boolean; reducedMotion: boolean }) {
+  const [all, setAll] = useState(false);
+  const shown = all ? items : items.slice(0, 2);
+  const anim = reducedMotion ? '' : 'animate-in fade-in slide-in-from-bottom-1 duration-300';
+  return <div className={anim}>
+    {items.length === 0 ? <p className="flex items-center gap-2 text-sm text-slate-200" data-readable><meta.Icon aria-hidden="true" className={meta.text} size={18} />{en ? meta.emptyEn : meta.emptyPt}</p> : <ul className="space-y-2">
+      {shown.map((item) => <li className="flex items-start gap-2 text-sm leading-6 text-slate-100" data-readable key={item}><span aria-hidden="true" className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${meta.badge}`}><meta.Icon size={12} /></span><span className="min-w-0 flex-1"><Highlighted text={item} tone={meta.text} /></span></li>)}
+    </ul>}
+    {items.length > 2 ? <button aria-expanded={all} className="mt-2 rounded-md px-2 py-1 text-xs font-semibold text-lime-200 underline" type="button" onClick={() => setAll((value) => !value)}>{all ? (en ? 'show less' : 'ver menos') : (en ? `see ${items.length - 2} more` : `ver mais ${items.length - 2}`)}</button> : null}
+  </div>;
+}
+
+export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false, topic, onTopic, reducedMotion = false }: { scenario: FarmScenarioView; cycle: FarmCycleView; en: boolean; locale: Locale; simple?: boolean; topic?: SceneHighlight; onTopic?: (topic: SceneHighlight) => void; reducedMotion?: boolean }) {
   const copy = futureFarmCopy(locale);
   const [showFull, setShowFull] = useState(false);
+  const [localTopic, setLocalTopic] = useState<{ key: string; topic: SceneHighlight } | null>(null);
   const noneComputed = en ? 'None computed; missing evidence stays unknown.' : 'Nenhum item calculado; evidência ausente permanece desconhecida.';
   if (simple) {
-    const benefits = scenario.tradeoffs.gains.length ? scenario.tradeoffs.gains : cycle.potentialBenefits;
-    const attention = scenario.tradeoffs.losses.length ? scenario.tradeoffs.losses : cycle.risksAndUnknowns;
-    const missing = [...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))];
-    const mood: JoaoMood = benefits.length ? 'happy' : attention.length ? 'alert' : 'sad';
-    const sentence = (text: string) => (/[.!?]$/.test(text) ? text : `${text}.`);
-    const benefitLine = benefits.length
-      ? (en ? sentence(benefits[0]) : sentence(benefits[0]))
-      : (en ? 'No benefit was calculated for this stage.' : 'Nenhum benefício foi calculado para esta etapa.');
-    const attentionLine = attention.length
-      ? (en ? sentence(attention[0]) : sentence(attention[0]))
-      : (en ? 'No attention point was calculated for this stage.' : 'Nenhum ponto de atenção foi calculado para esta etapa.');
-    const missingLine = missing.length === 0
-      ? (en ? 'No pending data is cataloged for this stage.' : 'Nenhum dado pendente está catalogado para esta etapa.')
-      : missing.length === 1
-        ? (en ? 'There is still 1 data point to confirm.' : 'Ainda falta 1 dado para confirmar.')
-        : (en ? `There are still ${missing.length} data points to confirm.` : `Ainda faltam ${missing.length} dados para confirmar.`);
-    const cropsText = cycle.crops.map((crop) => crop.label).join(' + ');
-    const rows = [
-      { label: en ? 'Strength' : 'Ponto forte', text: benefitLine, Icon: Sprout, tone: 'bg-lime-300/20 text-lime-200' },
-      { label: en ? 'Watch out' : 'Fique de olho', text: attentionLine, Icon: TriangleAlert, tone: 'bg-amber-300/20 text-amber-200' },
-      { label: en ? 'Still to confirm' : 'Falta confirmar', text: missingLine, Icon: CircleHelp, tone: 'bg-sky-300/20 text-sky-200' }
-    ];
+    const topics = simpleTopics(scenario, cycle);
+    const benefits = topics.strength;
+    const attention = topics.attention;
+    const key = `${scenario.id}-${cycle.id}`;
+    const active: SceneHighlight = topic ?? (localTopic?.key === key ? localTopic.topic : defaultTopic(topics));
+    const select = (next: SceneHighlight) => { setLocalTopic({ key, topic: next }); onTopic?.(next); };
+    const meta = TOPIC_META[active];
+    const mood: JoaoMood = active === 'missing' && topics.missing.length === 0 ? 'neutral' : meta.mood;
     return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-lime-300/30 bg-slate-950/60 p-4">
-    <div className="flex items-start gap-3">
+    <div aria-label={en ? 'What João tells about this stage' : 'O que o João conta desta etapa'} className="grid grid-cols-3 gap-2" role="group">
+      {TOPIC_ORDER.map((id) => { const m = TOPIC_META[id]; const on = id === active; return <button aria-pressed={on} className={`flex min-h-[72px] flex-col items-center justify-center gap-1 rounded-xl border px-1 py-2 text-center text-xs font-bold transition ${on ? m.chipOn : m.chip}`} data-testid={`topic-${id}`} key={id} type="button" onClick={() => select(id)}>
+        <span className="flex items-center gap-1"><m.Icon aria-hidden="true" size={20} /><span className={`rounded-full px-1.5 text-xs ${m.badge}`}>{topics[id].length}</span></span>
+        <span>{en ? m.en : m.pt}</span>
+      </button>; })}
+    </div>
+    <div className="mt-4 flex items-start gap-3">
       <JoaoFigure className="h-[96px] w-[64px]" mood={mood} />
       <div className="min-w-0 flex-1">
         <div className="relative rounded-2xl rounded-tl-sm border border-lime-300/30 bg-slate-900 p-3.5" id="joao-cycle-speech">
           <span aria-hidden="true" className="absolute -left-1.5 top-5 h-3 w-3 rotate-45 border-b border-l border-lime-300/30 bg-slate-900" />
-          <p className="text-sm font-semibold leading-6 text-lime-200" data-readable>{en ? `In this stage you plant ${cropsText}.` : `Nesta etapa você planta ${cropsText}.`}</p>
-          <div className="mt-3 space-y-3" data-testid="cycle-short-explanation">
-            {rows.map((row) => <div className="flex items-start gap-3" data-readable key={row.label}>
-              <span aria-hidden="true" className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${row.tone}`}><row.Icon size={18} /></span>
-              <p className="min-w-0 flex-1"><span className="block text-xs font-bold uppercase tracking-wide text-slate-300">{row.label}<span className="sr-only">:</span></span><span className="block text-sm leading-6 text-slate-100">{row.text}</span></p>
-            </div>)}
+          <p className="flex flex-wrap items-center gap-1.5 text-sm font-semibold text-lime-200" data-readable><span>{en ? 'This stage:' : 'Nesta etapa:'}</span>{cycle.crops.map((crop) => <span className="rounded-full border border-lime-300/40 bg-lime-300/10 px-2 py-0.5 text-xs" key={crop.cropId}>🌱 {crop.label}</span>)}</p>
+          <div className="mt-3" data-testid="cycle-short-explanation">
+            <p className={`mb-2 text-xs font-bold uppercase tracking-wide ${meta.text}`} data-readable>{en ? meta.en : meta.pt}<span className="sr-only">:</span></p>
+            <TopicBody en={en} items={topics[active]} key={`${key}-${active}`} meta={meta} reducedMotion={reducedMotion} />
           </div>
         </div>
-        <JoaoReaderButton className="mt-2" key={`${scenario.id}-${cycle.id}`} targetId="joao-cycle-speech" />
+        <JoaoReaderButton className="mt-2" key={`${scenario.id}-${cycle.id}-${active}`} targetId="joao-cycle-speech" />
       </div>
     </div>
     <h3 className="mt-4 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3><p className="mt-1 text-xs text-slate-400">{cycleName(cycle, en)}</p>
