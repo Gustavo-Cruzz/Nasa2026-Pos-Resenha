@@ -1,0 +1,216 @@
+{
+ "generatedAt": "2026-11-16T01:29:15.171Z",
+ "complete": true,
+ "expected": 5571,
+ "processed": 5571,
+ "missing": 0,
+ "missingSample": [],
+ "available": 5556,
+ "insufficient": 10,
+ "unavailable": 5,
+ "perUf": {
+  "RO": {
+   "expected": 52,
+   "processed": 52,
+   "available": 52,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "AC": {
+   "expected": 22,
+   "processed": 22,
+   "available": 22,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "AM": {
+   "expected": 62,
+   "processed": 62,
+   "available": 61,
+   "insufficient": 1,
+   "unavailable": 0
+  },
+  "RR": {
+   "expected": 15,
+   "processed": 15,
+   "available": 15,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "PA": {
+   "expected": 144,
+   "processed": 144,
+   "available": 141,
+   "insufficient": 1,
+   "unavailable": 2
+  },
+  "AP": {
+   "expected": 16,
+   "processed": 16,
+   "available": 16,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "TO": {
+   "expected": 139,
+   "processed": 139,
+   "available": 139,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "MA": {
+   "expected": 217,
+   "processed": 217,
+   "available": 216,
+   "insufficient": 1,
+   "unavailable": 0
+  },
+  "PI": {
+   "expected": 224,
+   "processed": 224,
+   "available": 224,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "CE": {
+   "expected": 184,
+   "processed": 184,
+   "available": 184,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "RN": {
+   "expected": 167,
+   "processed": 167,
+   "available": 167,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "PB": {
+   "expected": 223,
+   "processed": 223,
+   "available": 222,
+   "insufficient": 1,
+   "unavailable": 0
+  },
+  "PE": {
+   "expected": 185,
+   "processed": 185,
+   "available": 185,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "AL": {
+   "expected": 102,
+   "processed": 102,
+   "available": 102,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "SE": {
+   "expected": 75,
+   "processed": 75,
+   "available": 75,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "BA": {
+   "expected": 417,
+   "processed": 417,
+   "available": 413,
+   "insufficient": 2,
+   "unavailable": 2
+  },
+  "MG": {
+   "expected": 853,
+   "processed": 853,
+   "available": 853,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "ES": {
+   "expected": 78,
+   "processed": 78,
+   "available": 78,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "RJ": {
+   "expected": 92,
+   "processed": 92,
+   "available": 91,
+   "insufficient": 0,
+   "unavailable": 1
+  },
+  "SP": {
+   "expected": 645,
+   "processed": 645,
+   "available": 643,
+   "insufficient": 2,
+   "unavailable": 0
+  },
+  "PR": {
+   "expected": 399,
+   "processed": 399,
+   "available": 399,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "SC": {
+   "expected": 295,
+   "processed": 295,
+   "available": 294,
+   "insufficient": 1,
+   "unavailable": 0
+  },
+  "RS": {
+   "expected": 497,
+   "processed": 497,
+   "available": 496,
+   "insufficient": 1,
+   "unavailable": 0
+  },
+  "MS": {
+   "expected": 79,
+   "processed": 79,
+   "available": 79,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "MT": {
+   "expected": 142,
+   "processed": 142,
+   "available": 142,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "GO": {
+   "expected": 246,
+   "processed": 246,
+   "available": 246,
+   "insufficient": 0,
+   "unavailable": 0
+  },
+  "DF": {
+   "expected": 1,
+   "processed": 1,
+   "available": 1,
+   "insufficient": 0,
+   "unavailable": 0
+  }
+ },
+ "coverage": {
+  "mean": 99.78,
+  "min": 0,
+  "max": 100
+ },
+ "duplicates": [],
+ "invalidPoints": [],
+ "period": {
+  "start": "2011-01-01",
+  "end": "2026-01-03"
+ },
+ "stacItemsUsed": 5010,
+ "errors": [],
+ "warnings": []
+}

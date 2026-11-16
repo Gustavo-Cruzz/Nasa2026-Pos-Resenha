@@ -4,6 +4,7 @@ import { useId, useMemo, useState } from 'react';
 import type { AnalysisResult } from '@/lib/engine/types';
 import type { WaterBalanceMonth } from '@/lib/climate/indicators';
 import { relativeLowVegetationMonths } from '@/lib/climate/ndvi';
+import { ndviMunicipalCaveats } from '@/lib/climate/ndvi-copy';
 import { applyRainChange, formatMonths, deriveRotationCalendar, deriveSeasonInsights, describeSeasonInsight, monthLabel, seasonCaveat, type CalendarCell } from '@/lib/engine/season';
 import { cropDisplayName } from '@/lib/presentation';
 import { useLocale } from '@/components/locale-provider';
@@ -50,7 +51,8 @@ function NdviStrip({ climate, en, locale }: { climate: AnalysisResult['climate']
   const low = relativeLowVegetationMonths(ndvi.months);
   return <div className="mt-5 rounded-lg border border-slate-600 p-3 text-sm"><h3 className="font-bold">{en ? 'Vegetation (MODIS NDVI, monthly median)' : 'Vegetação (NDVI MODIS, mediana mensal)'}</h3>
     <ol className="mt-2 grid grid-cols-6 gap-1 text-center text-xs sm:grid-cols-12">{ndvi.months.map((month) => <li className={`rounded border px-1 py-1 ${low.includes(month.month) ? 'border-amber-300 bg-amber-950/40' : 'border-slate-700'}`} key={month.month}><span className="block text-slate-400">{monthLabel(month.month, locale)}</span><b>{month.medianNdvi === null ? 'N/D' : month.medianNdvi.toLocaleString(en ? 'en-US' : 'pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</b></li>)}</ol>
-    <p className="mt-2 text-xs text-slate-300">{low.length ? (en ? `Lowest vegetation months relative to this point's own series: ${formatMonths(low, locale)}. This is a relative reading, not a bare-soil diagnosis.` : `Meses de menor vegetação em relação à própria série deste ponto: ${formatMonths(low, locale)}. É uma leitura relativa, não um diagnóstico de solo nu.`) : en ? 'Not enough months with a reading to compare (N/D).' : 'Meses com leitura insuficientes para comparar (N/D).'} {ndvi.period.start}–{ndvi.period.end} · {ndvi.coveragePct}%</p></div>;
+    <p className="mt-2 text-xs text-slate-300">{low.length ? (en ? `Lowest vegetation months relative to this point's own series: ${formatMonths(low, locale)}. This is a relative reading, not a bare-soil diagnosis.` : `Meses de menor vegetação em relação à própria série deste ponto: ${formatMonths(low, locale)}. É uma leitura relativa, não um diagnóstico de solo nu.`) : en ? 'Not enough months with a reading to compare (N/D).' : 'Meses com leitura insuficientes para comparar (N/D).'} {ndvi.period.start}–{ndvi.period.end} · {ndvi.coveragePct}%</p>
+    {ndvi.origin === 'municipal_artifact' ? <ul className="mt-2 list-disc pl-5 text-xs text-slate-300">{ndviMunicipalCaveats(locale).map((line) => <li key={line}>{line}</li>)}</ul> : null}</div>;
 }
 
 function WaterBalanceChart({ balance, en, locale, planting }: { balance: WaterBalanceMonth[]; en: boolean; locale: 'pt-BR' | 'en'; planting: number }) {

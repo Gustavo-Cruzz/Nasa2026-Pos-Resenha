@@ -4,10 +4,9 @@ import pamData from '@/data/brazil-pam-index.json';
 import type { Coordinates } from '@/lib/schema';
 import type { BrazilRegionalContext, MunicipalityContext, PamProductContext, ZarcCropContext, ZarcWindow } from '@/lib/brazil/types';
 
-export type Position = [number, number];
-type Ring = Position[];
-type PolygonCoordinates = Ring[];
-export type Geometry = { type: 'Polygon'; coordinates: PolygonCoordinates } | { type: 'MultiPolygon'; coordinates: PolygonCoordinates[] };
+import { contains, type Geometry, type Position } from '@/lib/brazil/interior-point';
+export { contains };
+export type { Geometry, Position };
 type MunicipalityRecord = MunicipalityContext & { bbox: [number, number, number, number]; geometry: Geometry };
 type PackedZarcWindow = [cultureIndex: number, managementIndex: number, cycleCodes: number[], soilCodes: number[], packedRisk: string];
 type ZarcIndexEntry = Omit<ZarcCropContext, 'windows'> & { municipalityCode: string; windows: PackedZarcWindow[] };
@@ -37,33 +36,6 @@ for (const entry of zarcDocument.entries) {
 }
 const pamByMunicipality = new Map<string, PamIndexEntry[]>();
 for (const entry of pamDocument.entries) pamByMunicipality.set(entry.municipalityCode, [...(pamByMunicipality.get(entry.municipalityCode) ?? []), entry]);
-
-function onSegment(point: Position, start: Position, end: Position): boolean {
-  const cross = (point[1] - start[1]) * (end[0] - start[0]) - (point[0] - start[0]) * (end[1] - start[1]);
-  if (Math.abs(cross) > 1e-9) return false;
-  return point[0] >= Math.min(start[0], end[0]) && point[0] <= Math.max(start[0], end[0]) && point[1] >= Math.min(start[1], end[1]) && point[1] <= Math.max(start[1], end[1]);
-}
-
-function inRing(point: Position, ring: Ring): boolean {
-  let inside = false;
-  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index, index += 1) {
-    const currentPoint = ring[index];
-    const previousPoint = ring[previous];
-    if (onSegment(point, previousPoint, currentPoint)) return true;
-    const crosses = (currentPoint[1] > point[1]) !== (previousPoint[1] > point[1])
-      && point[0] < ((previousPoint[0] - currentPoint[0]) * (point[1] - currentPoint[1])) / (previousPoint[1] - currentPoint[1]) + currentPoint[0];
-    if (crosses) inside = !inside;
-  }
-  return inside;
-}
-
-function inPolygon(point: Position, polygon: PolygonCoordinates): boolean {
-  return Boolean(polygon[0] && inRing(point, polygon[0]) && !polygon.slice(1).some((hole) => inRing(point, hole)));
-}
-
-export function contains(point: Position, geometry: Geometry): boolean {
-  return geometry.type === 'Polygon' ? inPolygon(point, geometry.coordinates) : geometry.coordinates.some((polygon) => inPolygon(point, polygon));
-}
 
 export function resolveBrazilMunicipality(coordinates: Coordinates): MunicipalityContext | null {
   const point: Position = [coordinates.longitude, coordinates.latitude];

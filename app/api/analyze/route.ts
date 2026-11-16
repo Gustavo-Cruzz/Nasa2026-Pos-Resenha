@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) throw new Error(parsed.error.issues.map((issue) => issue.message).join('; '));
     const input = 'input' in parsed.data ? parsed.data.input : parsed.data;
     const labPlan = 'input' in parsed.data ? parsed.data.labPlan : undefined;
-    const [climate, regionalContext, terrain, soilContext] = await Promise.all([resolveClimateContext(input.location, input.plantingMonth), Promise.resolve(resolveBrazilRegionalContext(input.location)), fetchTerrain(input.location, input.fieldBoundary), Promise.resolve(resolveRegionalSoilAnalysis(input.location))]);
+    const regionalContext = resolveBrazilRegionalContext(input.location);
+    const [climate, terrain, soilContext] = await Promise.all([resolveClimateContext(input.location, input.plantingMonth, undefined, regionalContext.municipality?.code), fetchTerrain(input.location, input.fieldBoundary), Promise.resolve(resolveRegionalSoilAnalysis(input.location))]);
     const regionalSoil = input.soil ? undefined : regionalSoilProfile(soilContext);
     const result = analyze(input, climate, labPlan, regionalContext, { regionalSoil, terrain });
     return NextResponse.json({ ...result, terrain, soilContext, evidenceManifest: { ...result.evidenceManifest, sourceHealth: buildSourceHealth({ ...result, terrain }) } });

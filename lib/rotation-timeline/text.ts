@@ -1,6 +1,7 @@
 import type { AnalysisResult } from '@/lib/engine/types';
 import type { Locale } from '@/lib/i18n';
 import { cropDisplayName, indicatorDisplay, missingLabel } from '@/lib/presentation';
+import { ndviMunicipalCaveats } from '@/lib/climate/ndvi-copy';
 import { erosivityLabel } from '@/lib/climate/erosivity';
 import { dominantPriorities } from '@/lib/engine/priorities';
 import { bareMonthCount, readMonth, secondCropSegment, windowBalanceSum, type ClimateSeries, type TimelineModel } from '@/lib/rotation-timeline/model';
@@ -68,6 +69,7 @@ export function buildTechnicianBrief(data: AnalysisResult, locale: Locale): Tech
   if (data.climate.erosivity?.classId) known.push(en ? `Rainfall erosivity: ${erosivityLabel(data.climate.erosivity.classId, 'en')}.` : `Erosividade da chuva: ${erosivityLabel(data.climate.erosivity.classId, 'pt-BR')}.`);
   for (const id of [...new Set(data.strategies.flatMap((strategy) => [...strategy.missingData, ...(strategy.bareSoil?.missing ?? [])]))]) missing.push(missingLabel(id, locale));
   if (!data.climate.ndvi) missing.push(en ? 'MODIS NDVI series' : 'série NDVI MODIS');
+  else if (data.climate.ndvi.origin === 'municipal_artifact') known.push(ndviMunicipalCaveats(locale).join(' '));
   for (const strategy of data.strategies) {
     const bare = strategy.bareSoil;
     if (bare && bare.bareMonthsInHighErosivity.length) risks.push(en ? `${strategy.id}: ${bare.bareMonthsInHighErosivity.length} bare month(s) fall in months of above-average erosive rain.` : `${strategy.id}: ${bare.bareMonthsInHighErosivity.length} mês(es) descoberto(s) em meses de chuva mais erosiva.`);

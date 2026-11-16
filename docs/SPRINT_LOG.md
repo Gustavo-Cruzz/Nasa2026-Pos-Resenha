@@ -1096,3 +1096,38 @@ Implemented:
 Checks: `npx tsc --noEmit`, `npm run lint`, `npx vitest run` (65 files / 445 tests) and `npm run build` (in an isolated copy, so the running dev server was not touched) pass. Playwright `future-stories.spec.ts` + `navigation.spec.ts`: 22/24 pass; the 2 failures (home heading "Converse com o João…", explore map-unavailable status) are in untouched screens and pre-date this sprint.
 
 Limitations: the D4 card compares only year 1's second crop; the Climate Risk Lab forecast panel left the advanced view (component and unit tests kept); the timeline layout was verified by e2e only, not by visual review. Next: visual review of the timeline on mobile/desktop, fix the two stale home/explore e2e assertions.
+
+## Sprint F25 — NDVI MODIS municipal nacional (5.571 municípios)
+
+Status: complete — the MODIS MOD13Q1 NDVI series is now available for every Brazilian municipality of the IBGE 2025 catalog, validated and wired into the municipal analysis.
+
+Implemented:
+- Source: NASA MODIS MOD13Q1 v061, Terra only (MYD13Q1/Aqua excluded by id prefix `MOD13Q1.`), band `250m_16_days_NDVI`, 250 m nominal, 16-day composites, scale 0.0001, fill −3000, valid raw range −2000..10000. Out-of-range and fill values become `null`, never zero.
+- Access: Microsoft Planetary Computer STAC (`modis-13Q1-061`). COGs are read directly over HTTP Range with a minimal built-in TIFF/deflate reader (no new dependencies). The SAS token from `/api/sas/v1/token/{account}/{container}` is kept in memory only; no token or signed URL is stored.
+- Points: `data/ndvi-brazil/points.json` has one interior point per municipality of `data/brazil-municipalities.json` (IBGE 2025): 5.571 municipalities, which is the 5.570 in the catalog plus Boa Esperança do Norte/MT (5101837), created in 2025. Method: centroid of the largest polygon when inside the municipality (5.523), otherwise the interior grid point nearest the centroid (48). Every point was checked to lie inside its own municipality geometry; Polygon and MultiPolygon are both handled. Command: `npm run build:ndvi-municipal-points`.
+- Pipeline: `npm run fetch:ndvi-brazil` with `--resume`, `--force`, `--concurrency` (1–16), `--uf`, `--ibge`, `--dry-run` and `--source cog|point`. `--source point` is an explicit low-concurrency fallback through the point API. Checkpoint in `data/ndvi-brazil/manifest.json` (format version, product/band, period, processed items, completed municipalities, recoverable and permanent failures, catalog and generator SHA-256, SHA-256 of each `states/<UF>.json`), written atomically (tmp + rename). Raw per-tile values stay in `data/ndvi-brazil/.work/` (gitignored, 29 MB) so a resume does not download again.
+- Validator: `npm run validate:ndvi-brazil [-- --require-complete]` writes `data/ndvi-brazil/report.json`. A municipality is `available` with at least 90% of the expected composites listed (23 per year) and at least 70% valid.
+- Output: `data/ndvi-brazil/states/<UF>.json` (27 files, 7.5 MB in total). Each record carries the monthly climatology (median per calendar month), observations, valid observations, coverage, status, point, period and provenance.
+- Runtime: `lib/climate/ndvi-municipal.ts` `readMunicipalNdvi(ibgeCode)` resolves, in order: (1) the municipal artifact by IBGE code, validated against the IBGE mesh, checksum-verified, and used only when `status` is `available`; (2) the seven exact-coordinate pilot fixtures in `data/ndvi` (unchanged); (3) N/D. It is never resolved by coordinate or UF alone. Only `/api/analyze` passes the IBGE code, from the regional context; climate-only routes (`/api/climate`, `/api/climate-risk`, global) keep the fixture-only behaviour. `next.config.ts` traces the manifest and `states/` for `/api/analyze` on Vercel.
+- Copy: when the origin is municipal, the UI and the export show four mandatory caveats: “NDVI MODIS representativo do município.”, “Ponto modelado de 250 m; não representa necessariamente a fazenda.”, “Série histórica, não previsão.” and “Não mede produtividade, saúde da cultura ou condição atual do talhão.” The series is not used for yield, crop recommendation, property degradation, field biomass, soil recovery, irrigation, or as a replacement for local observation.
+- Documentation: `docs/DATA_CROSSWALK.md`, `components/methodology/content.ts`, `data/ndvi-brazil/README.md` and `data/README.md` describe the municipal artifact; stale “7 points” and “exists only at demonstration points” statements were corrected.
+
+Bugs found and fixed while piloting:
+- Items from 2024 onward lack the STAC `platform` property, so a server-side platform filter silently dropped them. Terra is now selected by the id prefix instead.
+- LP DAAC reprocessed composites appear twice for the same tile and date, with a newer production timestamp. Only the latest one is kept.
+
+Evidence (2026-11-15):
+- National run: 5.571/5.571 municipalities processed; 0 duplicates, 0 invalid points, 0 failures. Result: 5.556 `available`, 10 `insufficient_coverage`, 5 `unavailable`. Coverage mean 99.78% (min 0, max 100).
+- Real period: composites from 2011-01-01 through 2025-12-19 (the last composite ends 2026-01-03). 334 of the 345 expected composites exist per tile in the Planetary Computer catalog; the gaps are in 2023–2025.
+- Scope: 15 MODIS tiles, 5.010 STAC items sampled, about 50 thousand range requests, about 69 GB estimated transfer. National run took 59 min 19 s at concurrency 8 (pilots: DF 59 s; GO 5 min 09 s).
+- Value validation: exact match against the Planetary Computer point API for 60/60 random points and for the three Rio Verde composites.
+- Non-available municipalities (the point falls on water inside the IBGE boundary, where MODIS fills the pixel): `unavailable` in Salvador BA, Madre de Deus BA, Afuá PA, Chaves PA and Arraial do Cabo RJ; `insufficient_coverage` in Japurá AM, Itaparica BA, Saubara BA, Viana MA, Belém PA, Cabedelo PB, Quinze de Novembro RS, Laguna SC, Cananéia SP and Rubinéia SP. The app shows N/D for these 15.
+- Tests: 513/513 passing (new: `ndvi-municipal-points`, `modis-sinusoidal`, `cog-reader`, `ndvi-raster-source`, `ndvi-brazil-pipeline`, `ndvi-municipal`). Lint, typecheck and build pass.
+
+Limitations:
+- One point per municipality. It is not representative of every land use in the municipality and can fall on water near the coast (the 15 cases above).
+- Municipal context only. There is no field-level or farm-level NDVI, and the series does not diagnose the crop.
+- Catalog gaps in 2023–2025 (334 of 345 composites per tile).
+- The IBGE mesh used is the “qualidade mínima” simplified geometry.
+
+Next: optionally a land-preferring fallback point for the 15 water points. Whether to do it is the user's decision.

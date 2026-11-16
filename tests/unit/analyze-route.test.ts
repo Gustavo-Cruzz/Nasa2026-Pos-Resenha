@@ -24,7 +24,7 @@ describe('POST /api/analyze', () => {
     expect(body.soilContext.status).toBe('unavailable');
     expect(JSON.stringify(body)).not.toMatch(/"score"|"yield"|"etc"|"irrigationNeed"/i);
     expect(JSON.stringify(body)).not.toContain('locally_validated');
-    expect(mocks.resolveClimateContext).toHaveBeenCalledWith(valid.location, 7);
+    expect(mocks.resolveClimateContext).toHaveBeenCalledWith(valid.location, 7, undefined, undefined); // outside the IBGE mesh: no municipality code, so no municipal NDVI
     expect(mocks.resolveBrazilRegionalContext).toHaveBeenCalledWith(valid.location);
   });
   it('passes the municipal SoilGrids estimate to the engine as separate regional soil without touching the farmer input', async () => {

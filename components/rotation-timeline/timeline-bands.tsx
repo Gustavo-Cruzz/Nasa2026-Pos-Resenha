@@ -26,7 +26,7 @@ export function bandInfo(id: BandId, model: TimelineModel, laneCount: number, lo
     case 'zarc': return { height: laneCount * 22 + 40, available: model.zarcAvailable, title: t('Janela ZARC e risco', 'ZARC window and risk'), subtitle: t('por cenário e cultura', 'by scenario and crop'), missing: t('N/D — dado não disponível: sem ZARC municipal processado para este local.', 'N/D — data not available: no processed municipal ZARC for this location.') };
     case 'erosivity': return { height: 92 + laneCount * 13, available: series.rainSharePct.some((value) => value !== null), title: t('Erosividade e solo descoberto', 'Erosivity and bare soil'), subtitle: t('% da chuva anual no mês (base do Fournier)', '% of annual rain in the month (Fournier basis)'), missing: t('N/D — dado não disponível: sem os 12 meses de chuva não há como medir a contribuição de cada mês.', 'N/D — data not available: without all 12 months of rain the monthly contribution cannot be measured.') };
     case 'wetness': return { height: 84, available: series.has.wetness, title: t('Umidade da zona radicular (GWETROOT)', 'Root-zone wetness (GWETROOT)'), subtitle: t('índice 0–1 · modelado', 'index 0–1 · modelled'), missing: t('N/D — dado não disponível: GWETROOT não foi carregado.', 'N/D — data not available: GWETROOT was not loaded.') };
-    case 'ndvi': return { height: 84, available: series.has.ndvi, title: t('NDVI mensal (MODIS)', 'Monthly NDVI (MODIS)'), subtitle: t('mediana mensal', 'monthly median'), missing: t('N/D — dado não disponível: a série NDVI verificada existe só para alguns pontos e não cobre este local.', 'N/D — data not available: the verified NDVI series exists only for some points and does not cover this location.') };
+    case 'ndvi': return { height: 84, available: series.has.ndvi, title: t('NDVI mensal (MODIS)', 'Monthly NDVI (MODIS)'), subtitle: t('mediana mensal', 'monthly median'), missing: t('N/D — dado não disponível: não há série NDVI válida para este local (ex.: ponto sobre água ou fora dos pontos com arquivo verificado).', 'N/D — data not available: no valid NDVI series for this location (e.g. a point on water or outside the points with a verified file).') };
   }
 }
 
@@ -188,6 +188,7 @@ export function NdviBand({ model, mw, width, locale }: BandProps) {
     <path d={linePath(points)} fill="none" stroke={COLORS.lime} strokeWidth="2" />
     {points.map((item, index) => item ? <circle cx={item.x} cy={item.y} fill={COLORS.lime} key={index} r="3" /> : <text fill={COLORS.muted} fontSize="9" key={index} textAnchor="middle" x={index * mw + mw / 2} y={height - 4}>N/D</text>)}
     <text fill={COLORS.lime} fontSize="10" x="3" y="12">{copy(locale, 'NDVI 0–1 (vigor da vegetação visto do satélite)', 'NDVI 0–1 (satellite vegetation vigour)')}</text>
+    {model.series.ndviMunicipal ? <text fill={COLORS.muted} fontSize="9" x="3" y={height - 16}>{copy(locale, 'Representativo do município; ponto de 250 m, não da fazenda.', 'Municipal representative; 250 m point, not the farm.')}</text> : null}
   </Svg>;
 }
 

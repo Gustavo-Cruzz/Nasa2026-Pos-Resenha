@@ -4,6 +4,7 @@ import { cropDisplayName, missingLabel } from '@/lib/presentation';
 import { deriveDecisionHero } from '@/lib/engine/decision-hero';
 import { deriveRotationCalendar, deriveSeasonInsights, describeSeasonInsight, monthLabel, seasonCaveat } from '@/lib/engine/season';
 import { relativeLowVegetationMonths } from '@/lib/climate/ndvi';
+import { ndviMunicipalCaveats } from '@/lib/climate/ndvi-copy';
 import { RELIEF_CLASSES, reliefLabel, HOTSPOT_MIN_SLOPE_PCT } from '@/lib/terrain/terrain';
 import { erosivityLabel } from '@/lib/climate/erosivity';
 import { buildSourceHealth, sourceGapLabel, sourceStateLabel, sourceTitle } from '@/lib/source-health';
@@ -65,6 +66,7 @@ function seasonLines(data: AnalysisResult, locale: Locale): string[] {
   if (ndvi) {
     const low = relativeLowVegetationMonths(ndvi.months);
     lines.push('', `${en ? 'MODIS NDVI (monthly median)' : 'NDVI MODIS (mediana mensal)'}: ${ndvi.months.map((month) => `${monthLabel(month.month, locale)} ${month.medianNdvi ?? 'N/D'}`).join(', ')}${low.length ? ` — ${en ? 'relative lowest months' : 'meses relativamente mais baixos'}: ${low.map((month) => monthLabel(month, locale)).join(', ')}` : ''}`);
+    if (ndvi.origin === 'municipal_artifact') lines.push(...ndviMunicipalCaveats(locale).map((line) => `- ${line}`), `- ${ndvi.period.start}–${ndvi.period.end}${ndvi.scope ? ` · ${ndvi.scope.municipality}/${ndvi.scope.uf} (IBGE ${ndvi.scope.ibgeCode})` : ''}`);
   } else lines.push('', `${en ? 'MODIS NDVI' : 'NDVI MODIS'}: N/D`);
   return lines;
 }

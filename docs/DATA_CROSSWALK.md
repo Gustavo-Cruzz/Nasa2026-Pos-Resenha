@@ -22,7 +22,7 @@ Escopo do produto: Brasil inteiro (contexto municipal/regional) mais exploraçã
 |---|---|---|---|
 | NASA POWER | **Usado numérico** | Daily Point, `community=AG`, 2011–2025, 11 parâmetros: `T2M`, `T2M_MAX`, `T2M_MIN`, `PRECTOTCORR`, `RH2M`, `WS2M`, `ALLSKY_SFC_SW_DWN` + `IMERG_PRECTOT`, `GWETROOT`, `PS`, `TSOIL1` (`lib/climate/nasa-power.ts:15-17`). Gera ET0 FAO-56, balanço P−ET0, estação chuvosa, veranicos, triagem de geada, Fournier, faixa térmica. Também POWER Monthly Regional para `GWETROOT` municipal (5.571 municípios). | Sem credencial, diário, global, parâmetros agroclimáticos prontos. |
 | GPM / IMERG | **Usado numérico** + **visual** | `IMERG_PRECTOT` via POWER (total mensal e mediana de dias de chuva); camada GIBS `IMERG_Precipitation_Rate` no mapa. | Distribuição da chuva além do total; sem login. |
-| MODIS (MOD13Q1 v061) | **Usado numérico** + **visual** | NDVI 250 m/16 dias via Microsoft Planetary Computer STAC, só em 7 pontos com arquivo verificado (SHA-256); GIBS `MODIS_Terra_CorrectedReflectance_TrueColor` no mapa. | Período de solo exposto/vegetação baixa; serviço ORNL DAAC devolvia 502/503. |
+| MODIS (MOD13Q1 v061) | **Usado numérico** + **visual** | NDVI 250 m/16 dias (Terra) via Microsoft Planetary Computer STAC: série municipal nacional para os 5.571 municípios do IBGE 2025 (um ponto interior por município, arquivo com SHA-256) e 7 pontos de demonstração com arquivo verificado; GIBS `MODIS_Terra_CorrectedReflectance_TrueColor` no mapa. | Período de solo exposto/vegetação baixa; serviço ORNL DAAC devolvia 502/503. |
 | SRTM (GL1 v003, 30 m) | **Usado numérico** | OpenTopoData `srtm30m`, até 100 pontos por análise: declividade, classes de relevo Embrapa, pontos ≥ 8%. | Relevo para risco de erosão; endpoint público. |
 | SMAP | **Usado visual** | GIBS `SMAP_L4_Analyzed_Root_Zone_Soil_Moisture` em data fixa 2025-06-30. Numérico (SPL4SMGP) fica N/D: exige login Earthdata. Substituto numérico: POWER `GWETROOT` (índice modelado 0–1, não umidade volumétrica). | Sem credencial Earthdata no projeto. |
 | Landsat | **Candidato** (difícil) | Não usado. | Cena 30 m exige recorte por talhão, máscara de nuvem e volume de dados. |
@@ -79,7 +79,7 @@ IBGE (malha municipal, Localidades, PAM), MAPA ZARC 2026/2027, ISRIC SoilGrids 2
 - **IMERG via POWER**: mesma requisição, segunda estimativa de chuva (satélite), usada para contar dias de chuva.
 - **GWETROOT (POWER)**: substituto sem credencial do SMAP numérico. Índice relativo 0–1, não umidade volumétrica.
 - **TSOIL1 (POWER)**: temperatura do solo próxima à superfície, mostrada no Explorar; no arquivo de Rio Verde não existe (N/D).
-- **MODIS MOD13Q1**: NDVI para achar meses de vegetação relativamente baixa (risco de solo exposto). Só em pontos com arquivo verificado.
+- **MODIS MOD13Q1**: NDVI para achar meses de vegetação relativamente baixa (risco de solo exposto). No Brasil, a série municipal cobre os 5.571 municípios (um ponto modelado de 250 m por município, não a fazenda); fora disso, só nos 7 pontos de demonstração com arquivo verificado. Sem série válida (por exemplo, ponto sobre água), N/D.
 - **SRTM**: declividade e classes de relevo da Embrapa para o risco de erosão.
 - **GIBS**: mostrar SMAP, IMERG e MODIS no mapa sem baixar nem decodificar dados.
 - **SoilGrids**: única base de solo com cobertura nacional e acesso aberto; os arquivos são pré-processados porque a API REST está suspensa.
@@ -126,8 +126,8 @@ Já calculados (não listar como novidade): ET0 FAO-56, balanço P−ET0, estaç
 
 Divergências entre documentação e código encontradas no inventário. Não foram corrigidas aqui:
 
-1. `data/README.md` e `docs/SOURCES.md` falam em NDVI para 3 pontos; o código (`lib/climate/ndvi.ts:12-20`) tem 7.
-2. `lib/source-health.ts` rotula o MODIS como "(ORNL DAAC)", mas os dados vêm do Microsoft Planetary Computer.
+1. ~~`data/README.md` e `docs/SOURCES.md` falam em NDVI para 3 pontos; o código (`lib/climate/ndvi.ts:12-20`) tem 7.~~ **Corrigido em 2026-11-15**: os 7 pontos de demonstração e a série municipal nacional (`data/ndvi-brazil/`) estão descritos nos dois arquivos.
+2. ~~`lib/source-health.ts` rotula o MODIS como "(ORNL DAAC)", mas os dados vêm do Microsoft Planetary Computer.~~ **Corrigido em 2026-11-15**: o rótulo agora cita NASA LP DAAC via Planetary Computer.
 3. A página de metodologia dizia "Sem previsões" / "Open-Meteo … sem previsões", mas existem `/api/forecast` e `/api/climate-risk` (previsão meteorológica de até 16 dias). **Corrigido na nova página.**
 4. `docs/METHOD.md` lista nove parâmetros POWER; o código pede 11 (inclui `PS` e `TSOIL1`).
 5. RONI/ENSO e `TSOIL1` não aparecem em `docs/SOURCES.md` nem em `docs/METHOD.md`.

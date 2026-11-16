@@ -165,7 +165,7 @@ flowchart TB
 | **NASA POWER** | Historical climate and inputs for FAO-56 ET0 | Shows how climate usually behaves during a crop window | Regional grid; not a sensor or forecast |
 | **GPM IMERG via POWER** | Historical totals and rainy-day distribution | Separates rainfall amount from rainfall frequency | Rainfall is not crop water demand |
 | **MERRA-2 GWETROOT** | Relative root-zone wetness index | Adds water context beyond rainfall alone | Not volumetric field soil moisture |
-| **MODIS MOD13Q1** | Verified, preprocessed NDVI at agricultural demonstration points | Adds a historical vegetation-greenness signal | Prepared points only; does not diagnose a farm |
+| **MODIS MOD13Q1** | Pre-processed NDVI: one modelled 250 m point per Brazilian municipality (5,571), plus verified demonstration points | Adds a historical vegetation-greenness signal | Municipal context, not the farm; points on water show N/D; does not diagnose a farm |
 | **NASA SRTM** | Elevation, slope classes, and relief hotspots | Makes terrain visible when discussing exposed soil | Does not calculate soil loss |
 | **NASA GIBS** | Dated visual SMAP, rain, and imagery layers | Supports visual exploration of spatial context | Raster colors never become measurements |
 | **IBGE municipal mesh** | Versioned coordinate-to-municipality resolution | Connects the point to the correct municipal datasets | A municipality does not confirm ownership or agricultural land use |
@@ -313,6 +313,9 @@ npm run build:brazil-context
 npm run update:brazil-pam
 npm run build:brazil-soil
 npm run build:brazil-moisture
+npm run build:ndvi-municipal-points
+npm run fetch:ndvi-brazil -- --resume
+npm run validate:ndvi-brazil -- --require-complete
 npm run fetch:modis-ndvi -- <site>
 npm run fetch:nasa-fixture -- <site>
 npm run train:dry-spell

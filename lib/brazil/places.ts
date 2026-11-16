@@ -1,5 +1,6 @@
 import municipalitiesData from '@/data/brazil-municipalities.json';
 import { contains, type Geometry, type Position } from '@/lib/brazil/context';
+import { representativePoint as interiorRepresentativePoint } from '@/lib/brazil/interior-point';
 
 type Record_ = { [code: string]: Position };
 type Record = { code: string; name: string; uf: string; bbox: [number, number, number, number]; geometry: Geometry };
@@ -35,39 +36,7 @@ const PILOT_POINT: Record_ = { '5218805': [-50.919, -17.798] };
 
 const indexed = records.map((record) => ({ record, key: normalizeName(record.name) }));
 
-const ringArea = (ring: Position[]) => ring.reduce((sum, [x, y], index) => { const [nx, ny] = ring[(index + 1) % ring.length]; return sum + (x * ny - nx * y); }, 0) / 2;
-function inPolygon(point: Position, polygon: Position[][]): boolean { return contains(point, { type: 'Polygon', coordinates: polygon }); }
-
-/**
- * A point that is guaranteed to lie inside the municipality: the centroid of its largest polygon when that is inside,
- * otherwise the interior point of a grid nearest to the centroid. A centroid outside a concave shape would land in a neighbour
- * municipality and select the wrong regional context.
- */
-export function representativePoint(geometry: Geometry): Position | undefined {
-  const polygons = geometry.type === 'Polygon' ? [geometry.coordinates] : geometry.coordinates;
-  const polygon = [...polygons].sort((a, b) => Math.abs(ringArea(b[0])) - Math.abs(ringArea(a[0])))[0];
-  if (!polygon?.[0]?.length) return undefined;
-  const ring = polygon[0];
-  const area = ringArea(ring);
-  let centroid: Position;
-  if (Math.abs(area) < 1e-12) centroid = [ring.reduce((sum, p) => sum + p[0], 0) / ring.length, ring.reduce((sum, p) => sum + p[1], 0) / ring.length];
-  else {
-    let cx = 0; let cy = 0;
-    ring.forEach(([x, y], index) => { const [nx, ny] = ring[(index + 1) % ring.length]; const cross = x * ny - nx * y; cx += (x + nx) * cross; cy += (y + ny) * cross; });
-    centroid = [cx / (6 * area), cy / (6 * area)];
-  }
-  const settle = (point: Position): Position | undefined => { for (const digits of [4, 6]) { const rounded: Position = [Number(point[0].toFixed(digits)), Number(point[1].toFixed(digits))]; if (contains(rounded, geometry)) return rounded; } return undefined; };
-  if (inPolygon(centroid, polygon)) { const settled = settle(centroid); if (settled) return settled; }
-  const xs = ring.map((p) => p[0]); const ys = ring.map((p) => p[1]);
-  const minX = Math.min(...xs); const maxX = Math.max(...xs); const minY = Math.min(...ys); const maxY = Math.max(...ys);
-  const steps = 60; let best: Position | undefined; let bestDistance = Infinity;
-  for (let i = 0; i <= steps; i += 1) for (let j = 0; j <= steps; j += 1) {
-    const point: Position = [minX + (maxX - minX) * i / steps, minY + (maxY - minY) * j / steps];
-    const distance = (point[0] - centroid[0]) ** 2 + (point[1] - centroid[1]) ** 2;
-    if (distance < bestDistance && inPolygon(point, polygon)) { best = point; bestDistance = distance; }
-  }
-  return best ? settle(best) : undefined;
-}
+export const representativePoint = interiorRepresentativePoint;
 
 /** Municipalities matching "city" or "city, state": exact name first, then names that start with or contain the text. At most `limit`. */
 export function searchMunicipalities(query: string, limit = 6): PlaceMatch[] {

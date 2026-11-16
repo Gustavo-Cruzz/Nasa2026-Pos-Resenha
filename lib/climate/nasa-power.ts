@@ -7,6 +7,7 @@ import { isPilotLocation } from '@/lib/region';
 import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, monthlyForYear, historicalWaterBalanceByMonth, historicalWaterContextForMonth, historicalWaterContextByMonth, frostByMonth, monthlyClimatology, type HistoricalCalendarDay, type YearMonth, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth, type FrostMonth } from '@/lib/climate/indicators';
 import { dayOfYear, et0Daily } from '@/lib/climate/et0';
 import type { NdviContext } from '@/lib/climate/ndvi';
+import { readMunicipalNdvi } from '@/lib/climate/ndvi-municipal';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
 import { historicalErosivity, type Erosivity } from '@/lib/climate/erosivity';
 import { drySpellsInRainySeason, rainySeasonFromBalance, rootZoneByMonth, type DrySpellSummary, type RainySeason, type RootZoneMonth } from '@/lib/climate/seasonality';
@@ -156,20 +157,21 @@ export async function readVerifiedPilotFixture(coordinates: Coordinates): Promis
 }
 
 /** Single climate acquisition path for both public routes. Fixture fallback is pilot-exact only. */
-export async function resolveClimateContext(coordinates: Coordinates, plantingMonth: number, calendarDay?: number): Promise<ClimateContext> {
+export async function resolveClimateContext(coordinates: Coordinates, plantingMonth: number, calendarDay?: number, municipalityCode?: string): Promise<ClimateContext> {
   try {
     const dataset = await fetchNasaPower(coordinates);
-    return withNdvi(contextFromDataset(dataset, plantingMonth, 'live', calendarDay), coordinates);
+    return withNdvi(contextFromDataset(dataset, plantingMonth, 'live', calendarDay), coordinates, municipalityCode);
   } catch (error) {
     const fixture = await readVerifiedPilotFixture(coordinates);
-    if (fixture) return withNdvi(contextFromDataset(fixture, plantingMonth, 'verified_fixture', calendarDay), coordinates);
+    if (fixture) return withNdvi(contextFromDataset(fixture, plantingMonth, 'verified_fixture', calendarDay), coordinates, municipalityCode);
     const reason = error instanceof ClimateDataError ? error.code : 'NASA_REQUEST_FAILED';
     return { status: 'unavailable', origin: 'unavailable', monthly: [], plantingMonthPrecipitation: null, historicalPrecipitationByMonth: [], waterContext: null, provenance: null, gaps: [`Historical NASA POWER climate is unavailable (${reason}). No Rio Verde fixture was used for this coordinate.`] };
   }
 }
 
-async function withNdvi(context: ClimateContext, coordinates: Coordinates): Promise<ClimateContext> {
-  const ndvi = await readNdviFixture(coordinates);
+/** NDVI priority: municipal artifact by validated IBGE code, then exact pilot fixture, otherwise N/D. */
+async function withNdvi(context: ClimateContext, coordinates: Coordinates, municipalityCode?: string): Promise<ClimateContext> {
+  const ndvi = (municipalityCode ? await readMunicipalNdvi(municipalityCode) : undefined) ?? await readNdviFixture(coordinates);
   return ndvi ? { ...context, ndvi } : context;
 }
 

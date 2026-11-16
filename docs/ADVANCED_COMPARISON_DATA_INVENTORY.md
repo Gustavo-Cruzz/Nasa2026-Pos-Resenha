@@ -347,9 +347,9 @@ Recolhido: "Climate window by month, vegetation and NASA Insight" (dentro de `Se
 | Insights com ajuste hipotético (só quando há ajuste) | `deriveSeasonInsights(calendar, applyRainChange(waterBalanceByMonth, rainPct), plantingMonth)` | Derivado | texto | — |
 | Gráfico chuva × ET₀ (barras e linha) | `climate.waterBalanceByMonth[].precipMedianMm` (barras) e `et0MedianMm` (linha), com ajuste de chuva aplicado quando há controle hipotético | NASA POWER + FAO-56 | mm | Mês de plantio destacado. |
 | Tabela "Tabela de dados": chuva, ET₀, balanço e "Anos completos" | `waterBalanceByMonth[].precipMedianMm`, `.et0MedianMm`, `.balanceMedianMm`, `.validYears`, `.expectedYears` | NASA POWER + FAO-56 | mm; `válidos/esperados` | — |
-| Vegetação (MODIS NDVI, mediana mensal): valor por mês (2 casas) | `climate.ndvi.months[].medianNdvi` e `.month` | MODIS MOD13Q1 NDVI (ORNL DAAC), série verificada | adimensional, 2 casas | N/D por mês quando nulo. |
+| Vegetação (MODIS NDVI, mediana mensal): valor por mês (2 casas) | `climate.ndvi.months[].medianNdvi` e `.month` | MODIS MOD13Q1 NDVI (Planetary Computer), série municipal válida ou fixture verificado | adimensional, 2 casas | N/D por mês quando nulo. |
 | Meses de menor vegetação (em relação à série do próprio ponto) | `relativeLowVegetationMonths(climate.ndvi.months)` (`lib/climate/ndvi.ts`) | Derivado do NDVI | meses | Texto: "leitura relativa, não diagnóstico de solo nu". |
-| Período e cobertura do NDVI | `climate.ndvi.period.start`, `.end`; `climate.ndvi.coveragePct` | MODIS | período; % | Quando não há NDVI: "N/D — só existe onde há série pré-processada verificada". |
+| Período e cobertura do NDVI | `climate.ndvi.period.start`, `.end`; `climate.ndvi.coveragePct` | MODIS | período; % | Quando não há NDVI: "N/D — só existe onde há série municipal válida ou fixture verificado". |
 | Seletor de mês do NASA Insight (padrão: mês de plantio) | `nasaInsightByMonth[]` (escolhido pelo select) | — | mês | Trocar o mês não altera culturas nem plano salvo. |
 | NASA Insight do mês: título (contraste, sinal compartilhado, observacional ou desconhecido) | `nasaInsightByMonth[].status` | Motor | texto | Textos de `copy.nasaInsight*`. |
 | NASA Insight do mês: valor observado, unidade, período e cobertura | `nasaInsightByMonth[].observedValue`, `.unit`, `.period.start`, `.period.end`, `.coveragePct` | NASA POWER T2M (temperatura mensal) | °C; período; % | "N/D" quando nulo. |
@@ -532,7 +532,7 @@ Fontes (`SourcesVisual`; uma linha por fonte de `buildSourceHealth(data)`):
 |---|---|---|---|---|
 | NASA POWER: estado; cobertura (%); período; falta (gap) | `climate.provenance.coveragePct.T2M`, `climate.provenance.period.start`/`.end`, `climate.origin`, `climate.status`, `climate.gaps` (gap: dias sem valor válido, ou clima indisponível) | NASA POWER (MERRA-2) | estado; %; período | Estado derivado da cobertura. Estado `cache_verified` para o cache verificado. |
 | GPM IMERG: estado; cobertura; período; falta | `climate.provenance.coveragePct.IMERG_PRECTOT`; período; gap (`imerg_unavailable` ou dias sem valor) | GPM IMERG via NASA POWER | estado; %; período | — |
-| MODIS NDVI: estado; cobertura; período | `climate.ndvi.coveragePct`, `climate.ndvi.period.start`/`.end`; estado `nd` sem NDVI, `partial` com cobertura < 100% | MODIS MOD13Q1 (ORNL DAAC) | estado; %; período | — |
+| MODIS NDVI: estado; cobertura; período | `climate.ndvi.coveragePct`, `climate.ndvi.period.start`/`.end`; estado `nd` sem NDVI, `partial` com cobertura < 100% | MODIS MOD13Q1 (Planetary Computer) | estado; %; período | — |
 | SRTM: estado; período fixo "STS-99, 2000" | `terrain.status`, `terrain.gaps` (`some_cells_without_elevation`) | NASA SRTM GL1 v003 | estado; texto fixo | Cobertura não se aplica (N/D). |
 | SMAP: sempre N/D; falta "requer pré-processamento Earthdata" | `boundaryAnalysis.smapHistorical.product`, `.version`, `.temporalCoverage` | SMAP L4 (SPL4SMGP v8) | estado N/D | — |
 | ZARC: estado; safra; falta (sem registro ZARC ou fora do Brasil) | `regionalContext.zarc.safra`, `regionalContext.zarc` nulo, `regionalContext.country` | MAPA ZARC | estado; safra | — |

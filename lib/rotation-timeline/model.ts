@@ -29,6 +29,8 @@ export type ClimateSeries = {
   wetness: Monthly12<number>;
   wetnessSource: 'rootZoneByMonth' | 'waterContextByMonth' | null;
   ndvi: Monthly12<number>;
+  /** True when the NDVI series comes from the national municipal artifact (representative of the municipality, not the farm). */
+  ndviMunicipal?: boolean;
   /** Share (%) of the annual rainfall falling in the month: the Fournier term basis. Null unless all 12 months have rain. */
   rainSharePct: Monthly12<number>;
   highErosivity: boolean[];
@@ -57,7 +59,7 @@ export function buildClimateSeries(data: Pick<AnalysisResult, 'climate'>): Clima
   const complete = rainMm.every((value) => value !== null); const total = complete ? rainMm.reduce<number>((sum, value) => sum + (value as number), 0) : 0;
   const rainSharePct = rainMm.map((value) => complete && total > 0 ? roundTo(((value as number) / total) * 100, 2) : null);
   const high = highErosivityMonths({ ...climate, historicalPrecipitationByMonth: climate.historicalPrecipitationByMonth ?? [] });
-  return { rainMm, rainCoveragePct, et0Mm, balanceMm, tmeanC, wetness, wetnessSource, ndvi, rainSharePct, highErosivity: Array.from({ length: 12 }, (_, index) => high.includes(index + 1)), erosivityClassId: climate.erosivity?.classId ?? null, frost, has: { rain: anyValue(rainMm), balance: anyValue(balanceMm), temp: anyValue(tmeanC), wetness: anyValue(wetness), ndvi: anyValue(ndvi), erosivity: Boolean(climate.erosivity?.classId) && complete, frost: anyValue(frost) } };
+  return { rainMm, rainCoveragePct, et0Mm, balanceMm, tmeanC, wetness, wetnessSource, ndvi, ndviMunicipal: climate.ndvi?.origin === 'municipal_artifact', rainSharePct, highErosivity: Array.from({ length: 12 }, (_, index) => high.includes(index + 1)), erosivityClassId: climate.erosivity?.classId ?? null, frost, has: { rain: anyValue(rainMm), balance: anyValue(balanceMm), temp: anyValue(tmeanC), wetness: anyValue(wetness), ndvi: anyValue(ndvi), erosivity: Boolean(climate.erosivity?.classId) && complete, frost: anyValue(frost) } };
 }
 
 export type MonthReading = { month: number; rainMm: number | null; rainBaseMm: number | null; et0Mm: number | null; balanceMm: number | null; balanceBaseMm: number | null; tmeanC: number | null; tmeanBaseC: number | null; wetness: number | null; ndvi: number | null; rainSharePct: number | null; highErosivity: boolean; frost: { years: number; valid: number } | null };

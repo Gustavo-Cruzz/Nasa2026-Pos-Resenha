@@ -12,7 +12,7 @@ const SOURCES: Node[] = [
   { title: { pt: 'Embrapa · FAO', en: 'Embrapa · FAO' }, simple: { pt: 'Faixas de cada cultura', en: 'Each crop’s ranges' }, technical: { pt: 'viableTempC · ciclo · Kc · pH', en: 'viableTempC · cycle · Kc · pH' } },
   { title: { pt: 'Você', en: 'You' }, simple: { pt: 'Histórico e prioridades', en: 'History and priorities' }, technical: { pt: 'Zod · análise de solo opcional', en: 'Zod · optional soil analysis' } },
   { title: { pt: 'Dados oficiais do Brasil', en: 'Brazil official data' }, simple: { pt: 'IBGE · ZARC · PAM · SoilGrids', en: 'IBGE · ZARC · PAM · SoilGrids' }, technical: { pt: 'decêndio · SIDRA 5457 · 5 km', en: '10-day · SIDRA 5457 · 5 km' } },
-  { title: { pt: 'NASA MODIS NDVI', en: 'NASA MODIS NDVI' }, simple: { pt: 'Verde da vegetação', en: 'Vegetation greenness' }, technical: { pt: 'MOD13Q1 · 250 m · 7 pontos', en: 'MOD13Q1 · 250 m · 7 points' } },
+  { title: { pt: 'NASA MODIS NDVI', en: 'NASA MODIS NDVI' }, simple: { pt: 'Verde da vegetação', en: 'Vegetation greenness' }, technical: { pt: 'MOD13Q1 · 250 m · 5.571 municípios', en: 'MOD13Q1 · 250 m · 5,571 municipalities' } },
 ];
 
 const STEPS: Node[] = [

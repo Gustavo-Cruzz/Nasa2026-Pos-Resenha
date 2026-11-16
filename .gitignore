@@ -45,3 +45,4 @@ dados-abertos-tabua-de-risco-safra-2026-2027.csv
 
 # local SQLite database (demo accounts and registered farms)
 data/runtime/
+data/ndvi-brazil/.work/

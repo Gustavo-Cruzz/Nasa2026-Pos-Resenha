@@ -5,7 +5,9 @@ export const NDVI_VALID: readonly [number, number] = [-2000, 10_000];
 
 export type NdviObservation = { date: string; ndvi: number | null };
 export type NdviMonth = { month: number; medianNdvi: number | null; validObservations: number; years: number };
-export type NdviContext = { origin: 'verified_fixture'; product: 'MOD13Q1'; band: '250m_16_days_NDVI'; period: { start: string; end: string }; fetchedAt: string; sourceUrl: string; observations: number; validObservations: number; coveragePct: number; months: NdviMonth[] };
+/** Municipal scope of a national-artifact series: one modelled 250 m interior point, never a farm or field. */
+export type NdviScope = { kind: 'municipal'; ibgeCode: string; municipality: string; uf: string; point: { latitude: number; longitude: number; method: string } };
+export type NdviContext = { origin: 'verified_fixture' | 'municipal_artifact'; scope?: NdviScope; product: 'MOD13Q1'; band: '250m_16_days_NDVI'; period: { start: string; end: string }; fetchedAt: string; sourceUrl: string; observations: number; validObservations: number; coveragePct: number; months: NdviMonth[] };
 
 /** Demonstration points that may carry a pre-processed NDVI fixture. Exact coordinates only, like the POWER pilot fixture. */
 /** Rural cropland points (ESA WorldCover 2021 class 40, away from the built-up centre of each municipality). */

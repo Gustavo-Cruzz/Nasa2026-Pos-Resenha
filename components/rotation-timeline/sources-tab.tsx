@@ -1,5 +1,6 @@
 'use client';
 
+import { ndviMunicipalCaveats } from '@/lib/climate/ndvi-copy';
 import { DataQualityPanel } from '@/components/results/data-quality-panel';
 import { Term } from '@/components/rotation-timeline/glossary-term';
 import { useLocale } from '@/components/locale-provider';
@@ -23,6 +24,7 @@ export function SourcesTab({ data }: { data: AnalysisResult }) {
           {gap ? <p className="mt-1 text-xs text-amber-200">{gap}</p> : null}
           {source.url ? <a className="mt-1 inline-block text-xs text-cyan-200 underline" href={source.url} rel="noreferrer" target="_blank">{en ? 'Source' : 'Fonte'}</a> : null}
         </li>; })}</ul> : <p className="text-sm text-amber-200">N/D</p>}
+      {data.climate.ndvi?.origin === 'municipal_artifact' ? <ul aria-label="NDVI" className="mt-2 list-disc pl-5 text-xs text-slate-300">{ndviMunicipalCaveats(locale).map((line) => <li key={line}>{line}</li>)}</ul> : null}
     </section>
     <section aria-label={en ? 'Regional context' : 'Contexto regional'} className="mt-4 rounded-2xl border border-slate-700 bg-slate-900/70 p-3 text-sm">
       <h3 className="mb-1 text-base font-bold">{en ? 'Regional context' : 'Contexto regional'}</h3>
