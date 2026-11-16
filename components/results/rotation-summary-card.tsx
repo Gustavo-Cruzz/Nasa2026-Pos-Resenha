@@ -47,8 +47,10 @@ export function RotationSummaryCard({ data, onAdvanced }: { data: AnalysisResult
           </div>
           <div className={`flex h-16 w-60 shrink-0 flex-col justify-center gap-0.5 overflow-hidden rounded-lg border-l-4 bg-slate-800 px-3 ${lane.outcome.kind === 'reference' ? 'border-slate-600' : 'border-lime-300'}`}>
             {lane.outcome.kind === 'reference' ? <div className="text-sm font-semibold text-slate-400">{en ? 'reference' : 'referência'}</div> : <>
-              <div className="text-xl font-bold leading-none text-sky-300">{lane.outcome.waterDeltaMm === null ? 'N/D' : mm(lane.outcome.waterDeltaMm)}</div>
-              <div className="line-clamp-2 text-xs leading-tight text-slate-300">{en ? 'of water in the second crop vs A' : 'de água na segunda cultura vs A'}{lane.outcome.tag ? ` · ${lane.outcome.tag.kind === 'no_zarc' ? (en ? `no ZARC window for ${lane.outcome.tag.cropName}` : `sem janela ZARC para ${lane.outcome.tag.cropName}`) : lane.outcome.tag.text}` : ''}</div>
+              {lane.outcome.waterDeltaMm === null
+                ? <div className="line-clamp-2 text-sm font-semibold leading-tight text-slate-200">{lane.outcome.missingReason === 'base_missing' ? (en ? 'Path A has no second crop to compare' : 'A não tem 2ª safra para comparar') : (en ? 'No water data' : 'Sem dados de água')}</div>
+                : <><div className="text-xl font-bold leading-none text-sky-300">{mm(lane.outcome.waterDeltaMm)}</div><div className="line-clamp-2 text-xs leading-tight text-slate-300">{en ? 'of water in the second crop vs A' : 'de água na segunda cultura vs A'}</div></>}
+              {lane.outcome.tag ? <div className="line-clamp-2 text-xs leading-tight text-slate-300">{lane.outcome.tag.kind === 'no_zarc' ? (en ? `no ZARC window for ${lane.outcome.tag.cropName}` : `sem janela ZARC para ${lane.outcome.tag.cropName}`) : lane.outcome.tag.text}</div> : null}
             </>}
           </div>
         </div>)}

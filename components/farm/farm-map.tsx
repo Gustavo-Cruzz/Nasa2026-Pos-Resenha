@@ -70,13 +70,13 @@ export function FarmMap({ point, polygon: savedPolygon, polygonOrigin, onSavePol
         <MapOverlay coordinates={coordinateLabel(point)} layers={layers} name={point.label ?? (en ? 'Point on the map' : 'Ponto no mapa')} onToggle={(layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }))} />
         <FarmWeatherFx drawing={drawing} en={en} live={live} map={map} onDraw={startDrawing} point={point} polygon={polygon} sim={fxSim} />
         {drawing ? <DrawToolbar count={polygon.length} en={en} onCancel={cancelDrawing} onFinish={() => void finishDrawing()} onUndo={() => setPolygon((current) => current.slice(0, -1))} /> : <PixelClimateHud en={en} onRetry={onRetryClimate ?? (() => undefined)} state={climate} />}
-        {suggested ? <p className="pointer-events-none absolute left-3 top-3 z-[1000] max-w-[70%] border-2 border-lime-300 bg-slate-950/90 px-2 py-1 font-mono text-xs text-lime-100 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)]" role="status">{en ? 'Suggested area · tap Edit perimeter to adjust' : 'Área sugerida · toque em Editar perímetro para ajustar'}</p> : null}
       </div>
     </ClientOnly>
     <div className="flex flex-wrap items-center gap-2 border-t border-slate-700 bg-slate-900/70 p-3">
       {drawing
         ? <p className="text-sm text-lime-100" role="status">{en ? `Click the map to add vertices (${polygon.length}). Finish after at least 3.` : `Clique no mapa para adicionar vértices (${polygon.length}). Conclua após pelo menos 3.`}</p>
         : <Button disabled={saving.kind === 'saving'} onClick={startDrawing} type="button" variant="secondary"><Pentagon aria-hidden="true" className="mr-2" size={16} />{hasSaved ? (en ? 'Edit perimeter' : 'Editar perímetro') : (en ? 'Draw perimeter' : 'Desenhar perímetro')}</Button>}
+      {suggested ? <p className="text-xs text-lime-100" role="status">{en ? 'Suggested area · tap Edit perimeter to adjust' : 'Área sugerida · toque em Editar perímetro para ajustar'}</p> : null}
       {saving.kind === 'saving' ? <p className="text-sm text-slate-300" role="status">{en ? 'Saving…' : 'Salvando…'}</p> : null}
       {saving.kind === 'saved' ? <p className="text-sm text-lime-200" role="status">{en ? 'Perimeter saved.' : 'Perímetro salvo.'}</p> : null}
       {saving.kind === 'error' ? <p className="text-sm text-amber-100" role="alert">{saving.message}</p> : null}
