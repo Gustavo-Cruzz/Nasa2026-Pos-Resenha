@@ -1081,3 +1081,18 @@ Implemented: removed the `ReviewTransition` pixel-art interstitial from `/result
 Regression evidence: before the fix, cassava selection stayed on `nextPlanting` and “mandioca” returned no crop. New tests reproduced both failures; after the fix, focused chat tests pass (51/51). Full `npm run test -- --run` passes (63 files / 426 tests); `npm run typecheck`, `npm run lint` and `npm run build` pass.
 
 Limitations: no full Playwright run. The picker-to-flow defect is covered at the real state-transition seam; visual removal is covered by typecheck, lint and build.
+
+## Sprint F24 — Linha do tempo da rotação no Avançado, card D4 e João em duas versões
+
+Status: complete.
+
+Implemented:
+- Advanced comparison is replaced by the "Linha do tempo da rotação" interface (design Proposta 2): 24-month lanes A/B/C with crop bars from the real slot windows and bare-soil hatching from `bareSoil`; collapsible evidence bands aligned on the same month ruler (rain, P−ET₀ with second-crop window sums vs A, temperature with the documented range of each scenario's second crop, ZARC per occupied month, erosivity share and bare months in erosive months, GWETROOT, NDVI); hypothetical "E se?" temperature/rain sliders (display shift only, ET₀ not recomputed); keyboard month cursor; side panel "Mês"/"Cenário" (bottom sheet below 1024px); bottom tabs "Solo e relevo", "Fontes e qualidade", "Leve ao técnico" (export + methodology); accessible glossary tooltips. Missing series render as N/D; the prototype's illustrative values were not copied. Code: `components/rotation-timeline/*`, pure model in `lib/rotation-timeline/*`.
+- The old advanced blocks (and the João rail/dock and /api/explain-farm call in that view) are no longer rendered there; their files are kept. Every datum they showed is recorded in `docs/ADVANCED_COMPARISON_DATA_INVENTORY.md` (origin field, source, unit, João comment source).
+- Simple comparison ends with a D4-style card "Rotação de 24 meses · visão simples" (`components/results/rotation-summary-card.tsx`, `lib/rotation-summary.ts`): lanes with crop sprites and bare-soil months, B/C outcome = second-crop-window P−ET₀ difference vs A (N/D when null) plus a ZARC or trade-off tag, João line and a button to the advanced view.
+- "João explica o plano" panel now shows João's sprite, a short plain-language text from the existing data, and the full explanation behind "Ler explicação completa".
+- The Future Stories "Comparar" link now opens the advanced timeline.
+
+Checks: `npx tsc --noEmit`, `npm run lint`, `npx vitest run` (65 files / 445 tests) and `npm run build` (in an isolated copy, so the running dev server was not touched) pass. Playwright `future-stories.spec.ts` + `navigation.spec.ts`: 22/24 pass; the 2 failures (home heading "Converse com o João…", explore map-unavailable status) are in untouched screens and pre-date this sprint.
+
+Limitations: the D4 card compares only year 1's second crop; the Climate Risk Lab forecast panel left the advanced view (component and unit tests kept); the timeline layout was verified by e2e only, not by visual review. Next: visual review of the timeline on mobile/desktop, fix the two stale home/explore e2e assertions.

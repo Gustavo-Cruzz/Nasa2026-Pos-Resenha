@@ -29,6 +29,9 @@ test('embeds Future Farm Stories in the simple A/B/C comparison and walks the fo
   await expect(page.locator('.ffs-plant:not([data-crop="soybean"])')).toHaveCount(0);
   await steps.getByRole('button', { name: /Ciclo 2/ }).press('End');
   await expect(steps.getByRole('button', { name: /Ciclo 4/ })).toHaveAttribute('aria-current', 'step');
+  await expect(page.getByTestId('cycle-short-explanation')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'O que este plano pode oferecer' })).toBeHidden();
+  await page.getByRole('button', { name: 'Ler explicação completa' }).click();
   await expect(page.getByRole('heading', { name: 'O que este plano pode oferecer' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'O que os dados NASA mostram aqui' })).toBeVisible();
   await page.getByRole('tab', { name: /João explica o plano B/ }).click();
@@ -36,7 +39,7 @@ test('embeds Future Farm Stories in the simple A/B/C comparison and walks the fo
   await page.getByRole('button', { name: 'Pausar animação' }).click();
   await expect(page.getByTestId('farm-scene')).toHaveAttribute('data-animate', 'false');
   await page.getByRole('tabpanel').getByRole('link', { name: 'Comparar' }).click();
-  await expect(page.getByRole('heading', { name: 'Comparar critérios' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Linha do tempo · plantio em/ })).toBeVisible();
 });
 
 test('a crop edited after the analysis is drawn immediately, with evidence withheld', async ({ page }) => {

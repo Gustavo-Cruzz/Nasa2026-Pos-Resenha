@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { JoaoFigure } from '@/components/joao/joao-figure';
 import { FarmScene, usePrefersReducedMotion } from '@/components/future-stories/farm-scene';
+import type { JoaoMood } from '@/lib/explain/joao-mood';
 import { futureFarmCopy } from '@/lib/future-farm/copy';
 import { demoScenes } from '@/lib/future-farm/demo';
 import { FARM_SCENE_DISCLAIMER, type FarmCycleView, type FarmScenarioView, type ScenarioId } from '@/lib/future-farm/types';
@@ -98,16 +100,41 @@ function List({ items, empty }: { items: string[]; empty: string }) {
 
 export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false }: { scenario: FarmScenarioView; cycle: FarmCycleView; en: boolean; locale: Locale; simple?: boolean }) {
   const copy = futureFarmCopy(locale);
+  const [showFull, setShowFull] = useState(false);
   const noneComputed = en ? 'None computed; missing evidence stays unknown.' : 'Nenhum item calculado; evidência ausente permanece desconhecida.';
   if (simple) {
     const benefits = scenario.tradeoffs.gains.length ? scenario.tradeoffs.gains : cycle.potentialBenefits;
     const attention = scenario.tradeoffs.losses.length ? scenario.tradeoffs.losses : cycle.risksAndUnknowns;
+    const missing = [...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))];
+    const mood: JoaoMood = benefits.length ? 'happy' : attention.length ? 'alert' : 'sad';
+    const sentence = (text: string) => (/[.!?]$/.test(text) ? text : `${text}.`);
+    const benefitLine = benefits.length
+      ? (en ? `This plan can offer: ${sentence(benefits[0])}` : `Este plano pode oferecer: ${sentence(benefits[0])}`)
+      : (en ? 'No benefit was calculated for this stage.' : 'Nenhum benefício foi calculado para esta etapa.');
+    const attentionLine = attention.length
+      ? (en ? `Worth attention: ${sentence(attention[0])}` : `Merece atenção: ${sentence(attention[0])}`)
+      : (en ? 'No attention point was calculated for this stage.' : 'Nenhum ponto de atenção foi calculado para esta etapa.');
+    const missingLine = missing.length === 0
+      ? (en ? 'No pending data is cataloged for this stage.' : 'Nenhum dado pendente está catalogado para esta etapa.')
+      : missing.length === 1
+        ? (en ? 'There is still 1 data point to confirm.' : 'Ainda falta 1 dado para confirmar.')
+        : (en ? `There are still ${missing.length} data points to confirm.` : `Ainda faltam ${missing.length} dados para confirmar.`);
     return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-lime-300/30 bg-slate-950/60 p-4">
-    <p className="text-sm font-semibold text-lime-200">{en ? `João explains plan ${scenario.id}` : `João explica o plano ${scenario.id}`}</p><h3 className="mt-1 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3><p className="mt-1 text-xs text-slate-400">{cycleName(cycle, en)}</p>
+    <div className="flex items-start gap-3">
+      <JoaoFigure className="h-[96px] w-[64px]" mood={mood} />
+      <div className="relative min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-lime-300/30 bg-slate-900 p-3.5 text-[0.9375rem] leading-6">
+        <span aria-hidden="true" className="absolute -left-1.5 top-5 h-3 w-3 rotate-45 border-b border-l border-lime-300/30 bg-slate-900" />
+        <p className="text-sm font-semibold text-lime-200">{en ? `João explains plan ${scenario.id}` : `João explica o plano ${scenario.id}`}</p>
+        <p className="mt-1 text-slate-100" data-testid="cycle-short-explanation">{benefitLine} {attentionLine} {missingLine}</p>
+      </div>
+    </div>
+    <h3 className="mt-4 text-lg font-bold" id="ffs-cycle-heading">{cycle.crops.map((crop) => crop.label).join(' + ')}</h3><p className="mt-1 text-xs text-slate-400">{cycleName(cycle, en)}</p>
     {cycle.evidenceStale ? <p className="mt-3 rounded-lg border border-amber-300 bg-amber-950/50 p-3 text-sm" role="status">{copy.staleEvidence}</p> : null}
+    <button aria-controls="ffs-cycle-full" aria-expanded={showFull} className="mt-4 rounded-lg border border-lime-300/60 px-3 py-2 text-sm font-semibold text-lime-100 hover:bg-lime-300/10" type="button" onClick={() => setShowFull((value) => !value)}>{showFull ? (en ? 'Show less' : 'Mostrar menos') : (en ? 'Read full explanation' : 'Ler explicação completa')}</button>
+    <div id="ffs-cycle-full" hidden={!showFull}>
     <div className="mt-4 space-y-4"><section><h4 className="font-semibold">{en ? 'What this plan can offer' : 'O que este plano pode oferecer'}</h4><List empty={noneComputed} items={benefits} /></section><section><h4 className="font-semibold">{en ? 'What deserves attention' : 'O que merece atenção'}</h4><List empty={noneComputed} items={attention} /></section><section><h4 className="font-semibold">{en ? 'What NASA data shows here' : 'O que os dados NASA mostram aqui'}</h4><p className="mt-1 text-sm text-slate-200">{cycle.climate?.waterDetail ?? (en ? 'No NASA climate reading is available for this stage.' : 'Não há leitura climática NASA disponível para esta etapa.')}</p></section><section><h4 className="font-semibold">{en ? 'What we still need to confirm' : 'O que ainda precisamos confirmar'}</h4><List empty={en ? 'No cataloged gap for this stage.' : 'Nenhuma lacuna catalogada para esta etapa.'} items={[...cycle.missingData, ...scenario.scenarioMissingData.filter((item) => !cycle.missingData.includes(item))]} /></section>
       <details className="border-t border-slate-700 pt-3"><summary className="cursor-pointer font-semibold">{en ? 'See sources and details' : 'Ver fontes e detalhes'}</summary><p className="mt-3 text-sm"><b>{en ? 'Evidence level' : 'Nível de evidência'}:</b> {cycle.evidenceLevel ? copy.evidenceLevel[cycle.evidenceLevel] : 'N/D'}</p>{cycle.evidenceLinks.length ? <ul className="mt-2 space-y-1 text-sm">{cycle.evidenceLinks.map((item) => <li key={item.url}><a className="break-all underline" href={item.url} rel="noreferrer" target="_blank">{item.title}</a></li>)}</ul> : <p className="mt-2 text-sm text-slate-300">{en ? 'No linked source.' : 'Nenhuma fonte vinculada.'}</p>}{scenario.scenarioNotes.length ? <List empty="" items={scenario.scenarioNotes} /> : null}</details>
-    </div></aside>;
+    </div></div></aside>;
   }
   return <aside aria-labelledby="ffs-cycle-heading" className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
     <p className="text-sm font-semibold text-lime-200">{cycleName(cycle, en)}</p>
@@ -138,7 +165,7 @@ export function CycleEvidencePanel({ scenario, cycle, en, locale, simple = false
 export function ScenarioComparisonActions({ demo, en, simple = false }: { demo: boolean; en: boolean; simple?: boolean }) {
   return <div className="mt-5 flex flex-wrap gap-3 border-t border-slate-700 pt-4">
     {demo ? <Button asChild><Link href="/future-stories">{en ? 'Leave demonstration' : 'Sair da demonstração'}</Link></Button> : <>
-      <Button asChild><Link href={simple ? '/results?mode=advanced#comparison-heading' : '/results#comparison-heading'}>{en ? 'Compare' : 'Comparar'}</Link></Button>
+      <Button asChild><Link href="/results?mode=advanced#rt-timeline-title">{en ? 'Compare' : 'Comparar'}</Link></Button>
       <Button asChild variant="secondary"><Link href="/lab">{en ? 'Edit rotation' : 'Editar rotação'}</Link></Button>
     </>}
   </div>;
