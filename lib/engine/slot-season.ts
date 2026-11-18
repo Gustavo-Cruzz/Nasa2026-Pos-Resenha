@@ -6,6 +6,7 @@ export const MONTH_ABBR = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago
 
 /** Start month of the safrinha event observed in the farmer's history; null when no safra -> safrinha pair is detected. Never invented. */
 export function safrinhaMonth(input: AnalysisInput): number | null {
+  if (input.safrinhaPlantingMonth !== undefined) return input.safrinhaPlantingMonth;
   const pattern = detectCurrentPattern(input.history, input.futureBaseline); const cropId = pattern[1]; if (!cropId) return null;
   const events = input.history.filter((event) => event.cropId).sort((a, b) => a.startYearMonth.localeCompare(b.startYearMonth));
   const startMonth = (value: string) => Number(value.split('-')[1]);
@@ -18,5 +19,5 @@ export function safrinhaMonth(input: AnalysisInput): number | null {
 export function slotSeasonWindow(input: AnalysisInput, season: 'A' | 'B'): SeasonWindow {
   if (season === 'A') return { month: input.plantingMonth, label: 'safra' };
   const month = safrinhaMonth(input);
-  return month === null ? { month: null, label: 'safrinha' } : { month, label: 'safrinha', note: `Safrinha avaliada em ${MONTH_ABBR[month - 1]} (início observado no seu histórico).` };
+  return month === null ? { month: null, label: 'safrinha' } : { month, label: 'safrinha', note: `Safrinha avaliada em ${MONTH_ABBR[month - 1]} (${input.safrinhaPlantingMonth !== undefined ? 'mês informado pelo produtor' : 'início observado no seu histórico'}).` };
 }

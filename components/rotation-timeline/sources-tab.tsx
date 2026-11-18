@@ -6,12 +6,14 @@ import { Term } from '@/components/rotation-timeline/glossary-term';
 import { useLocale } from '@/components/locale-provider';
 import type { AnalysisResult } from '@/lib/engine/types';
 import { sourceGapLabel, sourceStateLabel, sourceTitle } from '@/lib/source-health';
+import { regionalNdReasons } from '@/lib/nd-reasons';
 
 const STATE_TONE = { available: 'border-cyan-300 text-cyan-200', cache_verified: 'border-cyan-300 text-cyan-200', partial: 'border-[#E7BF62] text-[#E7BF62]', nd: 'border-slate-500 text-slate-300' } as const;
 
 export function SourcesTab({ data }: { data: AnalysisResult }) {
   const { locale } = useLocale(); const en = locale === 'en';
   const health = data.evidenceManifest?.sourceHealth ?? []; const context = data.regionalContext;
+  const regionalGaps = regionalNdReasons(data, locale);
   const termFor: Record<string, 'IMERG' | 'POWER' | 'NDVI' | 'ZARC' | 'PAM' | null> = { nasa_power: 'POWER', gpm_imerg: 'IMERG', modis_ndvi: 'NDVI', zarc: 'ZARC', pam: 'PAM' };
   return <div>
     <section aria-label={en ? 'Source status' : 'Estado das fontes'}>
@@ -25,6 +27,7 @@ export function SourcesTab({ data }: { data: AnalysisResult }) {
           {source.url ? <a className="mt-1 inline-block text-xs text-cyan-200 underline" href={source.url} rel="noreferrer" target="_blank">{en ? 'Source' : 'Fonte'}</a> : null}
         </li>; })}</ul> : <p className="text-sm text-amber-200">N/D</p>}
       {data.climate.ndvi?.origin === 'municipal_artifact' ? <ul aria-label="NDVI" className="mt-2 list-disc pl-5 text-xs text-slate-300">{ndviMunicipalCaveats(locale).map((line) => <li key={line}>{line}</li>)}</ul> : null}
+      {regionalGaps.length ? <ul className="mt-3 grid gap-2 text-xs" aria-label={en ? 'Reasons for unavailable regional data' : 'Motivos dos dados regionais indisponíveis'}>{regionalGaps.map((gap) => <li className="rounded-lg border border-amber-300/40 bg-amber-950/20 p-2" key={gap.code}><b className="text-amber-100">N/D · {gap.code.startsWith('ndvi') ? 'NDVI' : 'ZARC'}:</b> {gap.reason} <span className="text-lime-200">{gap.action}</span></li>)}</ul> : null}
     </section>
     <section aria-label={en ? 'Regional context' : 'Contexto regional'} className="mt-4 rounded-2xl border border-slate-700 bg-slate-900/70 p-3 text-sm">
       <h3 className="mb-1 text-base font-bold">{en ? 'Regional context' : 'Contexto regional'}</h3>

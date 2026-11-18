@@ -1,3 +1,4 @@
+import { cycleSimulationDataset, resolveCycleSimulation } from '@/lib/cycle-simulation';
 import type { Crop } from '@/lib/catalog';
 import type { ClimateContext } from '@/lib/climate/nasa-power';
 import type { HistoricalWaterContextMonth, WaterBalanceMonth } from '@/lib/climate/indicators';
@@ -6,15 +7,22 @@ import { MONTH_ABBR } from '@/lib/engine/slot-season';
 /** Declared assumption (not a catalog value): window length in months when the crop has no documented cycle. */
 export const ASSUMED_WINDOW_MONTHS = { A: 4, B: 4 } as const;
 const DAYS_PER_MONTH = 30;
-export type SlotWindow = { startMonth: number; months: number[]; source: 'documented_cycle' | 'assumed_default'; /** Documented maximum cycle used, null when assumed. */ cycleDays: number | null };
+export type SlotWindow = { startMonth: number; months: number[]; source: 'documented_cycle' | 'assumed_default'; /** Documented maximum cycle used, null when assumed. */ cycleDays: number | null; simulation?: { daysRange: { min: number; max: number } | null; estimated: boolean; warning: string; sourceUrl: string; startEvent: string; endEvent: string | null; horizonMonths: number | null } };
 
 /**
  * Months a slot occupies from its start month. With a documented `cycleDaysRange` the window is
  * ceil(max cycle / 30) months (the longest documented cycle, so the window covers the whole range; capped at 12).
  * Otherwise a fixed assumed length per season applies and the source says so. Null when the start month is unknown.
  */
-export function slotWindow(crop: Crop | undefined, startMonth: number | null, season: 'A' | 'B' = 'A'): SlotWindow | null {
+export function slotWindow(crop: Crop | undefined, startMonth: number | null, season: 'A' | 'B' = 'A', contextConfirmed?: boolean): SlotWindow | null {
   if (startMonth === null || startMonth < 1 || startMonth > 12) return null;
+  if (crop && contextConfirmed !== undefined && cycleSimulationDataset.records.some((item) => item.cropId === crop.id)) {
+    const simulation = resolveCycleSimulation(crop.id, contextConfirmed);
+    if (!simulation) return null;
+    const length = simulation.horizonMonths ?? (simulation.daysRange ? Math.ceil(simulation.daysRange.max / DAYS_PER_MONTH) : null);
+    if (length === null) return null;
+    return { startMonth, months: Array.from({ length }, (_, index) => (startMonth - 1 + index) % 12 + 1), source: 'assumed_default', cycleDays: null, simulation: { daysRange: simulation.daysRange, estimated: simulation.estimated, warning: simulation.warning, sourceUrl: simulation.evidence.source.url, startEvent: simulation.evidence.startEvent, endEvent: simulation.evidence.endEvent, horizonMonths: simulation.horizonMonths } };
+  }
   const cycleDays = crop?.cycleDaysRange?.max ?? null;
   const length = cycleDays !== null ? Math.min(12, Math.max(1, Math.ceil(cycleDays / DAYS_PER_MONTH))) : ASSUMED_WINDOW_MONTHS[season];
   return { startMonth, months: Array.from({ length }, (_, index) => (startMonth - 1 + index) % 12 + 1), source: cycleDays !== null ? 'documented_cycle' : 'assumed_default', cycleDays };
@@ -23,6 +31,7 @@ export function slotWindow(crop: Crop | undefined, startMonth: number | null, se
 const num = (value: number, digits = 1) => String(Number(value.toFixed(digits))).replace('.', ',');
 const names = (months: number[]) => months.map((month) => MONTH_ABBR[month - 1]).join(', ');
 export function windowLabel(window: SlotWindow): string {
+  if (window.simulation) return `janela exploratória de ${window.months.length} meses (${window.simulation.startEvent} → ${window.simulation.endEvent ?? 'ocupação perene'}; ${window.simulation.estimated ? 'estimativa' : 'referência contextual'}; conversão mensal por teto de dias/30). ${window.simulation.warning}`;
   const span = `${MONTH_ABBR[window.months[0]! - 1]}–${MONTH_ABBR[window.months.at(-1)! - 1]}`;
   return window.source === 'documented_cycle' ? `janela de ${window.months.length} meses (${span}; ciclo documentado de até ${window.cycleDays} dias)` : `janela presumida de ${window.months.length} meses (${span}; ciclo não documentado, duração presumida)`;
 }

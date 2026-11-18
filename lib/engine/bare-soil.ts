@@ -54,7 +54,8 @@ export function assessBareSoil(input: AnalysisInput, slots: LabSlotAssessment[],
   const crops = slots.map((slot) => slot.cropId ? cropById.get(slot.cropId as Crop['id']) : undefined);
   const starts = slots.map((slot) => slotSeasonWindow(input, slot.season).month);
   const missing = [...new Set([...(slots.length < 4 || crops.some((crop) => !crop) ? ['unconfigured_lab_slots'] : []), ...(starts.some((month) => month === null) ? ['safrinha_start_month'] : [])])];
-  const windows = slots.map((slot, index) => slotWindow(crops[index], starts[index] ?? null, slot.season));
+  const windows = slots.map((slot, index) => slot.window !== undefined ? slot.window : slotWindow(crops[index], starts[index] ?? null, slot.season));
+  if (windows.some((window, index) => window === null && crops[index] && starts[index] !== null)) missing.push('cycle_context_confirmation');
   const complete = !missing.length && windows.every(Boolean);
   const sources = new Set(windows.flatMap((window) => window ? [window.source] : []));
   const windowsSource: BareSoilAssessment['windowsSource'] = !complete ? 'unknown' : sources.size > 1 ? 'mixed' : sources.has('documented_cycle') ? 'documented' : 'assumed';
@@ -70,7 +71,7 @@ export function assessBareSoil(input: AnalysisInput, slots: LabSlotAssessment[],
   const stats = terrain?.status === 'available' ? terrain.slopePct : null;
   const slope = stats ? { meanPct: stats.mean, maxPct: stats.max, reliefId: reliefClass(stats.mean) } : null;
   const steep = Boolean(slope && slope.meanPct >= SLOPE_ATTENTION_PCT);
-  const sourceRefs = [...new Set([...(climate.erosivity?.classId ? ['https://journals.ltn.lodz.pl/Acta-Geographica-Lodziensia/article/download/2022/1789'] : []), ...(terrain?.status === 'available' ? [terrain.source.url] : [])])];
+  const sourceRefs = [...new Set([...windows.flatMap((window) => window?.simulation ? [window.simulation.sourceUrl] : []), ...(climate.erosivity?.classId ? ['https://journals.ltn.lodz.pl/Acta-Geographica-Lodziensia/article/download/2022/1789'] : []), ...(terrain?.status === 'available' ? [terrain.source.url] : [])])];
   if (!classId) missing.push('rainfall_erosivity');
   if (!slope) missing.push('terrain_slope');
   missing.push('residue_and_management');
@@ -85,8 +86,10 @@ export function assessBareSoil(input: AnalysisInput, slots: LabSlotAssessment[],
   const tailPt = ' Palhada após a colheita, plantio direto e manejo não são modelados; não calcula perda de solo.';
   const tailEn = ' Residue after harvest, no-till and management are not modelled; no soil loss is computed.';
   let detail: string; let detailEn: string;
-  if (!complete) { detail = 'Não sabemos: slots sem cultura ou sem mês de início impedem montar o calendário de ocupação de 24 meses.'; detailEn = 'We do not know: slots without a crop or start month prevent building the 24-month occupancy calendar.'; }
+  if (!complete) { detail = 'Não sabemos: slots sem cultura, mês de início ou confirmação de contexto impedem montar o calendário de ocupação de 24 meses.'; detailEn = 'We do not know: slots without a crop, start month or context confirmation prevent building the 24-month occupancy calendar.'; }
   else if (!bareMonths.length) { detail = `Os 24 meses ficam dentro de alguma janela de cultura (${srcPt}).${tailPt}`; detailEn = `All 24 months fall inside some crop window (${srcEn}).${tailEn}`; }
   else { detail = `${bareMonths.length} de 24 meses fora de qualquer janela de cultura (${list(bareMonths)}), a partir de ${srcPt}. ${bareHigh.length ? `Destes, ${bareHigh.length} em meses de chuva mais erosiva (${list(bareHigh)}). ` : ''}${eroPt}${slopePt}${tailPt}`; detailEn = `${bareMonths.length} of 24 months fall outside every crop window (${list(bareMonths)}), from ${srcEn}. ${bareHigh.length ? `${bareHigh.length} of them in higher-erosivity months (${list(bareHigh)}). ` : ''}${eroEn}${slopeEn}${tailEn}`; }
+  const simulationNotes = [...new Set(windows.flatMap((window) => window?.simulation ? [window.simulation.warning] : []))].join(' ');
+  if (simulationNotes) { detail += ` Simulação exploratória: ${simulationNotes}`; detailEn += ` Exploratory simulation: ${simulationNotes}`; }
   return { state, windowsSource, occupancy, bareMonths, bareMonthsInHighErosivity: bareHigh, highErosivityMonths: high, erosivityClass: classId, slope, detail, detailEn, sourceRefs, missing: [...new Set(missing)] };
 }

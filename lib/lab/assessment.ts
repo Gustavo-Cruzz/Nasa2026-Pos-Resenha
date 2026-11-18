@@ -6,10 +6,12 @@ import type { LabPlan } from '@/lib/lab';
 import type { AnalysisInput, SoilProfile } from '@/lib/schema';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
 import type { ValidationLevel } from '@/lib/engine/types';
+import { cycleSimulationDataset } from '@/lib/cycle-simulation';
+import { slotWindow, type SlotWindow } from '@/lib/engine/slot-window';
 import { slotSeasonWindow } from '@/lib/engine/slot-season';
 import { zarcWindowStatus, type ZarcSoilTexture, type ZarcWindowStatus } from '@/lib/brazil/zarc';
 
-export type LabSlotAssessment = { scenarioId: 'A' | 'B' | 'C'; slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string | null; cropName: string | null; previousCropId: string | null; validationLevel: ValidationLevel; indicators: QualitativeIndicator[]; sourceRefs: string[]; missingEvidence: string[]; /** ZARC status for the slot start month (calendar axis); null when there is no crop or no start month. */ zarc: ZarcWindowStatus | null };
+export type LabSlotAssessment = { window?: SlotWindow | null; cycleContextConfirmed?: boolean; scenarioId: 'A' | 'B' | 'C'; slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string | null; cropName: string | null; previousCropId: string | null; validationLevel: ValidationLevel; indicators: QualitativeIndicator[]; sourceRefs: string[]; missingEvidence: string[]; /** ZARC status for the slot start month (calendar axis); null when there is no crop or no start month. */ zarc: ZarcWindowStatus | null };
 
 /** MAPA soil Tipo 1/2/3 from farmer-declared clay share (<15 %, 15-35 %, >35 %); null (any soil) when no farmer texture exists. */
 export function farmerZarcTexture(input: AnalysisInput): ZarcSoilTexture | null {
@@ -24,17 +26,19 @@ export function assessLabPlan(input: AnalysisInput, plan: LabPlan, climate: Clim
   return plan.scenarios.flatMap((scenario) => scenario.slots.map((slot, slotIndex) => {
     const crop = getCrop(slot.cropId);
     const previousCrop = slotIndex === 0 ? historicalCrop : getCrop(scenario.slots[slotIndex - 1]?.cropId);
-    const indicators = assessCropIndicators(crop, previousCrop, input, climate, regionalSoil, slotSeasonWindow(input, slot.season));
+    const indicators = assessCropIndicators(crop, previousCrop, input, climate, regionalSoil, { ...slotSeasonWindow(input, slot.season), cycleContextConfirmed: slot.cycleContextConfirmed ?? false });
     const missingEvidence = [...new Set([
       ...(!crop ? ['crop'] : []),
       ...(crop && !crop.viableTempC ? ['temperature'] : []),
       ...(crop && !crop.cycleDaysRange ? ['cycle'] : []),
+      ...(crop && cycleSimulationDataset.records.some((item) => item.cropId === crop.id) && slot.cycleContextConfirmed !== true ? ['cycle_context_confirmation'] : []),
       ...((input.soil?.ph === undefined && regionalSoil?.ph === undefined) || (input.soil?.ph !== undefined && !crop?.soilPhRange) ? ['soil_ph'] : []),
       ...(!previousCrop ? ['previous_crop_family'] : []),
     ])];
     const validationLevel: ValidationLevel = crop && regionalContext?.zarc?.crops[crop.id] ? 'regionally_contextualized' : 'climate_exploration';
     const startMonth = slotSeasonWindow(input, slot.season).month;
     const zarc = crop ? zarcWindowStatus(regionalContext, crop.id, startMonth ?? 0, farmerZarcTexture(input)) : null;
-    return { scenarioId: scenario.id, slotIndex, year: slot.year, season: slot.season, cropId: crop?.id ?? null, cropName: crop?.commonNames['pt-BR'] ?? null, previousCropId: previousCrop?.id ?? null, validationLevel, indicators, sourceRefs: [...new Set(indicators.flatMap((indicator) => indicator.sourceRefs))], missingEvidence, zarc };
+    const window = crop ? slotWindow(crop, startMonth, slot.season, slot.cycleContextConfirmed ?? false) : null;
+    return { window, cycleContextConfirmed: slot.cycleContextConfirmed ?? false, scenarioId: scenario.id, slotIndex, year: slot.year, season: slot.season, cropId: crop?.id ?? null, cropName: crop?.commonNames['pt-BR'] ?? null, previousCropId: previousCrop?.id ?? null, validationLevel, indicators, sourceRefs: [...new Set(indicators.flatMap((indicator) => indicator.sourceRefs).concat(window?.simulation ? [window.simulation.sourceUrl] : []))], missingEvidence, zarc };
   }));
 }

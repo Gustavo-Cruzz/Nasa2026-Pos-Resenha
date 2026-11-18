@@ -4,7 +4,7 @@ import { cropById, isAnnualRotationEligible } from '@/lib/catalog';
 import { defaultLabSequences, type EngineStrategyLike } from '@/lib/lab/sequence';
 
 export type LabCropId = string;
-const slotSchema = z.object({ year: z.union([z.literal(1), z.literal(2)]), season: z.union([z.literal('A'), z.literal('B')]), cropId: z.string().nullable() }).refine((slot) => !slot.cropId || (cropById.has(slot.cropId) && isAnnualRotationEligible(slot.cropId)), 'Annual rotation slots accept only catalogued annual-management crops.');
+const slotSchema = z.object({ year: z.union([z.literal(1), z.literal(2)]), season: z.union([z.literal('A'), z.literal('B')]), cropId: z.string().nullable(), cycleContextConfirmed: z.boolean().optional() }).refine((slot) => !slot.cropId || (cropById.has(slot.cropId) && isAnnualRotationEligible(slot.cropId)), 'Annual rotation slots accept only catalogued annual-management crops.');
 const scenarioSchema = z.object({ id: z.union([z.literal('A'), z.literal('B'), z.literal('C')]), title: z.string().min(1), slots: z.array(slotSchema).length(4) });
 export const labPlanSchema = z.object({ scenarios: z.array(scenarioSchema).length(3) });
 export type LabPlan = z.infer<typeof labPlanSchema>;
@@ -29,7 +29,7 @@ export function createDefaultLabPlan(input: AnalysisInput, strategies: EngineStr
 }
 
 export function changeLabSlot(plan: LabPlan, scenarioId: 'A' | 'B' | 'C', slotIndex: number, cropId: LabCropId | null): LabPlan {
-  return { scenarios: plan.scenarios.map((scenario) => scenario.id !== scenarioId ? scenario : { ...scenario, slots: scenario.slots.map((slot, index) => index === slotIndex ? { ...slot, cropId } : slot) }) };
+  return { scenarios: plan.scenarios.map((scenario) => scenario.id !== scenarioId ? scenario : { ...scenario, slots: scenario.slots.map((slot, index) => index === slotIndex ? { ...slot, cropId, cycleContextConfirmed: false } : slot) }) };
 }
 
 export function labPrimaryCrop(plan: LabPlan, scenarioId: 'A' | 'B' | 'C'): string | undefined { return plan.scenarios.find((item) => item.id === scenarioId)?.slots.find((slot) => slot.cropId)?.cropId ?? undefined; }

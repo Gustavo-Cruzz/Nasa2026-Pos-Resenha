@@ -3,7 +3,7 @@ import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readMunicipalNdvi } from '@/lib/climate/ndvi-municipal';
+import { inspectMunicipalNdvi, readMunicipalNdvi } from '@/lib/climate/ndvi-municipal';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
 import { ndviMunicipalCaveats } from '@/lib/climate/ndvi-copy';
 
@@ -32,6 +32,9 @@ describe('municipal NDVI artifact reader', () => {
   });
   it('is N/D for insufficient coverage, unprocessed municipality, missing artifact and checksum mismatch', async () => {
     const dir = await artifact();
+    expect((await inspectMunicipalNdvi('5201108', dir)).gap).toBe('insufficient_coverage');
+    expect((await inspectMunicipalNdvi('5208707', dir)).gap).toBe('record_missing');
+    expect((await inspectMunicipalNdvi('5218805', await artifact({ checksum: 'a'.repeat(64) }))).gap).toBe('checksum_mismatch');
     expect(await readMunicipalNdvi('5201108', dir)).toBeUndefined();
     expect(await readMunicipalNdvi('5208707', dir)).toBeUndefined();
     expect(await readMunicipalNdvi('3550308', dir)).toBeUndefined();

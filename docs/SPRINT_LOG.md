@@ -1131,3 +1131,106 @@ Limitations:
 - The IBGE mesh used is the “qualidade mínima” simplified geometry.
 
 Next: optionally a land-preferring fallback point for the 15 water points. Whether to do it is the user's decision.
+## Sprint F26 — Clareza da jornada e recuperação da comparação
+
+Status: complete.
+
+Implemented (2026-11-17): reviewed the home → farm → comparison → laboratory journey with parallel investigation and independent review. The main navigation now exposes Laboratory directly and uses the mobile menu below `lg` to accommodate the fifth link. Comparison explains Simple and Advanced modes; an analysis error offers retry, while missing data links honestly to My Farm. João's farm introduction now describes the map perimeter as exploratory, not a verified property boundary, and identifies available information and gaps. No scientific calculation or evidence source changed.
+
+Checks: `npm run test` passes (71 files, 515 tests); `npm run typecheck` and `npm run build` pass. `npm run lint` fails on three pre-existing React hook errors in `components/estaca/estaca-devices.tsx` (two) and `components/joao/joao-figure.tsx` (one); none is in a modified file.
+
+Limitations / next: no browser-based visual walkthrough was run; verify navigation at narrow desktop widths and keyboard use in the farm arrival modal. Fix the existing lint errors in a separate sprint.
+
+## Sprint F27 — Nomes de culturas, largura da metodologia e diagnóstico N/D
+
+Status: complete (2026-11-17).
+
+Implemented: stored catalog crop labels now resolve to the selected language even when only the other language's name is available; the laboratory's change message uses that resolver. Technical methodology cards, grid columns and water-balance table now permit long content to wrap or scroll within their own panel. `docs/ND_GAPS_REPORT.md` records the causes and a sourced-data improvement plan for nitrogen fixation, bare periods, erosion context, municipal NDVI, ZARC and additional crops. No missing agronomic or NASA value was filled.
+
+Checks: `npm run test` passes (72 files, 516 tests); `npm run typecheck` and `npm run build` pass. `npm run lint` still fails on three pre-existing React hook errors in `components/estaca/estaca-devices.tsx` and `components/joao/joao-figure.tsx`.
+
+Limitations / next: no browser visual check of technical-methodology widths was run. Audit each remaining raw crop-name rendering path and add a responsive browser regression check. Implement the N/D reason codes and evidence inventory in a later sprint, after source review.
+
+## Sprint F28 — Nomes livres reconhecíveis e motivos de N/D
+
+Status: complete (2026-11-17).
+
+Implemented: exact normalized matching of free-text crop names to catalog names and registered aliases, with ambiguous/novel names left unlinked. On farm-history save, a unique match is stored by stable catalog ID; display follows the selected language. Added a crop × field evidence inventory with source, verification, cultivar and context; the catalog distinguishes partial sourced profiles from fields without a verifiable parameter. Added stable reasons and next actions for unknown nitrogen fixation, bare-soil interval, erosion context, municipal NDVI and ZARC. The NDVI artifact reader now reports coverage, unavailable-point, missing-record, missing-artifact and checksum gaps without converting them to measurements; the advanced source panel shows the specific gap. ZARC unknown cells show the existing rule note by crop. Scientific values and selection logic did not change.
+
+Checks: `npm run test` passes (74 files, 519 tests); `npm run typecheck` and `npm run build` pass. `npm run lint` remains blocked by three pre-existing React hook errors in `components/estaca/estaca-devices.tsx` and `components/joao/joao-figure.tsx`.
+
+Limitations / next: catalog evidence is still incomplete for many crops; adding Kc, cycles, limits or regional windows requires primary-source review and applicable context. No browser visual check was run. The three unrelated lint errors remain for a separate sprint.
+
+## Sprint F29 — Inventário reproduzível de N/D
+
+Status: complete (2026-11-17), baseline and ownership inventory.
+
+Implemented: `npm run audit:nd` reads the 28 catalog crops, active source records, municipal NDVI report and ZARC index and writes `docs/nd-audit/inventory.json` plus a summary. The matrix has 224 crop × core-field rows with source, URL, context, cultivar, verification and seed-value status. It also indexes 272 source lines that can display N/D, grouped by data family and planned sprint. Source presence is explicitly not treated as national applicability or a projected engine value.
+
+Evidence/checks: 63/224 crop-field rows have at least one active verified non-null record; NDVI report has 5,556 available/5,571 processed municipalities. `npm run typecheck`, `npm run test -- --maxWorkers=4` (75 files, 520 tests) and `npm run build` pass. `npm run lint` fails on the three previously documented React hook errors outside this sprint.
+
+Limitations / next: a source-code N/D occurrence may only render an upstream unknown; runtime tracing of representative cases remains in F30–F35. The inventory does not fill missing measurements. Next: F30, complete producer inputs and crop-window evidence one sprint at a time.
+
+## Sprint F30 — Entradas e janelas da rotação
+
+Status: parcial; encerrado a pedido do usuário (2026-11-18). Não avançou para F31.
+
+Implemented: added an optional producer supplied start month for the second crop to the input schema and farm history form. The rotation engine uses it when present and otherwise retains the month observed in crop history; absent months remain unknown. The N/D action for a missing month now points to the farm history field, while missing slots point to the Laboratory. Added tests for an absent start month, an explicit month, and overlapping windows without double counting occupancy.
+
+Evidence/checks: `npm run typecheck`, `npm run build` and `git diff --check` pass; `npm run test -- --maxWorkers=4` passes (75 files, 523 tests). `npm run lint` still fails on the same three pre-existing React hook errors in `components/estaca/estaca-devices.tsx` and `components/joao/joao-figure.tsx`.
+
+Limitations / next: 17 of 28 crops still have no verified cycle record in the inventory (`ruziziensis`, `cassava`, `pumpkin`, `sweet_potato`, `peanut`, `watermelon`, `lettuce`, `tomato`, `carrot`, `kale`, `onion`, `bell_pepper`, `okra`, `coffee`, `banana`, `cacao`, `acai`). Existing four-month fallback windows remain explicitly presumed, not measured. F30 acceptance is not met until source review, context selection and the remaining slot cases are completed. The F31–F35 data acquisition and validation sprints are pending; no missing agronomic or NASA value was fabricated.
+
+## Sprint F31a — Evidência contextual de ciclo Plantaê
+
+Status: implemented; build verification pending.
+
+Implemented: integrated `data/plantae_ciclos_17_culturas_2026-11-18.json` as a separately validated Zod dataset. Enforced 17 unique IDs, HTTP(S) source URLs, catalog ID resolution, positive ordered ranges, and null terminal-cycle values for `not_applicable_as_single_cycle`. Crop details now show supplied ranges and milestones with cultivar, purpose, region, system, definition, integration note, source quote, locator, access date and URL. Dataset ranges are not projected into the rotation engine; this prevents regional references, first harvests and perennial milestones from becoming field-level slot durations.
+
+Checks: `npm run typecheck` passes; `npm run test -- --maxWorkers=4` passes (76 files, 525 tests). `npm run lint` reports the same three existing React hook errors in `components/estaca/estaca-devices.tsx` and `components/joao/joao-figure.tsx`.
+
+Limitations / next: production build pending. Dataset is evidence presentation only; cycle ranges are not customized to a farm cultivar, region or management system and do not affect rankings or slot windows.
+
+Follow-up (2026-11-18): corrected the catalog summary to show contextual ranges without calling them missing, included those sources in catalog coverage, and added scenario crop references and milestones to the Evidence Center. Typecheck and build pass; 76 test files / 525 tests pass. Lint still reports the three previously recorded hook errors. Automatic slot selection remains unimplemented: the current slot model does not record cultivar, management or cycle-start convention, and the dataset contains context-specific and non-terminal milestones. The offline N/D audit still requires an update for this separate dataset. No contextual range was promoted to a field-specific duration.
+
+## Sprint F31b — Inventário offline de ciclos contextuais
+
+Status: complete (2026-11-18).
+
+Implemented: `npm run audit:nd` now includes the 17-crop Plantaê dataset, retaining each complete contextual record and milestones in the cycle row. Nine non-null ranges count as source records, including one explicitly conditional on a harvest assumption; eight null cycles retain their milestones without counting those as terminal cycles. The generated report distinguishes source presence from applicability and automatic engine projection. The matrix now has 72 of 224 crop-field combinations with a verified or conditionally verified source record.
+
+Checks: audit generation, typecheck, build and 76 test files / 525 tests pass. Lint still fails on the three pre-existing React hook errors in `components/estaca/estaca-devices.tsx` and `components/joao/joao-figure.tsx`.
+
+Limitations / next: audit coverage does not establish applicability to an individual farm; automatic contextual cycle selection remains pending.
+
+## Sprint F31c — Dataset de simulação 2.2
+
+Status: complete for dataset ingestion and presentation (2026-11-18).
+
+Implemented: imported the supplied `data/plantae_ciclos_17_culturas_v2.2.json` without replacing the historical evidence dataset. Strict Zod validation preserves all supplied fields and enforces unique catalog IDs, ordered positive ranges, HTTP(S) sources, policy restrictions and no automatic release for perennials. Added a pure resolver requiring explicit context confirmation and rejecting recommendation/ZARC use. Catalog details and the Evidence Center show the current simulation ranges, start/end events, source locators, milestones, estimates and warnings. Offline inventory retains each full 2.2 record as `simulationReference`, separately from verified-evidence counts.
+
+Checks: audit generation, typecheck, build and 77 test files / 529 tests pass; diff check passes. Lint still fails on the three previously recorded React hook errors outside these changes. Tests compare the parsed dataset to the entire input JSON and verify confirmation, prohibited uses, perennial occupancy and invalid ranges/IDs.
+
+Limitations: this sprint integrates the supplied dataset and resolver; the existing rotation-slot UI and engine do not yet collect confirmation or call the resolver, so automatic rotation windows are unchanged. No independent agronomic re-verification of the supplied source claims was performed.
+
+## Sprint F31d — Confirmação por slot, janelas 2.2 e fechamento de lint
+
+Status: complete (2026-11-18).
+
+Implemented: Laboratory slots expose the 2.2 cultivar, region, system, start/end events, range, source and warning alongside an explicit confirmation checkbox. Confirmation is retained by the LabPlan/storage schema and revoked on crop change. Confirmed slots use the pure simulation resolver to build monthly exploratory windows (ceiling of maximum days / 30); unconfirmed 2.2 slots retain unknown occupancy. Slot assessments carry the calculated window to bare-soil analysis, timeline, comparison summary, NASA insight and farm weather views. Source links and estimate warnings accompany simulation results; ZARC continues using the original official rules independently of this confirmation. Perennial simulation windows retain the 24-month horizon without a terminal cycle; permanent crops remain outside replaceable annual slots as required by the product model.
+
+Fixed: removed an unused ref written during render in Estaca, initialized demo device data directly, and kept network state updates in asynchronous callbacks. João's variant is selected in a cancellable animation-frame callback with mood-aware fallback, avoiding synchronous effect state changes and stale art.
+
+Checks: lint and typecheck pass; all 77 unit test files / 531 tests pass, including engine integration for confirmation, revocation, occupancy and unchanged ZARC, plus perennial horizon checks. Audit and diff checks pass. Production build passes.
+
+Limitations: the supplied agronomic claims have not undergone an independent source review; windows are exploratory and explicitly contextual, never a recommendation or an inferred harvest forecast. No browser visual walkthrough was run in this sprint.
+
+## Sprint F31e — Lote 1: pesquisa de FBN e palhada
+
+Status: dataset integrated for research review (2026-11-18).
+
+Implemented: retained the supplied 56 records for 28 crops and two fields in `data/plantae_F31_lote1_fbn_palhada_28_culturas_2026-11-18.json`, validated with Zod and exposed in crop details and the Evidence Center with context, references, limitations, conflicts and a clear pending-review label. The reproducible N/D audit records the full research entry in each corresponding row and reports 24 source-bearing values and 32 insufficient-source entries separately from approved coverage. No values are projected into catalog parameters, engine calculations or recommendations while review is pending.
+
+Evidence and checks: 23 residue records in the supplied file have `evidenceType: qualitative_potential` rather than `qualitative_residue_behavior`; the discrepancy is preserved and flagged for review. Two sampled Embrapa URLs returned 502 and 403 during automated access, so the source claims are not independently verified. `npm run audit:nd`, lint, typecheck, build and 78 unit test files / 533 tests pass. Typecheck was rerun after build because concurrent Next.js type generation caused a transient missing-generated-file error.
+
+Limitations / next: review each source and the 23 field/type discrepancies with agronomic expertise before promotion. Existing verified-source counts are unchanged; pending evidence is not evidence of field-level nitrogen fixation or observed residue.

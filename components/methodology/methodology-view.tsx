@@ -13,7 +13,7 @@ import { SourceCards } from '@/components/methodology/source-cards';
 import { WaterBalanceChart } from '@/components/methodology/water-balance-chart';
 
 function Section({ id, kicker, title, lead, children }: { id: string; kicker: string; title: string; lead: string; children: ReactNode }) {
-  return <section aria-labelledby={id} className="mt-14">
+  return <section aria-labelledby={id} className="mt-14 min-w-0 [overflow-wrap:anywhere]">
     <p className="font-mono text-sm font-bold text-lime-300">{kicker}</p>
     <h2 className="mt-1 text-2xl font-bold" id={id}>{title}</h2>
     <p className="mt-2 max-w-3xl text-slate-300">{lead}</p>
@@ -26,7 +26,7 @@ export function MethodologyView({ example }: { example: PilotExample | null }) {
   const en = locale === 'en';
   const [level, setLevel] = useState<Level>('simple');
   const tech = level === 'technical';
-  return <section className="mx-auto max-w-6xl">
+  return <section className="mx-auto min-w-0 max-w-6xl [overflow-wrap:anywhere]">
     <h1 className="page-title font-bold">{copy.methodTitle}</h1>
     <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">{en ? 'What goes in, how it is used, and what it cannot tell you. Pick how deep you want to read.' : 'O que entra, como é usado e o que não dá para afirmar. Escolha a profundidade da leitura.'}</p>
     <LevelSwitch en={en} level={level} onChange={setLevel} />

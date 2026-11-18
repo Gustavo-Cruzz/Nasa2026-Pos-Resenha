@@ -69,8 +69,8 @@ export function readMonth(series: ClimateSeries, month: number, whatIf: WhatIf):
   return { month, rainBaseMm: series.rainMm[index] ?? null, rainMm: shiftRain(series.rainMm[index] ?? null, whatIf), et0Mm: series.et0Mm[index] ?? null, balanceBaseMm: series.balanceMm[index] ?? null, balanceMm: shiftBalance(series.balanceMm[index] ?? null, series.rainMm[index] ?? null, whatIf), tmeanBaseC: series.tmeanC[index] ?? null, tmeanC: shiftTemp(series.tmeanC[index] ?? null, whatIf), wetness: series.wetness[index] ?? null, ndvi: series.ndvi[index] ?? null, rainSharePct: series.rainSharePct[index] ?? null, highErosivity: series.highErosivity[index] ?? false, frost: series.frost[index] ?? null };
 }
 
-export type CropSegment = { slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string; startOffset: number; length: number; startMonth: number; months: number[]; source: 'documented_cycle' | 'assumed_default'; cycleDays: number | null; clipped: boolean; row: number };
-export type UnplacedSlot = { slotIndex: number; year: 1 | 2; season: 'A' | 'B'; reason: 'no_crop' | 'no_start_month' };
+export type CropSegment = { slotIndex: number; year: 1 | 2; season: 'A' | 'B'; cropId: string; startOffset: number; length: number; startMonth: number; months: number[]; source: 'documented_cycle' | 'assumed_default'; cycleDays: number | null; simulationWarning?: string; clipped: boolean; row: number };
+export type UnplacedSlot = { slotIndex: number; year: 1 | 2; season: 'A' | 'B'; reason: 'no_crop' | 'no_start_month' | 'context_unconfirmed' };
 export type BareSegment = { startOffset: number; length: number; highErosivityMonths: number };
 export type ZarcCell = { offset: number; month: number; cropId: string; status: 'indicated' | 'not_indicated' | 'unknown'; riskPct: number | null; sowing: boolean; note: string; noteEn: string };
 export type LaneModel = { id: ScenarioId; rotation: Rotation; segments: CropSegment[]; unplaced: UnplacedSlot[]; bare: BareSegment[]; /** False when the 24-month occupancy could not be built (slot without crop or start month). */ bareKnown: boolean; rows: number; zarc: Array<ZarcCell | null> };
@@ -81,12 +81,12 @@ export function buildSegments(rotation: Rotation, input: AnalysisResult['input']
   (rotation.slots ?? []).forEach((slot, slotIndex) => {
     if (!slot.cropId) { unplaced.push({ slotIndex, year: slot.year, season: slot.season, reason: 'no_crop' }); return; }
     const start = slotSeasonWindow(input, slot.season).month;
-    const window = slotWindow(cropById.get(slot.cropId as Crop['id']), start, slot.season);
-    if (!window) { unplaced.push({ slotIndex, year: slot.year, season: slot.season, reason: 'no_start_month' }); return; }
+    const window = slot.window !== undefined ? slot.window : slotWindow(cropById.get(slot.cropId as Crop['id']), start, slot.season);
+    if (!window) { unplaced.push({ slotIndex, year: slot.year, season: slot.season, reason: start === null ? 'no_start_month' : 'context_unconfirmed' }); return; }
     const startOffset = ((window.startMonth - input.plantingMonth + 12) % 12) + (slot.year === 2 ? 12 : 0);
     if (startOffset >= HORIZON) return;
     const length = Math.min(window.months.length, HORIZON - startOffset);
-    segments.push({ slotIndex, year: slot.year, season: slot.season, cropId: slot.cropId, startOffset, length, startMonth: window.startMonth, months: window.months.slice(0, length), source: window.source, cycleDays: window.cycleDays, clipped: length < window.months.length, row: 0 });
+    segments.push({ slotIndex, year: slot.year, season: slot.season, cropId: slot.cropId, startOffset, length, startMonth: window.startMonth, months: window.months.slice(0, length), source: window.source, simulationWarning: window.simulation?.warning, cycleDays: window.cycleDays, clipped: length < window.months.length, row: 0 });
   });
   const ends: number[] = [];
   for (const segment of [...segments].sort((a, b) => a.startOffset - b.startOffset)) {

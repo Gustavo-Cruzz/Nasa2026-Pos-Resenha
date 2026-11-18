@@ -41,31 +41,39 @@ async function loadChecksums(directory: string): Promise<Record<string, string> 
   return manifest.stateChecksums;
 }
 
-export async function readMunicipalNdvi(ibgeCode: string, directory = path.join(process.cwd(), NDVI_BRAZIL_DIR)): Promise<NdviContext | undefined> {
-  if (typeof ibgeCode !== 'string' || !/^\d{7}$/.test(ibgeCode)) return undefined;
+export type MunicipalNdviGap = 'invalid_code' | 'artifact_missing' | 'checksum_mismatch' | 'record_missing' | 'insufficient_coverage' | 'unavailable';
+export type MunicipalNdviLookup = { data?: NdviContext; gap?: MunicipalNdviGap };
+
+export async function inspectMunicipalNdvi(ibgeCode: string, directory = path.join(process.cwd(), NDVI_BRAZIL_DIR)): Promise<MunicipalNdviLookup> {
+  if (typeof ibgeCode !== 'string' || !/^\d{7}$/.test(ibgeCode)) return { gap: 'invalid_code' };
   const uf = UF_BY_STATE_CODE[ibgeCode.slice(0, 2)];
-  if (!uf) return undefined;
+  if (!uf) return { gap: 'invalid_code' };
   try {
     const checksums = await loadChecksums(directory);
     const expected = checksums?.[uf];
-    if (!expected) return undefined;
+    if (!expected) return { gap: 'artifact_missing' };
     const key = `${directory}|${uf}|${expected}`;
     let state = stateCache.get(key);
     if (!state) {
       const raw = await readFile(path.join(directory, 'states', `${uf}.json`));
-      if (createHash('sha256').update(raw).digest('hex') !== expected) return undefined;
+      if (createHash('sha256').update(raw).digest('hex') !== expected) return { gap: 'checksum_mismatch' };
       const parsed = stateSchema.parse(JSON.parse(raw.toString('utf8')));
-      if (parsed.uf !== uf) return undefined;
+      if (parsed.uf !== uf) return { gap: 'artifact_missing' };
       state = { records: new Map(parsed.records.filter((record) => record.uf === uf).map((record) => [record.ibgeCode, record as MunicipalNdviRecord])) };
       stateCache.set(key, state);
     }
     const record = state.records.get(ibgeCode);
-    if (!record || record.status !== 'available') return undefined;
-    return {
+    if (!record) return { gap: 'record_missing' };
+    if (record.status !== 'available') return { gap: record.status };
+    return { data: {
       origin: 'municipal_artifact',
       scope: { kind: 'municipal', ibgeCode: record.ibgeCode, municipality: record.municipality, uf: record.uf, point: { latitude: record.point.latitude, longitude: record.point.longitude, method: record.point.method } },
       product: record.product, band: record.band, period: record.period, fetchedAt: record.source.fetchedAt, sourceUrl: record.source.sourceUrl,
       observations: record.observations, validObservations: record.validObservations, coveragePct: record.coveragePct, months: record.monthlyClimatology,
-    };
-  } catch { return undefined; }
+    } };
+  } catch { return { gap: 'artifact_missing' }; }
+}
+
+export async function readMunicipalNdvi(ibgeCode: string, directory = path.join(process.cwd(), NDVI_BRAZIL_DIR)): Promise<NdviContext | undefined> {
+  return (await inspectMunicipalNdvi(ibgeCode, directory)).data;
 }

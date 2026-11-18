@@ -46,8 +46,8 @@ export function WaterBalanceChart({ example, level, en }: { example: PilotExampl
   const expectedYears = Math.max(...example.months.map((item) => item.expectedYears));
   const title = en ? `${example.label}, example: monthly rain vs ET0` : `${example.label}, exemplo: chuva × ET0 por mês`;
 
-  return <div className="mt-5 grid gap-5 lg:grid-cols-[1.6fr_1fr]" data-inview={inView ? 'true' : 'false'} ref={ref}>
-    <figure className="rounded-2xl border border-slate-700 bg-slate-950/60 p-3">
+  return <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]" data-inview={inView ? 'true' : 'false'} ref={ref}>
+    <figure className="min-w-0 rounded-2xl border border-slate-700 bg-slate-950/60 p-3">
       <svg aria-labelledby="balance-title balance-desc" className="h-auto w-full" role="img" viewBox="0 0 720 300">
         <title id="balance-title">{title}</title>
         <desc id="balance-desc">{en ? `Median monthly rain and ET0 in millimetres, NASA POWER 2011–2025. Rainy season (positive balance): ${rainyText}. Full numbers in the table below.` : `Chuva e ET0 medianas por mês em milímetros, NASA POWER 2011–2025. Estação chuvosa (balanço positivo): ${rainyText}. Números completos na tabela abaixo.`}</desc>
@@ -79,7 +79,7 @@ export function WaterBalanceChart({ example, level, en }: { example: PilotExampl
       </svg>
       <figcaption className="mt-2 px-1 text-xs text-slate-400">{en ? `${example.label} (${example.latitude}, ${example.longitude}), example. NASA POWER daily 2011–2025, verified file fetched ${example.fetchedAt.slice(0, 10)}. Shaded months: rainy season (${rainyText}).` : `${example.label} (${example.latitude}, ${example.longitude}), exemplo. NASA POWER diário 2011–2025, arquivo verificado obtido em ${example.fetchedAt.slice(0, 10)}. Meses sombreados: estação chuvosa (${rainyText}).`}</figcaption>
     </figure>
-    <div className="grid content-start gap-4">
+    <div className="grid min-w-0 content-start gap-4">
       {legend}
       {explainer}
       <p className="rounded-lg border border-slate-700 bg-slate-900/70 p-3 text-sm text-slate-300">
@@ -88,7 +88,7 @@ export function WaterBalanceChart({ example, level, en }: { example: PilotExampl
           ? `MFI = ${example.mfi} (${erosivityLabel(example.mfiClass, en ? 'en' : 'pt-BR')}; classes <60 · 60–90 · 90–120 · 120–160 · >160, Arnoldus/CEC 1992)`
           : `${erosivityLabel(example.mfiClass, en ? 'en' : 'pt-BR')}. ${en ? 'Rain concentrated in a few months hits bare soil harder.' : 'Chuva concentrada em poucos meses bate mais forte no solo descoberto.'}`}
       </p>
-      <details className="rounded-lg border border-slate-700 bg-slate-900/70 p-3 text-sm">
+      <details className="min-w-0 overflow-x-auto rounded-lg border border-slate-700 bg-slate-900/70 p-3 text-sm">
         <summary className="cursor-pointer font-semibold text-cyan-200">{en ? 'See the numbers (table)' : 'Ver os números (tabela)'}</summary>
         <table className="mt-3 w-full text-left text-xs tabular-nums">
           <caption className="sr-only">{title}</caption>

@@ -4,9 +4,12 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { BloomSprite } from '@/components/catalog/bloom-sprite';
 import { evidenceFieldLabels, lifeCycleLabels, t, type Loc } from '@/components/catalog/catalog-text';
-import { cropEvidence, cropMetadataById, type Crop, type CropEvidenceRecord } from '@/lib/catalog';
+import { cropEvidence, cropMetadataById, plantaeCycleEvidence, type Crop, type CropEvidenceRecord } from '@/lib/catalog';
 import { intercropLibrary } from '@/lib/intercrops';
 import { cropById } from '@/lib/catalog';
+import { catalogEvidenceInventory } from '@/lib/catalog-coverage';
+import { CycleSimulationReference } from '@/components/evidence/cycle-simulation-reference';
+import { F31Lot1Reference } from '@/components/evidence/f31-lot1-reference';
 
 const structuredFields = new Set(['cycleDaysRange', 'idealTempC', 'viableTempC', 'soilPhRange', 'kcStages']);
 
@@ -45,6 +48,7 @@ export function CropDetail({ crop, locale, onClose, bloomKey }: { crop: Crop; lo
   const ref = useRef<HTMLDivElement>(null);
   const L = (k: keyof typeof t) => t[k][locale];
   const name = crop.commonNames[locale];
+  const cycleEvidence = plantaeCycleEvidence.find((record) => record.cropId === crop.id);
   const meta = cropMetadataById.get(crop.id);
   const empty = L('noData');
 
@@ -80,6 +84,8 @@ export function CropDetail({ crop, locale, onClose, bloomKey }: { crop: Crop; lo
   const risks = [...crop.knownRisks, ...(crop.diseaseNotes ?? [])];
   const kcMax = Math.max(1.4, ...(crop.kcStages ?? []).map((s) => s.kc));
   const status = crop.parameterStatus;
+  const fieldCoverage = catalogEvidenceInventory(crop.id);
+  const verifiedFields = fieldCoverage.filter((entry) => entry.status === 'verified');
   const statusCls = status === 'verified' ? 'border-emerald-400 bg-emerald-900/60 text-emerald-200' : status === 'provisional' ? 'border-amber-400 bg-amber-900/50 text-amber-200' : 'border-slate-500 bg-slate-800 text-slate-300';
   const purposeLabel = (p: string) => t[p as 'commercial' | 'cover' | 'forage'][locale];
 
@@ -96,7 +102,7 @@ export function CropDetail({ crop, locale, onClose, bloomKey }: { crop: Crop; lo
           <p className="text-sm text-slate-400">{L('family')}: {crop.family}{meta ? ` · ${L('lifeCycle')}: ${lifeCycleLabels[meta.lifeCycle]?.[locale] ?? meta.lifeCycle}` : ''}</p>
           <div className="mt-2 flex flex-wrap justify-center gap-2">
             {crop.purposes.map((p) => <span className="border border-lime-300/60 px-2 py-0.5 text-xs text-lime-200" key={p}>{purposeLabel(p)}</span>)}
-            <span className={`border px-2 py-0.5 text-xs ${statusCls}`}>{status === 'missing' ? L('missing') : L(status)}</span>
+            <span className={`border px-2 py-0.5 text-xs ${statusCls}`}>{status === 'missing' ? (verifiedFields.length ? `${L('partialProfile')} · ${verifiedFields.length} ${locale === 'en' ? 'fields with sourced records' : 'campos com registros de fonte'}` : L('missing')) : L(status)}</span>
           </div>
         </div>
         {meta?.usageRestrictions ? <p className="mt-4 border-l-4 border-amber-400 bg-amber-900/30 p-3 text-sm text-amber-100"><strong>{L('caution')}:</strong> {meta.usageRestrictions}</p> : null}
@@ -106,9 +112,28 @@ export function CropDetail({ crop, locale, onClose, bloomKey }: { crop: Crop; lo
             <RangeBar color="bg-lime-400" empty={empty} label={L('idealTemp')} max={45} min={0} range={crop.idealTempC} unit="°C" />
             <RangeBar color="bg-amber-400" empty={empty} label={L('viableTemp')} max={45} min={0} range={crop.viableTempC} unit="°C" />
             <RangeBar color="bg-sky-400" empty={empty} label={L('ph')} max={8} min={4} range={crop.soilPhRange} unit="pH" />
-            <div className="text-sm"><span className="text-slate-300">{L('cycle')}:</span> <span className="font-mono text-cream">{crop.cycleDaysRange ? `${crop.cycleDaysRange.min}–${crop.cycleDaysRange.max}` : empty}</span></div>
+            <div className="text-sm"><span className="text-slate-300">{L('cycle')}:</span> <span className="font-mono text-cream">{crop.cycleDaysRange ? `${crop.cycleDaysRange.min}–${crop.cycleDaysRange.max}` : cycleEvidence?.value ? `${cycleEvidence.value.min}–${cycleEvidence.value.max} (${locale === 'en' ? 'contextual reference' : 'referência contextual'})` : cycleEvidence ? (locale === 'en' ? 'No single terminal cycle' : 'Sem ciclo terminal único') : empty}</span></div>
           </div>
         </Section>
+
+        <F31Lot1Reference cropId={crop.id} />
+        <CycleSimulationReference cropId={crop.id} />
+        {cycleEvidence ? <Section title={locale === 'en' ? 'Contextual cycle evidence' : 'Evidência contextual de ciclo'}>
+          <article className="space-y-2 border border-slate-700 p-3 text-sm">
+            <p className="font-semibold text-lime-200">{cycleEvidence.value ? `${cycleEvidence.value.min}–${cycleEvidence.value.max} ${cycleEvidence.unit}` : (locale === 'en' ? 'No single terminal cycle reported' : 'Sem ciclo terminal único informado')}</p>
+            <p className="text-slate-200">{cycleEvidence.context.cycleDefinition}</p>
+            <p className="text-xs text-slate-300">{[cycleEvidence.context.cultivar && `${locale === 'en' ? 'Cultivar' : 'Cultivar'}: ${cycleEvidence.context.cultivar}`, `${locale === 'en' ? 'Purpose' : 'Finalidade'}: ${cycleEvidence.context.purpose}`, `${locale === 'en' ? 'Region' : 'Região'}: ${cycleEvidence.context.region}`, `${locale === 'en' ? 'System' : 'Sistema'}: ${cycleEvidence.context.productionSystem}`].filter(Boolean).join(' · ')}</p>
+            <p className="text-xs text-amber-200">{cycleEvidence.integrationNotes}</p>
+            <ul className="space-y-2">{cycleEvidence.milestones.map((milestone, index) => <li className="border-t border-slate-700 pt-2" key={`${milestone.kind}-${index}`}>
+              <p>{milestone.kind}: {milestone.value.min}–{milestone.value.max} {milestone.unit} · {milestone.cycleDefinition}</p>
+              <p className="text-xs text-slate-400">{milestone.source.locator} · {milestone.source.quote}</p>
+              <a className="text-xs text-lime-300 underline" href={milestone.source.url} rel="noreferrer" target="_blank">{milestone.source.title}</a>
+            </li>)}</ul>
+            <p className="border-t border-slate-700 pt-2 text-xs">{cycleEvidence.source.locator} · {cycleEvidence.source.quote}</p>
+            <a className="text-xs text-lime-300 underline" href={cycleEvidence.source.url} rel="noreferrer" target="_blank">{cycleEvidence.source.title}</a>
+            <p className="text-xs text-slate-500">{locale === 'en' ? 'Research date' : 'Data da pesquisa'}: {cycleEvidence.source.accessedAt} · {cycleEvidence.verification}</p>
+          </article>
+        </Section> : null}
 
         {crop.kcStages && crop.kcStages.length > 0 ? <Section title={L('water')}>
           <ul className="space-y-1.5">{crop.kcStages.map((s, i) => <li className="text-sm" key={i}>

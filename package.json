@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "audit:nd": "node scripts/audit-nd.mjs",
     "build:brazil-context": "node scripts/build-brazil-context.mjs",
     "update:brazil-context": "node scripts/update-brazil-context.mjs",
     "update:brazil-pam": "node scripts/update-brazil-pam.mjs",

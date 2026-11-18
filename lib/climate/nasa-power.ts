@@ -7,7 +7,7 @@ import { isPilotLocation } from '@/lib/region';
 import { historicalContextForCalendarDay, historicalPrecipitationByMonth, historicalPrecipitationForMonth, monthlyForYear, historicalWaterBalanceByMonth, historicalWaterContextForMonth, historicalWaterContextByMonth, frostByMonth, monthlyClimatology, type HistoricalCalendarDay, type YearMonth, type HistoricalPrecipitationMonth, type HistoricalWaterContextMonth, type MonthlyClimateSummary, type WaterBalanceMonth, type FrostMonth } from '@/lib/climate/indicators';
 import { dayOfYear, et0Daily } from '@/lib/climate/et0';
 import type { NdviContext } from '@/lib/climate/ndvi';
-import { readMunicipalNdvi } from '@/lib/climate/ndvi-municipal';
+import { inspectMunicipalNdvi, type MunicipalNdviGap } from '@/lib/climate/ndvi-municipal';
 import { readNdviFixture } from '@/lib/climate/ndvi-fixture';
 import { historicalErosivity, type Erosivity } from '@/lib/climate/erosivity';
 import { drySpellsInRainySeason, rainySeasonFromBalance, rootZoneByMonth, type DrySpellSummary, type RainySeason, type RootZoneMonth } from '@/lib/climate/seasonality';
@@ -48,6 +48,7 @@ export type ClimateContext = {
   erosivity?: Erosivity;
   /** MODIS NDVI monthly medians; only present for points with a hash-verified pre-processed fixture, otherwise N/D. */
   ndvi?: NdviContext;
+  ndviGapCode?: MunicipalNdviGap | 'municipality_missing';
   calendarDayContext?: HistoricalCalendarDay | null;
   /** Rainy-season months and in-season dry spells (veranicos) from the same daily series. Historical context, not a forecast. */
   seasonality?: { rainySeason: RainySeason | null; drySpells: DrySpellSummary | null };
@@ -171,8 +172,9 @@ export async function resolveClimateContext(coordinates: Coordinates, plantingMo
 
 /** NDVI priority: municipal artifact by validated IBGE code, then exact pilot fixture, otherwise N/D. */
 async function withNdvi(context: ClimateContext, coordinates: Coordinates, municipalityCode?: string): Promise<ClimateContext> {
-  const ndvi = (municipalityCode ? await readMunicipalNdvi(municipalityCode) : undefined) ?? await readNdviFixture(coordinates);
-  return ndvi ? { ...context, ndvi } : context;
+  const municipal: { data?: NdviContext; gap?: MunicipalNdviGap | 'municipality_missing' } = municipalityCode ? await inspectMunicipalNdvi(municipalityCode) : { gap: 'municipality_missing' };
+  const ndvi = municipal.data ?? await readNdviFixture(coordinates);
+  return ndvi ? { ...context, ndvi } : { ...context, ndviGapCode: municipal.gap };
 }
 
 function contextFromDataset(dataset: ClimateDataset, plantingMonth: number, origin: 'live' | 'verified_fixture', calendarDay?: number): ClimateContext {

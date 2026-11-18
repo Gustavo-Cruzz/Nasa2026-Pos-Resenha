@@ -79,7 +79,9 @@ export function windowMonthsWeather(analysis: AnalysisResult, cropId: string, se
   const climate = analysis.climate;
   if (!climate || climate.status !== 'available') return [];
   const start = slotSeasonWindow(analysis.input, season).month;
-  const window = slotWindow(cropById.get(cropId), start, season);
+  const assessed = (analysis.strategies ?? []).flatMap((strategy) => strategy.slots ?? []).filter((slot) => slot.cropId === cropId && slot.season === season && slot.window !== undefined);
+  if (assessed.some((slot) => JSON.stringify(slot.window) !== JSON.stringify(assessed[0]?.window))) return [];
+  const window = assessed.length ? assessed[0]!.window : slotWindow(cropById.get(cropId), start, season);
   if (!window) return [];
   const solarByMonth = climate.monthly.flatMap((item) => item.solarMedianMjM2Day === null || item.solarMedianMjM2Day === undefined ? [] : [item.solarMedianMjM2Day]);
   const annualSolarMjM2Day = median(solarByMonth);

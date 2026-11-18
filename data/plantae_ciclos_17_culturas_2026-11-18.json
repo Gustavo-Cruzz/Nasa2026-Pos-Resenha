@@ -1,0 +1,720 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "plantae-cycle-evidence-17-2026-11-18",
+  "researchDate": "2026-11-18",
+  "language": "pt-BR",
+  "scope": "Referências agronômicas brasileiras contextualizadas; não são recomendações de cultivo ou adequação por município",
+  "importantRules": [
+    "cycleDaysRange só pode ser interpretado conforme context.cycleDefinition; semeado, emergido e transplantado não são marcos equivalentes.",
+    "Para perenes e forrageiras manejadas, cycleDaysRange é null porque não existe duração terminal única; usar milestones específicos.",
+    "Não converter months/years em days automaticamente para fazer parecer que a fonte verificou dias.",
+    "Para culturas com colheitas sucessivas, timeToFirstHarvest não determina liberação do talhão para próxima cultura.",
+    "Variabilidade regional, cultivar, clima e manejo: exige escolha explícita ou apresentação como referência não personalizada.",
+    "Ciclo não é projeção fenológica específica nem previsão de produção."
+  ],
+  "records": [
+    {
+      "cropId": "ruziziensis",
+      "commonNamePt": "capim-ruziziensis",
+      "group": "forage_cover",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "cobertura de solo e/ou forragem",
+        "region": "Brasil; uso em sistemas de cobertura",
+        "productionSystem": "consórcio, cobertura ou pastagem",
+        "cycleDefinition": "não existe ciclo terminal único sem definir corte ou dessecação"
+      },
+      "source": {
+        "title": "Plantas de Cobertura de Primavera-Verão — ESALQ/USP",
+        "url": "https://www.esalq.usp.br/biblioteca/pdf/Livro_Plantas_de_Cobertura_completo.pdf",
+        "locator": "p. 16, seção Ciclo até o florescimento",
+        "quote": "U. ruziziensis - 40 a 50 dias",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "daysToFlowering",
+          "value": {
+            "min": 40,
+            "max": 50
+          },
+          "unit": "days",
+          "cycleDefinition": "semeadura até florescimento",
+          "source": {
+            "title": "Plantas de Cobertura de Primavera-Verão — ESALQ/USP",
+            "url": "https://www.esalq.usp.br/biblioteca/pdf/Livro_Plantas_de_Cobertura_completo.pdf",
+            "locator": "p. 16, Ciclo até o florescimento",
+            "quote": "40 a 50 dias",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "40–50 dias é semeadura até florescimento, NÃO até dessecação, corte ou fim do ciclo; o usuário deve informar o manejo."
+    },
+    {
+      "cropId": "cassava",
+      "commonNamePt": "mandioca",
+      "group": "roots_tubers",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 360,
+        "max": 360
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "raízes de reserva",
+        "region": "Brasil; referência técnica de mandioca irrigada",
+        "productionSystem": "irrigado",
+        "cycleDefinition": "plantio até término do modelo fenológico de 12 meses (360 dias); NÃO é data universal de colheita"
+      },
+      "source": {
+        "title": "Comunicado Técnico 172 — Embrapa Mandioca e Fruticultura",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1121941/1/ComunicadoTecnico172-Mauricio-Coelho-AINFO-2.pdf",
+        "locator": "p. 3, Tabela 1, Duração do ciclo da cultura e fases fenológicas",
+        "quote": "Acumulado | 30 | 150 | 300 | 360",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [
+        {
+          "kind": "timeToRootHarvest",
+          "value": {
+            "min": 10,
+            "max": 12
+          },
+          "unit": "months",
+          "cycleDefinition": "plantio até início da colheita, cultivares precoces, Tabuleiros Costeiros",
+          "source": {
+            "title": "Cultivo da Mandioca para a Região dos Tabuleiros Costeiros — Embrapa",
+            "url": "https://sistemasdeproducao.cnptia.embrapa.br/FontesHTML/Mandioca/mandioca_tabcosteiros/colheita.htm",
+            "locator": "seção Colheita",
+            "quote": "precoces - 10-12 meses",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Valor de 360 dias refere-se a modelo fenológico de mandioca irrigada; colheita varia muito com cultivar e finalidade. Usar intervalo específico de cultivar onde conhecido."
+    },
+    {
+      "cropId": "sweet_potato",
+      "commonNamePt": "batata-doce",
+      "group": "roots_tubers",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 90,
+        "max": 150
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "raízes tuberosas para consumo",
+        "region": "Brasil; diferentes condições edafoclimáticas",
+        "productionSystem": "cultivo anual; sequeiro ou irrigado conforme local",
+        "cycleDefinition": "plantio até colheita das raízes tuberosas"
+      },
+      "source": {
+        "title": "Ecofisiologia e exigências climáticas — Batata-doce, Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas",
+        "locator": "seção Desenvolvimento",
+        "quote": "Normalmente o ciclo varia de 90 a 150 dias",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [],
+      "integrationNotes": "A publicação também menciona intervalos mais amplos em semanas; 90–150 dias está associado especificamente a plantio→colheita em sua descrição de fases."
+    },
+    {
+      "cropId": "pumpkin",
+      "commonNamePt": "abóbora",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 120,
+        "max": 130
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": "Jacarezinho",
+        "purpose": "fruto/produção de sementes no estudo",
+        "region": "Juazeiro, BA, Vale do São Francisco; experimento 2010–2011",
+        "productionSystem": "experimento de campo irrigado por gotejamento",
+        "cycleDefinition": "semeadura até fase de colheita descrita no diagrama fenológico"
+      },
+      "source": {
+        "title": "Figueiredo Neto et al. (2014), Maturação fisiológica de sementes de abóbora cv. Jacarezinho",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/997862/1/Barbara2014.pdf",
+        "locator": "p. 304, Figura 1",
+        "quote": "Colheita | 120 - 130 dias",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {
+            "min": 90,
+            "max": 120
+          },
+          "unit": "days",
+          "cycleDefinition": "plantio até início da colheita, abóboras em geral",
+          "source": {
+            "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+            "locator": "p. 8, tabela Abóbora",
+            "quote": "90 - 120 DIAS",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Este intervalo é específico do cultivar Jacarezinho e do estudo; não representa todas as abóboras. O catálogo da Embrapa registra início de colheita mais cedo, 90–120 dias."
+    },
+    {
+      "cropId": "watermelon",
+      "commonNamePt": "melancia",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 95,
+        "max": 110
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "fruto comercial",
+        "region": "Brasil; varia com cultivar e clima",
+        "productionSystem": "manejo comercial não especificado na faixa citada",
+        "cycleDefinition": "semeadura ao fim do ciclo cultural, incluindo colheita"
+      },
+      "source": {
+        "title": "A Cultura da Melancia — Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1026847/1/A-CULTURA-DA-MELANCIA.pdf",
+        "locator": "capítulo Manejo Integrado de Pragas da Melancia, subseção Avaliação do Agroecossistema; Figura 12",
+        "quote": "O ciclo da cultura da melancia é completado em 95 a 110 dias",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [],
+      "integrationNotes": "A mesma obra cita 65–110 dias em contexto de irrigação. Manter a faixa de 95–110 com a definição e fonte associadas; não generalizar a todas as cultivares."
+    },
+    {
+      "cropId": "lettuce",
+      "commonNamePt": "alface",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 50,
+        "max": 70
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "folhas/cabeça para consumo; colheita única",
+        "region": "Brasil; alface de verão",
+        "productionSystem": "época/clima de verão; muda em local definitivo",
+        "cycleDefinition": "plantio até início de colheita; usado como término apenas se colheita única retirar toda a planta"
+      },
+      "source": {
+        "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+        "locator": "p. 13, tabela Alface de verão, início de colheita após plantio",
+        "quote": "50 - 70 DIAS",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified_with_harvest_assumption",
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {
+            "min": 60,
+            "max": 80
+          },
+          "unit": "days",
+          "cycleDefinition": "plantio até início de colheita, alface de inverno",
+          "source": {
+            "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+            "locator": "p. 13, tabela Alface de inverno",
+            "quote": "60 - 80 DIAS",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "O documento registra INÍCIO de colheita, não encerramento do cultivo. Para produção com colheita fracionada, tratar como timeToFirstHarvest e exigir decisão de manejo."
+    },
+    {
+      "cropId": "tomato",
+      "commonNamePt": "tomate",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 95,
+        "max": 125
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "tomate de mesa",
+        "region": "Brasil; condições variáveis de solo e clima",
+        "productionSystem": "não especificado (cultivo de mesa)",
+        "cycleDefinition": "duração do ciclo da cultura; marco inicial não explicitado na fonte"
+      },
+      "source": {
+        "title": "Grupos — Tomate de Mesa, Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/tomate-de-mesa/grupos",
+        "locator": "seção Escolha da cultivar",
+        "quote": "Ciclo: pode variar de 95 a 125 dias",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {
+            "min": 100,
+            "max": 120
+          },
+          "unit": "days",
+          "cycleDefinition": "plantio até início de colheita",
+          "source": {
+            "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+            "locator": "p. 57, tabela Tomate",
+            "quote": "100 - 120 DIAS",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "O marco inicial (semeadura ou transplante) NÃO é informado: não usar para preencher automaticamente datas sem definir a convenção."
+    },
+    {
+      "cropId": "carrot",
+      "commonNamePt": "cenoura",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 80,
+        "max": 120
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "raiz de consumo",
+        "region": "Brasil; depende de clima e cultivar",
+        "productionSystem": "cultivo em canteiros",
+        "cycleDefinition": "semeadura até colheita de raízes"
+      },
+      "source": {
+        "title": "A Cultura da Cenoura — Embrapa, Coleção Plantar",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/101146/1/Aculturadacenoura.pdf",
+        "locator": "p. 69, seção Colheita e comercialização",
+        "quote": "80 a 120 dias decorridos da semeadura",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [],
+      "integrationNotes": "Ciclo aplicável à colheita comercial; verificar cultivar e região antes de usar nas janelas de plantio."
+    },
+    {
+      "cropId": "kale",
+      "commonNamePt": "couve",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "folhas de couve-manteiga",
+        "region": "Brasil; épocas de plantio por região no catálogo",
+        "productionSystem": "colheita contínua de folhas",
+        "cycleDefinition": "não há término único do ciclo produtivo em fonte consultada"
+      },
+      "source": {
+        "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+        "locator": "p. 29, tabela Couve manteiga, início de colheita após plantio",
+        "quote": "80 - 90 DIAS",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {
+            "min": 80,
+            "max": 90
+          },
+          "unit": "days",
+          "cycleDefinition": "plantio até início da colheita de folhas",
+          "source": {
+            "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+            "locator": "p. 29, tabela Couve manteiga",
+            "quote": "80 - 90 DIAS",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Couve permite retiradas sucessivas de folhas: início da colheita NÃO significa saída do talhão."
+    },
+    {
+      "cropId": "onion",
+      "commonNamePt": "cebola",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 110,
+        "max": 120
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": "cultivares de dias curtos",
+        "purpose": "bulbo comercial",
+        "region": "Nordeste brasileiro e parte de Minas Gerais",
+        "productionSystem": "cultivo adaptado a dias curtos; sistema hídrico não especificado",
+        "cycleDefinition": "ciclo da cultura até colheita; início da contagem não explicitado"
+      },
+      "source": {
+        "title": "Costa et al. (2002), Cultivares de cebola — Embrapa / Informe Agropecuário",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/handle/doc/132844?locale=pt_BR",
+        "locator": "Resumo / Conteúdo, p. 20–27",
+        "quote": "dias curtos, com ciclo em torno de 110 a 120 dias",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [
+        {
+          "kind": "alternateRegionalCycle",
+          "value": {
+            "min": 130,
+            "max": 210
+          },
+          "unit": "days",
+          "cycleDefinition": "ciclo de cultivares de dias intermediários em outros estados",
+          "source": {
+            "title": "Costa et al. (2002), Cultivares de cebola — Embrapa",
+            "url": "https://www.alice.cnptia.embrapa.br/alice/handle/doc/132844?locale=pt_BR",
+            "locator": "Resumo",
+            "quote": "130 a 210 dias",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "NÃO aplicar este intervalo automaticamente fora do Nordeste e regiões de dias curtos; para cultivares de dias intermediários 130–210 dias."
+    },
+    {
+      "cropId": "bell_pepper",
+      "commonNamePt": "pimentão",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "fruto de consumo",
+        "region": "Brasil; condições variáveis",
+        "productionSystem": "plantio por mudas e colheitas sucessivas",
+        "cycleDefinition": "duração até encerramento da colheita não documentada na referência"
+      },
+      "source": {
+        "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+        "locator": "p. 49, tabela Pimentão, início de colheita após plantio",
+        "quote": "100 - 120 DIAS",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {
+            "min": 100,
+            "max": 120
+          },
+          "unit": "days",
+          "cycleDefinition": "plantio até início da colheita",
+          "source": {
+            "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+            "locator": "p. 49, tabela Pimentão",
+            "quote": "100 - 120 DIAS",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Pimentão produz em colheitas sucessivas. 100–120 dias = primeira colheita, não ciclo completo."
+    },
+    {
+      "cropId": "okra",
+      "commonNamePt": "quiabo",
+      "group": "vegetables_fruits",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "vagens/frutos para consumo",
+        "region": "Brasil; calendário regional no catálogo",
+        "productionSystem": "colheitas sucessivas",
+        "cycleDefinition": "duração até encerramento da colheita não documentada na referência"
+      },
+      "source": {
+        "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+        "locator": "p. 50, tabela Quiabo, início de colheita após plantio",
+        "quote": "70 - 80 DIAS",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {
+            "min": 70,
+            "max": 80
+          },
+          "unit": "days",
+          "cycleDefinition": "plantio até início da colheita",
+          "source": {
+            "title": "Catálogo Brasileiro de Hortaliças — Sebrae / Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+            "locator": "p. 50, tabela Quiabo",
+            "quote": "70 - 80 DIAS",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Quiabo tem colheitas repetidas e pode ocupar o talhão muito além da primeira colheita."
+    },
+    {
+      "cropId": "peanut",
+      "commonNamePt": "amendoim",
+      "group": "oilseed",
+      "field": "cycleDaysRange",
+      "value": {
+        "min": 90,
+        "max": 90
+      },
+      "unit": "days",
+      "context": {
+        "cultivar": "BR 1",
+        "purpose": "grãos/vagens para alimentação ou indústria",
+        "region": "Nordeste brasileiro",
+        "productionSystem": "sequeiro ou irrigado; referência varietal",
+        "cycleDefinition": "emergência até término do ciclo; NÃO desde semeadura"
+      },
+      "source": {
+        "title": "AMENDOIM BR1 — Embrapa Algodão (2016)",
+        "url": "https://www.infoteca.cnptia.embrapa.br/handle/doc/1066744",
+        "locator": "Descrição do documento",
+        "quote": "ciclo de 90 dias após a emergência",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "verified",
+      "milestones": [],
+      "integrationNotes": "Adicionar dias da semeadura até emergência caso a aplicação queira agendar desde a semeadura. Valor específico do cultivar BR 1."
+    },
+    {
+      "cropId": "coffee",
+      "commonNamePt": "café",
+      "group": "perennial",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": "Icatu PR 182039-1",
+        "purpose": "grãos / primeira colheita economicamente significativa",
+        "region": "Acre, experimento novembro 2000 a abril 2003",
+        "productionSystem": "campo, consórcio com leguminosas em tratamentos experimentais",
+        "cycleDefinition": "perene; primeira colheita econômica não equivale ao fim de ciclo"
+      },
+      "source": {
+        "title": "Bergo et al. (2007), Efeito de adubação verde no crescimento e produtividade do cafeeiro — Embrapa",
+        "url": "https://www.alice.cnptia.embrapa.br/handle/doc/507698?locale=pt_BR",
+        "locator": "Resumo, experimento Acre",
+        "quote": "primeira colheita economicamente significativa (2 anos e 5 meses após o plantio)",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "timeToFirstCommercialHarvest",
+          "value": {
+            "min": 29,
+            "max": 29
+          },
+          "unit": "months",
+          "cycleDefinition": "plantio até primeira colheita economicamente significativa no experimento",
+          "source": {
+            "title": "Bergo et al. (2007) — Embrapa",
+            "url": "https://www.alice.cnptia.embrapa.br/handle/doc/507698?locale=pt_BR",
+            "locator": "Resumo, primeira colheita",
+            "quote": "2 anos e 5 meses após o plantio",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "29 meses até a primeira colheita economicamente significativa em um ensaio, não tempo de todo café nem intervalo de produção anual."
+    },
+    {
+      "cropId": "banana",
+      "commonNamePt": "banana",
+      "group": "perennial",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": "BRS Prata Caprichosa",
+        "purpose": "fruto para consumo; primeiro cacho",
+        "region": "Amazonas (AM), região de adaptação informada",
+        "productionSystem": "manejo não especificado na ficha da cultivar",
+        "cycleDefinition": "perene de sucessivas gerações; dias até colheita não representam duração de vida da planta"
+      },
+      "source": {
+        "title": "Cultivares — Banana, Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/banana/cultivares",
+        "locator": "BRS Caprichosa (AAAB), Número de dias até colheita",
+        "quote": "300 - 335",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "timeToHarvest",
+          "value": {
+            "min": 300,
+            "max": 335
+          },
+          "unit": "days",
+          "cycleDefinition": "número de dias até colheita da cultivar BRS Prata Caprichosa; marco inicial não definido na ficha",
+          "source": {
+            "title": "Cultivares — Banana, Embrapa Ater+",
+            "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/banana/cultivares",
+            "locator": "BRS Caprichosa (AAAB)",
+            "quote": "300 - 335",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        },
+        {
+          "kind": "timeToHarvest",
+          "value": {
+            "min": 340,
+            "max": 340
+          },
+          "unit": "days",
+          "cycleDefinition": "número de dias até colheita da BRS Platina, Bahia (BA)",
+          "source": {
+            "title": "Cultivares — Banana, Embrapa Ater+",
+            "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/banana/cultivares",
+            "locator": "BRS Platina (AAAB)",
+            "quote": "340 dias para Bahia",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "O marco inicial dos 300–335 dias não é explicitado na ficha. Há grande variação por cultivar e clima."
+    },
+    {
+      "cropId": "cacao",
+      "commonNamePt": "cacau",
+      "group": "perennial",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": null,
+        "purpose": "amêndoas de cacau",
+        "region": "Brasil; referência geral MAPA/CEPLAC",
+        "productionSystem": "plantio perene",
+        "cycleDefinition": "idade aproximada de entrada em produção, não ciclo completo nem intervalo de safra"
+      },
+      "source": {
+        "title": "Amelonado é o principal tipo de cacau produzido no Brasil — MAPA/CEPLAC (2025)",
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/noticias/2025/amelonado-e-o-principal-tipo-de-cacau-produzido-no-brasil",
+        "locator": "texto inicial e corpo, publicação 26/03/2025",
+        "quote": "O cacaueiro inicia a produção, em geral, aos três anos de idade",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "ageAtFirstProduction",
+          "value": {
+            "min": 3,
+            "max": 3
+          },
+          "unit": "years",
+          "cycleDefinition": "idade do cacaueiro até início de produção",
+          "source": {
+            "title": "MAPA/CEPLAC (2025), Amelonado é o principal tipo de cacau produzido no Brasil",
+            "url": "https://www.gov.br/agricultura/pt-br/assuntos/noticias/2025/amelonado-e-o-principal-tipo-de-cacau-produzido-no-brasil",
+            "locator": "corpo da notícia",
+            "quote": "aos três anos de idade",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Idade aproximada da planta na primeira produção; não equivale necessariamente a anos transcorridos desde o transplante no campo."
+    },
+    {
+      "cropId": "acai",
+      "commonNamePt": "açaí",
+      "group": "perennial",
+      "field": "cycleDaysRange",
+      "value": null,
+      "unit": "days",
+      "context": {
+        "cultivar": "BRS Pará",
+        "purpose": "frutos para polpa",
+        "region": "Pará; cultivo em terra firme",
+        "productionSystem": "açaizal cultivado",
+        "cycleDefinition": "perene; idade até entrada em produção, não duração de ciclo"
+      },
+      "source": {
+        "title": "BRS Pará: a primeira cultivar de açaizeiro do Brasil — Embrapa (2005)",
+        "url": "https://www.infoteca.cnptia.embrapa.br/handle/doc/409681",
+        "locator": "Descrição do registro Prosa Rural",
+        "quote": "precocidade no início da produção (aos 3 anos",
+        "accessedAt": "2026-11-18"
+      },
+      "verification": "not_applicable_as_single_cycle",
+      "milestones": [
+        {
+          "kind": "ageAtFirstProduction",
+          "value": {
+            "min": 3,
+            "max": 3
+          },
+          "unit": "years",
+          "cycleDefinition": "idade até primeira produção, BRS Pará",
+          "source": {
+            "title": "Embrapa Prosa Rural — BRS Pará (2005)",
+            "url": "https://www.infoteca.cnptia.embrapa.br/handle/doc/409681",
+            "locator": "Descrição",
+            "quote": "aos 3 anos",
+            "accessedAt": "2026-11-18"
+          },
+          "verification": "verified"
+        }
+      ],
+      "integrationNotes": "Primeira produção BRS Pará aos 3 anos de idade; não afirmar retorno anual fixo nem data exata após transplantio."
+    }
+  ]
+}

@@ -86,6 +86,7 @@ export const analysisInputSchema = z.object({
   farmerCrops: farmerCropProfileSchema.optional(),
   croppingSystems: z.array(croppingSystemSchema).max(3).optional(),
   plantingMonth: z.number().int().min(1).max(12),
+  safrinhaPlantingMonth: z.number().int().min(1).max(12).optional(),
   history: z.array(cropEventSchema).min(1).max(3),
   futureBaseline: futureBaselineSchema.optional(),
   soil: soilProfileSchema.optional(),

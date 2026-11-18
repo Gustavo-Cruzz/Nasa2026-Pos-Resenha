@@ -1,3 +1,4 @@
+import { cycleSimulationDataset } from '@/lib/cycle-simulation';
 import { cropById } from '@/lib/catalog';
 import { slotSeasonWindow } from '@/lib/engine/slot-season';
 import { slotWindow, windowWaterBalance } from '@/lib/engine/slot-window';
@@ -50,7 +51,7 @@ function placements(analysis: AnalysisResult, strategy: Rotation): Placement[] {
       const main = result.find((item) => item.slot.year === slot.year && item.slot.season === 'A');
       if (main) { first = (main.window.months.at(-1)! % 12) + 1; assumedStart = true; }
     }
-    const window = slotWindow(crop, first, slot.season);
+    const window = slot.window !== undefined && !(assumedStart && !cycleSimulationDataset.records.some((item) => item.cropId === slot.cropId)) ? slot.window : slotWindow(crop, first, slot.season);
     if (window) result.push({ slot, crop, window, assumedStart });
   }
   return result;

@@ -4,6 +4,7 @@ import evidenceDocument from '@/data/crop-evidence.json';
 import familyFarmCropRecords from '@/FieldShift_AgriculturaFamiliar_Consorcios_2026/family-farm-crops.seed.json';
 import familyFarmMetadataDocument from '@/FieldShift_AgriculturaFamiliar_Consorcios_2026/family-farm-crop-metadata.seed.json';
 import familyFarmEvidenceDocument from '@/FieldShift_AgriculturaFamiliar_Consorcios_2026/family-farm-evidence.seed.json';
+import plantaeCycleDocument from '@/data/plantae_ciclos_17_culturas_2026-11-18.json';
 
 const nullableRange = z.object({ min: z.number(), max: z.number() }).nullable();
 const kcStageSchema = z.object({ stage: z.string().min(1), kc: z.number().positive(), days: z.union([z.number().positive(), z.object({ min: z.number().positive(), max: z.number().positive() })]).optional() });
@@ -34,6 +35,12 @@ const evidenceRecordSchema = z.object({
   }),
 });
 export type CropEvidenceRecord = z.infer<typeof evidenceRecordSchema>;
+const cycleMilestoneSchema = z.object({ kind: z.string().min(1), value: z.object({ min: z.number().positive(), max: z.number().positive() }), unit: z.string().min(1), cycleDefinition: z.string().min(1), source: z.object({ title: z.string().min(1), url: z.string().url(), locator: z.string().min(1), quote: z.string().min(1), accessedAt: z.string().date() }), verification: z.enum(['verified', 'verified_source_text', 'not_verified']) });
+const contextualCycleSchema = z.object({ cropId: z.string(), commonNamePt: z.string(), group: z.string(), field: z.literal('cycleDaysRange'), value: z.object({ min: z.number().positive(), max: z.number().positive() }).nullable(), unit: z.string(), context: z.object({ cultivar: z.string().nullable(), purpose: z.string(), region: z.string(), productionSystem: z.string(), cycleDefinition: z.string().min(1) }), source: z.object({ title: z.string(), url: z.string().url(), locator: z.string(), quote: z.string(), accessedAt: z.string().date() }), verification: z.enum(['verified', 'verified_with_harvest_assumption', 'not_applicable_as_single_cycle']), milestones: z.array(cycleMilestoneSchema), integrationNotes: z.string() }).superRefine((record, ctx) => { if (record.value && record.value.min > record.value.max) ctx.addIssue({ code: 'custom', message: 'Cycle range min must not exceed max.' }); if (record.verification === 'not_applicable_as_single_cycle' && record.value !== null) ctx.addIssue({ code: 'custom', message: 'Non-terminal cycles must remain null.' }); });
+const plantaeCycleDatasetSchema = z.object({ schemaVersion: z.string(), datasetId: z.string(), researchDate: z.string().date(), language: z.string(), scope: z.string(), importantRules: z.array(z.string()), records: z.array(contextualCycleSchema).length(17) });
+export const plantaeCycleDataset = plantaeCycleDatasetSchema.parse(plantaeCycleDocument);
+export const plantaeCycleEvidence = plantaeCycleDataset.records;
+if (new Set(plantaeCycleEvidence.map((record) => record.cropId)).size !== 17 || plantaeCycleEvidence.some((record) => !/^https?:$/.test(new URL(record.source.url).protocol) || record.milestones.some((milestone) => !/^https?:$/.test(new URL(milestone.source.url).protocol)))) throw new Error('Plantae cycle dataset must contain 17 unique crops and public HTTP(S) sources.');
 const baseEvidence = z.object({ version: z.number(), records: z.array(evidenceRecordSchema) }).parse(evidenceDocument).records;
 const familyFarmEvidence = z.object({ version: z.string(), records: z.array(evidenceRecordSchema) }).parse(familyFarmEvidenceDocument).records;
 /** Source records remain contextual; harvest references never populate cycleDaysRange. */
@@ -70,6 +77,7 @@ export const crops = z.array(cropSchema).parse(mergedCropRecords.map((crop) => {
   return { ...crop, ...values, ...(nitrogen ? { nitrogenFixationPotential: nitrogen.value as string } : {}), ...(residue ? { residuePotential: residue.value as string } : {}), ...(diseaseNotes.length > 0 ? { diseaseNotes } : {}), sourceRefs };
 }));
 export const cropById = new Map(crops.map((crop) => [crop.id, crop]));
+if (plantaeCycleEvidence.some((record) => !cropById.has(record.cropId))) throw new Error('Plantae cycle dataset references an unknown catalog crop ID.');
 const cropMetadataSchema = z.object({ version: z.number(), newCrops: z.array(z.object({ cropId: z.string(), catalogTier: z.enum(['P0', 'P1', 'P2']), lifeCycle: z.enum(['annual', 'annual_management_long_cycle', 'perennial_grown_as_annual', 'biennial_grown_as_annual', 'biennial_often_perennial_management', 'perennial']), rotationEngineEligible: z.boolean(), taxonResolution: z.string(), profileStatus: z.string(), origin: z.string(), usageRestrictions: z.string() })), existingCropAliases: z.array(z.object({ id: z.string(), ptBRAliases: z.array(z.string()), taxonNote: z.string() })) });
 export type CropMetadata = z.infer<typeof cropMetadataSchema>['newCrops'][number];
 const familyFarmMetadata = cropMetadataSchema.parse(familyFarmMetadataDocument);

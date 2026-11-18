@@ -54,6 +54,22 @@ describe('bare soil occupancy calendar (audit 2.4)', () => {
     const result = assessBareSoil(input, slots('A', ['soybean', null, 'soybean', 'maize']), climate, terrain);
     expect(result.state).toBe('unknown'); expect(result.bareMonths).toEqual([]); expect(result.missing).toContain('unconfigured_lab_slots');
   });
+  it('requires an observed or producer supplied safrinha month', () => {
+    const withoutMonth = { ...input, history: [] };
+    const list = slots('A', ['soybean', 'maize', 'soybean', 'maize']);
+    const unknown = assessBareSoil(withoutMonth, list, climate, terrain);
+    expect(unknown.windowsSource).toBe('unknown'); expect(unknown.bareMonths).toEqual([]);
+    expect(unknown.missing).toContain('safrinha_start_month');
+    const supplied = assessBareSoil({ ...withoutMonth, safrinhaPlantingMonth: 2 }, list, climate, terrain);
+    expect(supplied.windowsSource).toBe('documented'); expect(supplied.missing).not.toContain('safrinha_start_month');
+    expect(supplied.occupancy).toHaveLength(24);
+  });
+  it('uses the union of overlapping windows without counting a month twice', () => {
+    const result = assessBareSoil({ ...input, safrinhaPlantingMonth: 11 }, slots('A', ['soybean', 'maize', 'soybean', 'maize']), climate, terrain);
+    expect(result.occupancy).toHaveLength(24);
+    expect(result.bareMonths.length + result.occupancy.filter((month) => month.covered).length).toBe(24);
+    expect(result.occupancy[1]?.covered).toBe(true);
+  });
 });
 
 describe('trade-off matrix (audit 2.3)', () => {

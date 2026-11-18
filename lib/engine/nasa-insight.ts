@@ -30,7 +30,8 @@ export function deriveNasaInsight(strategies: Rotation[], climate: ClimateContex
       const cropMonth = strategy.proposedCrop?.plantingMonth;
       if (options.ownWindow && strategy.proposedCrop && cropMonth !== month) {
         if (cropMonth === null || cropMonth === undefined) return { scenarioId: strategy.id, cropId: crop?.id ?? null, cropName: strategy.proposedCrop.name, state: 'unknown', ruleId: 'MISSING_CLIMATE_EVIDENCE', documentedRangeC: range, sourceRefs: refs, evaluatedMonth: null, observedValueC: null, ownWindow: true };
-        const window = slotWindow(crop, cropMonth, 'B'); const result = window ? windowThermal(window, crop, climate) : null;
+        const assessed = strategy.slots.find((slot) => slot.cropId === crop?.id && slot.season === 'B');
+        const window = assessed?.window !== undefined ? assessed.window : slotWindow(crop, cropMonth, 'B'); const result = window ? windowThermal(window, crop, climate) : null;
         const shown = result ? result.observed.find((item) => item.month === (result.outOfRangeMonths[0] ?? cropMonth)) : undefined;
         return { scenarioId: strategy.id, cropId: crop?.id ?? null, cropName: strategy.proposedCrop.name, state: result?.state ?? 'unknown', ruleId: range ? 'DOCUMENTED_THERMAL_RANGE' : 'MISSING_CLIMATE_EVIDENCE', documentedRangeC: range, sourceRefs: refs, evaluatedMonth: shown?.month ?? cropMonth, observedValueC: shown?.tmeanC ?? null, ownWindow: true };
       }

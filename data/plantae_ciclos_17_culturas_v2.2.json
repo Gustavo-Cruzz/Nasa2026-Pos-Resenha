@@ -1,0 +1,501 @@
+
+{
+  "schemaVersion": "2.2.0",
+  "updatedAt": "2026-11-18",
+  "planningHorizonMonths": 24,
+  "usage": "exploratory_simulation",
+  "policy": {
+    "allowEstimates": true,
+    "showEstimateWarning": true,
+    "requiresContextConfirmation": true,
+    "unknownIsNotZero": true,
+    "estimatesAllowedForRecommendations": false,
+    "estimatesAllowedForZARC": false,
+    "perennialOccupiesPlanningHorizon": true
+  },
+  "records": [
+    {
+      "cropId": "ruziziensis",
+      "field": "cycleDaysRange",
+      "value": null,
+      "verification": "no_fixed_terminal_cycle",
+      "simulationDaysRange": {"min": 90, "max": 120},
+      "simulationVerification": "estimated_heuristic",
+      "startEvent": "sowing",
+      "endEvent": "user_defined_termination",
+      "context": {
+        "cultivar": null,
+        "purpose": "cobertura vegetal",
+        "region": "Brasil",
+        "productionSystem": "cobertura ou consorcio",
+        "cycleDefinition": "semeadura ate corte ou dessecacao planejados"
+      },
+      "source": {
+        "title": "Periodos de dessecacao do capim ruziziensis",
+        "url": "https://rbms.sede.embrapa.br/index.php/ojs/article/view/918",
+        "locator": "Resumo e tratamentos",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "daysToFlowering",
+          "value": {"min": 40, "max": 50},
+          "unit": "days",
+          "sourceUrl": "https://www.esalq.usp.br/biblioteca/pdf/Livro_Plantas_de_Cobertura_completo.pdf"
+        }
+      ],
+      "warning": "90-120 dias e uma hipotese de simulacao, nao um ciclo documentado. O termino depende do manejo."
+    },
+    {
+      "cropId": "cassava",
+      "field": "cycleDaysRange",
+      "value": {"min": 240, "max": 360},
+      "verification": "estimated_calendar_conversion",
+      "simulationDaysRange": {"min": 240, "max": 360},
+      "startEvent": "planting",
+      "endEvent": "complete_root_harvest",
+      "context": {
+        "cultivar": "BRS 429 ou cultivar precoce de mesa",
+        "purpose": "raizes para consumo",
+        "region": "Brasil, conforme adaptacao da cultivar",
+        "productionSystem": "mandioca de mesa",
+        "cycleDefinition": "plantio das manivas ate colheita completa"
+      },
+      "referenceRange": {
+        "min": 8,
+        "max": 12,
+        "unit": "months"
+      },
+      "source": {
+        "title": "Cultivares de Mandioca - Embrapa",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/cultivares",
+        "locator": "Descricoes de cultivares",
+        "accessedAt": "2026-11-18"
+      },
+      "warning": "Conversao aproximada de meses para dias; cultivares industriais podem ter ciclos muito mais longos."
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "cycleDaysRange",
+      "value": {"min": 90, "max": 150},
+      "verification": "verified_contextual",
+      "simulationDaysRange": {"min": 90, "max": 150},
+      "startEvent": "planting",
+      "endEvent": "complete_root_harvest",
+      "context": {
+        "cultivar": null,
+        "purpose": "raizes tuberosas",
+        "region": "Brasil",
+        "productionSystem": "cultivo comercial",
+        "cycleDefinition": "plantio ate colheita"
+      },
+      "source": {
+        "title": "Ecofisiologia e Exigencias Climaticas - Embrapa",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas",
+        "locator": "Desenvolvimento",
+        "accessedAt": "2026-11-18"
+      }
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "cycleDaysRange",
+      "value": {"min": 120, "max": 130},
+      "verification": "verified_specific_cultivar",
+      "simulationDaysRange": {"min": 90, "max": 130},
+      "simulationVerification": "estimated_heuristic",
+      "startEvent": "sowing",
+      "endEvent": "final_fruit_harvest",
+      "context": {
+        "cultivar": "Jacarezinho",
+        "purpose": "frutos e sementes",
+        "region": "Juazeiro, Bahia",
+        "productionSystem": "irrigado",
+        "cycleDefinition": "semeadura ate colheita no experimento"
+      },
+      "source": {
+        "title": "Maturacao Fisiologica de Sementes de Abobora",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/997862/1/Barbara2014.pdf",
+        "locator": "Figura 1, pagina 304",
+        "accessedAt": "2026-11-18"
+      },
+      "warning": "120-130 dias corresponde a cultivar e finalidade especificas; 90-130 e estimativa exploratoria."
+    },
+    {
+      "cropId": "watermelon",
+      "field": "cycleDaysRange",
+      "value": {"min": 95, "max": 110},
+      "verification": "verified_contextual",
+      "simulationDaysRange": {"min": 95, "max": 110},
+      "startEvent": "sowing",
+      "endEvent": "complete_harvest",
+      "context": {
+        "cultivar": null,
+        "purpose": "frutos comerciais",
+        "region": "Brasil",
+        "productionSystem": "cultivo comercial",
+        "cycleDefinition": "semeadura ate fim do ciclo"
+      },
+      "source": {
+        "title": "A Cultura da Melancia - Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1026847/1/A-CULTURA-DA-MELANCIA.pdf",
+        "locator": "Pagina 248, manejo integrado de pragas",
+        "accessedAt": "2026-11-18"
+      }
+    },
+    {
+      "cropId": "lettuce",
+      "field": "cycleDaysRange",
+      "value": {"min": 50, "max": 70},
+      "verification": "verified_with_harvest_assumption",
+      "simulationDaysRange": {"min": 50, "max": 70},
+      "startEvent": "planting",
+      "endEvent": "full_plant_harvest",
+      "context": {
+        "cultivar": null,
+        "purpose": "folhas ou cabeca",
+        "region": "Brasil",
+        "productionSystem": "alface de verao, colheita unica",
+        "cycleDefinition": "plantio ate retirada completa da planta"
+      },
+      "source": {
+        "title": "Catalogo Brasileiro de Hortalicas - Sebrae/Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+        "locator": "Tabela Alface de Verao",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "winterFirstHarvest",
+          "value": {"min": 60, "max": 80},
+          "unit": "days"
+        }
+      ],
+      "warning": "A liberacao do talhao pressupoe colheita da planta inteira."
+    },
+    {
+      "cropId": "tomato",
+      "field": "cycleDaysRange",
+      "value": {"min": 95, "max": 125},
+      "verification": "verified_contextual",
+      "simulationDaysRange": {"min": 95, "max": 125},
+      "startEvent": "transplanting",
+      "endEvent": "end_of_harvest",
+      "context": {
+        "cultivar": "tomate italiano; referencias Netuno e San Vito",
+        "purpose": "tomate de mesa",
+        "region": "Frederico Westphalen, RS",
+        "productionSystem": "transplante de mudas em campo",
+        "cycleDefinition": "transplante ate encerramento da colheita"
+      },
+      "source": {
+        "title": "Caracterizacao Fenologica de Tomateiro Italiano",
+        "url": "https://www.scielo.br/j/hb/a/scGWDzR4NyHvS7fQZhm57rq/?lang=pt",
+        "locator": "Introducao e Material e Metodos",
+        "accessedAt": "2026-11-18"
+      },
+      "warning": "A duracao comeca no transplante. Acrescentar periodo de viveiro se o slot comecar na semeadura."
+    },
+    {
+      "cropId": "carrot",
+      "field": "cycleDaysRange",
+      "value": {"min": 80, "max": 120},
+      "verification": "verified_contextual",
+      "simulationDaysRange": {"min": 80, "max": 120},
+      "startEvent": "sowing",
+      "endEvent": "complete_root_harvest",
+      "context": {
+        "cultivar": null,
+        "purpose": "raiz para consumo",
+        "region": "Brasil",
+        "productionSystem": "semeadura direta",
+        "cycleDefinition": "semeadura ate colheita"
+      },
+      "source": {
+        "title": "A Cultura da Cenoura - Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/101146/1/Aculturadacenoura.pdf",
+        "locator": "Pagina 69, Colheita e Comercializacao",
+        "accessedAt": "2026-11-18"
+      }
+    },
+    {
+      "cropId": "kale",
+      "field": "cycleDaysRange",
+      "value": {"min": 240, "max": 365},
+      "verification": "estimated_calendar_conversion",
+      "simulationDaysRange": {"min": 240, "max": 365},
+      "startEvent": "planting",
+      "endEvent": "end_of_multiple_harvests",
+      "context": {
+        "cultivar": null,
+        "purpose": "folhas em colheitas sucessivas",
+        "region": "Sao Paulo",
+        "productionSystem": "campo ou cultivo protegido",
+        "cycleDefinition": "plantio ate encerramento do cultivo"
+      },
+      "referenceRange": {
+        "min": 8,
+        "max": 12,
+        "unit": "months"
+      },
+      "source": {
+        "title": "Boletim Tecnico 251 - CATI/IAC",
+        "url": "https://storage.googleapis.com/saa-repositorio/prd/saa-sites/cati/documentos/Boletim-Tecnico-251-Hortalicas-recomendacoes-de-calagem-e-adubacao-para-o-estado-de-Sao-Paulo.pdf",
+        "locator": "Pagina 49, Couve-de-Folha",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {"min": 80, "max": 90},
+          "unit": "days"
+        }
+      ],
+      "warning": "240-365 dias e conversao aproximada de 8-12 meses; primeira colheita nao libera o talhao."
+    },
+    {
+      "cropId": "onion",
+      "field": "cycleDaysRange",
+      "value": {"min": 120, "max": 120},
+      "verification": "verified_single_study",
+      "simulationDaysRange": {"min": 110, "max": 150},
+      "simulationVerification": "estimated_heuristic",
+      "startEvent": "transplanting",
+      "endEvent": "bulb_harvest",
+      "context": {
+        "cultivar": null,
+        "purpose": "bulbos comerciais",
+        "region": "Santa Catarina",
+        "productionSystem": "plantio direto com mudas",
+        "cycleDefinition": "transplante ate colheita"
+      },
+      "source": {
+        "title": "Produtividade e Conservacao de Cebola",
+        "url": "https://www.scielo.br/j/hb/a/WqKQ7FJzzWtRLztgdMYH7Xq/?lang=pt",
+        "locator": "Material e Metodos",
+        "accessedAt": "2026-11-18"
+      },
+      "warning": "120 dias e media experimental. 110-150 dias e faixa estimada para simulacao, nao universal."
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "cycleDaysRange",
+      "value": {"min": 150, "max": 180},
+      "verification": "verified_contextual",
+      "simulationDaysRange": {"min": 150, "max": 180},
+      "startEvent": "sowing",
+      "endEvent": "end_of_multiple_harvests",
+      "context": {
+        "cultivar": null,
+        "purpose": "frutos comerciais",
+        "region": "Brasil",
+        "productionSystem": "cultivo convencional a ceu aberto",
+        "cycleDefinition": "semeadura ate fim do ciclo"
+      },
+      "source": {
+        "title": "Como Produzir Pimentao - Embrapa Hortaliças",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1172738/1/LV-CNPH-42198.pdf",
+        "locator": "Pagina 22",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {"min": 110, "max": 120},
+          "unit": "days"
+        }
+      ],
+      "warning": "Em cultivo protegido a producao pode durar mais tempo."
+    },
+    {
+      "cropId": "okra",
+      "field": "cycleDaysRange",
+      "value": {"min": 150, "max": 180},
+      "verification": "estimated_from_harvest_window",
+      "simulationDaysRange": {"min": 150, "max": 180},
+      "startEvent": "sowing",
+      "endEvent": "end_of_harvest_without_pruning",
+      "context": {
+        "cultivar": null,
+        "purpose": "frutos comerciais",
+        "region": "Brasil",
+        "productionSystem": "sem poda, colheitas sucessivas",
+        "cycleDefinition": "semeadura ate encerramento das colheitas"
+      },
+      "source": {
+        "title": "Estudo Tecnico de Cultivo do Quiabo - UTFPR",
+        "url": "https://riut.utfpr.edu.br/jspui/bitstream/1/10750/1/DV_COAGR_2017_1_14.pdf",
+        "locator": "Pagina 18, Ponto de Colheita",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "timeToFirstHarvest",
+          "value": {"min": 60, "max": 80},
+          "unit": "days"
+        },
+        {
+          "kind": "withPruningEstimatedOccupancy",
+          "value": {"min": 240, "max": 270},
+          "unit": "days"
+        }
+      ],
+      "warning": "Duracao total estimada a partir do inicio e da janela de colheita. Manejo com poda pode prolongar a ocupacao."
+    },
+    {
+      "cropId": "peanut",
+      "field": "cycleDaysRange",
+      "value": {"min": 90, "max": 90},
+      "verification": "verified_specific_cultivar",
+      "simulationDaysRange": {"min": 95, "max": 105},
+      "simulationVerification": "estimated_emergence_lag",
+      "startEvent": "sowing",
+      "endEvent": "full_pod_harvest",
+      "context": {
+        "cultivar": "BR 1",
+        "purpose": "vagens maduras",
+        "region": "Nordeste brasileiro",
+        "productionSystem": "sequeiro ou irrigado",
+        "cycleDefinition": "emergencia ate maturacao das vagens"
+      },
+      "source": {
+        "title": "Amendoim BR 1 - Embrapa Algodao",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1027494/1/FolderAmendoimBR1Curvas.pdf",
+        "locator": "Colheita",
+        "accessedAt": "2026-11-18"
+      },
+      "assumedEmergenceLagDays": {"min": 5, "max": 15},
+      "warning": "Os 90 dias verificados sao apos emergencia. Atraso de emergencia de 5-15 dias e hipotese para simulacao."
+    },
+    {
+      "cropId": "coffee",
+      "field": "cycleDaysRange",
+      "value": null,
+      "verification": "perennial_no_automatic_release",
+      "simulationDaysRange": null,
+      "occupies24Months": true,
+      "startEvent": "planting",
+      "endEvent": null,
+      "context": {
+        "cultivar": "Icatu PR 182039-1",
+        "purpose": "graos",
+        "region": "Acre",
+        "productionSystem": "perene",
+        "cycleDefinition": "ocupacao permanente ate renovacao explicita"
+      },
+      "source": {
+        "title": "Efeito da Adubacao Verde no Cafeeiro - Embrapa",
+        "url": "https://www.alice.cnptia.embrapa.br/handle/doc/507698?locale=pt_BR",
+        "locator": "Resumo",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "timeToFirstCommercialHarvest",
+          "value": {"min": 29, "max": 29},
+          "unit": "months"
+        }
+      ]
+    },
+    {
+      "cropId": "banana",
+      "field": "cycleDaysRange",
+      "value": null,
+      "verification": "perennial_no_automatic_release",
+      "simulationDaysRange": null,
+      "occupies24Months": true,
+      "startEvent": "transplanting",
+      "endEvent": null,
+      "context": {
+        "cultivar": null,
+        "purpose": "frutos",
+        "region": "Brasil",
+        "productionSystem": "bananal permanente",
+        "cycleDefinition": "primeira colheita nao libera terreno"
+      },
+      "source": {
+        "title": "Colheita da Banana - Embrapa",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/banana/producao/tratos-culturais/colheita",
+        "locator": "Colheita do primeiro cacho",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "firstBunchTropicalIrrigated",
+          "value": {"min": 11, "max": 13},
+          "unit": "months"
+        },
+        {
+          "kind": "firstBunchSubtropicalRainfed",
+          "value": {"min": 15, "max": 18},
+          "unit": "months"
+        },
+        {
+          "kind": "firstBunchCoolClimate",
+          "value": {"min": 21, "max": 24},
+          "unit": "months"
+        }
+      ]
+    },
+    {
+      "cropId": "cacao",
+      "field": "cycleDaysRange",
+      "value": null,
+      "verification": "perennial_no_automatic_release",
+      "simulationDaysRange": null,
+      "occupies24Months": true,
+      "startEvent": "planting",
+      "endEvent": null,
+      "context": {
+        "cultivar": null,
+        "purpose": "amendoas de cacau",
+        "region": "Brasil",
+        "productionSystem": "perene",
+        "cycleDefinition": "primeira producao nao encerra ocupacao"
+      },
+      "source": {
+        "title": "MAPA/CEPLAC - Producao de Cacau",
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/noticias/2025/amelonado-e-o-principal-tipo-de-cacau-produzido-no-brasil",
+        "locator": "Corpo da publicacao",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "ageAtFirstProduction",
+          "value": {"min": 3, "max": 3},
+          "unit": "years"
+        }
+      ],
+      "warning": "Idade de inicio da producao nao equivale necessariamente ao tempo desde o transplante."
+    },
+    {
+      "cropId": "acai",
+      "field": "cycleDaysRange",
+      "value": null,
+      "verification": "perennial_no_automatic_release",
+      "simulationDaysRange": null,
+      "occupies24Months": true,
+      "startEvent": "transplanting",
+      "endEvent": null,
+      "context": {
+        "cultivar": "BRS Para",
+        "purpose": "frutos para polpa",
+        "region": "Para, terra firme",
+        "productionSystem": "acai cultivado",
+        "cycleDefinition": "primeira producao nao libera terreno"
+      },
+      "source": {
+        "title": "BRS Para - Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/409681",
+        "locator": "Descricao da cultivar",
+        "accessedAt": "2026-11-18"
+      },
+      "milestones": [
+        {
+          "kind": "timeToFirstProduction",
+          "value": {"min": 3, "max": 3},
+          "unit": "years"
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,25 @@
 import { p0Crops } from '@/lib/evidence-coverage';
-import { cropById } from '@/lib/catalog';
+import { cropAliases, cropById, crops } from '@/lib/catalog';
 import type { Explanation, PriorityAlignment, QualitativeIndicator, Rotation } from '@/lib/engine/types';
 import type { Locale } from '@/lib/i18n';
 
+const normalizeCropName = (value: string) => value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').replace(/\s+/g, ' ');
+
+/** Resolve only exact catalog names/registered aliases; ambiguous or novel farmer names stay unlinked. */
+export function catalogCropIdForName(value: string): string | null {
+  const key = normalizeCropName(value);
+  if (!key) return null;
+  const ids = new Set(crops.filter((crop) => Object.values(crop.commonNames).some((name) => normalizeCropName(name) === key)).map((crop) => crop.id));
+  for (const [alias, id] of cropAliases) if (normalizeCropName(alias) === key) ids.add(id);
+  return ids.size === 1 ? [...ids][0]! : null;
+}
+
 export function cropDisplayName(cropId: string | null | undefined, fallback: string | null | undefined, locale: Locale): string {
-  return (cropId ? cropById.get(cropId)?.commonNames[locale] ?? p0Crops.find((crop) => crop.id === cropId)?.commonNames[locale] : undefined) ?? fallback ?? 'N/D';
+  const byId = cropId ? cropById.get(cropId)?.commonNames[locale] ?? p0Crops.find((crop) => crop.id === cropId)?.commonNames[locale] : undefined;
+  if (byId) return byId;
+  const name = fallback?.trim();
+  const known = name ? cropById.get(catalogCropIdForName(name) ?? '') : undefined;
+  return known?.commonNames[locale] ?? name ?? 'N/D';
 }
 
 export function scenarioDisplayTitle(strategy: Pick<Rotation, 'id' | 'title' | 'baselineAssumed'>, locale: Locale): string {

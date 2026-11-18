@@ -5,7 +5,7 @@ import { slotWindow, windowThermal, windowThermalDetail, windowWaterBalance, win
 import type { IndicatorState, QualitativeIndicator } from '@/lib/engine/types';
 
 /** Season window of a lab slot: `month` null means the window is not informed (never invented). */
-export type SeasonWindow = { month: number | null; label?: string; note?: string };
+export type SeasonWindow = { month: number | null; label?: string; note?: string; cycleContextConfirmed?: boolean };
 
 /** Shared qualitative rules used by both scenario summaries and individual lab slots. */
 export function assessCropIndicators(crop: Crop | undefined, previousCrop: Crop | undefined, input: AnalysisInput, climateIn: ClimateContext, regionalSoil?: SoilProfile, season?: SeasonWindow): QualitativeIndicator[] {
@@ -13,7 +13,7 @@ export function assessCropIndicators(crop: Crop | undefined, previousCrop: Crop 
   /** NASA monthly context is evaluated for the slot's own month; month-specific water context only exists for the planting month. */
   const climate: ClimateContext = !monthKnown ? { ...climateIn, status: 'unavailable', plantingMonthPrecipitation: null, waterContext: null, waterContextByMonth: undefined } : month === input.plantingMonth ? climateIn : { ...climateIn, plantingMonthPrecipitation: climateIn.historicalPrecipitationByMonth.find((item) => item.month === month) ?? null, waterContext: climateIn.waterContextByMonth?.find((item) => item.month === month) ?? (climateIn.waterContext?.month === month ? climateIn.waterContext : null) };
   /** Window of the slot (documented cycle, else assumed length); every window indicator comes from NASA series already loaded. */
-  const window = crop && monthKnown ? slotWindow(crop, month, season?.label === 'safrinha' ? 'B' : 'A') : null;
+  const window = crop && monthKnown ? slotWindow(crop, month, season?.label === 'safrinha' ? 'B' : 'A', season?.cycleContextConfirmed) : null;
   const thermalWindow = window ? windowThermal(window, crop, climate) : null;
   const thermal: IndicatorState = thermalWindow ? thermalWindow.state : !crop?.viableTempC || climate.status !== 'available' ? 'unknown' : (() => { const observed = climate.monthly.find((item) => item.month === month)?.tmeanMedianC; return observed === null || observed === undefined ? 'unknown' : observed >= crop.viableTempC.min && observed <= crop.viableTempC.max ? 'compatible' : 'attention'; })();
   const rain = climate.plantingMonthPrecipitation;

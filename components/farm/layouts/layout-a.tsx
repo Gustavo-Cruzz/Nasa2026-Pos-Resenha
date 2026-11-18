@@ -84,10 +84,10 @@ export function LayoutA(props: FarmLayoutProps) {
       <div className="min-w-0 flex-1 rounded-2xl rounded-tl-sm border-2 border-lime-300/60 bg-slate-900/80 p-4 sm:p-5">
         <div data-readable>
           <p className="text-lg font-semibold leading-snug text-slate-50">{en
-            ? "This is your farm. On the map you see the live weather and the area of your land: tap 'Edit perimeter' to adjust it. Right below, three cards sum up the rain, the planting season and the soil, with colors: green is fine, yellow needs attention."
-            : "Esta é a sua fazenda. No mapa você vê o clima ao vivo e a área da sua terra: toque em 'Editar perímetro' para ajustar. Logo abaixo, três cartões resumem a chuva, a época de plantio e o solo, com cores: verde está bem, amarelo pede atenção."}</p>
+            ? "This is your farm overview. The map shows weather context and a perimeter you can explore or adjust; it does not verify your property boundary. The cards below summarize available rain, planting-season and soil information, including gaps."
+            : "Esta é a visão geral da sua fazenda. O mapa mostra o contexto do clima e um perímetro que você pode explorar ou ajustar; ele não confirma os limites da propriedade. Os cartões abaixo resumem as informações disponíveis sobre chuva, época de plantio e solo, incluindo lacunas."}</p>
           <p className="mt-2 text-sm leading-relaxed text-slate-200">{en ? 'Today' : 'Hoje'}: {insights.headline}</p>
-          <p className="mt-3 text-base font-semibold text-lime-100">{en ? 'Want to see everything in detail: scenarios, charts and evidence? Click here and I will show you in Compare.' : 'Quer ver tudo em detalhe: cenários, gráficos e evidências? Clica aqui que eu te mostro no Comparar.'}</p>
+          <p className="mt-3 text-base font-semibold text-lime-100">{en ? 'Compare scenarios and inspect their evidence in the analysis.' : 'Compare os cenários e consulte as evidências na análise.'}</p>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <Button className="min-h-12 bg-lime-300 px-5 text-base font-bold text-slate-950 hover:bg-lime-200" onClick={onOpenComparison} type="button">{en ? 'See detailed analysis' : 'Ver análise detalhada'}<ArrowRight aria-hidden="true" className="ml-2" size={18} /></Button>

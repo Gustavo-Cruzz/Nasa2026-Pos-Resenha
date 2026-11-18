@@ -8,6 +8,7 @@ import { slotWindow, windowWaterBalance, windowFrost, ASSUMED_WINDOW_MONTHS } fr
 import { frostByMonth, historicalPrecipitationByMonth, historicalWaterBalanceByMonth, historicalWaterContextByMonth, monthlyClimatology } from '@/lib/climate/indicators';
 import type { ClimateContext, ClimateDay } from '@/lib/climate/nasa-power';
 import type { AnalysisInput } from '@/lib/schema';
+import { safrinhaMonth, slotSeasonWindow } from '@/lib/engine/slot-season';
 
 const input: AnalysisInput = { location: { latitude: -17.798, longitude: -50.919 }, plantingMonth: 10, history: [{ cropId: 'soybean', startYearMonth: '2023-10', endYearMonth: '2024-02' }, { cropId: 'maize', startYearMonth: '2024-02', endYearMonth: '2024-06' }, { cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }], priorities: { water: 2, soil: 3, operations: 1 }, irrigation: 'unknown' };
 const noSafrinha: AnalysisInput = { ...input, history: [{ cropId: 'soybean', startYearMonth: '2024-10', endYearMonth: '2025-02' }] };
@@ -33,6 +34,12 @@ const slotB = (climate: ClimateContext, cropId: string, source: AnalysisInput = 
 const indicator = (slot: ReturnType<typeof slotB>, id: string) => slot.indicators.find((item) => item.id === id)!;
 
 describe('slot window', () => {
+  it('uses the producer-declared second-crop month when history cannot establish one', () => {
+    const declared = { ...input, history: [input.history[0]!], safrinhaPlantingMonth: 3 };
+    expect(safrinhaMonth(declared)).toBe(3);
+    expect(slotSeasonWindow(declared, 'B').note).toContain('mês informado pelo produtor');
+    expect(safrinhaMonth({ ...declared, safrinhaPlantingMonth: undefined })).toBeNull();
+  });
   it('uses the documented maximum cycle rounded up to months', () => {
     expect(crop('maize').cycleDaysRange?.max).toBe(145);
     expect(slotWindow(crop('maize'), 2, 'B')).toMatchObject({ startMonth: 2, months: [2, 3, 4, 5, 6], source: 'documented_cycle', cycleDays: 145 });

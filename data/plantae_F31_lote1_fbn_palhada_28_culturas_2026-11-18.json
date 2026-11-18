@@ -1,0 +1,1635 @@
+{
+  "researchDate": "2026-11-18",
+  "datasetReference": "plantae_17_culturas_ciclos_v2_2026-11-18.json",
+  "batch": "F31-1",
+  "scope": "Evidência qualitativa de FBN e resíduos; não usar como nota, categoria nacional ou estimativa de N",
+  "records": [
+    {
+      "cropId": "soybean",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial de FBN simbiótica por nodulação com Bradyrhizobium, condicionado a simbiose efetiva e inoculação quando necessária.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "Brasil",
+        "productionSystem": "Soja comercial",
+        "management": "Inoculação e nodulação efetiva; atenção à nutrição mineral"
+      },
+      "source": {
+        "title": "Inoculação e inoculante — Soja",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/soja/producao/inoculacao-e-inoculante",
+        "locator": "Seção Inoculação e inoculante",
+        "excerpt": "formando os nódulos",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Potencial não é medida de N fixado no talhão.",
+        "Não converter em crédito universal de N à cultura seguinte."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "soybean",
+      "field": "residuePotential",
+      "value": "Produz restos culturais, porém a palhada tende a decompor-se rapidamente e não assegura proteção persistente isoladamente.",
+      "unit": null,
+      "evidenceType": "qualitative_residue_behavior",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "Brasil / sistemas soja-milho",
+        "productionSystem": "Plantio direto e rotação",
+        "management": "Manutenção dos restos no talhão após a colheita"
+      },
+      "source": {
+        "title": "Rotação de culturas — Milho",
+        "institution": "Embrapa Milho e Sorgo",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/producao/rotacao-de-culturas",
+        "locator": "Seção rotação, comparação soja/milho",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não atribuir categoria alta a soja; decomposição depende de clima e manejo.",
+        "Colheita/remoção de biomassa altera o saldo efetivo."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "maize",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "Sul do Brasil / estudo de campo",
+        "productionSystem": "Milho granífero",
+        "management": "Inoculação experimental com Azospirillum brasilense"
+      },
+      "source": {
+        "title": "Produtividade do milho em resposta à inoculação com Azospirillum e adubação nitrogenada",
+        "institution": "Revista Brasileira de Milho e Sorgo / Embrapa",
+        "url": "https://rbms.sede.embrapa.br/index.php/ojs/article/view/1053",
+        "locator": "Resumo e conclusão",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Azospirillum foi estudado, mas não há FBN suficiente demonstrada para crédito automático de N.",
+        "Não generalizar para milho sem inoculação."
+      ],
+      "conflicts": [
+        "Estudo da Revista Brasileira de Milho e Sorgo não encontrou substituição de adubação N; projeto da Embrapa no Amazonas encontrou resposta favorável em cultivares estudadas. Diferença de contexto e endpoint. Fonte adicional: https://www.embrapa.br/en/busca-de-projetos/-/projeto/205396/fixacao-biologica-de-nitrogenio-em-feijao-caupi-e-milho-cultivados-em-sistema-de-plantio-direto-no-amazonas"
+      ]
+    },
+    {
+      "cropId": "maize",
+      "field": "residuePotential",
+      "value": "Milho pode deixar quantidade relevante de restos culturais e palhada de maior permanência quando resíduos são mantidos.",
+      "unit": null,
+      "evidenceType": "qualitative_residue_behavior",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "Brasil / sistemas de grãos",
+        "productionSystem": "Plantio direto",
+        "management": "Palhada de colmos e folhas conservada na superfície"
+      },
+      "source": {
+        "title": "Rotação de Culturas — Milho",
+        "institution": "Embrapa Milho e Sorgo",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/producao/rotacao-de-culturas",
+        "locator": "Trecho sobre grande quantidade de restos culturais",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Milho para silagem remove grande parte da biomassa e não é equivalente ao cultivo para grãos.",
+        "Cobertura real depende da colheita, fragmentação e clima."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sorghum",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": "BRS 332",
+        "location": "Estudo de sorgo BRS 332",
+        "productionSystem": "Sorgo granífero",
+        "management": "Inoculação experimental com Azospirillum brasilense"
+      },
+      "source": {
+        "title": "Azospirillum brasilense para mitigação do estresse hídrico no sorgo BRS 332",
+        "institution": "Embrapa Milho e Sorgo",
+        "url": "https://www.infoteca.cnptia.embrapa.br/handle/doc/1131684",
+        "locator": "Resumo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Efeito sobre crescimento e tolerância ao estresse não quantifica N fixado transferido à planta.",
+        "Sem crédito automático de N."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sorghum",
+      "field": "residuePotential",
+      "value": "Sorgo consta entre culturas empregadas para formação de cobertura residual em sistemas de plantio direto.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": null,
+        "location": "Brasil / sistemas de plantio direto",
+        "productionSystem": "Rotação com gramíneas",
+        "management": "Manutenção dos resíduos após colheita ou manejo"
+      },
+      "source": {
+        "title": "Sistema de produção inicial — SPD",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/tematicas/sistema-plantio-direto/fazendo-certo/planejando-e-executando/fase-de-implantacao/organizando-o-sistema-produtivo/sistema-de-producao-inicial",
+        "locator": "Espécies para cobertura do solo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Sorgo para silagem pode remover a parte aérea e reduzir drasticamente a palhada.",
+        "Fonte não fixa classe nem valor nacional de biomassa."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sunflower",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi localizada nesta pesquisa evidência institucional específica de fixação de N utilizável agronomicamente em Helianthus annuus."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sunflower",
+      "field": "residuePotential",
+      "value": "Girassol forma resíduos, mas caules semi-eretos limitam cobertura efetiva sem fragmentação e manejo adequados.",
+      "unit": null,
+      "evidenceType": "qualitative_residue_behavior",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": "Brasil / capítulo técnico com exemplos de safrinha",
+        "productionSystem": "Semeadura direta e rotação",
+        "management": "Fragmentação de hastes/resíduos na colheita para cobertura"
+      },
+      "source": {
+        "title": "Girassol no Brasil — capítulo Manejo do solo",
+        "institution": "Embrapa",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/468161/1/LV-Girassol-no-Brasil.pdf",
+        "locator": "Capítulo Manejo do solo, p. 309–311",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Produção de biomassa não equivale a porcentagem de solo coberta.",
+        "Não estimar taxa de cobertura sem saber regulagem da colhedora."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cowpea",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial de FBN por simbiose com rizóbios; eficiência depende de estirpe, nodulação e condições do solo.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "Brasil",
+        "productionSystem": "Feijão-caupi",
+        "management": "Inoculação compatível ou rizóbios nativos e nodulação ativa"
+      },
+      "source": {
+        "title": "Listagem Perguntas e Respostas — Feijão-caupi",
+        "institution": "Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas?delta=200",
+        "locator": "Perguntas sobre inoculação e fixação biológica",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não presumir que todo cultivo fixou N em quantidade agronomicamente relevante."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cowpea",
+      "field": "residuePotential",
+      "value": "Resíduos culturais do feijão-caupi podem ser incorporados ao solo no manejo convencional, mas a manutenção como palhada de superfície não está determinada.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "Brasil",
+        "productionSystem": "Feijão-caupi comercial",
+        "management": "Incorporação ou retenção conforme manejo"
+      },
+      "source": {
+        "title": "Listagem Perguntas e Respostas — Feijão-caupi",
+        "institution": "Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas?delta=200",
+        "locator": "Manejo de restos culturais, incorporação",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Incorporação ao solo é diferente de palhada superficial.",
+        "Sem fonte para persistência ou classe de cobertura."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "common_bean",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial de FBN simbiótica com rizóbios, documentado para cultivares e estirpes estudadas.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "Experimentos com sete cultivares",
+        "productionSystem": "Feijoeiro-comum",
+        "management": "Inoculação com estirpes de Rhizobium"
+      },
+      "source": {
+        "title": "Início da nodulação em sete cultivares de feijoeiro",
+        "institution": "Pesquisa Agropecuária Brasileira / Embrapa",
+        "url": "https://apct.sede.embrapa.br/pab/pt_BR/article/view/4502",
+        "locator": "Resumo — Phaseolus vulgaris e Rhizobium",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Eficiência pode ser menor e mais variável que na soja.",
+        "Não inferir fixação efetiva apenas por ser Fabaceae."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "common_bean",
+      "field": "residuePotential",
+      "value": "Feijão-comum pode deixar palhada, mas seus resíduos apresentam decomposição rápida em comparação com gramíneas.",
+      "unit": null,
+      "evidenceType": "qualitative_residue_behavior",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "Brasil / sistemas de plantio direto",
+        "productionSystem": "Feijão comercial",
+        "management": "Manutenção dos resíduos após colheita"
+      },
+      "source": {
+        "title": "Listagem Perguntas e Respostas — Feijão",
+        "institution": "Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao/listagem-perguntas-e-respostas?delta=200",
+        "locator": "Resíduos culturais e relação C/N",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não considerar a palhada do feijoeiro isolada como cobertura persistente.",
+        "Condição de doenças pode exigir manejo diferenciado."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Oryza sativa",
+        "cultivar": null,
+        "location": "Brasil / linhagens em estudo",
+        "productionSystem": "Arroz de terras altas",
+        "management": "Inoculação experimental com Azospirillum"
+      },
+      "source": {
+        "title": "Avaliação de linhagens de arroz de terras altas inoculadas com Azospirillum",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/busca-de-publicacoes/-/publicacao/212405/avaliacao-de-linhagens-de-arroz-de-terras-altas-inoculadas-com-azospirillum-lipoferum-sp59b-e-a-brasilense-sp245",
+        "locator": "Registro bibliográfico",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Registro demonstra estudo de inoculação, não quantifica fixação com benefício reprodutível no sistema-alvo.",
+        "Resultados de arroz irrigado não são transferíveis automaticamente a arroz de terras altas."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "residuePotential",
+      "value": "O arroz de terras altas gera resteva e resíduos que podem integrar o manejo de cobertura no sistema de plantio direto.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Oryza sativa",
+        "cultivar": null,
+        "location": "Cerrado brasileiro",
+        "productionSystem": "Arroz de terras altas em sistema de plantio direto",
+        "management": "Manejo da resteva e retenção da palha"
+      },
+      "source": {
+        "title": "Manejo do plantio e da resteva — Arroz de terras altas",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/arroz/producao/sistema-de-cultivo/arroz-de-terras-altas/manejo-do-plantio-e-da-resteva",
+        "locator": "Manejo de resteva, semeadura direta",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não confundir restos da cultura com palhada de plantas de cobertura anteriores.",
+        "Não presumir volume suficiente para proteger todo o talhão."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Cenchrus americanus (syn. Pennisetum glaucum)",
+        "cultivar": null,
+        "location": "Sertão de Pernambuco",
+        "productionSystem": "Milheto",
+        "management": "Isolamento de bactérias associativas e ensaio de inoculação"
+      },
+      "source": {
+        "title": "Caracterização polifásica de bactérias associadas a sorgo e milheto",
+        "institution": "Embrapa / Alice",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/handle/doc/1070442",
+        "locator": "Resumo: isolados, gene nifH e ensaios",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Marcadores como nifH e ensaios de crescimento não comprovam aporte de N à cultura no campo."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "residuePotential",
+      "value": "Milheto é cultura de cobertura reconhecida pela produção de fitomassa e formação de palhada no plantio direto.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Cenchrus americanus (syn. Pennisetum glaucum)",
+        "cultivar": null,
+        "location": "Brasil / regiões tropicais",
+        "productionSystem": "Cobertura vegetal ou rotação",
+        "management": "Produção de fitomassa, dessecação/acamamento e manutenção superficial"
+      },
+      "source": {
+        "title": "Milheto é cultura alternativa para cobertura de solo",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/busca-de-noticias/-/noticia/1461750/milheto-e-cultura-alternativa-para-cobertura-de-solo",
+        "locator": "Produção de biomassa e palhada",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Manejo, época e água disponível alteram produção e persistência.",
+        "Não extrapolar massa seca de estudo para o Brasil inteiro."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Urochloa ruziziensis (syn. Brachiaria ruziziensis)",
+        "cultivar": null,
+        "location": "Brasil / sistemas de cobertura com algodão",
+        "productionSystem": "U. ruziziensis como cobertura",
+        "management": "Inoculação com Azospirillum brasilense estudada"
+      },
+      "source": {
+        "title": "Ciclagem de nitrogênio por plantas de cobertura inoculadas para semeadura direta do algodoeiro",
+        "institution": "Embrapa / Alice",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/handle/doc/1084582",
+        "locator": "Resumo: U. ruziziensis e Azospirillum",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não confundir ciclagem de N de consórcios com fixação específica medida pela gramínea.",
+        "Não atribuir crédito de N sem experimento compatível."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "residuePotential",
+      "value": "Urochloa ruziziensis é usada como forrageira de cobertura em rotação/consórcio; o manejo pode gerar palhada sobre o solo.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Urochloa ruziziensis (syn. Brachiaria ruziziensis)",
+        "cultivar": null,
+        "location": "Brasil / sistemas tropicais de rotação",
+        "productionSystem": "Cobertura em plantio direto",
+        "management": "Dessecação, roçagem ou manejo da cobertura; considerar pastejo"
+      },
+      "source": {
+        "title": "Rotação de culturas — Soja",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/soja/producao/manejo-do-solo/rotacao-de-culturas",
+        "locator": "Forrageiras tropicais para cobertura do solo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "A biomassa remanescente depende de pastejo, época de corte e adubação.",
+        "Não atribuir duração de persistência ou porcentagem de cobertura sem dados."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial de fixação simbiótica documentado em sistemas de adubação verde com Crotalaria juncea.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": null,
+        "location": "Experimentos de adubação verde no Brasil",
+        "productionSystem": "Adubação verde",
+        "management": "Cultivo isolado ou consorciado e manejo de fitomassa"
+      },
+      "source": {
+        "title": "Produção de fitomassa, acúmulo de nutrientes e fixação biológica de nitrogênio por adubos verdes",
+        "institution": "Pesquisa Agropecuária Brasileira / Embrapa",
+        "url": "https://apct.sede.embrapa.br/pab/pt_BR/article/view/6733",
+        "locator": "Resumo: Crotalaria juncea e FBN",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Estudo de contribuição sob manejo específico; não extrapolar aporte de N à cultura seguinte."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "residuePotential",
+      "value": "Crotalaria juncea produz fitomassa usada como cobertura; estudos analisam a persistência da palhada após o manejo.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": null,
+        "location": "Brasil / ensaios de cultivo isolado e consorciado",
+        "productionSystem": "Adubação verde",
+        "management": "Manejo mecânico, roçagem ou dessecação antes da próxima cultura"
+      },
+      "source": {
+        "title": "Persistência de palhada e liberação de nutrientes da crotalária e milheto",
+        "institution": "Pesquisa Agropecuária Brasileira / Embrapa",
+        "url": "https://apct.sede.embrapa.br/pab/pt_BR/article/view/12431",
+        "locator": "Resumo e metodologia sobre persistência de palhada",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Resíduos de leguminosas podem decompor-se mais rápido que gramíneas.",
+        "Persistência depende do momento e do consórcio."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cotton",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial experimental de associação com bactérias diazotróficas investigado em algodão herbáceo; não equivale a tecnologia validada para crédito de N.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "Brasil / ensaios laboratoriais e lavouras relatados pela Embrapa",
+        "productionSystem": "Algodão herbáceo comercial",
+        "management": "Inoculação experimental; estirpes em caracterização"
+      },
+      "source": {
+        "title": "Pesquisadores descobrem bactérias capazes de fixar nitrogênio no algodão",
+        "institution": "Embrapa Algodão",
+        "url": "https://www.embrapa.br/pt/agencia-de-noticias-embrapa/busca-de-noticias/-/noticia/146461056/pesquisadores-descobrem-bacterias-capazes-de-fixar-nitrogenio-no-algodao",
+        "locator": "Seção sobre ensaios em algodoeiro herbáceo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Achado pré-comercial em pesquisa, não inferir FBN efetiva em lavoura comum.",
+        "Sem recomendação de redução de fertilização ou crédito de N."
+      ],
+      "conflicts": [
+        "A própria matéria da Embrapa distingue resultados experimentais da ausência de viabilidade consolidada de FBN no algodão."
+      ]
+    },
+    {
+      "cropId": "cotton",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "Brasil / estados com vazio sanitário",
+        "productionSystem": "Algodão comercial",
+        "management": "Destruição de soqueiras e restos conforme exigências fitossanitárias"
+      },
+      "source": {
+        "title": "Recomendações de boas práticas agrícolas para a destruição de restos culturais do algodoeiro",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/web/hortalicas/busca-de-solucoes-tecnologicas/-/produto-servico/4756/recomendacoes-de-boas-praticas-agricolas-para-a-destruicao-de-restos-culturais-do-algodoeiro",
+        "locator": "Resumo: destruição de restos e vazio sanitário",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "A existência de restos não autoriza crédito de palhada deixada no solo.",
+        "Manejo e exigências estaduais de vazio sanitário devem prevalecer."
+      ],
+      "conflicts": [
+        "Retenção para cobertura pode conflitar com destruição de restos por controle de bicudo e doenças."
+      ]
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial documentado de FBN simbiótica com Bradyrhizobium para feijão-guandu BRS Guatã.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": "BRS Guatã",
+        "location": "Centro-Oeste e Sudeste / áreas indicadas pela Embrapa",
+        "productionSystem": "Cobertura, forragem ou adubação verde",
+        "management": "Cultivar BRS Guatã, manejo conforme finalidade"
+      },
+      "source": {
+        "title": "Feijão-guandu BRS Guatã",
+        "institution": "Embrapa Pecuária Sudeste",
+        "url": "https://www.embrapa.br/web/pecuaria-sudeste/busca-de-solucoes-tecnologicas/-/produto-servico/12195/feijao-guandu-brs-guata",
+        "locator": "Benefícios da cultivar, FBN via Bradyrhizobium",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Condição específica da cultivar; não inferir N fixado ou disponibilizado para cultura seguinte."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "residuePotential",
+      "value": "A cultivar BRS Guatã pode ser empregada como planta de cobertura morta para proteção do solo.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": "BRS Guatã",
+        "location": "Centro-Oeste e Sudeste / recomendação varietal",
+        "productionSystem": "Adubação verde, forragem e cobertura",
+        "management": "Manejo para cobertura; biomassa não retirada para feno ou alimentação"
+      },
+      "source": {
+        "title": "Feijão-guandu BRS Guatã",
+        "institution": "Embrapa Pecuária Sudeste",
+        "url": "https://www.embrapa.br/web/pecuaria-sudeste/busca-de-solucoes-tecnologicas/-/produto-servico/12195/feijao-guandu-brs-guata",
+        "locator": "Alternativa como planta de cobertura morta",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Colheita de forragem diminui os resíduos efetivamente mantidos.",
+        "Não extrapolar para todas as cultivares e ambientes."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cassava",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cassava",
+      "field": "residuePotential",
+      "value": "Há resíduos de folhas, ramas e hastes na colheita, mas a mandioca pode apresentar pouca cobertura residual e distúrbio do solo.",
+      "unit": null,
+      "evidenceType": "qualitative_residue_behavior",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": "Brasil / estudo em solo arenoso",
+        "productionSystem": "Mandioca para raízes",
+        "management": "Extração de raízes e eventual reaproveitamento de ramas"
+      },
+      "source": {
+        "title": "Características fitotécnicas de mandioca em plantio direto na palhada de aveia",
+        "institution": "Embrapa / Alice",
+        "url": "https://www.alice.cnptia.embrapa.br/handle/doc/253080",
+        "locator": "Resumo: baixa produção de resíduos culturais e movimentação do solo na colheita",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Quantidade de resíduos disponível para palhada depende da retirada para mudas, alimentação e outros usos.",
+        "Colheita de raízes revolvendo o solo reduz cobertura efetiva."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Cucurbita spp.",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Cucurbita spp.",
+        "cultivar": null,
+        "location": "Brasil / orientações para abóboras e morangas",
+        "productionSystem": "Hortaliça comercial",
+        "management": "Colheita de frutos e manejo das ramas"
+      },
+      "source": {
+        "title": "Recomendações técnicas para o cultivo de abóboras e morangas",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://www.embrapa.br/web/hortalicas/busca-de-publicacoes/-/publicacao/1134117/recomendacoes-tecnicas-para-o-cultivo-de-aboboras-e-morangas",
+        "locator": "Publicação técnica; não apresenta evidência de palhada persistente no resumo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Fonte da cultura não quantifica palhada residual nem sua permanência.",
+        "Cobertura viva por ramas durante cultivo não equivale a palhada após colheita."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "residuePotential",
+      "value": "A cultura gera folhas e ramas na colheita; sua utilização como palhada depende de esses materiais permanecerem na área.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": "Brasil",
+        "productionSystem": "Cultivo para raízes tuberosas",
+        "management": "Colheita e destino de ramas e folhas"
+      },
+      "source": {
+        "title": "Aproveitamento de resíduos das lavouras de batata-doce e mandioca",
+        "institution": "Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/1187480",
+        "locator": "Resumo: resíduos de parte aérea e raízes não comerciais",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Publicação documenta geração e aproveitamento de resíduos, não uma taxa de cobertura residual.",
+        "Parte aérea pode ser removida para alimentação animal; não dar crédito automático."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "peanut",
+      "field": "nitrogenFixationPotential",
+      "value": "Potencial de nodulação e FBN com rizóbios nativos em acessos de Arachis hypogaea estudados.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "Brasil / acessos estudados",
+        "productionSystem": "Amendoim de grãos",
+        "management": "Associação com estirpes nativas de rizóbios"
+      },
+      "source": {
+        "title": "Nodulação e fixação biológica de nitrogênio de acessos de amendoim com rizóbios",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/busca-de-publicacoes/-/publicacao/621873/nodulacao-e-fixacao-biologica-de-nitrogenio-de-acessos-de-amendoim-com-estirpes-nativas-de-rizobios",
+        "locator": "Resumo: acessos e rizóbios nativos",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Eficiência depende do acesso, comunidade microbiana e manejo.",
+        "Não usar resultado de Arachis pintoi (amendoim forrageiro) como referência de A. hypogaea."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "peanut",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "Brasil / estudo experimental",
+        "productionSystem": "Amendoim de grãos Arachis hypogaea",
+        "management": "Colheita que retira vagens e pode deslocar biomassa"
+      },
+      "source": {
+        "title": "Alocação de fitomassa e índice de colheita de amendoim",
+        "institution": "Universidade Federal do Recôncavo da Bahia — Magistra",
+        "url": "https://www3.ufrb.edu.br/index.php/magistra/es/article/view/3929",
+        "locator": "Resumo: massa seca folhas, hastes e raízes, sem medida de cobertura de palha",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Biomassa de folhas/hastes documentada não equivale a palhada efetivamente deixada na área.",
+        "Não confundir com amendoim forrageiro Arachis pintoi."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "watermelon",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "watermelon",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": "Brasil / produção de melancia",
+        "productionSystem": "Cultivo comercial",
+        "management": "Cultivo sobre palhada de arroz da cultura antecedente"
+      },
+      "source": {
+        "title": "Preparo do solo, correção e adubação para a cultura da melancia",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/busca-de-publicacoes/-/publicacao/1119901/preparo-do-solo-correcao-e-adubacao-para-a-cultura-da-melancia",
+        "locator": "Resumo: plantio sobre palhada de arroz",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Fonte documenta uso de palhada de ARROZ na melancia, não palhada produzida pela melancia.",
+        "Não pontuar resíduos de melancia por transferência indevida da cultura antecedente."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "lettuce",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Lactuca sativa",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "lettuce",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Lactuca sativa",
+        "cultivar": null,
+        "location": "Brasil / experimentos com resíduos de hortaliças",
+        "productionSystem": "Alface comercial",
+        "management": "Colheita de folhas/cabeças e destinação dos resíduos"
+      },
+      "source": {
+        "title": "Compostos orgânicos obtidos a partir de resíduos de hortaliças",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/1166646",
+        "locator": "Resumo: folhas de alface como material para compostagem",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Resíduos de alface estudados para compostagem, não como palhada persistente no campo.",
+        "Retirada da planta na colheita pode diminuir o material remanescente."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "tomato",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Solanum lycopersicum",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "tomato",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Solanum lycopersicum",
+        "cultivar": null,
+        "location": "Brasil / manejo fitossanitário do tomate de mesa",
+        "productionSystem": "Tomate comercial",
+        "management": "Retirada/destruição dos restos culturais após colheita"
+      },
+      "source": {
+        "title": "Pragas — Tomate de mesa",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://www.embrapa.br/web/hortalicas/tomate-de-mesa/pragas",
+        "locator": "Controle cultural: destruir restos culturais",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não contabilizar palhada se a recomendação fitossanitária exige destruição de restos.",
+        "Palhada utilizada NO cultivo pode ter origem em outra planta."
+      ],
+      "conflicts": [
+        "Benefício genérico de manter resíduos no solo conflita com prevenção de pragas/viroses em tomate."
+      ]
+    },
+    {
+      "cropId": "carrot",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Daucus carota",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "carrot",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Daucus carota",
+        "cultivar": null,
+        "location": "Brasil / resíduos hortícolas",
+        "productionSystem": "Cenoura comercial",
+        "management": "Colheita das raízes e destinação de folhas"
+      },
+      "source": {
+        "title": "Compostos orgânicos obtidos a partir de resíduos de hortaliças",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/1166646",
+        "locator": "Resumo: folhas de cenoura para compostagem",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Folhas de cenoura aparecem como resíduo para compostagem; não há palhada residual demonstrada na fonte.",
+        "Arranquio/revolvimento do canteiro não equivale a cobertura retida."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "kale",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "kale",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": "Brasil",
+        "productionSystem": "Couve-manteiga comercial",
+        "management": "Colheitas sucessivas de folhas"
+      },
+      "source": {
+        "title": "Couve — Hortaliça não é só salada",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://www.embrapa.br/web/hortalicas/hortalica-nao-e-so-salada/couve",
+        "locator": "Descrição da cultura, sem avaliação de palhada",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Colheitas sucessivas retiram a biomassa comercial.",
+        "Não foi verificada fonte sobre resíduos deixados como cobertura após encerramento do cultivo."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "onion",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "onion",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": "Brasil / manejo de tripes",
+        "productionSystem": "Cebola comercial",
+        "management": "Destruição e incorporação de restos para reduzir pragas"
+      },
+      "source": {
+        "title": "Tripes — Cebola",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/cebola/producao/pragas/tripes",
+        "locator": "Manejo fitossanitário e destruição de restos culturais",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Restos culturais não devem ser considerados palhada persistente quando destruídos/incorporados.",
+        "Palhada de plantas de cobertura utilizada antes da cebola não é produzida pela cebola."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": "Brasil / manejo fitossanitário de Capsicum",
+        "productionSystem": "Pimentão/hortaliças Capsicum",
+        "management": "Destruição de restos culturais quando indicada"
+      },
+      "source": {
+        "title": "Doenças — Pimenta e pimentão",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://www.embrapa.br/web/hortalicas/pimenta/doencas",
+        "locator": "Medidas culturais para reduzir fontes de infecção",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Referência agrupada no portal pimenta; aplicabilidade exata ao pimentão exige checagem de espécie e condição fitossanitária.",
+        "Não atribuir crédito automático de palhada."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "okra",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "okra",
+      "field": "residuePotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": null,
+        "location": "Brasil / produção tradicional",
+        "productionSystem": "Quiabo comercial",
+        "management": "Colheitas sucessivas de frutos e encerramento conforme manejo"
+      },
+      "source": {
+        "title": "Sistema de produção para a cultura do quiabo",
+        "institution": "Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/908494",
+        "locator": "Registro bibliográfico sem medida de palhada",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Registro da fonte não contém indicador específico de palhada.",
+        "Biomassa de hastes ao fim do ciclo não é automaticamente palhada de superfície."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "coffee",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Coffea spp.",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "coffee",
+      "field": "residuePotential",
+      "value": "Em cafezais, podas e manejo de entrelinha podem gerar biomassa aproveitável no solo; não se trata de liberação do talhão.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Coffea spp.",
+        "cultivar": null,
+        "location": "Brasil / cafezais em formação e produção",
+        "productionSystem": "Cafeicultura perene",
+        "management": "Poda e trituração/retorno de material, manutenção de vegetação na entrelinha"
+      },
+      "source": {
+        "title": "Fase de formação — Café",
+        "institution": "Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/cafe/faseformacao",
+        "locator": "Poda, desbrota e manejo de entrelinha",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Comprovar que restos de poda saudáveis permanecem no talhão.",
+        "Não transformar biomassa de poda em classe universal de cobertura."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "banana",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Musa spp.",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "banana",
+      "field": "residuePotential",
+      "value": "Folhas e pseudocaules cortados em tratos e colheita constituem resíduos orgânicos que podem retornar ao solo do bananal.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Musa spp.",
+        "cultivar": null,
+        "location": "Brasil / sistemas de produção de banana",
+        "productionSystem": "Bananal perene",
+        "management": "Desfolha, desbaste e corte de pseudocaule pós-colheita"
+      },
+      "source": {
+        "title": "Tratos culturais — Banana",
+        "institution": "Embrapa Ater+",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/banana/tratos-culturais",
+        "locator": "Manejo de folhas e pseudocaule após colheita",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Decomposição pode ser rápida; solo protegido depende de reposição e manejo.",
+        "Não interpretar resíduos como fim da ocupação da área."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cacao",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "cacao",
+      "field": "residuePotential",
+      "value": "Resíduos de poda e cascas podem retornar como matéria orgânica ao cacaueiro sob manejo agroflorestal adequado.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": "Amazônia / contextos de manejo do cacaueiro",
+        "productionSystem": "Sistema agroflorestal com cacau",
+        "management": "Poda e destinação controlada de cascas e ramos sadios"
+      },
+      "source": {
+        "title": "Boas práticas de manejo do cacaueiro",
+        "institution": "IIEB / associações locais",
+        "url": "https://iieb.org.br/wp-content/uploads/2019/02/Cacau_Ipa_site.pdf",
+        "locator": "Seção Nutrição, reutilização de restos da casca e podas",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Cuidados fitossanitários determinam se resíduos podem permanecer.",
+        "A referência é orientação de manejo, não medida de palhada persistente ou classe nacional."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "acai",
+      "field": "nitrogenFixationPotential",
+      "value": null,
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": null,
+        "location": null,
+        "productionSystem": null,
+        "management": null
+      },
+      "source": {
+        "title": null,
+        "institution": null,
+        "url": null,
+        "locator": null,
+        "excerpt": null,
+        "accessedAt": null
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não foi identificada fonte específica que comprove FBN agronomicamente utilizável para esta espécie/sistema.",
+        "Não inferir FBN pela presença genérica de bactérias no solo; manter null."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "acai",
+      "field": "residuePotential",
+      "value": "Em açaizal cultivado, cobertura morta pode ser usada ao redor das touceiras; a fonte inclui materiais externos e não mede palhada gerada pelo açaizeiro.",
+      "unit": null,
+      "evidenceType": "qualitative_potential",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": null,
+        "location": "Amazônia / açaizal cultivado",
+        "productionSystem": "Açaizal perene",
+        "management": "Cobertura morta na área de projeção da copa e roçagem"
+      },
+      "source": {
+        "title": "Controle do mato — Açaí",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/acai/producao/tratos-culturais/manejo-de-perfilhos-limpeza-das-touceiras-e-controle-do-mato/controle-do-mato",
+        "locator": "Cobertura morta com materiais externos e cobertura viva",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não creditar automaticamente ao açaizeiro a cobertura oriunda de serragem ou casca de arroz externa.",
+        "Registro é prática de cobertura, não potencial quantitativo intrínseco."
+      ],
+      "conflicts": []
+    }
+  ]
+}

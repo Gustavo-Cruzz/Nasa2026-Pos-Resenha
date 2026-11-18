@@ -4,8 +4,9 @@ import type { Rotation, ValidationLevel } from '@/lib/engine/types';
 import type { BrazilRegionalContext } from '@/lib/brazil/types';
 import { analyzeBoundary, type BoundaryAnalysis } from '@/lib/engine/boundary-context';
 import { buildSourceHealth } from '@/lib/source-health';
+import { plantaeCycleEvidence } from '@/lib/catalog';
 
-const gapLabels: Record<string, string> = { cycle_duration: 'Duração documentada', eligible_crop: 'Cultura com critérios mínimos', historical_climate: 'Clima histórico', documented_temperature_range: 'Faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'Slots ainda não configurados', crop: 'Cultura do slot', temperature: 'Faixa térmica', cycle: 'Duração documentada', soil_ph: 'Contexto de pH', previous_crop_family: 'Família da cultura anterior' };
+const gapLabels: Record<string, string> = { cycle_context_confirmation: 'Confirmação de contexto e marcos da simulação', cycle_duration: 'Duração documentada', eligible_crop: 'Cultura com critérios mínimos', historical_climate: 'Clima histórico', documented_temperature_range: 'Faixa térmica documentada', soil_ph_or_verified_range: 'pH informado ou faixa verificável', unconfigured_lab_slots: 'Slots ainda não configurados', crop: 'Cultura do slot', temperature: 'Faixa térmica', cycle: 'Duração documentada', soil_ph: 'Contexto de pH', previous_crop_family: 'Família da cultura anterior' };
 
 function claimStatus(state: string): EvidenceClaim['status'] { return state === 'unknown' ? 'missing' : state === 'attention' || state === 'no' ? 'partial' : 'supported'; }
 
@@ -48,7 +49,9 @@ export function buildEvidenceManifest(strategies: Rotation[], climate: ClimateCo
     else if (!existing) gapsById.set(gap, { id: gap, label: gapLabels[gap] ?? gap, scenarioIds: [strategy.id] });
   }
   if (boundary?.status === 'spatial_context') gapsById.set('smap_numeric_polygon_history', { id: 'smap_numeric_polygon_history', label: 'Série histórica SMAP numérica agregada ao polígono', scenarioIds: [] });
-  return { sources, claims, gaps: [...gapsById.values()], guardrails: ['Não é previsão meteorológica.', 'Precipitação observada não é demanda hídrica.', 'Contexto municipal não é validação do talhão.', 'Cenários exploratórios não são recomendação agronômica.'], sourceHealth: buildSourceHealth({ climate, regionalContext, boundaryAnalysis: boundary ?? analyzeBoundary() }) };
+  const cropIds = new Set(strategies.flatMap((strategy) => [strategy.proposedCrop?.cropId, ...strategy.slots.map((slot) => slot.cropId)].filter((id): id is string => Boolean(id))));
+  const contextualCycles = plantaeCycleEvidence.filter((record) => cropIds.has(record.cropId)).map((record) => ({ cropId: record.cropId, cropName: record.commonNamePt, value: record.value, unit: record.unit, definition: record.context.cycleDefinition, cultivar: record.context.cultivar, purpose: record.context.purpose, region: record.context.region, system: record.context.productionSystem, note: record.integrationNotes, sourceTitle: record.source.title, sourceUrl: record.source.url, locator: record.source.locator, milestones: record.milestones.map((item) => ({ kind: item.kind, value: item.value, unit: item.unit, definition: item.cycleDefinition, sourceTitle: item.source.title, sourceUrl: item.source.url, locator: item.source.locator })) }));
+  return { sources, claims, gaps: [...gapsById.values()], contextualCycles, researchCropIds: [...cropIds], guardrails: ['Não é previsão meteorológica.', 'Precipitação observada não é demanda hídrica.', 'Contexto municipal não é validação do talhão.', 'Cenários exploratórios não são recomendação agronômica.'], sourceHealth: buildSourceHealth({ climate, regionalContext, boundaryAnalysis: boundary ?? analyzeBoundary() }) };
 }
 
 const GUARDRAILS_EN: Record<string, string> = {

@@ -16,13 +16,13 @@ export function SourceCards({ level, en }: { level: Level; en: boolean }) {
       <ul className="mt-3 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {SOURCES[group.id].map((source) => {
           const Icon = ICONS[source.icon];
-          return <li className="flex flex-col rounded-xl border border-slate-700 bg-slate-900/70 p-5 transition-colors hover:border-slate-500" key={source.id}>
+          return <li className="flex min-w-0 flex-col rounded-xl border border-slate-700 bg-slate-900/70 p-5 transition-colors hover:border-slate-500" key={source.id}>
             <div className="flex items-center gap-3"><span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${ACCENT[group.id]}`}><Icon aria-hidden="true" size={22} /></span><h4 className="font-bold">{source.title}</h4></div>
             <dl className="mt-3 grid gap-2 text-sm">
               <div><dt className="font-semibold text-slate-100">{en ? 'What it gives' : 'O que dá'}</dt><dd className="text-slate-300">{pick(source.gives, en)}</dd></div>
               <div><dt className="font-semibold text-slate-100">{en ? 'Why we chose it' : 'Por que escolhemos'}</dt><dd className="text-slate-300">{pick(source.why, en)}</dd></div>
               <div><dt className="font-semibold text-amber-200">{en ? 'Limit' : 'Limite'}</dt><dd className="text-amber-50/90">{pick(source.limit, en)}</dd></div>
-              {level === 'technical' && source.tech ? <div className="mt-1 grid gap-1 rounded-lg border border-slate-700 bg-slate-950/60 p-3 text-xs">
+              {level === 'technical' && source.tech ? <div className="mt-1 grid min-w-0 gap-1 rounded-lg border border-slate-700 bg-slate-950/60 p-3 text-xs [overflow-wrap:anywhere]">
                 <dt className="sr-only">{en ? 'Technical details' : 'Detalhes técnicos'}</dt>
                 <dd><span className="text-slate-400">{en ? 'Parameters: ' : 'Parâmetros: '}</span><code className="break-words text-cyan-100">{source.tech.params}</code></dd>
                 <dd><span className="text-slate-400">{en ? 'Resolution: ' : 'Resolução: '}</span><span className="text-slate-200">{pick(source.tech.resolution, en)}</span></dd>
