@@ -2,7 +2,15 @@
 
 Gerado por `npm run audit:nd`. `inventory.json` traz as 224 combinações cultura × campo, fontes e contextos; também lista 272 linhas de código com N/D ou noData para revisão. Presença de fonte não garante aplicabilidade nacional ou valor projetado no motor. Ocorrência de texto no código não equivale a N/D visto pelo usuário; a origem deve ser confirmada em casos de execução.
 
+Fontes dos lotes 1, 2, 3 e 4: usuário relatou conferência no ChatGPT web; revisão agronômica continua pendente.
+
 Lote F31-1: 56 registros aguardam revisão agronômica; 24 trazem valor com fonte e 32 permanecem sem valor; 23 têm tipo divergente do campo de palhada. Eles não entram na contagem de registros verificados nem no motor.
+
+Lote F31-2: 56 referências de temperatura e pH aguardam revisão; temperatura é associada à linha de pesquisa idealTempC apenas para localização e não representa limites viáveis. Não altera contagens aprovadas ou motor.
+
+Lote F31-3: 28 descrições radiculares aguardam revisão agronômica; 26 têm profundidade numérica de semântica contextual e 2 não a informam. Não preenchem automaticamente classe radicular nem indicam profundidade de talhão.
+
+Lote F31-4: 56 registros pendentes; 23 com Kc, 20 com fases e 13 sem valores. Divergência entre soma das fases e total informado: sorghum. Preservam contexto e não atualizam parâmetros de motor nem janelas 2.2.
 
 Dataset contextual: 17 culturas, 9 faixas (incluindo 1 condicionada à hipótese de colheita) e 8 sem ciclo terminal único. Marcos preservados em `contextualCycle.milestones` não contam como ciclo terminal. As referências ainda não são selecionadas pelo motor.
 

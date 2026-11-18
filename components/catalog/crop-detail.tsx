@@ -10,6 +10,9 @@ import { cropById } from '@/lib/catalog';
 import { catalogEvidenceInventory } from '@/lib/catalog-coverage';
 import { CycleSimulationReference } from '@/components/evidence/cycle-simulation-reference';
 import { F31Lot1Reference } from '@/components/evidence/f31-lot1-reference';
+import { F31Lot2Reference } from '@/components/evidence/f31-lot2-reference';
+import { F31Lot3Reference } from '@/components/evidence/f31-lot3-reference';
+import { F31Lot4Reference } from '@/components/evidence/f31-lot4-reference';
 
 const structuredFields = new Set(['cycleDaysRange', 'idealTempC', 'viableTempC', 'soilPhRange', 'kcStages']);
 
@@ -117,6 +120,9 @@ export function CropDetail({ crop, locale, onClose, bloomKey }: { crop: Crop; lo
         </Section>
 
         <F31Lot1Reference cropId={crop.id} />
+        <F31Lot2Reference cropId={crop.id} />
+        <F31Lot3Reference cropId={crop.id} />
+        <F31Lot4Reference cropId={crop.id} />
         <CycleSimulationReference cropId={crop.id} />
         {cycleEvidence ? <Section title={locale === 'en' ? 'Contextual cycle evidence' : 'Evidência contextual de ciclo'}>
           <article className="space-y-2 border border-slate-700 p-3 text-sm">

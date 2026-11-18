@@ -1,0 +1,2131 @@
+{
+  "researchDate": "2026-11-18",
+  "datasetId": "plantae-F31-lote2-temperature-ph-28-cultures",
+  "compatibleWithCycleDatasetVersion": "2.2",
+  "scope": "FAO ECOCROP global species ecological reference, with crop-specific Embrapa adaptations where available",
+  "policy": {
+    "reviewStatus": "pending",
+    "automaticallyApplicableToFarm": false,
+    "allowAsDisplayedReference": true,
+    "allowForAutomaticSuitabilityScoring": false,
+    "neverTreatEcologicalAbsoluteLimitsAsVerifiedSafeLimits": true,
+    "requireSpeciesCultivarProductionSystemAndTemperatureStatistic": true,
+    "pHMeasurementMethodRequiredForPlotComparison": true,
+    "unknownIsNotZero": true
+  },
+  "methodologyNotes": [
+    "Each value is an optimal ecological reference or specifically identified management target, not a crop suitability recommendation for a Brazilian municipality.",
+    "ECOCROP is an expert-compiled global crop database; per-species provenance is uneven and its environmental ranges are not validated field measurements (CGIAR Climate Action Data Hub).",
+    "ECOCROP absolute ranges are not copied into value and must not be used as safe upper or lower limits.",
+    "No inference from NASA monthly median T2M to ECOCROP temperature requirements is authorized until averaging and phenological context are aligned.",
+    "For upland rice soil pH is a target around 6.0, not a zero-width tolerance range.",
+    "Coffee is arabica-only and banana entry is a hybrid subgroup; generic crop IDs require species/cultivar disambiguation.",
+    "Dataset status source_found means traceable documentation exists, not validation of farmer-specific applicability."
+  ],
+  "references": {
+    "FAO_ECOCROP": "https://www.fao.org/geospatial/data-and-tools/data-portals/ecocrop/",
+    "ECOCROP_methodology": "https://cgiar-climate-data-hub.github.io/catalog/ecocrop/"
+  },
+  "records": [
+    {
+      "cropId": "soybean",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "institutional_agronomic_adaptation_reference",
+      "variableDefinition": "Adaptation range for soybean according to Embrapa; not a cultivar-specific critical threshold or a stage-specific requirement.",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "Brazil; Embrapa agronomic guidance",
+        "productionSystem": "commercial soybean grain cropping",
+        "management": "Follow Embrapa crop-specific management context"
+      },
+      "source": {
+        "title": "SECA — Soja em Carência de Água: exigências climáticas",
+        "institution": "Embrapa Soja",
+        "url": "https://bioinfo.cnpso.embrapa.br/seca/index.php?Itemid=435&catid=84&id=73%3Aexigencias-climaticas&option=com_content&view=article",
+        "locator": "Exigências climáticas > temperatura",
+        "excerpt": "A soja se adapta melhor às regiões onde as temperaturas oscilam entre 20°C e 30°C",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO ECOCROP lists a broader ecological optimum of 20–33 °C; Embrapa adaptation guidance selected here gives 20–30 °C. Different definitions/contexts.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1150"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "soybean",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "commercial soybean grain cropping",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Glycine max species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1150",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 6.5 | 4.5 | 8.4",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "maize",
+      "field": "temperatureRange",
+      "value": {
+        "min": 24,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "institutional_phenology_stage_optimum",
+      "variableDefinition": "Optimal air temperature during maize emergence-to-flowering; NOT a whole-cycle monthly/annual range.",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "Brazil; Embrapa agronomic guidance",
+        "productionSystem": "grain maize; rainfed or irrigated",
+        "management": "Follow Embrapa crop-specific management context"
+      },
+      "source": {
+        "title": "Relações com o clima — milho",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/milho/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-ambiente/relacoes-com-o-clima",
+        "locator": "Relações com o clima > temperatura ideal da emergência à floração",
+        "excerpt": "A temperatura ideal para o desenvolvimento do milho, da emergência à floração, está compreendida entre 24ºC e 30ºC.",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified.",
+        "This temperature is valid for emergence-to-flowering only; do not use as a blanket whole-cycle interval."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO ECOCROP species-level 18–33 °C covers an unspecified stage; Embrapa 24–30 °C selected here is specific to emergence-to-flowering.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2175"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "maize",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "grain maize; rainfed or irrigated",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Zea mays species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2175",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5 | 7 | 4.5 | 8.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sorghum",
+      "field": "temperatureRange",
+      "value": {
+        "min": 22,
+        "max": 35
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "grain or forage; ecotypes and cultivars differ",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Sorghum bicolor species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=48747",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 22 | 35 | 8 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sorghum",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "grain or forage; ecotypes and cultivars differ",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Sorghum bicolor species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=48747",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 7.5 | 5 | 8",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sunflower",
+      "field": "temperatureRange",
+      "value": {
+        "min": 17,
+        "max": 34
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "sunflower grown for oilseed",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Helianthus annuus species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1191",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 17 | 34 | 5 | 45",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sunflower",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "sunflower grown for oilseed",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Helianthus annuus species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1191",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 6 | 7.5 | 5.5 | 8",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cowpea",
+      "field": "temperatureRange",
+      "value": {
+        "min": 25,
+        "max": 35
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "cowpea grain production",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Vigna unguiculata species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2153",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 25 | 35 | 15 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cowpea",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "institutional_regional_management_reference",
+      "variableDefinition": "Soil pH range recommended for irrigated cowpea grown for immature green grains in Baixada Maranhense; not national generalization.",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "Brazil; Embrapa agronomic guidance",
+        "productionSystem": "cowpea grain production",
+        "management": "Follow Embrapa crop-specific management context"
+      },
+      "source": {
+        "title": "Tecnologias de produção de feijão-caupi irrigado para consumo de grãos imaturos (verdes) na Baixada Maranhense",
+        "institution": "Embrapa",
+        "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1153904/1/TecnologiaProducaoFeijaoCaupiIrrigadoDoc277.2022.pdf",
+        "locator": "Preparo e manejo do solo, seleção da área (página impressa 24)",
+        "excerpt": "pH entre 5,5 e 6,5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot.",
+        "Specific to irrigated green-grain cowpea production in Baixada Maranhense, Maranhão."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO ECOCROP ecological optimum 5.5–7.5 is broader than Embrapa selected 5.5–6.5 for irrigated green-grain cowpea in Baixada Maranhense.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2153"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "common_bean",
+      "field": "temperatureRange",
+      "value": {
+        "min": 18,
+        "max": 24
+      },
+      "unit": "°C",
+      "evidenceType": "institutional_optimal_mean_air_temperature",
+      "variableDefinition": "Optimal mean air temperature for common bean; not instantaneous Tmin/Tmax.",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "Brazil; Embrapa agronomic guidance",
+        "productionSystem": "common-bean grain production",
+        "management": "Follow Embrapa crop-specific management context"
+      },
+      "source": {
+        "title": "Clima — Feijão-comum",
+        "institution": "Embrapa Ater+ Digital",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao/clima",
+        "locator": "Clima > faixa ótima de temperatura média",
+        "excerpt": "a média ótima entre 18 e 24°C e a temperatura ideal 21°C",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO ecological optimum 16–25 °C differs from Embrapa selected mean-optimal 18–24 °C (ideal 21 °C). The temperature statistic must be matched.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1668"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "common_bean",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "common-bean grain production",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Phaseolus vulgaris species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1668",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 7.5 | 4 | 9",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [
+        {
+          "description": "Embrapa cites an ideal soil pH of about 6.0, whereas FAO gives a wider ecological optimum 5.5–7.5.",
+          "sourceUrl": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao/busca"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Oryza sativa",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "upland non-flooded rice; FAO species record emphasizes wet-rice",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Oryza sativa species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1574",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 30 | 10 | 36",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO Oryza sativa sheet lists wet-rice cropping; its species-level optimum cannot automatically be treated as upland-rice-specific.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO record includes wet-rice system rather than an upland-rice-specific trial; stage-specific limits for upland rice are not established by this record.",
+          "sourceUrl": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/arroz/pre-producao/caracteristicas/clima"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 6
+      },
+      "unit": "pH",
+      "evidenceType": "institutional_management_target",
+      "variableDefinition": "Approximate soil pH management target for upland rice; 6.0 is a point target, not a validated acceptable interval.",
+      "context": {
+        "species": "Oryza sativa",
+        "cultivar": null,
+        "location": "Brazil; Embrapa agronomic guidance",
+        "productionSystem": "upland non-flooded rice; FAO species record emphasizes wet-rice",
+        "management": "Follow Embrapa crop-specific management context"
+      },
+      "source": {
+        "title": "Correção da acidez do solo — arroz de terras altas",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/arroz/producao/sistema-de-cultivo/arroz-de-terras-altas/correcao-do-solo-e-adubacao/correcao-da-acidez-do-solo",
+        "locator": "Solo seco (terras altas), pH ideal",
+        "excerpt": "O pH ideal deve ser mantido em torno de 6,0 para maximizar a produtividade.",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO Oryza sativa sheet lists wet-rice cropping; its species-level optimum cannot automatically be treated as upland-rice-specific.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot.",
+        "6.0 is an approximate point target, NOT a zero-width biological tolerance interval or a permission to classify 5.9 as incompatible."
+      ],
+      "conflicts": [
+        {
+          "description": "The FAO broad rice ecological pH optimum is 5.5–7.0, but its crop metadata emphasizes flooded rice; Embrapa upland-rice soil guidance gives a target around pH 6.0.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1574"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "temperatureRange",
+      "value": {
+        "min": 25,
+        "max": 35
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Pennisetum glaucum (syn. Cenchrus americanus)",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "millet grain or cover/forage crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Pennisetum glaucum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=8418",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 25 | 35 | 12 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO uses older synonym Pennisetum glaucum (now also Cenchrus americanus); species check is required.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Pennisetum glaucum (syn. Cenchrus americanus)",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "millet grain or cover/forage crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Pennisetum glaucum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=8418",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5 | 6.5 | 4.5 | 8.3",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO uses older synonym Pennisetum glaucum (now also Cenchrus americanus); species check is required.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "temperatureRange",
+      "value": {
+        "min": 25,
+        "max": 33
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Brachiaria ruziziensis (syn. Urochloa ruziziensis)",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "perennial forage or managed cover crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Brachiaria ruziziensis species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=543",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 25 | 33 | 19 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "A perennial species managed as temporary cover; temperature/pH requirements do not define cover-crop termination dates.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Brachiaria ruziziensis (syn. Urochloa ruziziensis)",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "perennial forage or managed cover crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Brachiaria ruziziensis species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=543",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 6.5 | 4.5 | 7.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "A perennial species managed as temporary cover; temperature/pH requirements do not define cover-crop termination dates.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "green manure / cover crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Crotalaria juncea species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=801",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 30 | 4 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "green manure / cover crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Crotalaria juncea species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=801",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 6 | 7 | 5 | 8.4",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cotton",
+      "field": "temperatureRange",
+      "value": {
+        "min": 22,
+        "max": 36
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "commercial annual cotton",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Gossypium hirsutum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1160",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 22 | 36 | 15 | 42",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cotton",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "commercial annual cotton",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Gossypium hirsutum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1160",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 6 | 7.5 | 5 | 9.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "temperatureRange",
+      "value": {
+        "min": 18,
+        "max": 38
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "legume grain or cover; annual or short-lived perennial management",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Cajanus cajan species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=576",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 18 | 38 | 10 | 45",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "legume grain or cover; annual or short-lived perennial management",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Cajanus cajan species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=576",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5 | 7 | 4.5 | 8.4",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cassava",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 29
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "cassava grown for storage roots",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Manihot esculenta species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1420",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 29 | 10 | 35",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cassava",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 8
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "cassava grown for storage roots",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Manihot esculenta species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1420",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 8 | 4 | 9",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Cucurbita moschata",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "Cucurbita moschata squash; not all pumpkins",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Cucurbita moschata species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=820",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 30 | 10 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The source covers C. moschata only; other pumpkin species (e.g. C. maxima, C. pepo) need their own evidence.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Cucurbita moschata",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "Cucurbita moschata squash; not all pumpkins",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Cucurbita moschata species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=820",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 7.5 | 4.5 | 8.3",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The source covers C. moschata only; other pumpkin species (e.g. C. maxima, C. pepo) need their own evidence.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "temperatureRange",
+      "value": {
+        "min": 18,
+        "max": 28
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "sweet potato grown for storage roots",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Ipomoea batatas species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1265",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 18 | 28 | 10 | 38",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "sweet potato grown for storage roots",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Ipomoea batatas species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1265",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5 | 7 | 4 | 8.7",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "peanut",
+      "field": "temperatureRange",
+      "value": {
+        "min": 22,
+        "max": 32
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "peanut for commercial pods",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Arachis hypogaea species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2199",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 22 | 32 | 10 | 45",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "peanut",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "peanut for commercial pods",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Arachis hypogaea species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2199",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 6.5 | 4.5 | 8.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "watermelon",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 35
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "commercial watermelon fruit",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Citrullus lanatus species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=708",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 35 | 15 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "watermelon",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "commercial watermelon fruit",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Citrullus lanatus species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=708",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 6 | 7 | 5.5 | 7.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "lettuce",
+      "field": "temperatureRange",
+      "value": {
+        "min": 12,
+        "max": 21
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Lactuca sativa var. capitata",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "heading lettuce; not all looseleaf or summer cultivars",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Lactuca sativa var. capitata species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1313",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 12 | 21 | 5 | 30",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO sheet describes head lettuce (var. capitata); do not generalize to all lettuce types, including heat-tolerant leaf cultivars.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "lettuce",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Lactuca sativa var. capitata",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "heading lettuce; not all looseleaf or summer cultivars",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Lactuca sativa var. capitata species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1313",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 6 | 7 | 4.2 | 7.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO sheet describes head lettuce (var. capitata); do not generalize to all lettuce types, including heat-tolerant leaf cultivars.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "tomato",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 27
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Lycopersicon esculentum (syn. Solanum lycopersicum)",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "table tomato; open-field or protected varieties vary",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Lycopersicon esculentum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1379",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 27 | 7 | 35",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO records Lycopersicon esculentum, a synonym of Solanum lycopersicum; field and protected cultivation may diverge.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "tomato",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.8
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Lycopersicon esculentum (syn. Solanum lycopersicum)",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "table tomato; open-field or protected varieties vary",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Lycopersicon esculentum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1379",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 6.8 | 5 | 7.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO records Lycopersicon esculentum, a synonym of Solanum lycopersicum; field and protected cultivation may diverge.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "carrot",
+      "field": "temperatureRange",
+      "value": {
+        "min": 15,
+        "max": 24
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Daucus carota",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "carrot root crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Daucus carota species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=871",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 15 | 24 | 3 | 30",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "carrot",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.8,
+        "max": 6.8
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Daucus carota",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "carrot root crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Daucus carota species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=871",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.8 | 6.8 | 4.2 | 8.7",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "kale",
+      "field": "temperatureRange",
+      "value": {
+        "min": 15,
+        "max": 22
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "collards/kale leaf production; managed successive harvest",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Brassica oleracea var. acephala species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=3867",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 15 | 22 | 7 | 30",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO record covers broad kale/collards; leaf-harvest duration and cultivar traits are management-dependent.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "kale",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.4,
+        "max": 6
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "collards/kale leaf production; managed successive harvest",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Brassica oleracea var. acephala species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=3867",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.4 | 6 | 4.5 | 8.3",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO record covers broad kale/collards; leaf-harvest duration and cultivar traits are management-dependent.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "onion",
+      "field": "temperatureRange",
+      "value": {
+        "min": 12,
+        "max": 25
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "bulb onion; photoperiod and cultivar class matter",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Allium cepa species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=364",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 12 | 25 | 4 | 30",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "onion",
+      "field": "soilPhRange",
+      "value": {
+        "min": 6,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "bulb onion; photoperiod and cultivar class matter",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Allium cepa species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=364",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 6 | 7 | 4.3 | 8.3",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "temperatureRange",
+      "value": {
+        "min": 17,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "sweet bell pepper subset; not necessarily hot peppers",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Capsicum annuum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=618",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 17 | 30 | 8 | 35",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO lists C. annuum broadly (sweet and hot peppers); use as species-level context, not cultivar-specific tolerance.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.8
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "sweet bell pepper subset; not necessarily hot peppers",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Capsicum annuum species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=618",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 6.8 | 4.5 | 7",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "FAO lists C. annuum broadly (sweet and hot peppers); use as species-level context, not cultivar-specific tolerance.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "okra",
+      "field": "temperatureRange",
+      "value": {
+        "min": 20,
+        "max": 30
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "okra under repeated fruit harvest",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Abelmoschus esculentus species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=289",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 20 | 30 | 12 | 35",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "okra",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "okra under repeated fruit harvest",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Abelmoschus esculentus species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=289",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 7 | 4.5 | 8.7",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "coffee",
+      "field": "temperatureRange",
+      "value": {
+        "min": 18,
+        "max": 22
+      },
+      "unit": "°C",
+      "evidenceType": "institutional_optimal_annual_mean",
+      "variableDefinition": "Optimal mean annual air temperature for Coffea arabica (not daily / monthly instantaneous temperature)",
+      "context": {
+        "species": "Coffea arabica",
+        "cultivar": null,
+        "location": "Brazil; Embrapa agronomic guidance",
+        "productionSystem": "arabica coffee only; generic coffee includes canephora",
+        "management": "Follow Embrapa crop-specific management context"
+      },
+      "source": {
+        "title": "Monitoramento climático e fitossanitário como ferramenta para o manejo integrado das principais pragas e doenças do cafeeiro",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/busca-de-publicacoes/-/publicacao/1170653/monitoramento-climatico-e-fitossanitario-como-ferramenta-para-o-manejo-integrado-das-principais-pragas-e-doencas-do-cafeeiro",
+        "locator": "Descrição / temperatura média anual ideal para café arábica",
+        "excerpt": "temperatura média anual ideal para o desenvolvimento do café Arábica situa-se entre 18 ºC e 22 ºC",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The source covers Coffea arabica; generic coffee also includes C. canephora, which has different temperature requirements.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO EcoCrop ecological-optimal range 14–28 °C for Coffea arabica is not the same statistic as Embrapa annual-mean ideal 18–22 °C; conilon requires a separate model.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=749"
+        },
+        {
+          "description": "Embrapa reports 22–26 °C as ideal for Coffea canephora, demonstrating species-level differences.",
+          "sourceUrl": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1106818/1/2018PedroIvoAquinoLeiteSala.pdf"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "coffee",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 7
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Coffea arabica",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "arabica coffee only; generic coffee includes canephora",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Coffea arabica species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=749",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 7 | 4.3 | 8.4",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The source covers Coffea arabica; generic coffee also includes C. canephora, which has different temperature requirements.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "banana",
+      "field": "temperatureRange",
+      "value": {
+        "min": 25,
+        "max": 35
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Musa acuminata × balbisiana",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "hybrid Musa acuminata × balbisiana; cultivar/genome group unknown",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Musa acuminata × balbisiana species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=7849",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 25 | 35 | 15 | 40",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The source is a specific interspecific banana hybrid; banana cultivar genome groups and local management can differ.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [
+        {
+          "description": "EcoCrop Musa acuminata (AA/AAA) lists 23–33 °C, versus hybrid Musa acuminata × balbisiana 25–35 °C; do not merge cultivar groups.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=7848"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "banana",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5.5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Musa acuminata × balbisiana",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "hybrid Musa acuminata × balbisiana; cultivar/genome group unknown",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Musa acuminata × balbisiana species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=7849",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5.5 | 6.5 | 4.5 | 8",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The source is a specific interspecific banana hybrid; banana cultivar genome groups and local management can differ.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [
+        {
+          "description": "EcoCrop Musa acuminata lists pH 5.5–7.5, versus selected hybrid 5.5–6.5; cultivar-group selection is required.",
+          "sourceUrl": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=7848"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cacao",
+      "field": "temperatureRange",
+      "value": {
+        "min": 21,
+        "max": 32
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "cocoa orchard / perennial tree crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Theobroma cacao species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2074",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 21 | 32 | 10 | 38",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cacao",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 6.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "cocoa orchard / perennial tree crop",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Theobroma cacao species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2074",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5 | 6.5 | 4 | 8",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "acai",
+      "field": "temperatureRange",
+      "value": {
+        "min": 22,
+        "max": 28
+      },
+      "unit": "°C",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal temperature requirement for species (physiological stage and averaging convention unspecified)",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "açaí palm; wet Amazonian ecology, terra firme may differ",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Euterpe oleracea species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=6054",
+        "locator": "Ecology > Temperat. requir. > Optimal Min/Max",
+        "excerpt": "Temperat. requir. | 22 | 28 | 16 | 32",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The FAO sheet describes Euterpe oleracea ecological context with wet-soil drainage; do not assume direct equivalence with BRS Pará grown on upland terra firme.",
+        "ECOCROP does not identify a cultivar-specific phenological stage or whether its broad temperature descriptor is a monthly/annual mean, hourly maximum, or daily mean; do not compare directly with NASA POWER T2M until the statistic is justified."
+      ],
+      "conflicts": [],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "acai",
+      "field": "soilPhRange",
+      "value": {
+        "min": 5,
+        "max": 5.5
+      },
+      "unit": "pH",
+      "evidenceType": "expert_compiled_ecological_optimum",
+      "variableDefinition": "FAO ECOCROP optimal soil pH for species (laboratory method and depth unspecified)",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": null,
+        "location": "Global species reference (FAO ECOCROP)",
+        "productionSystem": "açaí palm; wet Amazonian ecology, terra firme may differ",
+        "management": "Unspecified in species data sheet; verify cultivar and cultivation practice"
+      },
+      "source": {
+        "title": "FAO ECOCROP — Euterpe oleracea species data sheet",
+        "institution": "FAO",
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=6054",
+        "locator": "Ecology > Soil PH > Optimal Min/Max",
+        "excerpt": "Soil PH | 5 | 5.5 | 4.5 | 6.5",
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Global FAO ECOCROP ecological descriptors, not measurements in a regional field trial; cultivar, season, water supply and management are not verified.",
+        "Optimal ecological ranges do not prove local suitability or predict yield, and must not be applied automatically to a municipality or slot.",
+        "The FAO sheet describes Euterpe oleracea ecological context with wet-soil drainage; do not assume direct equivalence with BRS Pará grown on upland terra firme.",
+        "ECOCROP does not state soil pH measurement method (water/CaCl2/KCl) or sampling depth; SoilGrids estimate is not a laboratory test of the plot."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO ecological entry emphasizes wet Amazonian conditions; BRS Pará is selected for terra-firme cropping, requiring separate soil-management verification.",
+          "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/handle/doc/409681"
+        }
+      ],
+      "applicability": "contextual_reference_only",
+      "readyForAutomaticSuitabilityScoring": false
+    }
+  ]
+}

@@ -1,0 +1,1545 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "plantae-F31-lote3-root-system-28",
+  "researchDate": "2026-11-18",
+  "field": "rootSystem",
+  "reviewPolicy": {
+    "reviewStatus": "pending",
+    "readyForAutomaticSuitabilityScoring": false,
+    "noNumericImputation": true,
+    "doNotUseToCalculateIrrigationOrETc": true,
+    "neverInferMunicipalSuitability": true,
+    "notDirectlyComparableDepthTypes": [
+      "observed_depth_containing_80_percent_of_roots",
+      "maximum_effective_rooting_depth_guideline",
+      "suggested_effective_depth_by_growth_phase_for_irrigation",
+      "observed_root_extension_in_specific_demonstration",
+      "reported_layer_where_superficial_roots_are_found",
+      "sampling_depth_only"
+    ]
+  },
+  "records": [
+    {
+      "cropId": "soybean",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 43,
+          "maxCm": 54,
+          "depthDefinition": "observed_depth_containing_80_percent_of_roots",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Oitenta por cento das raízes situaram-se até 43–54 cm nas condições experimentais."
+      },
+      "unit": "cm",
+      "evidenceType": "observed_profile",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "Brasil; ensaio de plantio direto e convencional",
+        "productionSystem": "soja em plantio direto e convencional",
+        "management": "Sistemas comparados no estudo; condições específicas",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Matéria seca, carbono e nitrogênio de raízes de soja e milho em plantio direto e convencional",
+        "institution": "Pesquisa Agropecuária Brasileira / Embrapa",
+        "url": "https://www.scielo.br/j/pab/a/jSkKdJ4Vp6DFXx8BXpnr6zz/?lang=pt",
+        "locator": "Resumo e resultados: profundidade contendo 80% das raízes",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não é a profundidade máxima nem limite genético da soja.",
+        "FAO-56 informa 60–130 cm como referência de profundidade máxima efetiva para modelos, não como observação deste experimento."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "model_guideline",
+          "depthCm": {
+            "min": 60,
+            "max": 130
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Soybeans",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Maximum effective rooting depth for soil-water models, not depth of 80% of observed roots."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "maize",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 40,
+          "maxCm": 46,
+          "depthDefinition": "observed_depth_containing_80_percent_of_roots",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Oitenta por cento das raízes situaram-se até 40–46 cm nas condições experimentais."
+      },
+      "unit": "cm",
+      "evidenceType": "observed_profile",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "Brasil; ensaio de plantio direto e convencional",
+        "productionSystem": "milho em plantio direto e convencional",
+        "management": "Sistemas comparados no estudo; condições específicas",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Matéria seca, carbono e nitrogênio de raízes de soja e milho em plantio direto e convencional",
+        "institution": "Pesquisa Agropecuária Brasileira / Embrapa",
+        "url": "https://www.scielo.br/j/pab/a/jSkKdJ4Vp6DFXx8BXpnr6zz/?lang=pt",
+        "locator": "Resumo e resultados: profundidade contendo 80% das raízes",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não é profundidade máxima de penetração.",
+        "FAO-56 lista 100–170 cm como profundidade máxima efetiva de referência para milho-grão."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "model_guideline",
+          "depthCm": {
+            "min": 100,
+            "max": 170
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Maize, Field (grain)",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Metric differs from observed depth containing 80% of roots."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sorghum",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 100,
+          "maxCm": 200,
+          "depthDefinition": "maximum_effective_rooting_depth_guideline",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Profundidade máxima efetiva sugerida para modelagem de água no solo."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": null,
+        "location": "FAO, referência internacional",
+        "productionSystem": "sorgo granífero",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "estágio de crescimento com sistema radicular desenvolvido"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+        "locator": "Table 22, Sorghum—grain",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Faixa para o grupo sorgo granífero e não medição nacional.",
+        "Embrapa descreve sistema fibroso com grande parte das raízes superficiais, diferente de profundidade máxima."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "root_distribution_context",
+          "description": "Embrapa descreve raízes fibrosas, até cerca de 1,5 m, com 80% nos primeiros 30 cm em seu contexto técnico.",
+          "source": {
+            "title": "Sistema de Produção: Cultivo do Sorgo",
+            "institution": "Embrapa Milho e Sorgo",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/994083/1/Sistema-de-Producao-Cultivo-do-Sorgo.pdf",
+            "locator": "Sistema radicular: profundidade e distribuição de 80% das raízes",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          }
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sunflower",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 80,
+          "maxCm": 150,
+          "depthDefinition": "maximum_effective_rooting_depth_guideline",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Faixa para modelagem hídrica, não profundidade observada em área específica."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": "FAO, referência internacional",
+        "productionSystem": "girassol para óleo ou grãos",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "planta desenvolvida"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+        "locator": "Table 22, Sunflower",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Referência contextual; não permite inferir profundidade do talhão, desempenho ou adequação municipal."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cowpea",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 20,
+          "maxCm": 40,
+          "depthDefinition": "effective_root_depth_irrigation_reference",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Faixa de profundidade radicular usada como referência de manejo hídrico nos estádios descritos."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "Semiárido brasileiro; referência de cultivo de feijão-caupi",
+        "productionSystem": "caupi para produção de grãos",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "crescimento até maturação"
+      },
+      "source": {
+        "title": "Caderno Semiárido 17: Feijão-Caupi",
+        "institution": "Embrapa / Ater+ Digital",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/documents/1244794/1245078/CADERNO-SEMIARIDO-17-FEIJAO-CAUPI.pdf/a9f6caa3-4955-6592-ab56-52df39b0ba52?download=true&t=1682430571011&version=1.0",
+        "locator": "Manejo de irrigação: profundidade entre crescimento e maturação",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Métrica e estágio não equivalem à profundidade máxima de raízes.",
+        "FAO-56 (Green Gram and Cowpeas) apresenta 60–100 cm de profundidade máxima efetiva em modelo, de definição diferente."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "model_guideline",
+          "depthCm": {
+            "min": 60,
+            "max": 100
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Green Gram and Cowpeas",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          }
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "common_bean",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 0,
+          "maxCm": 30,
+          "unit": "cm",
+          "depthDefinition": "reported_soil_layer_containing_almost_all_roots"
+        },
+        "rootCharacteristics": "O perfil 0–30 cm representa a quase totalidade das raízes no manejo descrito."
+      },
+      "unit": "cm",
+      "evidenceType": "observed_profile",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "Brasil; orientação de manejo de irrigação no Cerrado",
+        "productionSystem": "feijão-comum irrigado",
+        "management": "Aspersão, uso de tensiômetros",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Manejo de irrigação — Feijão",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/feijao/producao/manejo-de-irrigacao",
+        "locator": "Seção Manejo de irrigação: tensiômetros a 15 e 30 cm",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não indica ausência de raízes abaixo de 30 cm.",
+        "FAO-56 agrupa feijões secos e leguminosas com 60–90 cm de profundidade máxima efetiva; as métricas não são comparáveis."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "generic_group_model_guideline",
+          "depthCm": {
+            "min": 60,
+            "max": 90
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Beans, dry and Pulses",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          }
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": null,
+        "rootCharacteristics": "A pesquisa avaliou diferenças de densidade radicular em segmentos de 20 cm até 80 cm de profundidade; 80 cm é limite de amostragem, não profundidade máxima das raízes."
+      },
+      "unit": null,
+      "evidenceType": "qualitative_or_contextual",
+      "context": {
+        "species": "Oryza sativa (sistema de terras altas)",
+        "cultivar": null,
+        "location": "Brasil; estudo em casa de vegetação sob deficiência hídrica",
+        "productionSystem": "arroz de terras altas (aeróbio)",
+        "management": "Genótipos contrastantes sob deficiência hídrica",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Sistema radicular do arroz de terras altas sob deficiência hídrica",
+        "institution": "Embrapa / Alice",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/handle/doc/895618",
+        "locator": "Resumo: densidade radicular em intervalos de 20 cm, até 80 cm",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não converter profundidade de amostragem (80 cm) em profundidade radicular efetiva.",
+        "A referência FAO de arroz geralmente envolve manejo hídrico não equivalente ao arroz de terras altas."
+      ],
+      "conflicts": [
+        {
+          "description": "FAO-56 lista 50–100 cm para Rice, mas a categoria não distingue adequadamente arroz aeróbio de arroz inundado.",
+          "sourceUrl": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+          "resolution": "Não atribuir faixa numérica automaticamente ao arroz de terras altas."
+        }
+      ],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": null,
+          "maxCm": 500,
+          "unit": "cm",
+          "depthDefinition": "reported_possible_maximum_reach_under_specific_conditions_not_typical"
+        },
+        "rootCharacteristics": "Embrapa descreve sistema vigoroso e abundante que pode alcançar até 5 m sob determinadas condições."
+      },
+      "unit": "cm",
+      "evidenceType": "qualitative_or_contextual",
+      "context": {
+        "species": "Cenchrus americanus (sin. Pennisetum glaucum)",
+        "cultivar": null,
+        "location": "Referência Embrapa sobre milheto no Norte do Rio Grande do Sul",
+        "productionSystem": "milheto forrageiro ou cobertura",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Milheto: gramínea de verão para a região norte do Rio Grande do Sul",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/busca-de-publicacoes/-/publicacao/1179693/milheto-graminea-de-verao-para-a-regiao-norte-do-rio-grande-do-sul",
+        "locator": "Resumo: sistema radicular vigoroso e profundidade potencial",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Até 5 m é potencial relatado, não profundidade efetiva típica ou valor observado em todos os cultivos.",
+        "FAO-56 usa categoria genérica Millet de 100–200 cm; não confundir espécies e métricas."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "generic_group_model_guideline",
+          "depthCm": {
+            "min": 100,
+            "max": 200
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Millet",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          }
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": null,
+          "maxCm": 280,
+          "unit": "cm",
+          "depthDefinition": "observed_root_extension_in_specific_demonstration"
+        },
+        "rootCharacteristics": "Notícia da Embrapa descreve raízes demonstradas alcançando 2,8 m."
+      },
+      "unit": "cm",
+      "evidenceType": "observed_profile",
+      "context": {
+        "species": "Urochloa ruziziensis (sin. Brachiaria ruziziensis)",
+        "cultivar": null,
+        "location": "Demonstração Embrapa Soja; condições específicas não fornecidas no texto público",
+        "productionSystem": "gramínea de cobertura / plantio direto",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Embrapa enfatiza necessidade de diversificação de culturas para melhoria da qualidade do solo",
+        "institution": "Embrapa Soja",
+        "url": "https://www.embrapa.br/en/web/soja/busca-de-noticias/-/noticia/49818252/embrapa-enfatiza-necessidade-de-diversificacao-de-culturas-para-melhoria-da-qualidade-do-solo",
+        "locator": "Notícia: raízes de braquiária ruziziensis demonstradas",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "A observação de demonstração não fornece distribuição percentual das raízes ou profundidade efetiva de manejo.",
+        "Não usar 280 cm como valor universal para esta espécie."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 40,
+          "maxCm": 40,
+          "unit": "cm",
+          "depthDefinition": "observed_effective_depth_about_80_percent_roots_at_60_days",
+          "observedMaximumReachCm": 60
+        },
+        "rootCharacteristics": "Estudo informa profundidade efetiva em torno de 0,4 m e raízes alcançando aproximadamente 0,6 m."
+      },
+      "unit": "cm",
+      "evidenceType": "observed_profile",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": null,
+        "location": "Petrolina, PE; Campo Experimental de Bebedouro",
+        "productionSystem": "adubação verde entre linhas de videira",
+        "management": "Irrigação por sulcos; avaliação aos 60 dias após o plantio",
+        "soil": "Latossolo Vermelho-Amarelo franco-arenoso; lençol freático a cerca de 0,9 m",
+        "growthStage": "60 dias após plantio"
+      },
+      "source": {
+        "title": "Distribuição radicular de adubos verdes irrigados no Vale do São Francisco (Crotalaria juncea e outras espécies)",
+        "institution": "Embrapa Semi-Árido / Alice",
+        "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/131805/1/OPB1540.pdf",
+        "locator": "Resultados; Tabela 2 e distribuição radicular",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Resultado de estudo local com idade e solo determinados.",
+        "Os 40 cm referem-se ao manejo hídrico na idade observada, não ao máximo potencial da espécie."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cotton",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 100,
+          "maxCm": 170,
+          "depthDefinition": "maximum_effective_rooting_depth_guideline",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Intervalo de referência para profundidade máxima efetiva em modelos de água no solo."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "FAO, referência internacional",
+        "productionSystem": "algodão para fibra",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "planta desenvolvida"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+        "locator": "Table 22, Cotton",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Referência contextual; não permite inferir profundidade do talhão, desempenho ou adequação municipal."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": "pivotante (taproot)",
+        "depth": null,
+        "rootCharacteristics": "Embrapa caracteriza sistema radicular profundo associado à estrutura do solo, sem faixa de profundidade numérica nesta fonte."
+      },
+      "unit": null,
+      "evidenceType": "qualitative_or_contextual",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": null,
+        "location": "Brasil; orientação de guandu para agricultura familiar",
+        "productionSystem": "guandu para grãos, forragem ou cobertura",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": null
+      },
+      "source": {
+        "title": "Variedades de guandu para alimentação humana apresentam benefícios nutricionais e boa aceitação",
+        "institution": "Embrapa",
+        "url": "https://www.embrapa.br/en/busca-de-noticias/-/noticia/101308351/variedades-de-guandu-para-alimentacao-humana-apresentam-beneficios-nutricionais-e-boa-aceitacao",
+        "locator": "Discussão sobre sistema radicular profundo e estrutura do solo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Profundidade em centímetros não informada pela fonte selecionada.",
+        "Não converter o qualificativo profundo em classe quantitativa ou eficiência de descompactação garantida."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cassava",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 25,
+          "maxCm": 45,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 25,
+            "productionAndFinalPhases3And4": 45
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 25 cm na fase vegetativa e 45 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "raízes tuberosas",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Mandioca",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio.",
+        "FAO-56 apresenta faixas diferentes para primeiro e segundo ano da mandioca; profundidades da Embrapa são para manejo hídrico de horticultura."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 50,
+            "max": 80
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Cassava—year 1",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 20,
+          "maxCm": 45,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 20,
+            "productionAndFinalPhases3And4": 45
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 20 cm na fase vegetativa e 45 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Cucurbita spp.",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "abóbora cultivada; espécie/cultivar não especificadas no manual",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Abóbora",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio.",
+        "A rubrica Abóbora não identifica espécie e variedade; evitar extrapolar para toda Cucurbita spp."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 100,
+            "max": 150
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Pumpkin, Winter Squash",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 30,
+          "maxCm": 50,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 30,
+            "productionAndFinalPhases3And4": 50
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 30 cm na fase vegetativa e 50 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "raízes tuberosas",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Batata-doce",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 100,
+            "max": 150
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Sweet Potato",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "peanut",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 50,
+          "maxCm": 100,
+          "depthDefinition": "maximum_effective_rooting_depth_guideline",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Faixa de profundidade máxima efetiva para modelagem hídrica."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "FAO, referência internacional",
+        "productionSystem": "amendoim para vagens e grãos",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "planta desenvolvida"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+        "locator": "Table 22, Groundnut (Peanut)",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Referência contextual; não permite inferir profundidade do talhão, desempenho ou adequação municipal."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "watermelon",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 30,
+          "maxCm": 40,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 30,
+            "productionAndFinalPhases3And4": 40
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 30 cm na fase vegetativa e 40 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "fruto comercial",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Melancia",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 80,
+            "max": 150
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Watermelon",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "lettuce",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 15,
+          "maxCm": 25,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 15,
+            "productionAndFinalPhases3And4": 25
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 15 cm na fase vegetativa e 25 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Lactuca sativa",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "folhas para consumo",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Alface",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 30,
+            "max": 50
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Lettuce",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "tomato",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 25,
+          "maxCm": 45,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 25,
+            "productionAndFinalPhases3And4": 45
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 25 cm na fase vegetativa e 45 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Solanum lycopersicum",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "tomate de mesa",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Tomate de mesa",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 70,
+            "max": 150
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Tomato",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "carrot",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 20,
+          "maxCm": 40,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 20,
+            "productionAndFinalPhases3And4": 40
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 20 cm na fase vegetativa e 40 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Daucus carota",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "raízes para consumo",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Cenoura",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 50,
+            "max": 100
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Carrots",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "kale",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 20,
+          "maxCm": 30,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 20,
+            "productionAndFinalPhases3And4": 30
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 20 cm na fase vegetativa e 30 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "couve-de-folha (não couve-flor)",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Couve",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio.",
+        "A rubrica Couve deve ser interpretada para couve-de-folha; não usar valores de couve-flor ou repolho como se fossem equivalentes."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "onion",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 20,
+          "maxCm": 35,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 20,
+            "productionAndFinalPhases3And4": 35
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 20 cm na fase vegetativa e 35 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "bulbos",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Cebola",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 30,
+            "max": 60
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Onions—dry",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 25,
+          "maxCm": 45,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 25,
+            "productionAndFinalPhases3And4": 45
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 25 cm na fase vegetativa e 45 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "frutos comerciais",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Pimentão",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 50,
+            "max": 100
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Sweet Peppers (bell)",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          },
+          "interpretation": "Não comparar diretamente à profundidade efetiva sugerida nas fases vegetativa/produtiva da Embrapa."
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "okra",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 30,
+          "maxCm": 45,
+          "unit": "cm",
+          "depthDefinition": "suggested_effective_depth_by_growth_phase_for_irrigation",
+          "phaseValuesCm": {
+            "vegetativePhase2": 30,
+            "productionAndFinalPhases3And4": 45
+          },
+          "isStatisticalRange": false
+        },
+        "rootCharacteristics": "Profundidade sugerida de 30 cm na fase vegetativa e 45 cm nas fases produtiva/final."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": null,
+        "location": "Brasil; referência Embrapa para manejo de irrigação em hortaliças",
+        "productionSystem": "frutos comerciais",
+        "management": "Sistema de irrigação e solo devem ser avaliados localmente",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "fase 2 (vegetativa) e fases 3–4 (produção/final)"
+      },
+      "source": {
+        "title": "Irrigação por Aspersão em Hortaliças: Qualidade da Água, Aspectos do Sistema e Método Prático de Manejo (4ª edição)",
+        "institution": "Embrapa Hortaliças",
+        "url": "https://ainfo.cnptia.embrapa.br/digital/bitstream/doc/1069565/1/Irrigacao-por-aspersao-em-hortalicas-ed-04-2017-web.pdf",
+        "locator": "p. 91, Tabela 27, linha Quiabo",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Os dois valores pertencem a FASES diferentes, não são um intervalo estatístico de incerteza.",
+        "Tabela de manejo de irrigação; não representa medição direta de raiz no talhão nem profundidade máxima da espécie.",
+        "Exige confirmação de cultivar, tipo de solo, manejo e estágio."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "coffee",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 90,
+          "maxCm": 150,
+          "depthDefinition": "maximum_effective_rooting_depth_guideline",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Referência de profundidade radicular efetiva máxima para modelagem; não descreve distribuição percentual no cafezal."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Coffea spp. (espécie/cultivar não discriminada na tabela)",
+        "cultivar": null,
+        "location": "FAO, referência internacional",
+        "productionSystem": "cafezal perene",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "planta adulta"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+        "locator": "Table 22, Coffee",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não distingue café arábica e conilon, idade, altitude, profundidade de solo ou manejo de irrigação.",
+        "O sistema radicular pode explorar camadas diferentes sob compactação, correção química e água."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "banana",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 0,
+          "maxCm": 30,
+          "unit": "cm",
+          "depthDefinition": "reported_layer_containing_62_percent_of_roots",
+          "rootFractionPercent": 62
+        },
+        "rootCharacteristics": "Fonte informa predomínio superficial, com 62% das raízes nos 30 cm iniciais, e recomenda solo profundo, sem impedimentos."
+      },
+      "unit": "cm",
+      "evidenceType": "observed_profile",
+      "context": {
+        "species": "Musa spp. (grupo varietal não especificado na notícia)",
+        "cultivar": null,
+        "location": "Brasil; Embrapa Mandioca e Fruticultura",
+        "productionSystem": "bananal",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "bananeira estabelecida; idade não especificada"
+      },
+      "source": {
+        "title": "Relações com o solo — Banana",
+        "institution": "Embrapa Mandioca e Fruticultura",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/banana/pre-producao/especie/relacoes-solo",
+        "locator": "Distribuição de raízes: proporção na camada superficial 0–30 cm",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "62% na camada 0–30 cm não significa que a profundidade máxima seja 30 cm.",
+        "A Embrapa cita mais de 75 cm de solo sem restrição como condição do perfil; não é profundidade de raiz medida.",
+        "FAO-56 fornece 50–90 cm como profundidade máxima efetiva de modelagem para banana nos anos 1 e 2."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "maximum_effective_rooting_depth_model_guideline",
+          "depthCm": {
+            "min": 50,
+            "max": 90
+          },
+          "source": {
+            "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+            "institution": "FAO",
+            "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+            "locator": "Table 22, Banana—1st and 2nd year",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          }
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "cacao",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": null,
+        "depth": {
+          "minCm": 70,
+          "maxCm": 100,
+          "depthDefinition": "maximum_effective_rooting_depth_guideline",
+          "unit": "cm"
+        },
+        "rootCharacteristics": "Profundidade máxima efetiva de referência para manejo hídrico, não profundidade de solo exigida pela cultura."
+      },
+      "unit": "cm",
+      "evidenceType": "contextual_effective_depth_reference",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": "FAO, referência internacional",
+        "productionSystem": "cacaueiro perene",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "plantas desenvolvidas"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — Guidelines for computing crop water requirements (FAO Irrigation and Drainage Paper 56)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0e.htm",
+        "locator": "Table 22, Cacao",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não comparar 70–100 cm a exigências de solo de 1,2–1,5 m citadas em estudos de zoneamento: profundidade disponível de solo e profundidade radicular efetiva são conceitos distintos.",
+        "Não atribuir uniformemente a todos os clones e ambientes."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [],
+      "readyForAutomaticSuitabilityScoring": false
+    },
+    {
+      "cropId": "acai",
+      "field": "rootSystem",
+      "value": {
+        "rootArchitecture": "fasciculado, denso e superficial",
+        "depth": {
+          "minCm": 30,
+          "maxCm": 40,
+          "unit": "cm",
+          "depthDefinition": "reported_layer_where_superficial_roots_are_found"
+        },
+        "rootCharacteristics": "Raízes descritas como densas e superficiais, encontradas nos primeiros 30–40 cm; isso NÃO define profundidade máxima."
+      },
+      "unit": "cm",
+      "evidenceType": "qualitative_or_contextual",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": null,
+        "location": "Amazônia brasileira; descrição botânica geral da Embrapa",
+        "productionSystem": "açaizal cultivado ou nativo",
+        "management": "Manejo não individualizado",
+        "soil": "Profundidade efetiva depende da textura, compactação, drenagem, fertilidade, camada restritiva e manejo da água.",
+        "growthStage": "estabelecido; idade não explicitada"
+      },
+      "source": {
+        "title": "Raízes — Características botânicas do açaizeiro",
+        "institution": "Embrapa Amazônia Oriental",
+        "url": "https://www.embrapa.br/en/web/agencia-de-informacao-tecnologica/cultivos/acai/pre-producao/caracteristicas-da-especie-e-relacoes-com-o-meio-ambiente/caracteristica-da-planta/caracteristica-botanica/raizes",
+        "locator": "Descrição morfológica das raízes: 30–40 cm superficiais",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "limitations": [
+        "Não interpretar 30–40 cm como limite físico de penetração radicular nem como intervalo universal.",
+        "Embrapa apresenta 30 cm como referência de profundidade efetiva para irrigação em contexto de solos argilosos no Noroeste do Brasil."
+      ],
+      "conflicts": [],
+      "additionalEvidence": [
+        {
+          "kind": "effective_root_depth_irrigation_guideline",
+          "depthCm": {
+            "min": 30,
+            "max": 30
+          },
+          "context": "cultivo irrigado, solos argilosos, Noroeste do Brasil",
+          "source": {
+            "title": "Cultivo do Açaizeiro (Euterpe oleracea Martius) no Noroeste do Brasil",
+            "institution": "Embrapa",
+            "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1101575/1/SistemadeproducaoAcai2018.pdf",
+            "locator": "Manejo de irrigação em solos argilosos: profundidade efetiva de 30 cm",
+            "excerpt": null,
+            "accessedAt": "2026-11-18"
+          }
+        }
+      ],
+      "readyForAutomaticSuitabilityScoring": false
+    }
+  ]
+}

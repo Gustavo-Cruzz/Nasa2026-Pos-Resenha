@@ -1,0 +1,3002 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "plantae-f31-lote4-kc-ciclos-2026-11-18",
+  "researchDate": "2026-11-18",
+  "basedOnDatasetId": "plantae-cycle-evidence-17-v2.2",
+  "scope": "28 culturas x 2 campos: Kc de referência por fase e duração das fases/ciclo com fonte, espécie e condições",
+  "policy": {
+    "reviewStatus": "pending",
+    "publishAsReferenceOnly": true,
+    "doNotComputeETcOrIrrigation": true,
+    "doNotOverwriteCycleDaysRange22": true,
+    "doNotInferSpeciesFromFamily": true,
+    "doNotAutoReleasePerennialsOrRepeatedHarvest": true,
+    "unknownIsNotZero": true,
+    "requiresCultivarProductionSystemAndStartEvent": true,
+    "readyForAutomaticDecision": false
+  },
+  "fieldDefinitions": {
+    "kcByStage": "Coeficientes de cultura de referência, dimensionless; valores FAO 56 e estudos não comparáveis automaticamente.",
+    "cycleStages": "Durações de estágios agronômicos com local/estação e sem pressupor coincidência com os slots brasileiros."
+  },
+  "records": [
+    {
+      "cropId": "soybean",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.4,
+          "max": 0.4
+        },
+        "midSeason": {
+          "min": 1.15,
+          "max": 1.15
+        },
+        "endSeason": {
+          "min": 0.5,
+          "max": 0.5
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Soybeans",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Soybeans; group Legumes",
+        "purposeOrPhase": "grain at maturity"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "soybean",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 15,
+          "development": 15,
+          "midSeason": 40,
+          "lateSeason": 15
+        },
+        "sourceReportedTotalDays": 85,
+        "phaseSumDays": 85,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Glycine max",
+        "cultivar": null,
+        "location": "Tropics",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season December",
+        "purposeOrPhase": "Soybeans"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "maize",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.3,
+          "max": 0.3
+        },
+        "midSeason": {
+          "min": 1.2,
+          "max": 1.2
+        },
+        "endSeason": {
+          "min": 0.35,
+          "max": 0.6
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Maize, Field (grain)",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        },
+        "endSeasonAlternatives": [
+          {
+            "purpose": "fresh grain",
+            "value": 0.6
+          },
+          {
+            "purpose": "fully dry grain",
+            "value": 0.35
+          }
+        ]
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Maize, Field (grain); group Cereals",
+        "purposeOrPhase": "Kc end differs for fully dry vs fresh grain harvest"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "maize",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 35,
+          "midSeason": 40,
+          "lateSeason": 30
+        },
+        "sourceReportedTotalDays": 125,
+        "phaseSumDays": 125,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Zea mays",
+        "cultivar": null,
+        "location": "Nigeria (humid)",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season June",
+        "purposeOrPhase": "Maize (grain)"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "sorghum",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.3,
+          "max": 0.3
+        },
+        "midSeason": {
+          "min": 1.0,
+          "max": 1.1
+        },
+        "endSeason": {
+          "min": 0.55,
+          "max": 0.55
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Sorghum — grain",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Sorghum — grain; group Cereals",
+        "purposeOrPhase": "grain sorghum; not sweet sorghum"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "sorghum",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 35,
+          "midSeason": 40,
+          "lateSeason": 30
+        },
+        "sourceReportedTotalDays": 130,
+        "phaseSumDays": 125,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Sorghum bicolor",
+        "cultivar": null,
+        "location": "USA / Pakistan / Mediterranean",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season May–June",
+        "purposeOrPhase": "Sorghum"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO table prints 130 total but row phase sum is 125; do not use total without reconciliation",
+        "ATENÇÃO: soma das fases difere do total impresso na fonte; não construir janelas automaticamente com este registro."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "sunflower",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.35,
+          "max": 0.35
+        },
+        "midSeason": {
+          "min": 1.0,
+          "max": 1.15
+        },
+        "endSeason": {
+          "min": 0.35,
+          "max": 0.35
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Sunflower",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Sunflower; group Oil Crops",
+        "purposeOrPhase": "mid-season range depends on planting density and drought management"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "sunflower",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 25,
+          "development": 35,
+          "midSeason": 45,
+          "lateSeason": 25
+        },
+        "sourceReportedTotalDays": 130,
+        "phaseSumDays": 130,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Helianthus annuus",
+        "cultivar": null,
+        "location": "Mediterranean / California",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season April–May",
+        "purposeOrPhase": "Sunflower"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "cowpea",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.4,
+          "max": 0.4
+        },
+        "midSeason": {
+          "min": 1.05,
+          "max": 1.05
+        },
+        "endSeason": {
+          "min": 0.35,
+          "max": 0.6
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Green Gram and Cowpeas",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        },
+        "endSeasonAlternatives": [
+          {
+            "purpose": "fresh cowpeas",
+            "value": 0.6
+          },
+          {
+            "purpose": "dry mature grain",
+            "value": 0.35
+          }
+        ]
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Green Gram and Cowpeas; group Legumes",
+        "purposeOrPhase": "Kc end 0.35 for dry, 0.60 for fresh"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "FAO genérico; os registros decendiais Embrapa variam com grupo varietal."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only",
+      "alternativeEvidence": {
+        "source": {
+          "title": "Listagem Perguntas e Respostas — Feijão-caupi",
+          "institution": "Embrapa Meio-Norte",
+          "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas?delta=200",
+          "locator": "Pergunta 25, Tabela 2: Kc decendial por grupo varietal",
+          "excerpt": null,
+          "accessedAt": "2026-11-18"
+        },
+        "cultivarGroup": "I (illustrative)",
+        "kcDecadal": [
+          0.5,
+          0.8,
+          0.9,
+          1.0,
+          1.2,
+          0.75,
+          0.65
+        ],
+        "cycleDays": 70,
+        "note": "Referência Embrapa associada a grupos varietais e decêndios; não usar como mesmo cronograma da FAO."
+      }
+    },
+    {
+      "cropId": "cowpea",
+      "field": "cycleStages",
+      "value": {
+        "stageDefinition": "Embrapa phases I germination/emergence; II development; III flowering/pod filling; IV physiological maturity/harvest",
+        "varietyGroups": [
+          {
+            "group": "I",
+            "stageLengthsDays": [
+              15,
+              25,
+              20,
+              10
+            ],
+            "totalDays": 70
+          },
+          {
+            "group": "II",
+            "stageLengthsDays": [
+              15,
+              25,
+              25,
+              15
+            ],
+            "totalDays": 80
+          },
+          {
+            "group": "III",
+            "stageLengthsDays": [
+              20,
+              30,
+              25,
+              15
+            ],
+            "totalDays": 90
+          }
+        ],
+        "startEvent": "unresolved_sowing_versus_emergence_in_source_sections",
+        "endEvent": "physiological_maturity_and_harvest"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_variety_group_reference",
+      "context": {
+        "species": "Vigna unguiculata",
+        "cultivar": null,
+        "location": "Brazil; Embrapa cowpea risk-zoning reference",
+        "productionSystem": "groups I, II, III",
+        "management": null,
+        "purposeOrPhase": "maturity groups, phases I-IV, grain cowpea"
+      },
+      "source": {
+        "title": "Listagem Perguntas e Respostas — Feijão-caupi",
+        "institution": "Embrapa Meio-Norte",
+        "url": "https://www.atermaisdigital.cnptia.embrapa.br/web/feijao-caupi/listagem-perguntas-e-respostas?delta=200",
+        "locator": "Pergunta 24, Tabela 1: fases de grupos I, II e III",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Os 70/80/90 dias estão associados a grupos de variedades; usuário precisa escolher o grupo.",
+        "Texto possui referência ao ciclo após emergência em outra seção; registrar o evento inicial no slot antes de agendar.",
+        "Tabela de fases e Kc decendiais pertencem a modelos distintos e não devem ser fundidos sem mapeamento."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "common_bean",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.4,
+          "max": 0.4
+        },
+        "midSeason": {
+          "min": 1.15,
+          "max": 1.15
+        },
+        "endSeason": {
+          "min": 0.35,
+          "max": 0.35
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Beans, dry and Pulses",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Beans, dry and Pulses; group Legumes",
+        "purposeOrPhase": "dry grain; not green pod harvest"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "common_bean",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 30,
+          "midSeason": 40,
+          "lateSeason": 20
+        },
+        "sourceReportedTotalDays": 110,
+        "phaseSumDays": 110,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Phaseolus vulgaris",
+        "cultivar": null,
+        "location": "Continental climate",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season May–June",
+        "purposeOrPhase": "Beans (dry)"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "kcByStage",
+      "value": null,
+      "unit": "dimensionless",
+      "evidenceType": "experimental_context_without_stage_values",
+      "context": {
+        "species": "Oryza sativa (upland system)",
+        "cultivar": null,
+        "location": "Selvíria, Mato Grosso do Sul, Brasil",
+        "productionSystem": "arroz de terras altas sob aspersão",
+        "management": null,
+        "purposeOrPhase": "Kc utilizado para irrigação em experimento, sem tabela numérica verificável"
+      },
+      "source": {
+        "title": "Manejo de irrigação por aspersão com base no Kc e adubação mineral na cultura de arroz de terras altas",
+        "institution": "Bragantia / UNESP",
+        "url": "https://www.scielo.br/j/brag/a/M7XSLbLYR8HTp6m67nRXPJP/?format=html",
+        "locator": "Study uses Kc for upland rice, but exact stage-by-stage coefficients not verifiable from accessible extract",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56 Table 12 Rice descreve arroz inundado (Kc ini 1.05) e não é transferível para arroz de terras altas.",
+        "Estudo brasileiro identificou uso de Kc no sistema de terras altas; faltam valores por fase confirmados na parte acessível."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "upland_rice",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "incompatible_paddy_rice_example",
+      "context": {
+        "species": "Oryza sativa (upland system)",
+        "cultivar": null,
+        "location": "Brazil upland rice; FAO-56 rice paddy separate",
+        "productionSystem": "upland rice rainfed or sprinkler irrigated",
+        "management": null,
+        "purposeOrPhase": "phase definition missing"
+      },
+      "source": {
+        "title": "Manejo de irrigação por aspersão com base no Kc e adubação mineral na cultura de arroz de terras altas",
+        "institution": "Bragantia / UNESP",
+        "url": "https://www.scielo.br/j/brag/a/M7XSLbLYR8HTp6m67nRXPJP/?format=html",
+        "locator": "Study uses Kc for upland rice, but exact stage-by-stage coefficients not verifiable from accessible extract",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56 Table 11 Rice and Table 12 initial Kc are for paddy/irrigated systems; upland rice not confirmed equivalent.",
+        "As informações não bastam para definir janelas por cultivar de arroz de terras altas."
+      ],
+      "conflicts": [],
+      "potentialSource": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "kcByStage",
+      "value": null,
+      "unit": "dimensionless",
+      "evidenceType": "species_not_confirmed_for_fao_row",
+      "context": {
+        "species": "Cenchrus americanus / Pennisetum glaucum",
+        "cultivar": null,
+        "location": "FAO-56 referência ampla; UF IFAS para espécie",
+        "productionSystem": "Pennisetum glaucum grão ou forragem",
+        "management": null,
+        "purposeOrPhase": "FAO-56 lista apenas Millet sem identidade de espécie"
+      },
+      "source": {
+        "title": "Pearl Millet (Pennisetum glaucum): Overview and Management",
+        "institution": "University of Florida IFAS",
+        "url": "https://ask.ifas.ufl.edu/publication/AG347",
+        "locator": "Species-specific guide; FAO-56 Table 12 lists generic Millet only",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "A linha Millet (Kc mid 1.00; end 0.30) da FAO-56 não identifica inequivocamente milheto pérola.",
+        "Não imputar valores da categoria Millet a Pennisetum glaucum sem confirmação taxonômica/uso."
+      ],
+      "conflicts": [],
+      "potentialSource": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      }
+    },
+    {
+      "cropId": "pearl_millet",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "ambiguous_species_millet",
+      "context": {
+        "species": "Cenchrus americanus / Pennisetum glaucum",
+        "cultivar": null,
+        "location": "FAO-56 generic millet row; IFAS pearl millet document",
+        "productionSystem": "milheto pérola grão ou forragem",
+        "management": null,
+        "purposeOrPhase": "FAO-56 durations refer to Millet unspecified species"
+      },
+      "source": {
+        "title": "Pearl Millet (Pennisetum glaucum): Overview and Management",
+        "institution": "University of Florida IFAS",
+        "url": "https://ask.ifas.ufl.edu/publication/AG347",
+        "locator": "Species-specific guide; FAO-56 Table 12 lists generic Millet only",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO generic Millet exemplifies 105/140 days, not confirmed for pearl millet cultivar and intended use.",
+        "Forage cutting time and grain maturity are different endpoints."
+      ],
+      "conflicts": [],
+      "potentialSource": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "kcByStage",
+      "value": null,
+      "unit": "dimensionless",
+      "evidenceType": "not_found_species_specific",
+      "context": {
+        "species": "Urochloa ruziziensis",
+        "cultivar": null,
+        "location": "Brasil; Embrapa BRS Integra",
+        "productionSystem": "forrageira/cobertura em rotação",
+        "management": null,
+        "purposeOrPhase": "Kc conforme corte/pastejo/dessecação não estabelecido"
+      },
+      "source": {
+        "title": "Cultivar de capim Brachiaria ruziziensis BRS Integra",
+        "institution": "Embrapa Gado de Leite",
+        "url": "https://www.embrapa.br/web/gado-de-leite/busca-de-noticias/-/noticia/69220474/cultivar-de-capim-brachiaria-ruziziensis-da-embrapa-tem-lancamento-online",
+        "locator": "Variety article; does not provide a species-specific Kc",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Embrapa confirma espécie/cultivar e uso; fonte consultada não fornece Kc numérico.",
+        "Não substituir por Kc genérico de pastagem ou capim sudão; sistema e corte alteram Kc."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "ruziziensis",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "management_defined_termination",
+      "context": {
+        "species": "Urochloa ruziziensis",
+        "cultivar": null,
+        "location": "Brazil BRS Integra / general Urochloa",
+        "productionSystem": "cover crop, pasture, intercropping",
+        "management": null,
+        "purposeOrPhase": "cutting or desiccation defined by farmer"
+      },
+      "source": {
+        "title": "Cultivar de capim Brachiaria ruziziensis BRS Integra",
+        "institution": "Embrapa Gado de Leite",
+        "url": "https://www.embrapa.br/web/gado-de-leite/busca-de-noticias/-/noticia/69220474/cultivar-de-capim-brachiaria-ruziziensis-da-embrapa-tem-lancamento-online",
+        "locator": "Variety article; does not provide a species-specific Kc",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Florescimento não implica corte/dessecação e não determina liberação do talhão.",
+        "Exigir data de manejo de término e eventual intervalo operacional."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": null,
+        "verification": "no_fixed_terminal_cycle",
+        "sourceUrl": "https://rbms.sede.embrapa.br/index.php/ojs/article/view/918",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "experimental_three_growth_phases_until_flowering",
+        "salinityVariants": [
+          {
+            "soilElectricalConductivity_dSm": 0.6,
+            "stageKc": [
+              0.34,
+              0.89,
+              1.41
+            ]
+          },
+          {
+            "soilElectricalConductivity_dSm": 5.0,
+            "stageKc": [
+              0.29,
+              0.8,
+              1.31
+            ]
+          }
+        ],
+        "stageLabels": [
+          "growth_phase_1",
+          "growth_phase_2",
+          "growth_phase_3_to_flowering"
+        ]
+      },
+      "unit": "dimensionless",
+      "evidenceType": "experimental_field_lysimeter",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": "Crotalaria juncea",
+        "location": "Mossoró, Rio Grande do Norte",
+        "productionSystem": "experimental field after irrigated cucurbits",
+        "management": "residual salinity treatments: 0.6 / 5.0 dS/m",
+        "purposeOrPhase": "56 days through flowering, not harvest"
+      },
+      "source": {
+        "title": "Necessidade hídrica da Crotalaria juncea L. em resposta à salinidade residual do solo",
+        "institution": "Revista IRRIGA / UFERSA",
+        "url": "https://revistas.fca.unesp.br/index.php/irriga/article/view/1715",
+        "locator": "Resumo: Kc em três fases até florescimento, Mossoró, RN",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "As três fases estão associadas a estudo local com salinidade residual do solo.",
+        "56 dias de observação até florescimento não equivale a final de cobertura/derrubada nem a quatro estágios FAO.",
+        "Não interpolar uma quarta fase nem atribuir Kc para dessecação."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "sunn_hemp",
+      "field": "cycleStages",
+      "value": {
+        "observationWindowDays": 56,
+        "endEvent": "flowering",
+        "completeCycleDays": null,
+        "stageLengthsDays": null
+      },
+      "unit": "days",
+      "evidenceType": "experimental_partial_window",
+      "context": {
+        "species": "Crotalaria juncea",
+        "cultivar": null,
+        "location": "Mossoró, RN",
+        "productionSystem": "Crotalaria juncea with residual soil salinity",
+        "management": null,
+        "purposeOrPhase": "56-day observation only, not termination"
+      },
+      "source": {
+        "title": "Necessidade hídrica da Crotalaria juncea L. em resposta à salinidade residual do solo",
+        "institution": "Revista IRRIGA / UFERSA",
+        "url": "https://revistas.fca.unesp.br/index.php/irriga/article/view/1715",
+        "locator": "Resumo: Kc em três fases até florescimento, Mossoró, RN",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "O estudo mensurou até o florescimento, não até dessecação, corte, produção de sementes ou liberação do talhão."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "cotton",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.35,
+          "max": 0.35
+        },
+        "midSeason": {
+          "min": 1.15,
+          "max": 1.2
+        },
+        "endSeason": {
+          "min": 0.5,
+          "max": 0.7
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Cotton",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Cotton; group Fibre Crops",
+        "purposeOrPhase": "harvest and late irrigation practices alter Kc end"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "cotton",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 30,
+          "development": 50,
+          "midSeason": 60,
+          "lateSeason": 55
+        },
+        "sourceReportedTotalDays": 195,
+        "phaseSumDays": 195,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Gossypium hirsutum",
+        "cultivar": null,
+        "location": "Egypt / Pakistan / California",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season March–May",
+        "purposeOrPhase": "Cotton"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "kcByStage",
+      "value": null,
+      "unit": "dimensionless",
+      "evidenceType": "experimental_qualitative_only",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": null,
+        "location": "Akola, Maharashtra, India",
+        "productionSystem": "kharif crop; lysimeters; 2024",
+        "management": null,
+        "purposeOrPhase": "Kc rose and peaked mid-season; numeric stage values not available in inspected abstract"
+      },
+      "source": {
+        "title": "Relationship between Leaf Area Index and Lysimetric Crop Coefficients of Pigeonpea",
+        "institution": "Asian Research Journal of Agriculture / PDKV",
+        "url": "https://www.journalarja.com/index.php/ARJA/article/view/695",
+        "locator": "Abstract: experiment in Akola, Maharashtra, 2024; values absent in abstract",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "O resumo confirma determinação experimental de Kc, mas não informa coeficientes numéricos confiáveis.",
+        "Não inferir valores da família Fabaceae ou de feijões; objetivo de guandu (grão/forragem/cobertura) altera manejo."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "pigeon_pea",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "experimental_context_without_duration",
+      "context": {
+        "species": "Cajanus cajan",
+        "cultivar": null,
+        "location": "Akola, Maharashtra, India",
+        "productionSystem": "pigeonpea for grain",
+        "management": null,
+        "purposeOrPhase": "phases measured but lengths not in abstract"
+      },
+      "source": {
+        "title": "Relationship between Leaf Area Index and Lysimetric Crop Coefficients of Pigeonpea",
+        "institution": "Asian Research Journal of Agriculture / PDKV",
+        "url": "https://www.journalarja.com/index.php/ARJA/article/view/695",
+        "locator": "Abstract: experiment in Akola, Maharashtra, 2024; values absent in abstract",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Não transferir ciclo de guandu para todas as cultivares/uso de cobertura.",
+        "Não há duração por fase confirmada na parte disponível da fonte."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false
+    },
+    {
+      "cropId": "cassava",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.3,
+          "max": 0.3
+        },
+        "midSeason": {
+          "min": 0.8,
+          "max": 0.8
+        },
+        "endSeason": {
+          "min": 0.3,
+          "max": 0.3
+        },
+        "initialIsGroupReference": false,
+        "sourceRow": "Cassava — year 1",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        },
+        "managementVariants": [
+          {
+            "year": "first",
+            "initial": 0.3,
+            "midSeason": 0.8,
+            "endSeason": 0.3
+          },
+          {
+            "year": "second",
+            "initial": 0.3,
+            "midSeason": 1.1,
+            "endSeason": 0.5
+          }
+        ]
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Cassava — year 1; group Roots and Tubers",
+        "purposeOrPhase": "FAO year-1 crop model only"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "cassava",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 40,
+          "midSeason": 90,
+          "lateSeason": 60
+        },
+        "sourceReportedTotalDays": 210,
+        "phaseSumDays": 210,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Manihot esculenta",
+        "cultivar": null,
+        "location": "Tropical regions",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season rainy season",
+        "purposeOrPhase": "Cassava year 1"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO year-1 model duration, not harvest to end-of-cycle; do not displace dataset 2.2",
+        "Ano 1 do modelo FAO não corresponde ao ciclo de colheita comercial da mandioca."
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 240,
+          "max": 360
+        },
+        "verification": "estimated_calendar_conversion",
+        "sourceUrl": "https://www.atermaisdigital.cnptia.embrapa.br/web/mandioca/cultivares",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.5,
+          "max": 0.5
+        },
+        "midSeason": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "endSeason": {
+          "min": 0.8,
+          "max": 0.8
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Pumpkin, Winter Squash",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Cucurbita moschata / Cucurbita spp.",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Pumpkin, Winter Squash; group Cucurbitaceae",
+        "purposeOrPhase": "winter squash / pumpkin, species not distinguished"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Linha FAO inclui pumpkin/winter squash, não identifica a espécie da cultivar brasileira estudada."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "pumpkin",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 25,
+          "development": 35,
+          "midSeason": 35,
+          "lateSeason": 25
+        },
+        "sourceReportedTotalDays": 120,
+        "phaseSumDays": 120,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Cucurbita moschata / Cucurbita spp.",
+        "cultivar": null,
+        "location": "Europe",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season June",
+        "purposeOrPhase": "Pumpkin, winter squash"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO species category may not match Jacarezinho variety in dataset 2.2"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 120,
+          "max": 130
+        },
+        "verification": "verified_specific_cultivar",
+        "sourceUrl": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/997862/1/Barbara2014.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.5,
+          "max": 0.5
+        },
+        "midSeason": {
+          "min": 1.15,
+          "max": 1.15
+        },
+        "endSeason": {
+          "min": 0.65,
+          "max": 0.65
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Sweet Potato",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Sweet Potato; group Roots and Tubers",
+        "purposeOrPhase": "roots harvest"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "sweet_potato",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 15,
+          "development": 30,
+          "midSeason": 50,
+          "lateSeason": 30
+        },
+        "sourceReportedTotalDays": 125,
+        "phaseSumDays": 125,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Ipomoea batatas",
+        "cultivar": null,
+        "location": "Tropical regions",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season rainy season",
+        "purposeOrPhase": "Sweet potato"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 90,
+          "max": 150
+        },
+        "verification": "verified_contextual",
+        "sourceUrl": "https://www.atermaisdigital.cnptia.embrapa.br/web/batata-doce/ecofisiologia-e-exigencias-climaticas",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "peanut",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.4,
+          "max": 0.4
+        },
+        "midSeason": {
+          "min": 1.15,
+          "max": 1.15
+        },
+        "endSeason": {
+          "min": 0.6,
+          "max": 0.6
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Groundnut (Peanut)",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Groundnut (Peanut); group Legumes",
+        "purposeOrPhase": "mature groundnut"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Faixas FAO internacionais não são ciclo da cultivar BR1 do dataset 2.2."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "peanut",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 25,
+          "development": 35,
+          "midSeason": 45,
+          "lateSeason": 25
+        },
+        "sourceReportedTotalDays": 130,
+        "phaseSumDays": 130,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Arachis hypogaea",
+        "cultivar": null,
+        "location": "West Africa",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season dry season",
+        "purposeOrPhase": "Groundnut"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO illustrative 130d does not supersede cultivar BR1 90d after emergence"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 90,
+          "max": 90
+        },
+        "verification": "verified_specific_cultivar",
+        "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1027494/1/FolderAmendoimBR1Curvas.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "watermelon",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.4,
+          "max": 0.4
+        },
+        "midSeason": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "endSeason": {
+          "min": 0.75,
+          "max": 0.75
+        },
+        "initialIsGroupReference": false,
+        "sourceRow": "Watermelon",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Watermelon; group Cucurbitaceae",
+        "purposeOrPhase": "commercial fruits"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "watermelon",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 30,
+          "midSeason": 30,
+          "lateSeason": 30
+        },
+        "sourceReportedTotalDays": 110,
+        "phaseSumDays": 110,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Citrullus lanatus",
+        "cultivar": null,
+        "location": "Italy",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season April",
+        "purposeOrPhase": "Water melons"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc."
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 95,
+          "max": 110
+        },
+        "verification": "verified_contextual",
+        "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1026847/1/A-CULTURA-DA-MELANCIA.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "lettuce",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.7,
+          "max": 0.7
+        },
+        "midSeason": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "endSeason": {
+          "min": 0.95,
+          "max": 0.95
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Lettuce",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Lactuca sativa",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Lettuce; group Small Vegetables",
+        "purposeOrPhase": "single harvest; group initial Kc indicative"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "lettuce",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 30,
+          "midSeason": 15,
+          "lateSeason": 10
+        },
+        "sourceReportedTotalDays": 75,
+        "phaseSumDays": 75,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Lactuca sativa",
+        "cultivar": null,
+        "location": "Mediterranean",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season April",
+        "purposeOrPhase": "Lettuce"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "75d example differs from Brazilian summer lettuce first harvest 50-70d"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 50,
+          "max": 70
+        },
+        "verification": "verified_only_if_whole_plant_harvest",
+        "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/887213/1/Catalogohortalicas.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "tomato",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.6,
+          "max": 0.6
+        },
+        "midSeason": {
+          "min": 1.15,
+          "max": 1.15
+        },
+        "endSeason": {
+          "min": 0.7,
+          "max": 0.9
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Tomato",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Solanum lycopersicum",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Tomato; group Solanaceae",
+        "purposeOrPhase": "fresh-market fruit; staked tomatoes can have larger Kc mid"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Colheitas sucessivas, tutoramento e manejo alteram Kc e a duração efetiva."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "tomato",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 30,
+          "development": 40,
+          "midSeason": 40,
+          "lateSeason": 25
+        },
+        "sourceReportedTotalDays": 135,
+        "phaseSumDays": 135,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Solanum lycopersicum",
+        "cultivar": null,
+        "location": "Arid region",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season January",
+        "purposeOrPhase": "Tomato"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "135d example differs from contextual 95-125d transplant reference in dataset 2.2"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 95,
+          "max": 125
+        },
+        "verification": "verified_contextual",
+        "sourceUrl": "https://www.scielo.br/j/hb/a/scGWDzR4NyHvS7fQZhm57rq/?lang=pt",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "carrot",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.7,
+          "max": 0.7
+        },
+        "midSeason": {
+          "min": 1.05,
+          "max": 1.05
+        },
+        "endSeason": {
+          "min": 0.95,
+          "max": 0.95
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Carrots",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Daucus carota subsp. sativus",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Carrots; group Small Vegetables",
+        "purposeOrPhase": "root harvest"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "carrot",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 20,
+          "development": 30,
+          "midSeason": 30,
+          "lateSeason": 20
+        },
+        "sourceReportedTotalDays": 100,
+        "phaseSumDays": 100,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Daucus carota subsp. sativus",
+        "cultivar": null,
+        "location": "Arid climate",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season Oct/Jan",
+        "purposeOrPhase": "Carrots"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO printed 50/30 for mid; 30 applies to 100-day example"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 80,
+          "max": 120
+        },
+        "verification": "verified_contextual",
+        "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/101146/1/Aculturadacenoura.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "kale",
+      "field": "kcByStage",
+      "value": null,
+      "unit": "dimensionless",
+      "evidenceType": "similar_species_only",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": "FAO-56 referência geral",
+        "productionSystem": "couve-folha com retiradas sucessivas",
+        "management": null,
+        "purposeOrPhase": "FAO-56 Table 12 contains Cabbage, not collard greens"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Kc do repolho da FAO (Brassica oleracea var. capitata) não é espécie/variedade e manejo idêntico à couve-folha.",
+        "Sem Kc numérico específico verificável no texto primário adotado; não generalizar.",
+        "Colheitas sucessivas não definem ciclo terminal."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "kale",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "multiple_harvest_crop_without_terminal_phenology",
+      "context": {
+        "species": "Brassica oleracea var. acephala",
+        "cultivar": null,
+        "location": "Brazil / São Paulo contextual crop cycle",
+        "productionSystem": "collard greens with leaf harvest",
+        "management": null,
+        "purposeOrPhase": "first leaf harvest is not field release"
+      },
+      "source": {
+        "title": "Boletim Técnico 251 — Hortaliças, calagem e adubação em São Paulo",
+        "institution": "CATI/IAC",
+        "url": "https://storage.googleapis.com/saa-repositorio/prd/saa-sites/cati/documentos/Boletim-Tecnico-251-Hortalicas-recomendacoes-de-calagem-e-adubacao-para-o-estado-de-Sao-Paulo.pdf",
+        "locator": "Couve de folha, ciclo de 8–12 meses",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Duração de ocupação depende da renovação/manejo e colheita contínua.",
+        "Dataset 2.2 inclui estimativa de conversão 8–12 meses; não informa fases fenológicas detalhadas."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 240,
+          "max": 365
+        },
+        "verification": "estimated_calendar_conversion",
+        "sourceUrl": "https://storage.googleapis.com/saa-repositorio/prd/saa-sites/cati/documentos/Boletim-Tecnico-251-Hortalicas-recomendacoes-de-calagem-e-adubacao-para-o-estado-de-Sao-Paulo.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "onion",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.7,
+          "max": 0.7
+        },
+        "midSeason": {
+          "min": 1.05,
+          "max": 1.05
+        },
+        "endSeason": {
+          "min": 0.75,
+          "max": 0.75
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Onions — dry",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Onions — dry; group Small Vegetables",
+        "purposeOrPhase": "bulb onions cured/harvested dry"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Kc de cebola seca; não aplicar automaticamente à cebola verde ou produção de sementes."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "onion",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 15,
+          "development": 25,
+          "midSeason": 70,
+          "lateSeason": 40
+        },
+        "sourceReportedTotalDays": 150,
+        "phaseSumDays": 150,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Allium cepa",
+        "cultivar": null,
+        "location": "Mediterranean",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season April",
+        "purposeOrPhase": "Onion (dry)"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO 150d example not equal to Brazilian 120d after transplant"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 120,
+          "max": 120
+        },
+        "verification": "verified_single_study",
+        "sourceUrl": "https://www.scielo.br/j/hb/a/WqKQ7FJzzWtRLztgdMYH7Xq/?lang=pt",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.6,
+          "max": 0.6
+        },
+        "midSeason": {
+          "min": 1.05,
+          "max": 1.05
+        },
+        "endSeason": {
+          "min": 0.9,
+          "max": 0.9
+        },
+        "initialIsGroupReference": true,
+        "sourceRow": "Sweet Peppers (bell)",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Sweet Peppers (bell); group Solanaceae",
+        "purposeOrPhase": "multiple harvests, Kc end does not mark field release"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Colheitas sucessivas, tutoramento e manejo alteram Kc e a duração efetiva."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "bell_pepper",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 30,
+          "development": 35,
+          "midSeason": 40,
+          "lateSeason": 20
+        },
+        "sourceReportedTotalDays": 125,
+        "phaseSumDays": 125,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "end_of_example_growth_period_not_field_release"
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Capsicum annuum",
+        "cultivar": null,
+        "location": "Europe and Mediterranean",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season June",
+        "purposeOrPhase": "Sweet peppers (bell)"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "FAO first stage shown as 25/30; selected 30d 125 total"
+      ],
+      "conflicts": [
+        {
+          "description": "Illustrative FAO/other four-stage total may differ from dataset 2.2 by cultivar, region, timing or harvest endpoint.",
+          "comparison": "Do not overwrite cycleDaysRange; verify context before slot planning."
+        }
+      ],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 150,
+          "max": 180
+        },
+        "verification": "verified_contextual",
+        "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/1172738/1/LV-CNPH-42198.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "okra",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "experimental_four_stage_mean_Kc",
+        "initial": {
+          "min": 0.64,
+          "max": 0.64
+        },
+        "development": {
+          "min": 1.07,
+          "max": 1.07
+        },
+        "midSeason": {
+          "min": 1.33,
+          "max": 1.33
+        },
+        "endSeason": {
+          "min": 0.86,
+          "max": 0.86
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "experimental_field_lysimeter",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": "Abelmoschus esculentus",
+        "location": "Parbhani, Maharashtra, India",
+        "productionSystem": "summer field 2022; semi-arid climate",
+        "management": null,
+        "purposeOrPhase": "seedling, development, peak pods, maturity; stage timing not given"
+      },
+      "source": {
+        "title": "Determination of Crop Coefficient of Okra Crop Using Lysimeter for Semi-arid Climatic Condition of Parbhani, Maharashtra",
+        "institution": "Journal of Agricultural Engineering / VNMKV",
+        "url": "https://pub.isae.in/index.php/jae/article/view/3193",
+        "locator": "Abstract: four stage mean Kc, 2022",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Quatro coeficientes são médias experimentais e não referenciais validados para cultivares brasileiras.",
+        "Colheita sucessiva: Kc de fase final não libera talhão; duração dos estágios não consta do resumo."
+      ],
+      "conflicts": [
+        {
+          "description": "Estudo de 2025 com quiabo Arka Nikita sob estufa e 80% ETc relata Kc 0.32/0.63/0.78/0.41; contexto não equivalente.",
+          "sourceUrl": "https://agriculturejournals.cz/artkey/rae-202504-0001_optimisation-of-the-irrigation-requirement-of-okra_under_protected_cultivation_using_a_digital_lysimeter.php"
+        }
+      ]
+    },
+    {
+      "cropId": "okra",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "experiment_without_phase_durations",
+      "context": {
+        "species": "Abelmoschus esculentus",
+        "cultivar": null,
+        "location": "Parbhani, Maharashtra, India",
+        "productionSystem": "okra field 2022; harvests may be successive",
+        "management": null,
+        "purposeOrPhase": "four phases used, durations not in accessible abstract"
+      },
+      "source": {
+        "title": "Determination of Crop Coefficient of Okra Crop Using Lysimeter for Semi-arid Climatic Condition of Parbhani, Maharashtra",
+        "institution": "Journal of Agricultural Engineering / VNMKV",
+        "url": "https://pub.isae.in/index.php/jae/article/view/3193",
+        "locator": "Abstract: four stage mean Kc, 2022",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "insufficient_source",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "A publicação fornece Kc por fase, não fornece duração de cada fase no resumo.",
+        "O valor de 150–180 dias do dataset 2.2 é estimativa, não validado pelo estudo Kc."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": {
+          "min": 150,
+          "max": 180
+        },
+        "verification": "estimated_from_harvest_window",
+        "sourceUrl": "https://riut.utfpr.edu.br/jspui/bitstream/1/10750/1/DV_COAGR_2017_1_14.pdf",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "coffee",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 0.9,
+          "max": 0.9
+        },
+        "midSeason": {
+          "min": 0.95,
+          "max": 0.95
+        },
+        "endSeason": {
+          "min": 0.95,
+          "max": 0.95
+        },
+        "initialIsGroupReference": false,
+        "sourceRow": "Coffee — bare ground cover",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        },
+        "managementVariants": [
+          {
+            "management": "bare ground cover",
+            "initial": 0.9,
+            "midSeason": 0.95,
+            "endSeason": 0.95
+          },
+          {
+            "management": "with weeds",
+            "initial": 1.05,
+            "midSeason": 1.1,
+            "endSeason": 1.1
+          }
+        ]
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Coffea spp.",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Coffee — bare ground cover; group Tropical Fruits and Trees",
+        "purposeOrPhase": "coffee with bare ground; canopy mature"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Cultura perene: os estágios de Kc não representam fim de plantio nem liberam terreno."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only",
+      "alternativeEvidence": {
+        "source": {
+          "title": "Estimativa do coeficiente de cultura do cafeeiro em função de variáveis climatológicas e fitotécnicas",
+          "institution": "Bragantia / ESALQ",
+          "url": "https://www.scielo.br/j/brag/a/Hx4gHnGNgYkd4QhRzsdJbXf/?format=html",
+          "locator": "Study: measured/estimated coffee Kc varies with canopy and ground management",
+          "excerpt": null,
+          "accessedAt": "2026-11-18"
+        },
+        "description": "Kc do cafeeiro varia com área foliar, plantas espontâneas e manejo de solo; não representa um único cultivar."
+      }
+    },
+    {
+      "cropId": "coffee",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "perennial_no_terminal_cycle",
+      "context": {
+        "species": "Coffea spp.",
+        "cultivar": null,
+        "location": "FAO international reference",
+        "productionSystem": "perennial established crop",
+        "management": null,
+        "purposeOrPhase": "continuous production, no automatic termination"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "not_applicable",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO Table 12 Kc por fase não cria fim de ocupação do terreno.",
+        "Registrar marcos de produção específicos e renovação explícita; manter ocupação de todo horizonte."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": null,
+        "verification": "perennial_no_automatic_release",
+        "sourceUrl": "https://www.alice.cnptia.embrapa.br/handle/doc/507698?locale=pt_BR",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "banana",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_perennial_year_stages",
+        "variants": [
+          {
+            "year": "first",
+            "initial": 0.5,
+            "midSeason": 1.1,
+            "endSeason": 1.0
+          },
+          {
+            "year": "second",
+            "initial": 1.0,
+            "midSeason": 1.2,
+            "endSeason": 1.1
+          }
+        ]
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Musa spp.",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "banana perennial, managed, no water stress",
+        "management": null,
+        "purposeOrPhase": "plantation first/second year"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Não assumir a mesma cultivar ou clima brasileiro; ano 1 e ano 2 não significam liberação do terreno."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "banana",
+      "field": "cycleStages",
+      "value": {
+        "stageLengthsDays": {
+          "initial": 120,
+          "development": 90,
+          "midSeason": 120,
+          "lateSeason": 60
+        },
+        "sourceReportedTotalDays": 390,
+        "phaseSumDays": 390,
+        "stageDefinition": "FAO-56 Table 11 example (not local cultivar)",
+        "startEvent": "sowing_or_transplanting_not_resolved",
+        "endEvent": "FAO banana-year model end, NOT termination of plantation",
+        "perennialOccupancyContinues": true,
+        "alternativeSecondYear": {
+          "initial": 120,
+          "development": 60,
+          "midSeason": 180,
+          "lateSeason": 5,
+          "totalDays": 365
+        }
+      },
+      "unit": "days",
+      "evidenceType": "institutional_example_by_region",
+      "context": {
+        "species": "Musa spp.",
+        "cultivar": null,
+        "location": "Mediterranean",
+        "productionSystem": "FAO example (climate-specific)",
+        "management": "Plant season March",
+        "purposeOrPhase": "Banana, 1st year"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 11 — Lengths of crop development stages",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO-56, Tabela 11: duração ilustrativa vinculada à região e época citadas, não previsão de duração para Brasil.",
+        "Marco inicial de semeadura versus transplante precisa ser confirmado antes de agendar slots.",
+        "Não sobrescrever cycleDaysRange do dataset 2.2 nem liberar o talhão com base em primeira colheita ou fases de Kc.",
+        "390d is management/phenology model, not banana planting lifetime",
+        "Ano 1 não determina a primeira colheita e ano 2 não significa o fim do bananal."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": null,
+        "verification": "perennial_no_automatic_release",
+        "sourceUrl": "https://www.embrapa.br/web/agencia-de-informacao-tecnologica/cultivos/banana/producao/tratos-culturais/colheita",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "cacao",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "FAO56_single_Kc",
+        "initial": {
+          "min": 1.0,
+          "max": 1.0
+        },
+        "midSeason": {
+          "min": 1.05,
+          "max": 1.05
+        },
+        "endSeason": {
+          "min": 1.05,
+          "max": 1.05
+        },
+        "initialIsGroupReference": false,
+        "sourceRow": "Cacao",
+        "referenceConditions": {
+          "climate": "subhumid",
+          "minimumRelativeHumidityPct": 45,
+          "windAt2mMps": 2,
+          "waterStress": false
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "institutional_standard_reference",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": "FAO-56: international reference",
+        "productionSystem": "well-managed; non-water-stressed (standard Kc)",
+        "management": "FAO row Cacao; group Tropical Fruits and Trees",
+        "purposeOrPhase": "perennial standing crop; no terminal cycle"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Valores de Kc da FAO-56 são referências sob boas condições de manejo, sem estresse hídrico, clima subúmido (URmin aproximadamente 45%; vento a 2 m/s).",
+        "Kc inicial varia fortemente com chuva, irrigação, fração de solo molhada e cobertura; valores gerais são preliminares.",
+        "Não calcular ETc, consumo hídrico ou irrigação, nem atribuir adequação agrícola automática.",
+        "Cultura perene: os estágios de Kc não representam fim de plantio nem liberam terreno."
+      ],
+      "conflicts": [],
+      "applicability": "international_reference_only"
+    },
+    {
+      "cropId": "cacao",
+      "field": "cycleStages",
+      "value": null,
+      "unit": "days",
+      "evidenceType": "perennial_no_terminal_cycle",
+      "context": {
+        "species": "Theobroma cacao",
+        "cultivar": null,
+        "location": "FAO international reference",
+        "productionSystem": "perennial established crop",
+        "management": null,
+        "purposeOrPhase": "continuous production, no automatic termination"
+      },
+      "source": {
+        "title": "Crop evapotranspiration — FAO Irrigation and Drainage Paper 56 (Allen et al., 1998)",
+        "institution": "FAO",
+        "url": "https://www.fao.org/4/X0490E/x0490e0b.htm",
+        "locator": "Chapter 6, Table 12 — Single (time-averaged) crop coefficients",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "not_applicable",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "FAO Table 12 Kc por fase não cria fim de ocupação do terreno.",
+        "Registrar marcos de produção específicos e renovação explícita; manter ocupação de todo horizonte."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": null,
+        "verification": "perennial_no_automatic_release",
+        "sourceUrl": "https://www.gov.br/agricultura/pt-br/assuntos/noticias/2025/amelonado-e-o-principal-tipo-de-cacau-produzido-no-brasil",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    },
+    {
+      "cropId": "acai",
+      "field": "kcByStage",
+      "value": {
+        "scheme": "MAPA_ZARC_decadal_Kc",
+        "establishment": {
+          "phaseDurationsDays": [
+            30,
+            60,
+            60,
+            60
+          ],
+          "kcDecadal": [
+            0.53,
+            0.55,
+            0.57,
+            0.59,
+            0.62,
+            0.66,
+            0.71,
+            0.76,
+            0.81,
+            0.86,
+            0.9,
+            0.93,
+            0.95,
+            0.97,
+            0.99,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "productive": {
+          "phaseDurationsDays": [
+            60,
+            30,
+            80,
+            50
+          ],
+          "kcDecadal": [
+            0.96,
+            0.96,
+            0.96,
+            0.96,
+            1,
+            1,
+            1.05,
+            1.05,
+            1.05,
+            1.1,
+            1.14,
+            1.14,
+            1.14,
+            1.14,
+            1.14,
+            1.14,
+            1.14,
+            1.1,
+            1.05,
+            1.04,
+            1.04,
+            1.04
+          ]
+        }
+      },
+      "unit": "dimensionless",
+      "evidenceType": "government_zarc_model_reference",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": "Euterpe oleracea",
+        "location": "Brasil; portaria SPA/MAPA 5/2024",
+        "productionSystem": "açaí cultivado irrigado / parâmetros técnicos ZARC",
+        "management": "Coefs decendiais de modelo ZARC irrigado, não Kc médio universal",
+        "purposeOrPhase": "establishment versus productive cycle"
+      },
+      "source": {
+        "title": "Portaria SPA/MAPA nº 5, de 20 de fevereiro de 2024 — ZARC açaí",
+        "institution": "MAPA — publicação oficial",
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/distrito-federal/PORTN5AAIRRIGADOVRIASUFs.pdf",
+        "locator": "Anexo técnico: III (coeficientes Kc decendiais) e V (duração das fases)",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Os 210 dias de implantação e 220 dias do ciclo produtivo são JANELAS FENOLÓGICAS do modelo ZARC, não duração de vida da palmeira.",
+        "A fonte oficial MAPA limita este modelo a cultivo irrigado; não aplicar ao sistema de sequeiro.",
+        "O Kc do modelo ZARC não deve ser usado como cálculo novo de irrigação no Plantaê."
+      ],
+      "conflicts": []
+    },
+    {
+      "cropId": "acai",
+      "field": "cycleStages",
+      "value": {
+        "establishment": {
+          "stageLengthsDays": [
+            30,
+            60,
+            60,
+            60
+          ],
+          "modelWindowDays": 210
+        },
+        "productive": {
+          "stageLengthsDays": [
+            60,
+            30,
+            80,
+            50
+          ],
+          "modelWindowDays": 220
+        },
+        "startEvent": "establishment=seedling_planting; production=flowering_as_first_decad_in_ZARC (source also labels phase I pre-flowering)",
+        "endEvent": "model_phase_end_only",
+        "perennialOccupancyContinues": true
+      },
+      "unit": "days",
+      "evidenceType": "government_zarc_model_reference",
+      "context": {
+        "species": "Euterpe oleracea",
+        "cultivar": null,
+        "location": "Brazil; MAPA ZARC reference",
+        "productionSystem": "irrigated cultivated açaí plantation",
+        "management": null,
+        "purposeOrPhase": "distinct establishment and productive phases"
+      },
+      "source": {
+        "title": "Portaria SPA/MAPA nº 5, de 20 de fevereiro de 2024 — ZARC açaí",
+        "institution": "MAPA — publicação oficial",
+        "url": "https://www.gov.br/agricultura/pt-br/assuntos/riscos-seguro/programa-nacional-de-zoneamento-agricola-de-risco-climatico/portarias/safra-vigente/distrito-federal/PORTN5AAIRRIGADOVRIASUFs.pdf",
+        "locator": "Anexo técnico: III (coeficientes Kc decendiais) e V (duração das fases)",
+        "excerpt": null,
+        "accessedAt": "2026-11-18"
+      },
+      "status": "source_found",
+      "reviewStatus": "pending",
+      "readyForAutomaticDecision": false,
+      "limitations": [
+        "Janelas de modelagem ZARC NÃO são anos até a primeira produção ou colheita que desocupa terreno. Há diferença textual entre marco de entrada (florescimento) e nome da fase I (pré-florescimento).",
+        "Não converter o ciclo produtivo de 220 dias em ciclo anual universal.",
+        "Confirmar grupo de cultivo, vigência e finalidade em novas versões do ZARC antes de uso operacional."
+      ],
+      "conflicts": [],
+      "usableForAutomaticSlotCalendar": false,
+      "previousDataset2_2": {
+        "field": "cycleDaysRange",
+        "value": null,
+        "verification": "perennial_no_automatic_release",
+        "sourceUrl": "https://www.infoteca.cnptia.embrapa.br/infoteca/handle/doc/409681",
+        "note": "Independent evidence; not overwritten or automatically reconciled with FAO-56 stage examples."
+      }
+    }
+  ]
+}
