@@ -60,7 +60,7 @@ Quando as sequências foram ligadas ao motor, a página de resultados passou a c
 3. `feat(engine)`: prioridades, indicadores por sequência, solo regional (1.1, 1.3, 1.5)
 4. `feat(home)`: demo do Cerrado, CTA da demo, texto da metodologia (1.2, 1.4, 1.7)
 5. `feat(explore)`: HUD de clima no mapa, perímetro com tempo, chat do João (1.7)
-6. `docs`: sprint F14 no `SPRINT_LOG.md`
+6. `docs`: sprint F14 no `PLANEJAMENTO.md`
 7. `feat(explore)`: mapa ligado ao chat do João + este relatório
 
 ## 5. Pendências

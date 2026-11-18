@@ -1,3 +1,392 @@
+# Planejamento central do Plantaê
+
+Este é o documento central de planejamento, contrato do produto e histórico de execução. Atualize-o ao concluir cada sprint. As regras atuais de `AGENTS.md` e decisões mais recentes prevalecem sobre textos históricos. Datas e estados nos registros abaixo descrevem o momento em que foram escritos.
+
+## Situação atual e próximo trabalho
+
+- F30: confirmação de contexto e janelas exploratórias implementadas; falta validação completa dos critérios para consórcios, perenes e fluxo visual.
+- F31: lote 1 de FBN e palhada integrado como pesquisa pendente de revisão; 24 valores com fonte, 32 sem valor e 23 divergências de tipo no arquivo. Lote 2 integrado com 56 referências de temperatura e pH e lote 3 integrado com 28 descrições de raízes e lote 4 integrado com 56 registros de Kc e fases; revisão agronômica independente pendente.
+- Fontes dos lotes 1, 2, 3 e 4: usuário informou conferência no ChatGPT web; essa informação não equivale a revisão agronômica independente nem altera o estado original dos registros.
+- F32–F35: seguir o plano de N/D abaixo, um sprint por vez.
+- A versão de ciclos 2.2 é exploratória, depende de confirmação por slot e não autoriza usar estimativas para recomendações ou ZARC.
+- Última verificação registrada: lint, typecheck, build e 533 testes passaram em 2026-11-18; sem validação visual em navegador para a confirmação de contexto.
+
+## Plano para eliminar N/D — F29 a F35
+
+# Plano para eliminar N/D evitável
+
+Data: 2026-11-17. Este documento planeja **preencher dados reais e verificáveis**, não apenas trocar rótulos. Meta operacional: zero N/D sem causa; zero N/D corrigível nos casos suportados. Um N/D sem fonte aplicável, sem entrada opcional do produtor ou sem registro oficial continua desconhecido — nunca vira zero, “inapto” ou valor estimado sem proveniência.
+
+## Linha de base e medição
+
+- Catálogo: 28 culturas × 8 campos centrais (`cycleDaysRange`, `idealTempC`, `viableTempC`, `soilPhRange`, `kcStages`, `residuePotential`, `nitrogenFixationPotential`, `rootingClass`) = 224 combinações. Nos arquivos atuais, 63 combinações têm pelo menos um registro verificado, não nulo e ativo: respectivamente 11, 6, 12, 12, 9, 8, 5 e 0 culturas. **Isto mede presença de fonte, não aplicabilidade universal da fonte nem disponibilidade de um parâmetro projetado no motor.**
+- NDVI: `data/ndvi-brazil/report.json` registra 5.556 disponíveis, 10 com cobertura insuficiente e 5 indisponíveis entre 5.571 municípios processados. Série municipal não representa cada fazenda.
+- Registrar para cada N/D: tela, indicador, local, cultura, safra, motivo estável, dado necessário, fonte candidata, responsável, estado da aquisição, resultado da validação e decisão final. Gerar relatório reproduzível a partir dos artefatos; acompanhar também quantos casos são falta de entrada, fonte, processamento, incompatibilidade de escopo ou não aplicáveis.
+
+## Ordem de execução: um sprint por vez
+
+### F29 — Inventário completo e regras de fechamento
+
+1. Gerar matriz executável cultura × campo × contexto/cultivar × fonte/URL × verificação × valor projetado. Auditar cada rota que pode produzir N/D: catálogo, comparação A/B/C, laboratório, série climática, solo, relevo, NDVI, ZARC e exportação.
+2. Para cada campo, definir unidade, espécie/cultivar, sistema de cultivo, região, época, tipo de evidência, validade temporal e regra de seleção entre fontes conflitantes. Proibir a promoção automática de um estudo específico a regra nacional.
+3. Publicar painel de cobertura e conjunto de casos de referência (município com todos os dados, município sem ZARC da cultura, um dos 15 NDVI, ponto externo ao Brasil, sequência de slots incompleta).
+
+**Aceite:** toda ocorrência de N/D rastreada a um motivo e a uma decisão; matriz e relatório gerados por comando, com testes de consistência.
+
+### F30 — Entradas e janelas da rotação
+
+1. Auditar os quatro slots, meses de início e duração usados para os 24 meses. Quando faltarem, pedir a informação ao produtor e indicar exatamente qual slot/mês falta.
+2. Buscar ciclos documentados para as 28 culturas, separando cultivar, finalidade, ambiente e faixa de duração. Manter a janela presumida rotulada; jamais apresentar duração padrão como ciclo medido.
+3. Recalcular período potencialmente descoberto somente depois de janelas completas. Testar sobreposições, consórcios, plantas perenes e ausência de mês de safrinha.
+
+**Aceite:** casos com entradas e janelas válidas produzem ocupação; casos incompletos mostram o campo a completar, sem contagem falsa de solo descoberto.
+
+### F31 — Evidência agronômica das 28 culturas
+
+1. Pesquisar espécie por espécie em publicações primárias e institucionais, começando pelos campos que afetam as telas: fixação de N, potencial de palhada, ciclo, temperatura, pH, Kc apenas como referência e classe radicular. Priorizar Embrapa e literatura científica rastreável; FAO-56 é referência metodológica para Kc, mas seus valores típicos exigem checagem de clima, manejo e fase antes de uso local.
+2. Para cada valor, guardar trecho/página, URL, data de acesso, unidade, espécie, cultivar, local, sistema e status de verificação. Revisão agronômica independente aprova a aplicação no produto. Sem fonte comparável, classificar “não avaliado” ou “não aplicável”, explicitando por quê; não usar família botânica para presumir fixação.
+3. Projetar somente registros aprovados no catálogo e no motor. Separar **potencial qualitativo de FBN** de fixação observada no talhão; não calcular kg de N nem ganho de produtividade.
+
+**Aceite:** cada campo exposto tem fonte aplicável ou decisão formal de não exposição; nenhuma cultura mostra “dados em levantamento” se já há evidência válida para aquele campo. Cobertura e conflitos auditáveis por cultura.
+
+### F32 — ZARC nacional por safra e cultura
+
+1. Atualizar o importador da Tábua de Risco MAPA para a safra vigente e a base “Perene, Olerícola e Sem Safra”; validar schema, códigos IBGE, nomes/sinônimos, decêndios, manejo, tipo de solo/AD e grupo de ciclo. Comparar totais por UF/cultura com o arquivo oficial.
+2. Distinguir ausência de município, ausência de cultura na safra, ausência de tabela por manejo, incompatibilidade de solo/ciclo e mês não indicado. Sem registro permanece “sem registro oficial”, nunca “inapto”.
+3. Versionar fonte, data, checksum e diff de atualização; testar municípios de todas as UFs e culturas novas antes de publicar.
+
+**Aceite:** todo registro oficial compatível do conjunto importado é consultável; para cada N/D restante há motivo ligado à tabela/safra exata.
+
+### F33 — NDVI municipal
+
+1. Reprocessar os 15 municípios sem série útil com um **novo ponto terrestre dentro da malha IBGE**, máscara de água/qualidade do MOD13Q1.061 e validação de inclusão geométrica. Registrar método, ponto, fonte, contagem de compósitos, cobertura, QA e checksum.
+2. Comparar amostras com o produto NASA original e repetir a validação nacional. Se um município continuar sem pixel confiável, conservar N/D documentado; não copiar valor de município vizinho nem de um ponto de água.
+3. Manter o resultado como contexto municipal histórico, sem inferir vigor, produtividade ou condição da fazenda.
+
+**Aceite:** 5.571 municípios com resultado `available` **ou** motivo final verificável; meta de recuperar os 15, condicionada a observações válidas. Nenhum uso em decisão agronômica de talhão.
+
+### F34 — Clima, solo e relevo
+
+1. Para NASA POWER, medir cobertura por variável/mês, falha de serviço, sentinelas, período e compatibilidade da fixture; tentar novamente e manter cache verificado apenas para coordenada/período exatos. Persistir motivo específico para P, temperatura, ET₀ e balanço P−ET₀. Não produzir ETc, consumo ou necessidade de irrigação.
+2. Para solo regional, auditar cobertura e proveniência do artefato SoilGrids; adquirir recortes via WCS ou outro canal oficial suportado, com profundidade, unidade e incerteza explícitas. Medição do produtor continua separada da estimativa regional.
+3. Para relevo, auditar falhas de SRTM/OpenTopoData e preparar artefato nacional versionado quando a fonte permitir. Calcular apenas declividade/contexto; proteção efetiva e perda de solo exigem observações de manejo e outros fatores que o produto não possui.
+
+**Aceite:** N/D de infraestrutura corrigível tem repetição/artefato verificável; falhas persistentes mostram variável e origem. Nenhum valor de grade é rotulado como medição do talhão.
+
+### F35 — Fechamento, experiência e validação
+
+1. Em cada cartão, trocar N/D genérico por estado preciso: aguardando entrada, fonte ausente, sem registro oficial, fonte insuficiente, não aplicável ou serviço indisponível. Mostrar ação possível sem sugerir que o produtor pode preencher um dado científico.
+2. Rodar matriz de testes por cultura, município, safra e cenário; revisão agronômica dos registros novos; testes de contrato, proveniência, acessibilidade, mobile, lint, typecheck, unitários, E2E e build.
+3. Publicar relatório final: cobertura por campo/cultura/UF, quantos N/D corrigidos, quantos irredutíveis e justificativa individual. Repetir na atualização de safra e dos artefatos NASA.
+
+**Aceite final:** nenhum N/D sem explicação; nenhum dado inferido como medição; toda combinação suportada com fonte válida exibida corretamente; lacunas irredutíveis explicitadas e revisadas.
+
+## Fontes oficiais verificadas para iniciar
+
+- [MAPA, Tábua de Risco ZARC e CSV da safra 2026/27](https://dados.agricultura.gov.br/dataset/tabua-de-risco-zoneamento-agricola-de-risco-climatico) e [dicionário da Tábua](https://dados.agricultura.gov.br/dataset/6d3d141c-885e-41a4-ab7f-dc8ff323b96f/resource/bebb0ebb-bc75-460c-b900-a7a1ebd87bee/download/dicionario-de-dados-tabua-de-risco-04_24.pdf).
+- [NASA POWER Daily API](https://power.larc.nasa.gov/docs/services/api/temporal/daily/); [NASA Earthdata MOD13Q1.061](https://doi.org/10.5067/MODIS/MOD13Q1.061); [guia de qualidade MOD13 v6.1](https://lpdaac.usgs.gov/documents/621/MOD13_User_Guide_V61.pdf).
+- [ISRIC SoilGrids e canais de acesso](https://docs.isric.org/globaldata/soilgrids/index.html); a documentação informa que a API REST está pausada e aponta WCS para recortes.
+- [Embrapa: fixação biológica de N](https://www.embrapa.br/pt/tema-fixacao-biologica-de-nitrogenio/perguntas-e-respostas); [FAO-56, coeficientes de cultura](https://www.fao.org/4/x0490e/x0490e0b.htm); [Embrapa: fatores da erosão hídrica](https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/567796/1/bolpd63.pdf).
+
+
+## Contrato histórico do produto
+
+# FIELD SHIFT — Especificação de projeto para GPT Codex
+
+> Versão 1.0 · 12/11/2026 · NASA Space Apps Challenge 2026 · MVP de 48 horas
+> Status: especificação de implementação, **não** validação agronômica.
+
+## 0. Produto e decisões inegociáveis
+
+**Problema:** agricultores precisam comparar estratégias de rotação sob variações climáticas, limitações do solo e prioridades individuais.
+
+**Produto:** web app gamificado, responsivo e bilíngue (pt-BR/en) para produtores no Brasil que recebe localização, de um a três cultivos recentes e dados opcionais do solo, consulta/sumariza dados históricos reais da NASA e compara **três estratégias de rotação** para os próximos 24 meses (incluindo linha de base), exibindo benefícios potenciais, limitações e evidências.
+
+**Proposta de valor:** “Built for the world. Contextualized with Brazilian sources. Powered by NASA.”
+
+**Regra geográfica (Brasil nacional):** toda coordenada brasileira é associada à malha municipal versionada do IBGE e cruzada com a Tábua de Risco ZARC da safra carregada. Somente uma cultura com registro no município identificado pode receber `regionally_contextualized`; ausência de registro permanece lacuna, nunca inadequação. `locally_validated` continua reservado a futura validação humana/campo rastreável. A coordenada não confirma propriedade, talhão nem uso agrícola do solo. A consulta climática global pode permanecer como diagnóstico técnico, mas não integra a promessa agronômica do produto.
+
+**O que a aplicação NÃO faz:** previsão meteorológica, previsão precisa de produtividade, cálculo quantitativo de variação de NPK/SOC, prescrição agronômica, recomendação fitossanitária universal, previsão de preço, identificação da condição real de cada talhão por uma grade climática regional.
+
+**Princípios:** dados NASA reais e rastreáveis; regras explícitas e testáveis; não inventar dados agronômicos; nenhuma variável ausente convertida em zero; incertezas visíveis; ranking comparativo ≠ probabilidade de sucesso; camadas climática e agronômica desacopladas.
+
+## 1. Stack, arquitetura e configuração
+
+- **Next.js App Router + TypeScript strict + React**; Tailwind CSS, shadcn/ui, Lucide, Recharts; Zod para entradas; Vitest para lógica e Playwright para fluxo E2E.
+- **Sem banco de dados, login ou serviços com API key** no MVP. Persistir somente rascunho da sessão do navegador via `localStorage` com versionamento e botão “Limpar dados”. Não armazenar coordenadas em logs.
+- **Backend mínimo** em `app/api/*` como proxy e orquestrador para NASA POWER; motor de recomendação como funções TypeScript puras (`lib/engine/*`) e serializáveis.
+- **Deployment:** Vercel; URL pública HTTPS. Não depender de persistência em disco no servidor. Fixtures validadas no repositório e cache HTTP/Next para evitar chamadas repetidas; eventuais caches devem respeitar a infraestrutura do hosting.
+- A primeira execução deve passar `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`. Incluir `.env.example` se necessário; preferir zero secrets.
+- Não criar microserviços, workers, IA generativa, banco vetorial, autenticação, mapas GIS pesados nem arquitetura de plugins abstratos.
+
+### Estrutura sugerida
+
+```text
+app/
+  page.tsx                         # landing + CTA
+  explore/page.tsx                 # wizard 5 passos
+  results/page.tsx                 # comparação de rotações
+  methodology/page.tsx             # ciência e limitações
+  api/climate/route.ts             # NASA POWER ou fixture autenticada
+  api/analyze/route.ts             # análise validada (opcional; pode ser client-side)
+components/
+  wizard/LocationStep.tsx
+  wizard/HistoryStep.tsx
+  wizard/SoilStep.tsx
+  wizard/PrioritiesStep.tsx
+  crops/CropCard.tsx
+  crops/CropDetailsDialog.tsx
+  results/RotationComparison.tsx
+  results/RotationTimeline.tsx
+  results/EvidenceList.tsx
+lib/
+  schema.ts                        # Zod + tipos
+  catalog.ts                       # carregamento e validação de datasets
+  climate/nasa-power.ts            # URL, fetch, parsing, checagem de lacunas
+  climate/indicators.ts            # séries => indicadores climáticos
+  engine/constraints.ts            # inviabilidade e desconhecido
+  engine/candidates.ts             # estratégias candidatas regionais
+  engine/score.ts                  # avaliação multicritério
+  engine/explain.ts                # explicações vinculadas a regras
+  i18n.ts
+  provenance.ts
+  region.ts                        # registro de pilotos
+  storage.ts                       # rascunho versionado
+  fixtures/*.test.ts
+ data/
+  crops.json                       # 10 culturas, campos desconhecidos = null
+  regional-rules-rio-verde.json    # restrições regionais com citações
+  nasa-power-rio-verde.json        # fixture NASA real, somente se coletada
+  nasa-power-rio-verde.meta.json   # URL, período, data, unidades, SHA256
+  soil-rio-verde.json              # opcional, somente se licitamente obtido
+ docs/
+  METHOD.md
+  SOURCES.md
+  VALIDATION.md
+  DEMO_SCRIPT.md
+  SPRINT_LOG.md
+ tests/
+  unit/
+  e2e/
+ public/sprites/                      # artes licenciadas/originais
+ AGENTS.md
+ README.md
+```
+
+## 2. Cadastro e interface
+
+### Jornada principal
+
+1. **Selecionar localização:** atalho “Exemplo: Rio Verde (GO)”, além de formulário de latitude/longitude para qualquer ponto brasileiro. Não usar geolocalização obrigatória; coordenadas válidas: lat [-90, 90], lon [-180, 180]. Coordenadas externas podem consultar clima como diagnóstico técnico, mas não iniciam a jornada regional brasileira.
+2. **Histórico:** de 1 a 3 eventos anteriores `{cropId, startYearMonth, endYearMonth}` em ordem cronológica; ano/mês obrigatórios. O primeiro evento é obrigatório; eventos adicionais são opcionais e explícitos. Aceitar cultura não catalogada com `otherLabel`, mas marcar compatibilidade histórica como incompleta. Não confundir eventos com anos.
+3. **Solo (opcional):** pH (0–14), areia/silte/argila (% somando ≈100, apenas quando todas informadas), carbono orgânico (g/kg), profundidade de amostragem e data. Origem `farmer_lab | regional_estimate | unknown`. Nenhum SOC/pH estimado deve ser rotulado como medição local. Entradas parciais são permitidas.
+4. **Prioridades:** conservação de água, saúde do solo e adequação comercial/operacional. Usar pesos normalizados com presets “equilibrado”, “água”, “solo”, “operacional”; irrigação `rainfed | irrigated | unknown`; permitir restrição de culturas sem mercado local.
+5. **Resultado:** 3 cenários exploratórios para horizonte de 24 meses: `A` continuidade, `B` foco em cobertura/solo, `C` contexto hídrico. C compara a mesma exposição NASA e não promete tolerância à seca, menor consumo ou melhor desempenho. Um único mês de plantio (1–12) é a janela climática comum. Sem ciclo verificável, exibir mês e duração desconhecida, sem inventar datas. Para cada cenário: indicadores qualitativos, justificativa, alertas, fontes, nível de evidência e lacunas.
+
+   Quando houver perfil Kc verificado para a cultura, C e a comparação podem mostrar o pico Kc/fase ao lado da exposição NASA. Essa justaposição não calcula ETc, consumo ou irrigação, não torna estudos distintos numericamente comparáveis e não altera seleção de culturas.
+
+### Baseline obrigatório
+
+A linha de base é a **intenção de rotação atual do agricultor**. Se não informada, criar uma **hipótese editável** de continuação com base na sequência recente; rotular “Continuação presumida — confirmar”. Nunca apresentar as três safras passadas como se fossem automaticamente o plano futuro. Comparar alternativas sempre contra a mesma janela temporal de 24 meses.
+
+### Design
+
+- Estética pixel art **somente na camada visual**: sprites estáticos SVG/PNG originais/licenciados, cartões acessíveis e barras de status calculadas dinamicamente.
+- Cartão resumido: sprite, nome, família, finalidade, consumo relativo de água **no cenário**, função na rotação, nível de evidência.
+- Modal detalhado: parâmetros, fonte, unidade, janelas, compatibilidade local e `unknown` quando não houver dado.
+- Comparação: três colunas (desktop), cartões empilhados (mobile), timeline dos dois anos, barras individuais (sem esconder trade-offs em nota única), botão “Por que?”.
+- NASA Insight: ligar uma observação histórica mensal a regras térmicas documentadas e aos estados A/B/C. Quando o sinal sair da faixa documentada, declarar concretamente qual mês e hipótese ficam sob atenção, com valor, faixa, regra e fontes. Se não houver contraste ou evidência suficiente, declarar isso explicitamente. A exploração de outro mês nunca troca culturas, prioridades ou dados salvos; precipitação histórica nunca vira demanda hídrica.
+- Atlas NASA: permitir limite exploratório desenhado pelo usuário, sem tratá-lo como propriedade/talhão verificado, e camada visual SMAP L4 via NASA EOSDIS GIBS com data, resolução, legenda e metadados explícitos. O polígono integra o contrato de análise como contexto espacial, área aproximada e interpretação frente à célula nominal SMAP de 9 km. O raster visual não gera números; série histórica zonal SMAP só pode ser utilizada após pré-processamento autenticado Earthdata com proveniência.
+- Laboratório: avaliar cada slot com as mesmas regras puras do resultado, comparar família somente com o predecessor imediato e manter lacunas como `unknown`. Toda edição mostra delta antes/depois, lacunas persistentes, ação de desfazer e acesso à evidência filtrada; não classificar mudanças como melhora/piora.
+- Centro de Evidências: um manifesto estruturado e compacto reúne camadas NASA, produtor, catálogo e contexto regional, claims rastreáveis, lacunas e limites. Evitar badges repetidos; contagens de fontes/lacunas não são notas de confiança.
+- Legendas que separem claramente **observação NASA**, **estimativa de solo** e **inferência baseada em regras**.
+- `pt-BR` padrão, troca para `en`, sem textos hardcoded fora do dicionário; WCAG básico, navegação teclado, loading/empty/error states, reduced motion.
+
+## 3. Catálogo agronômico e fontes
+
+**12 espécies catalogadas; 8 P0 no gerador Brasil 2:**
+
+| ID | Espécie | Nome comum | Prioridade |
+|---|---|---|---|
+| `soybean` | Glycine max | soja | P0 |
+| `maize` | Zea mays | milho | P0 |
+| `sorghum` | Sorghum bicolor | sorgo granífero | P0 |
+| `sunflower` | Helianthus annuus | girassol | P0 |
+| `cowpea` | Vigna unguiculata | feijão-caupi | P0 |
+| `common_bean` | Phaseolus vulgaris | feijão-comum | P0 |
+| `upland_rice` | Oryza sativa | arroz de terras altas | P0 |
+| `pearl_millet` | Cenchrus americanus (sin. Pennisetum glaucum) | milheto | deferred |
+| `ruziziensis` | Urochloa ruziziensis | braquiária-ruziziensis | P0 |
+| `sunn_hemp` | Crotalaria juncea | crotalária-júncea | deferred |
+| `cotton` | Gossypium hirsutum | algodão | P1 |
+| `pigeon_pea` | Cajanus cajan | feijão-guandu | P1 |
+
+**Cada registro:** `id`, `commonNames`, `scientificName`, `family`, `purposes[]`, `commercial`, `cycleDaysRange`, `idealTempC`, `viableTempC`, `soilPhRange`, `kcStages`, `residuePotential`, `nitrogenFixationPotential`, `rootingClass`, `regionalWindows[]`, `knownRisks[]`, `sourceRefs[]`, `parameterStatus` (`verified | provisional | missing`). Propriedades agronômicas com valores não disponíveis devem ficar `null` e ter fonte ausente, não defaults de conveniência. Não atribuir `Kc`, tolerância ou calendário por dedução de LLM sem documento científico verificável. Resolver sinônimos científicos via nomes estáveis.
+
+**Para P0:** oito culturas: soja, milho, sorgo granífero, girassol, feijão-caupi, feijão-comum, arroz de terras altas e *Urochloa ruziziensis*. Arroz de terras altas não representa arroz irrigado. PAM é somente observação estatística municipal; seus agregados “arroz em casca” e “feijão em grão” não distinguem sistemas ou espécies e nunca alteram seleção, compatibilidade ou nível de evidência. Milheto e crotalária-júncea permanecem fora do gerador. **Para P1:** algodão e guandu permanecem informativos.
+
+**Solo:** `SoilProfile` com pH, areia/silte/argila e SOC opcionais + `origin`, `depthCm`, `observedAt`, `sourceRef`. A API REST SoilGrids está pausada; dados regionais são arquivos pré-processados **somente quando realmente obtidos**, com licença CC BY 4.0 e metadados; se não, usar apenas preenchimento manual e `unknown`. Nunca inventar dados regionais.
+
+## 4. Dados da NASA — contrato técnico
+
+Documentação: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
+
+**Endpoint:** `https://power.larc.nasa.gov/api/temporal/daily/point`
+
+**Consulta padrão (servidor):** `community=AG`, `format=JSON`, `time-standard=UTC`, `start=20110101`, `end=20251231`, `latitude`, `longitude`, `parameters=T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,RH2M,WS2M,ALLSKY_SFC_SW_DWN,IMERG_PRECTOT,GWETROOT`. Os dois últimos acrescentam distribuição histórica da chuva GPM IMERG e contexto relativo modelado da zona radicular; ausência degrada somente esses indicadores para `unknown`. Escolha de período: 15 anos completos, nunca misturar 2026 incompleto com anos completos.
+
+**Resposta normalizada:** lista diária `{date, tmeanC, tmaxC, tminC, precipMm, rhPct, windMps, solarMjM2Day, imergPrecipMm, rootZoneWetness}` com nulos explícitos; `{source:'NASA_POWER', requestedCoordinates, period, fetchedAt, rawParameterNames, sourceUrl, timezone:'UTC', coveragePct, missingDays}`. `rootZoneWetness` é índice relativo de grade modelada, não umidade volumétrica nem medição do talhão. Converter unidade de radiação **somente após verificar metadados da resposta**.
+
+**Normalização e qualidade:** rejeitar lat/lon inválidas, rejeitar `-999`/sentinelas/nulos, valores fora de faixa física plausível e cobertura insuficiente; preservar dias ausentes como `null`; gerar percentis somente sobre períodos comparáveis. Cobertura mínima sugerida como regra de engenharia: pelo menos **80% dos dias válidos da variável na janela analisada**; rotular esse limiar como convenção de MVP, não padrão NASA.
+
+**Indicadores:** climatologia mensal por mediana e faixas históricas; chuva acumulada por janela; frequência de períodos secos sob limiar documentado; dias acima de temperatura crítica por cultura/fase quando existir referência; distribuição histórica em anos equivalentes (sem previsão). Não declarar que o valor de grade é dado de talhão.
+
+**Cache/fallback:** endpoint ao vivo com timeout e mensagens claras; cache de chamadas idênticas; script `scripts/fetch-nasa-fixture.ts` para baixar **dados reais** antecipadamente para o piloto, gerar JSON e sidecar com URL, timestamp e SHA-256. Se NASA estiver indisponível: usar fixture **somente na coordenada/período compatíveis** e exibir “Dados NASA históricos em cache (capturados em DATA)”; sem fixture verificada => erro recuperável e **nunca** usar séries simuladas como NASA. Não usar fixtures do piloto para outra coordenada.
+
+## 5. Motor agronômico — regras e rastreabilidade
+
+### Estrutura de cada decisão
+
+1. **`validateInputs`** via Zod.
+2. **`evaluateConstraints`**: calendário regional, duração do ciclo, compatibilidade térmica, incompatibilidade grave de pH quando comprovada, água/irrigação, equipamento/mercado e proibições documentadas. Estados `pass | warn | fail | unknown`. `unknown` reduz certeza e pode bloquear recomendação se afetar regra crítica; nunca transformar desconhecido em `pass`.
+3. **`generateCandidates`**: templates regionais (incluindo consórcios predefinidos quando validados) para 24 meses; **não** combinar culturas livremente. Respeitar ordem e início/fim dos eventos, impedir sobreposições não declaradas, diferenciar consórcio e sucessão; incluir baseline confirmado/presumido.
+4. **`computeMetrics`**: adequação térmica, risco hídrico histórico, cobertura potencial, diversificação funcional, possíveis alertas de nutrientes/fitossanidade e adequação operacional. Sempre retornar fonte da regra e tipo de evidência.
+5. **`rankCandidates`**: normalizar somente métricas com comparabilidade e boa fundamentação; pesos do produtor; não somar métricas desconhecidas fingindo 0. Reponderar pesos presentes **e avisar**; não ranquear se informação essencial insuficiente. Notas 0–100 são **heurísticas relativas**, não estimativas físicas de produtividade, risco probabilístico ou saúde do solo.
+6. **`explain`**: para cada benefício e risco: frase, `ruleId`, `inputsUsed`, `sourceRefs[]`, `certainty` (high/medium/low) e `missingData[]`.
+
+### Água (escopo matemático)
+
+Se houver ET₀ diário calculado de maneira válida/documentada e coeficientes Kc por fase verificados: `ETc(day) = Kc(day) × ET0(day)` (FAO-56). Não presumir ET₀ simplesmente porque há temperatura e chuva; implementá-lo apenas com equação e dados/unidades documentados, testes contra referência. Se não pronto, usar indicador comparativo **precipitação histórica na janela versus exigência hídrica publicada** e chamá-lo “triagem hídrica”, não “necessidade de irrigação”.
+
+A primeira entrega *não* estima mudança exata de NPK, carbono, rendimento, economia em dinheiro ou erradicação de pragas.
+
+### Exemplo de contrato de resultado
+
+```ts
+export interface RotationResult {
+  id: 'A' | 'B' | 'C';
+  titleKey: string;
+  baseline: boolean;
+  baselineAssumed: boolean;
+  horizonMonths: 24;
+  timeline: Array<{
+    cropIds: string[];
+    startYearMonth: string;
+    endYearMonth: string;
+    mode: 'single' | 'intercrop' | 'cover';
+  }>;
+  feasibility: 'pass' | 'warn' | 'fail' | 'unknown';
+  score: number | null;
+  metrics: Array<{
+    id: string;
+    value: number | null;
+    unit?: string;
+    labelKey: string;
+    relative: boolean;
+    evidenceRefs: string[];
+  }>;
+  explanations: Array<{
+    kind: 'benefit' | 'risk' | 'limitation';
+    messageKey: string;
+    ruleId: string;
+    sourceRefs: string[];
+    certainty: 'high' | 'medium' | 'low';
+  }>;
+  missingData: string[];
+}
+```
+
+**Regras exemplares** (codificar somente se há referência/região): calendário fora da janela => `fail/warn`; cultura de cobertura em período com risco de seca => apresentar simultaneamente possível proteção e consumo de água; fixação biológica N => mecanismo potencial, nunca “+N kg/ha”; família repetida => diversidade baixa, **não** diagnosticar patógeno específico; ausência de análise de solo => não afirmar deficiência ou reposição quantitativa.
+
+## 6. Contratos de API
+
+- `GET /api/climate?lat=<n>&lon=<n>` → `{status:'ok', origin:'live'|'verified_fixture', climateSummary, provenance, warnings}`; `400` entrada inválida, `503` NASA indisponível sem fallback autorizado. Implementar cache e limites básicos de requisições.
+- `POST /api/analyze` com `{location, lastThreeCrops, futureBaseline?, soil?, priorities, irrigation}` → `{scope:'brazil_regional_context'|'global_climate_only', strategies, climateSummary, warnings, provenance}`; `422` campos inconsistentes. A função pura do motor deve poder ser usada sem API para testes.
+- `GET /api/catalog` (opcional; ou import direto) → espécies e `parameterStatus`.
+- Todos os erros com código legível, mensagem traduzível e sem expor stack trace ou dados privados.
+
+## 7. Sprints e critérios de aceite (48 horas)
+
+| Sprint | Janela | Objetivo e entregáveis | Critérios de aceite |
+|---|---:|---|---|
+| **S0 — Foundation** | 0–4 h | Scaffold, lint/typecheck/test/build, tokens de design, layout, AGENTS.md, schemas, README, mock navigation | Página inicial e wizard renderizam; comandos verdes; tipos sem `any` desnecessário |
+| **S1 — NASA & provenance** | 4–12 h | Adaptador POWER, normalização, QA, fixture real do piloto + metadata, endpoint, indicadores | NASA usada de fato; 3 testes de parsing/ausências; fallback nunca usa fixture em outro local |
+| **S2 — Catálogo & entrada** | 12–20 h | 10 fichas, 6 P0 priorizadas, 2 P1 exploratórias, wizard 5 passos, validação, solo opcional, presets de prioridade, rascunho | Formulário completo funciona no celular; entradas inválidas bloqueadas; dados ausentes preservados |
+| **S3 — Engine** | 20–32 h | Baseline explícita/editável, 3 estratégias, filtros, ranking, explicações e `unknown` | 3 casos de validação agronômica; riscos e fontes por estratégia; fora do piloto sem recomendação regional |
+| **S4 — Pixel art & polish** | 32–40 h | Sprites, CropCards, modal técnico, timeline, comparação, i18n, mobile/a11y | Status reais computados, sem números falsos; navegação teclado; visual pronto para demo |
+| **S5 — Validation & ship** | 40–48 h | Testes unit/E2E, build, deploy, README, metodologia, ciência, fontes e roteiro de demo | Demo ponta a ponta sem incidentes críticos; URL pública; documentos e limites declarados |
+
+### Gates (não seguir adiante sem estes pontos)
+
+- **Gate A ao fim S1:** acesso a NASA real + uma fixture verificada para Rio Verde. Se indisponível, documentar bloqueio e priorizar análise manual com erro honesto; **não fabricar o dado**.
+- **Gate B ao fim S3:** usuário compara baseline e duas opções defensáveis **ou** vê indisponibilidade justificada. Ranking sempre contém explicações e fontes.
+- **Gate C ao fim S5:** fluxo funciona em navegador limpo, sem ambiente local e sem secrets.
+
+### Critérios de corte se atrasar
+
+1. Cortar mapa interativo (coordenadas continuam).
+2. Cortar animações e ícones secundários (manter cards legíveis).
+3. Cortar algodão/guandu das recomendações (manter catálogo).
+4. Cortar ET₀ se não validado (manter triagem climática explícita).
+5. Cortar segundo idioma **apenas** se o fluxo científico já estiver estável; manter nomes dos campos centralizados para tradução posterior.
+6. **Nunca cortar** uso real de dados NASA, comparação de rotações, explicações, riscos, fontes e honestidade sobre incerteza.
+
+## 8. Plano de testes (mínimo)
+
+**Unitários:**
+1. Coordenadas inválidas => `400`.
+2. Resposta NASA com `-999`, `null` ou data faltante => ausente, não zero.
+3. Agregação de chuvas usa apenas dias válidos e registra cobertura.
+4. Latitude diferente da fixture não usa fixture regional.
+5. Solo parcial é aceito e mantém `origin`/unidades.
+6. Calendário fora da janela produz falha/alerta com evidência.
+7. Peso do produtor muda ranking em um conjunto **sintético de testes**, sem atribuir valores fictícios às culturas reais.
+8. Estrategia com métrica crítica desconhecida não recebe falso `100`.
+9. Baseline presumida sempre tem marcador e pode ser alterada.
+10. Exposição de risco hídrico de cultura de cobertura não desaparece pela vantagem de biomassa.
+11. Sequências sobrepostas só são aceitas quando explicitamente definidas como consórcio.
+12. Renderização bilíngue preserva unidades e labels.
+
+**E2E:** (a) piloto Rio Verde -> histórico -> solo desconhecido -> prioridade água -> três estratégias e fontes; (b) coordenadas fora do piloto -> dados climáticos e aviso de indisponibilidade regional; (c) falha de API -> fallback verificado com indicação, ou erro honesto.
+
+**Validação científica manual:** três cenários documentados: maior exposição à seca; repetição de culturas; trade-off cobertura × água. Revisar com fonte e, se possível, especialista local. Não dizer “validado em campo” sem validação real.
+
+## 9. Definição de pronto (DoD) e demonstração
+
+- Implementação e testes ligados a requisitos; sem botões inertes, placeholders disfarçados de resultado, ou saídas com dados inventados.
+- Pelo menos um fluxo com NASA real e metadados exibidos; linha de base + duas alternativas interpretáveis (ou limitação explícita onde inviável); 8 cartas principais; design responsivo.
+- Toda estimativa separada de observação, unidades corretas, datas/períodos informados, método e fontes acessíveis.
+- `README.md` com execução/deploy, arquitetura, escopo, limitações, dados, licenças, decisões de design; `METHOD.md` com fórmulas/pesos/limiares; `SOURCES.md` com URLs; `VALIDATION.md` com cenários; `DEMO_SCRIPT.md` com apresentação de 2–3 minutos.
+
+**Roteiro de demo (2–3 minutos):** abrir um município brasileiro (Rio Verde é exemplo reproduzível) → inserir histórico soja/milho/soja (datas plausíveis e explicitamente de exemplo) → solo opcional → alternar objetivo água/solo → comparar linha de base + alternativas → abrir “Por quê?” → mostrar NASA POWER e data do dado → finalizar com cobertura Brasil, evidências por município e limites locais.
+
+## 10. Instruções obrigatórias para o GPT Codex
+
+1. Ler `PROJECT_SPEC.md` e `AGENTS.md` antes de editar.
+2. Implementar **um sprint por vez**; não iniciar o seguinte antes de testes e commit.
+3. Antes de escrever código: listar arquivos-alvo, suposições, riscos, tarefas; não interromper a implementação por detalhes já resolvidos nesta spec.
+4. Priorizar funções puras e tipos fortes; contratos Zod; desacoplar dados NASA, regras de cultura, UI e pontuação.
+5. **Não preencher parâmetros agronômicos ausentes com estimativas próprias**. Pesquisar fonte original e guardar metadados ou deixar `null`, com comportamento de degradação honesto.
+6. Se utilizar modo demo, indicar claramente data e fonte do fixture, jamais rótulo “ao vivo”.
+7. Não alterar prioridades/escopo sem registrar `docs/DECISIONS.md`.
+8. Ao terminar cada sprint: executar lint, typecheck, testes e build, reportar o que passou, o que falhou, pendências, cobertura e arquivos alterados; criar commit `sprint-N: ...` quando Git estiver disponível.
+9. Se uma dependência externa estiver indisponível, implementar fallback explícito ou estado de erro, **nunca simular silenciosamente**.
+10. Evitar arquitetura excessiva; deixar app pronto para demonstração antes de polimento.
+
+## 11. Referências técnicas verificadas
+
+1. NASA Space Apps Challenge 2026 — Field Shift: https://www.spaceappschallenge.org/2026/challenges/field-shift-adapting-farms-with-nasa-data/
+2. NASA POWER Daily API: https://power.larc.nasa.gov/docs/services/api/temporal/daily/
+3. SoilGrids data e indisponibilidade da API: https://docs.isric.org/globaldata/soilgrids/index.html
+4. SoilGrids propriedades, unidades e profundidades: https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_01.html
+5. FAO-56, cálculo de evapotranspiração da cultura: https://www.fao.org/4/X0490E/x0490e0a.htm
+6. FAO-56, coeficientes Kc: https://www.fao.org/4/X0490E/x0490e0b.htm
+
+**Uso das referências:** documentos de arquitetura e método devem citar URL e data de acesso. Fontes agronômicas específicas para cada parâmetro ainda precisam ser preenchidas e verificadas pelo sprint S2. A disponibilidade de uma espécie no catálogo **não** prova sua aptidão em Rio Verde.
+
+
+## Histórico de execução
+
 # Sprint log
 
 ## Jornada leiga F12 — entrada única, progresso e contato por áudio
@@ -1234,3 +1623,581 @@ Implemented: retained the supplied 56 records for 28 crops and two fields in `da
 Evidence and checks: 23 residue records in the supplied file have `evidenceType: qualitative_potential` rather than `qualitative_residue_behavior`; the discrepancy is preserved and flagged for review. Two sampled Embrapa URLs returned 502 and 403 during automated access, so the source claims are not independently verified. `npm run audit:nd`, lint, typecheck, build and 78 unit test files / 533 tests pass. Typecheck was rerun after build because concurrent Next.js type generation caused a transient missing-generated-file error.
 
 Limitations / next: review each source and the 23 field/type discrepancies with agronomic expertise before promotion. Existing verified-source counts are unchanged; pending evidence is not evidence of field-level nitrogen fixation or observed residue.
+
+## Sprint — Limpeza de arquivos redundantes
+
+Status: complete (2026-11-18).
+
+Implemented: removed the root copy of the F31 lot 1 JSON after SHA-256 confirmed it was identical to the application copy under `data/`; all imports and the audit use the latter. Removed three unreferenced, completed bootstrap/integration prompt files: `fieldshift_codex/SPRINT_PROMPTS.md` and the `CODEX_INTEGRATION.md` files from the P0 and P1 asset packs. Preserved the scoped AGENTS files, project specification, asset manifests, licenses, generators, source packs, and gamification materials because they have distinct instructions, reproducibility value or existing dependencies. No empty project directories were found.
+
+Checks: lint, typecheck and 78 unit test files / 533 tests pass. Production build passes. A simultaneous duplicate build briefly failed to acquire Next.js's build lock; the build was rerun after the first completed.
+
+Limitations / next: original source art and documentation with uncertain historical or licensing value remain in place. No changes to runtime functionality were intended.
+
+## Sprint — Consolidação do planejamento e instruções
+
+Status: concluído (2026-11-18).
+
+Implementado: reunidos o contrato histórico do produto, o plano de N/D e todo o histórico de sprints em `PLANEJAMENTO.md`; criado um único `AGENTS.md` na raiz, conciso, com regras científicas e referência ao planejamento central. Removidas as cópias anteriores após migração e atualizadas as referências ativas. As especificações históricas de gamificação e wireframes foram incorporadas ao apêndice; as pastas `fieldshift_codex` e `fieldshift_gamification_codex` foram removidas após consolidação. Pacotes de assets, licenças, manifestos e dados usados pela aplicação permanecem.
+
+Verificações: lint, typecheck, build e 78 arquivos de testes / 533 testes passaram.
+
+Limitações / próximo sprint: completar verificação dos critérios de F30 e revisão agronômica do lote F31 antes de promover dados pendentes.
+
+
+## Sprint F31f — Lote 2: pesquisa de temperatura e pH
+
+Status: integrado como pesquisa contextual pendente de revisão (2026-11-18).
+
+Implementado: `data/plantae_F31_lote2_temperatura_ph_28_culturas_2026-11-18.json` preserva integralmente as 56 referências recebidas, com validação Zod das 28 culturas, duas variáveis por cultura, fontes HTTP(S), unidades, limites ordenados e política que proíbe pontuação automática. Fichas e Centro de Evidências exibem contexto, definição, limitações, conflitos e fonte; o alvo de pH do arroz é apresentado como meta, não faixa de tolerância. O inventário registra cada pesquisa pendente separadamente; temperatura aparece na linha `idealTempC` apenas para localização, sem ser promovida a limite viável ou parâmetro do motor.
+
+Verificações: lint, typecheck, build e 79 arquivos de testes / 535 testes passaram. Os testes preservam os 56 registros, impedem promoção automática e rejeitam duplicatas, intervalos invertidos e alterações da política.
+
+Limitações / próximo passo: nenhuma das 56 fontes foi submetida a revisão agronômica independente neste sprint. Estatísticas de temperatura, cultivar, sistema e método de pH precisam ser compatíveis antes de qualquer uso futuro; ECOCROP não comprova adequação municipal. Continuar lote 3 e revisão de evidências.
+
+
+## Sprint F31g — Registro da conferência informada das fontes
+
+Status: concluído.
+
+Implementado: registrado no catálogo, Centro de Evidências e inventário que o usuário informou ter conferido os links dos lotes 1 e 2 no ChatGPT web. Os dados originais, conflitos e estados de revisão foram preservados; essa informação não representa validação agronômica independente. As referências já estão disponíveis para consulta contextual. Não foram promovidas a limites automáticos ou a medições de talhão, respeitando os próprios contratos dos lotes.
+
+Verificações: auditoria, lint, typecheck, build, 79 arquivos de teste e 535 testes passaram.
+
+Limitações / próximo passo: a conferência relatada não fornece decisão por registro, nem prova aplicabilidade local. Permanecem 32 entradas sem valor e 23 divergências de tipo do lote 1; prosseguir com revisão agronômica e demais lotes.
+
+
+## Sprint F31h — Lote 3: pesquisa de sistema radicular
+
+Status: integrado como referência contextual (2026-11-18).
+
+Implementado: `data/plantae_F31_lote3_sistema_radicular_28_culturas_2026-11-18.json` preserva integralmente os 28 registros recebidos, validados com Zod. Fichas, Centro de Evidências e inventário exibem arquitetura, profundidades, definição, condições de solo, fases, fontes adicionais, conflitos e limitações. Duas culturas não têm profundidade principal numérica; mínimos ausentes permanecem nulos. Valores por fase são identificados como tais. A pesquisa não é convertida em classe radicular nacional, medição do talhão, adequação municipal, ETc ou irrigação.
+
+Evidência e verificações: usuário informou conferência das fontes no ChatGPT web; a revisão agronômica independente permanece pendente. Auditoria, lint, typecheck, build e 80 arquivos de teste / 538 testes passaram. Testes cobrem preservação do JSON, lacunas, fases, fração de raízes, duplicatas, limites invertidos e proibição de pontuação.
+
+Limitações / próximo passo: profundidades têm definições e condições distintas e não devem ser comparadas diretamente. Concluir revisão agronômica e demais lotes de F31.
+
+
+## Sprint F31i — Lote 4: Kc e fases de cultivo
+
+Status: integrado como referência contextual (2026-11-18).
+
+Implementado: `data/plantae_F31_lote4_kc_ciclos_28_culturas_2026-11-18.json` preserva integralmente os 56 registros recebidos, validados com Zod. Fichas e Centro de Evidências exibem valores por fase, condições, fonte, conflitos e limitações; o inventário preserva os registros como pesquisa pendente sem modificar os valores de motor, os ciclos 2.2 ou as janelas. Das 56 entradas, 23 contêm valores de Kc, 20 contêm fases e 13 não têm valores. As referências não alimentam ETc, irrigação ou decisão automática.
+
+Evidências e verificações: o usuário informou conferência das fontes no ChatGPT web; isso não substitui a revisão agronômica independente. A soma das fases de sorgo (125 dias) difere do total impresso (130 dias), como já sinalizado no lote e agora no inventário. Lint, typecheck, build, 81 arquivos de teste / 540 testes e auditoria passaram; teste focado também confirmou a divergência após regeneração.
+
+Limitações / próximo passo: Kc depende de fase, clima, espécie e manejo; exemplos de fases não definem liberação do talhão. Revisar agronomicamente e resolver divergências antes de qualquer promoção futura.
+
+
+## Apêndice histórico — gamificação e experiência
+
+Os documentos abaixo foram incorporados integralmente para consulta histórica; `AGENTS.md` e a situação atual no início deste arquivo prevalecem sobre instruções antigas de migração.
+
+# Field Shift — Especificação de UX gamificada e implementação pelo Codex
+
+Versão: 2.0 | 12/11/2026 | Status: design/implementação; não é validação agronômica.
+
+## 0. Decisão de produto e mudança em relação ao projeto anterior
+
+**Substituir o wizard com 5 formulários sequenciais por uma experiência exploratória de mapa + cartas de culturas + linha do tempo agrícola + laboratório de rotações + comparação.** O produto atende o Brasil nacionalmente: o usuário deve poder clicar em qualquer coordenada brasileira e consultar o contexto disponível, com posição editável manualmente. Rio Verde é apenas um exemplo. O mapa pode manter inspeção ambiental global, mas fora do Brasil não há promessa de jornada agronômica ou contexto regional brasileiro.
+
+**Distinção científica obrigatória:** escopo Brasil nacional ≠ fornecer recomendação agronômica validada para qualquer talhão brasileiro. O motor avalia a disponibilidade e aplicabilidade de cada evidência de cultura/regra **na coordenada, município, estação, tipo de solo e contexto de manejo selecionados**. Quando incompletos, apresentar carta informativa ou comparação parcial somente para indicadores sustentados; NÃO inventar adequação, classificação, Kc, janela de semeadura ou recomendação regional. Manter estados explícitos `supported`, `partial`, `insufficient_evidence`, `unavailable`.
+
+**Objetivo da demo:** usuário seleciona ponto no mapa → vê perfil climático verificado → abre painel de culturas com indicadores suportados e incerteza → monta histórico → explora três estratégias (inclui linha de base) → muda prioridades → compara resultados e evidências.
+
+## 1. Não objetivos
+
+Não criar mundo 3D, personagens, loot, moedas, XP, rendimento de safra inventado, saúde do solo inferida diretamente de clima, ranking sem base, simulação NPK sem análise de solo, previsão de clima futuro, recomendação de fertilização/irrigação prescritiva, ranking agrícola brasileiro sem dados locais aplicáveis. Não insistir em drag-and-drop como única interação (touch/teclado precisam de alternativa).
+
+## 2. Contexto do projeto existente
+
+- Projeto original: Next.js App Router, TypeScript strict, Tailwind/shadcn, Zod, Recharts, Vitest/Playwright, API NASA POWER.
+- Telas atuais: Localização, Histórico (1 obrigatório + até 2 opcionais), Solo, Prioridades, Revisar. **Reutilizar lógica e validação**; redesenhar a apresentação sem reimplementar o motor agronômico do zero.
+- Catálogo ativo P0: soja, milho, sorgo granífero, girassol, feijão-caupi, *Urochloa ruziziensis*. P1: algodão, feijão-guandu (cartas de exploração opcionais; sem indicação automática se não habilitadas). Milheto e crotalária excluídos do escopo prioritário.
+- Imagens: usar sprites existentes no projeto, PNG transparentes; fornecer fallback textual para imagens faltantes; `image-rendering: pixelated` e dimensões apropriadas.
+- Atualizar instruções existentes que limitem recomendação ao piloto brasileiro. Substituir regra `location === Rio Verde` por `evidenceCoverageAssessment(location, crop, rotation, soil, season, management)`.
+
+## 3. Stack proposta, sujeita à inspeção do repositório
+
+- Mapa: MapLibre GL JS + react-map-gl/maplibre **ou** integração direta com MapLibre (escolher uma). Consultar versão instalada e compatibilidade com Next.js antes de adicionar. Componente client-only via import dinâmico; SSR do app permanece seguro.
+- Estilo cartográfico de provedor com autorização e atribuição; configurar `NEXT_PUBLIC_MAP_STYLE_URL` para estilo/tiles permitidos. Não usar tiles públicos do OpenStreetMap em volume incompatível com a política de uso. Para demo, estilo público autorizado e atribuição sempre visível. Fallback sem tiles: seleção por latitude/longitude e entrada textual de coordenadas.
+- Geocoding opcional; não depender de serviço gratuito sem SLA. Não enviar lat/long a serviços externos além daqueles necessários e consentidos para dados climáticos/mapa. Sem solicitação de localização do dispositivo por padrão.
+- Manter motor agronômico como funções puras. Não transformar o mapa em fonte de scores.
+- Se o mapa for bloqueador de prazo, implementar marcador em mapa leve ou coordenadas com visualização de contexto; não bloquear fluxo científico.
+
+## 4. Modelo de domínio e contratos
+
+### 4.1 Tipos a acrescentar / adaptar
+
+```ts
+type GeoPoint = { latitude: number; longitude: number; label?: string };
+type EvidenceStatus = 'supported' | 'partial' | 'insufficient_evidence' | 'unavailable';
+type DataOrigin = 'nasa_power' | 'soilgrids_prepared' | 'user_lab' | 'zarc' | 'embrapa' | 'fao' | 'peer_review' | 'user_input';
+type EvidenceRef = {
+  id: string; title: string; institution: string; url: string;
+  publicationDate?: string | null; accessDate: string;
+  pageOrSection?: string | null; excerpt?: string | null;
+  applicableRegions?: string[]; cultivars?: string[];
+};
+type MeasuredIndicator = {
+  id: string; label: string; value: number | string | null; unit?: string;
+  status: EvidenceStatus; explanation: string; sources: EvidenceRef[];
+  spatialResolution?: string | null; temporalCoverage?: string | null;
+};
+type CropCardModel = {
+  cropId: string; displayName: string; imageUrl: string;
+  roles: Array<'commercial' | 'cover' | 'forage'>;
+  status: EvidenceStatus; indicators: MeasuredIndicator[];
+  warnings: string[]; missingEvidence: string[];
+};
+type RotationSlot = { id: string; year: number; seasonId: string; cropIds: string[]; startMonth?: string; endMonth?: string };
+type RotationScenario = {
+  id: string; kind: 'baseline' | 'suggested' | 'custom'; label: string;
+  slots: RotationSlot[]; eligible: boolean; indicators: MeasuredIndicator[];
+  warnings: string[]; missingEvidence: string[];
+};
+type AnalysisSession = {
+  schemaVersion: 2; point: GeoPoint | null;
+  cropHistory: Array<{ cropId: string; start: string; end: string; management?: string }>;
+  soil: { provenance: 'user_lab' | 'regional_estimate' | 'unknown'; ph?: number | null; phMethod?: string | null; texture?: string | null; soc?: number | null };
+  priorities: { water: number; soil: number; operations: number };
+  irrigation: 'yes' | 'no' | 'unknown';
+  scenarios: RotationScenario[];
+};
+```
+
+Não confundir `missingEvidence` com zero. Edição de históricos pode conter cultura não cadastrada: armazenar como `other` com rótulo do usuário, sem inferir atributos.
+
+### 4.2 Contratos API / funções
+
+- `GET /api/climate?lat={...}&lon={...}` → `{ location, source, datasetVersion?, observationPeriod, spatialResolution?, status, metrics[], warnings[] }`. Implementar proxy NASA POWER existente, com validação Zod, timeout, caching e rate limiting razoável. Dados devem ser reais; fixtures testadas e identificadas se houver fallback de demonstração. Coordenadas válidas `[-90,90]`, `[-180,180]`. Click em oceano: perfil climático possível, **sem indicação de cultivo terrestre**.
+- `POST /api/evaluate-location` com `{ point, season?, soil?, cropIds? }` → `{ locationStatus, crops: CropCardModel[], missingEvidence, warnings }` baseado no catálogo e regras de aplicabilidade, nunca por proximidade arbitrária de município.
+- `POST /api/rotation-scenarios` com `{ session }` → `{ scenarios, comparisonStatus, caveats, evidenceRefs }`. Garantir linha de base, mais até 2 estratégias justificadas se viáveis. Se faltarem dados: preservar baseline e fornecer cartões de alternativas exploratórias sem nota, ou mensagem “não há evidência suficiente”; nunca preencher três recomendações fictícias.
+- Se existente motor no cliente, rotas são apenas adaptadores; evitar duplicação de lógica. Resposta deve identificar API offline, falta de parâmetros, janela não validada, e erro de dados.
+
+### 4.3 Cobertura brasileira e níveis de avaliação
+
+1. **Clima no Brasil**: série NASA POWER para coordenadas brasileiras; apresentar período, unidade, resolução/limitações. A consulta global pode permanecer como ferramenta técnica separada.
+2. **Dados locais opcionais**: solo laboratório e histórico fornecidos pelo usuário; solo regional brasileiro estimado somente quando produto/arquivo confiável disponível. Nunca inventar propriedade do talhão.
+3. **Viabilidade de cultura**: por cultura e local, verificar (a) evidência climática aplicável, (b) ciclo/fenologia e calendário aplicáveis, (c) limitações de solo relevantes, (d) compatibilidade entre cultivos e manejo, (e) fontes. Sem validação de calendário/região, exibir `partial`/`insufficient_evidence`.
+4. **Estratégias**: comparativo somente para dimensões com dados. Nunca normalizar ausência como zero ou gerar score agregado quando faltam dimensões críticas. Exibir “comparação parcial” e quais variáveis faltam.
+5. **Rótulos de interface**: “Compatibilidade com dados disponíveis”, não “Melhor cultura da região” sem base; “Condições históricas”, não “Previsão”; “Indicador relativo”, não “probabilidade”.
+
+## 5. IA de interação e etapas (novo fluxo)
+
+### 5.1 Navegação
+
+Rotas sugeridas: `/explore` (mapa inicial), `/farm` (histórico/solo/prioridades em drawer/abas), `/lab` (deck e montador), `/results` (comparador), `/methodology` (fontes, limitações). Preservar URLs atuais mediante redirecionamento ou link contextual. Navegação persistente `Explorar | Minha fazenda | Laboratório | Comparar | Metodologia` com indicação de progressão, mas sem bloqueio em wizard.
+
+### 5.2 Tela A — Atlas / mapa do Brasil
+
+- Mapa ocupa maioria da viewport e permite pan/zoom/click, pino movível.
+- Busca de cidade é opcional; entrada manual lat/lon sempre disponível; botão “Usar exemplo” seleciona Rio Verde **apenas como exemplo**, nunca filtro obrigatório.
+- Painel direito mostra local, métricas climáticas históricas, status de evidência e cartas de cultura (visual compacto). Antes de consulta, instrução clara.
+- Categorias de painel: `Clima observado` e `Culturas para explorar`; não inventar ranking. Cartas não habilitadas exibem `Dados insuficientes` com explicação.
+- Camadas `Precipitação`/`Temperatura` só se houver raster/tiles ou geodados reais; senão usar gráficos temporais de ponto e alternância de indicador, nunca pintar um heatmap sintético como observação NASA.
+- CTA: `Usar este local` → mantém pin + leva à Minha fazenda.
+
+### 5.3 Tela B — Minha fazenda
+
+- Linha do tempo de um a três eventos históricos editáveis (cartas de cultura + início/fim); campo de cultura “Outra”; detecção de sobreposição com mensagem clara.
+- Solo opcional em painel expansível com indicação de origem e método de pH. Irrigação e prioridades com sliders e valores numéricos.
+- Preview de clima por janela selecionada; se faltarem datas, “sem janela definida”.
+- Salvar rascunho versionado localmente; limpar/restaurar rascunho com confirmação.
+
+### 5.4 Tela C — Laboratório de rotações
+
+- Deck de 6 cartas P0; P1 apenas informativas se presentes; cada carta abre ficha com evidência e riscos.
+- Três colunas: `Atual (linha de base)`, `Alternativa 1`, `Alternativa 2`.
+- Horizonte sugerido: dois anos agrícolas, slots por estação/janela em função da localidade; **não assumir “safra/safrinha” globalmente**. Rótulos genéricos `Temporada A/B` configuráveis pelo usuário; onde dados locais verificados permitam, exibir nomes regionais.
+- Arrastar e soltar é enhancement opcional; **obrigatório** botão `Adicionar/Trocar cultura`, acessível por teclado e celular.
+- Ações `Duplicar atual`, `Gerar opções com evidências`, `Desfazer`, `Limpar alternativa`, `Comparar`.
+- Atualizar indicadores com debounce se necessário; estados `calculando`, `parcial`, `insuficiente`. Nunca apresentar ganho de 20% sem modelo validado.
+- Consórcio milho + braquiária apenas se regra específica estiver presente/aplicável; não habilitar combinações livres sem evidência.
+
+### 5.5 Tela D — Comparador
+
+- Três estratégias lado a lado desktop; vertical com seletor de cenários mobile.
+- Métricas água, cobertura/potencial de solo, diversidade, risco, operação/comercial **somente quando sustentadas**; `N/D` caso contrário.
+- Marcas contextualizadas `Menor demanda hídrica estimada`, `Mais diversidade funcional` somente com cálculos reais; evitar selo “campeão” absoluto.
+- Mostrar “Por quê?” expandable com fontes, unidades, janelas, metodologia, limitações. Alternar pesos das prioridades e recálculo com explicação do ranking.
+- Diferenciar `baseline`, `partial` e `eligible`; em localização sem evidência, comparação deve ensinar por que não é possível concluir, mas manter exploração de cartas e clima.
+
+### 5.6 Tela E — Metodologia
+
+- Fontes NASA, Embrapa/FAO/MAPA, metodologia, classes de evidência, data de obtenção, tratamento de dados ausentes, resolução e alertas científicos.
+- Linha clara: observação histórica vs inferência agronômica vs dado informado pelo usuário.
+
+## 6. Sistema visual / gamificação
+
+- Dark navy já existente + verde-lima de ação, pixel art apenas nas culturas e elementos pontuais; não tornar textos científicos pixelados.
+- Cartas: sprite, nome, finalidade, indicadores contextualizados com unidade e estado; cor nunca única via de comunicação; legenda para barras e `N/D`.
+- Microinterações 150–250 ms: hover, seleção, mudança de slot e mini-animacão do resultado. Respeitar `prefers-reduced-motion`.
+- Três estados dos cards: `Explorável`, `Análise parcial`, `Sem evidência local` (não confundir com inadequação real).
+- A satisfação vem de experimentar cenários, não de moedas, XP ou recompensas falsas.
+
+## 7. Acessibilidade, responsividade e comportamento nacional
+
+- Desktop ≥1024px: mapa ~65% + painel ~35%; tablet: drawer; mobile <768px: mapa topo e bottom sheet; controles sticky sem obstruir atribuição do mapa.
+- Teclado: pino por coordenadas, seleção das cartas por botões, edição por dialog, rotação sem DnD; foco visível, labels, contraste, aria-live para resultados sem excesso de anúncios.
+- i18n pt-BR/en preservado, nomes botânicos consistentes; coordenadas numéricas decimais e unidades explícitas; datas para hemisférios diferentes sem assumir mês de plantio brasileiro.
+- Estado de erro de rede, carregamento, dados ausentes, terreno não agrícola, rejeição de seleção, falha de tiles e sessão de rascunho migrada.
+- Privacidade: coordenadas e histórico em `localStorage` somente se o usuário aceitar rascunho; botões de apagar e não logar coordenadas arbitrárias no backend.
+
+## 8. Critérios de aceite verificáveis
+
+**Brasil nacional:** clicar em pelo menos três pontos geograficamente distantes em UFs diferentes salva coordenadas e consulta NASA POWER; a resposta informa cobertura, município e fonte. Não inventar adequação agrícola fora da evidência aplicável.
+
+**Atlas:** click/pin atualiza localização, mostra loading/erro, panel coerente, acessível sem mapa via coordenadas; mapas com atribuição e fallback.
+
+**Cartas:** seis culturas P0 visíveis, com pixel art/fallback; dados sem evidência aparecem como `N/D`, indicação de origem e expansão de fontes.
+
+**Histórico:** um evento obrigatório e até dois opcionais com datas; mensagens para datas inválidas; local e inputs sobrevivem à navegação e migração de rascunho.
+
+**Lab:** baseline imutável por padrão (edição apenas em cópia), duas alternativas editáveis; troca por botão em mobile/teclado; nenhuma combinação inválida silenciosa; recálculo sem scores fictícios.
+
+**Resultados:** cada métrica tem origem; comparação parcial apresentada como parcial; alterar prioridade só muda ranking onde computável; `/methodology` acessível.
+
+**Qualidade:** lint, typecheck, testes unitários da cobertura/evidência/slots, Playwright ponta a ponta desktop e mobile, build; sem token embutido nem dependência de API no teste unitário.
+
+## 9. Plano de sprints para Codex (incremental, preservar dados reais)
+
+### Sprint G0 — Auditoria e arquitetura (2–3 h)
+- Inspecionar repositório, componentes, dados, rotas e estrutura antiga. Mapear regras de Rio Verde hardcoded. Escrever ADR curta (map, navigation, coverage). Não quebrar lógica atual.
+- Aceite: diagnóstico de arquivos + plano de migração e testes atuais verdes.
+
+### Sprint G1 — Atlas Brasil (5–7 h)
+- Implementar mapa client-only, pino click/drag, busca opcional, coordenadas, fallback, painel climático NASA e exemplo Rio Verde sem geofence.
+- Aceite: pontos em 3 continentes, eventos de clique e erro, fonte e período, testes de componentes/integração.
+
+### Sprint G2 — Deck e painel lateral (4–5 h)
+- Integrar sprites reais, cards e fichas; classificar evidências por local/cultura; retirar “fortes na região” de cards sem suporte; UX loading/partial/unknown.
+- Aceite: seis P0, N/D não vira zero, fontes clicáveis, navegação por teclado.
+
+### Sprint G3 — Fazenda em timeline (4–5 h)
+- Transformar histórico em slots de timeline; solo e prioridades em painéis; migrar draft antigo; preservar validações.
+- Aceite: um a três eventos, adição/remoção mobile, datas válidas e estado persistente.
+
+### Sprint G4 — Laboratório interativo (6–8 h)
+- Três cenários (baseline + 2), slots de ano/temporada, menus trocar/adicionar, replicar base, regras do motor existente e faltas de evidência. Drag-and-drop somente se sobrar tempo.
+- Aceite: atualização imediata sem falsos scores e sem combinações não validadas.
+
+### Sprint G5 — Comparação e acabamento (5–7 h)
+- Comparação, rótulos de cobertura, fontes, prioridades, demo guiada, responsive, i18n, Playwright e build/deploy.
+- Aceite: fluxo completo ponta a ponta; estado regional brasileiro insuficiente é honesto e útil; sem quebra de navegação.
+
+**Prioridades de corte:** primeiro mapa + seleção brasileira + cards contextualizados + timeline + baseline/2 alternativas + comparação honesta. Cortar em ordem: layers geoespaciais, geocoding, DnD, animações, modos de jogo, estilo avançado. Nunca cortar proveniência/validação.
+
+## 10. Riscos e decisões de produto
+
+- `MapLibre` exige estilo e tiles de provedor autorizado; se offline, fallback coordenadas mantém aplicativo operante.
+- NASA POWER possui resolução regional; clique não equivale a medição da parcela. Não desenhar precisão de talhão.
+- Localização mundial não implica calendários agrícolas globais; interface deve suportar "desconhecido" e exigir entrada local no caso necessário.
+- Dados SoilGrids preparados podem não cobrir todas as coordenadas; nunca criar pH/CTC genérico.
+- Fontes de Rio Verde ou ZARC não devem ser aplicadas fora da região de validade; avaliações exploratórias não são recomendações locais.
+- O usuário pode selecionar mar/oceano; mensagem de contexto e continuar explorando clima se disponível, mas desabilitar rotação agrícola naquele ponto.
+
+## 11. Instrução pronta para o Codex
+
+> Leia `GAMIFICATION_SPEC.md`, `UX_WIREFRAMES.md`, `AGENTS.md` e os arquivos de especificação atuais. Preserve a implementação existente sempre que possível. O objetivo é transformar o wizard em um atlas interativo do Brasil com cartas pixel art, timeline agrícola, laboratório de três rotações e comparador explicável. Remova o geofence Rio Verde da seleção, mas NÃO trate evidências de um município, UF ou lote de solo como válidas em outro. Comece **somente** pelo Sprint G0. Antes de codificar, reporte os componentes existentes, regras hardcoded e plano de migração. A cada sprint, implemente alterações mínimas, valide lint/typecheck/test/build e reporte arquivos alterados e lacunas. Não invente dados científicos, indicadores regionais ou notas.
+
+
+### Wireframes históricos de experiência
+
+# Field Shift — Wireframes textuais completos (desktop + mobile)
+
+Versão 2.0 | Layouts conceituais, não imagens finais. Todos os valores abaixo são placeholders de UI **sem valores científicos inventados**.
+
+## I. Fluxo geral
+
+```text
+[Landing / Iniciar exploração]
+       |
+       v
+[ATLAS BRASIL /explore] -- clicar no mapa --> [PIN + PAINEL REGIONAL]
+       |                                      |
+       |                                      +-- [Carta de cultura] --> [Ficha detalhada]
+       v
+[MINHA FAZENDA /farm] -- histórico (3 cultivos) + solo + prioridades
+       |
+       v
+[LABORATÓRIO /lab] -- baseline + alternativa 1 + alternativa 2
+       |                 alterar cartas, períodos, prioridades
+       v
+[COMPARAÇÃO /results] -- indicadores suportados / N-D + evidências
+       |
+       +------------------------------------> [METODOLOGIA /methodology]
+```
+
+Todos os passos podem ser revisitados sem perder os dados. Nenhum ponto do mapa é bloqueado por país. Sem evidências agronômicas locais, o laboratório permanece exploratório, e a comparação mostra lacunas em vez de recomendações.
+
+## II. Tela 0 — Entrada / landing
+
+```text
++------------------------------------------------------------------------------------+
+| sprout FIELD SHIFT                         Explorar  Minha fazenda   Metodologia    |
++------------------------------------------------------------------------------------+
+|                                                                                    |
+|  DADOS NASA  ->  DECISÕES AGRÍCOLAS                                               |
+|  Explore condições climáticas e compare rotações com evidências                    |
+|                                                                                    |
+|  [ EXPLORAR O MAPA ]      [ TESTAR EXEMPLO: RIO VERDE ]                             |
+|                                                                                    |
+|  [mini visuais de culturas pixel art]                                              |
+|  Clima no Brasil  •  Diferentes estratégias  •  Incerteza explícita                |
++------------------------------------------------------------------------------------+
+```
+
+**Ações:** clicar mapa abre `/explore`; exemplo preenche somente localização demonstrativa; não afirma validação de talhão no Brasil.
+
+## III. Tela 1 — Atlas Brasil /explore
+
+```text
++------------------------------------------------------------------------------------+
+| FIELD SHIFT             Explorar*   Minha fazenda   Laboratório   Comparar   [?]   |
++------------------------------------------------------------------------------------+
+| [Buscar local opcional...]  [Lat ____] [Lon ____] [Ir] [Exemplo Rio Verde]         |
++------------------------------------------------------+-----------------------------+
+|                                                      | LOCAL SELECIONADO            |
+|   MAPA INTERATIVO MUNDIAL                            | [Nome quando disponível]     |
+|                                                      | Lat: __ / Lon: __            |
+|             [+] [-]                                  | [Dados NASA: carregando...]  |
+|                                                      | --------------------------- |
+|                         * PIN SELECIONADO            | CLIMA HISTÓRICO              |
+|                                                      | Chuva: [valor ou N/D]        |
+|   [alterar camada: dados pontuais]*                  | Temperatura: [valor/N/D]    |
+|                                                      | Período / fonte / resolução  |
+|                                                      | --------------------------- |
+|   [attribution]                                      | CULTURAS PARA EXPLORAR       |
+|                                                      | [sprite] Soja [status]       |
+|                                                      | [sprite] Milho [status]      |
+|                                                      | [sprite] Sorgo [status]      |
+|                                                      | [ver todas / filtros]        |
+|                                                      | [ USAR ESTE LOCAL ]          |
++------------------------------------------------------+-----------------------------+
+| *não ativar layer raster sem dados geográficos reais                               |
++------------------------------------------------------------------------------------+
+```
+
+**Estados:** sem seleção: painel instrucional; loading: skeleton; erro NASA: ação tentar novamente + fonte indisponível; oceano: aviso de uso não agrícola; sem dado agronômico: cards apenas informativos e `Evidência local insuficiente`.
+
+**Interações:** click, pan, zoom, pin arrastável; lat/lon alternativos; carta abre ficha; link `Ver evidência` abre painel com fonte e período; CTA salva coordenadas e vai a `/farm`.
+
+### Painel de cultura (overlay / drawer)
+
+```text
++--------------------------------------+
+| [X] SOJA   Glycine max               |
+| [PIXEL ART em destaque]              |
+| Comercial  •  Fixação biológica N    |
+| -----------------------------------  |
+| Clima da localidade: [status + fonte] |
+| Água: [valor/unidade ou N/D]         |
+| Solo: [dados do usuário / estimativa]|
+| Janela local: [período validado/N/D]  |
+| -----------------------------------  |
+| Potenciais: ...                      |
+| Riscos e limites: ...                |
+| Evidências: [abrir documentos]       |
+| [ ADICIONAR À ESTRATÉGIA ]           |
++--------------------------------------+
+```
+
+Se contexto insuficiente, trocar CTA para `CONSIDERAR COMO HIPÓTESE` e exigir revisão antes de usar em comparação.
+
+## IV. Tela 2 — Minha fazenda /farm
+
+```text
++------------------------------------------------------------------------------------+
+| < Voltar ao mapa                SUA ÁREA: [local + lat/lon]       [Alterar local]   |
++------------------------------------------------------------------------------------+
+| HISTÓRICO DE CULTIVOS (1 obrigatório + até 2 opcionais)                             |
+| [1] [sprite] [Selecionar cultura / Outra] [Início ___] [Fim ___] [editar]          |
+|  |                                                                                 |
+| [2] [sprite] [Selecionar cultura / Outra] [Início ___] [Fim ___] [editar]          |
+|  |                                                                                 |
+| [3] [sprite] [Selecionar cultura / Outra] [Início ___] [Fim ___] [editar]          |
+|                                                                                    |
+| [ + OUTRO EVENTO (futuro) ]        [Validar períodos]                               |
+|                                                                                    |
+| +---------------------------------+ +--------------------------------------------+ |
+| | SOLO (OPCIONAL)                 | | MINHAS PRIORIDADES                          | |
+| | ( ) Não sei                    | | Água        [----o------]                   | |
+| | ( ) Análise laboratorial       | | Solo        [------o----]                   | |
+| | ( ) Estimativa regional        | | Operações   [---o-------]                   | |
+| | pH [__] método [__]            | | Irrigação   [Sim | Não | Não sei]          | |
+| | textura [__] SOC [__]          | | Valores visíveis / explicação               | |
+| +---------------------------------+ +--------------------------------------------+ |
+| [Salvar rascunho]                      [ IR AO LABORATÓRIO ]                        |
++------------------------------------------------------------------------------------+
+```
+
+**Interações:** selecionar culturas via grid de cartas, não select obrigatório; digitar cultura livre para histórico; validação de datas, ordem e sobreposição (consórcio explícito); “solo não informado” continua funcional com limitações.
+
+## V. Tela 3 — Laboratório /lab
+
+```text
++------------------------------------------------------------------------------------+
+| LABORATÓRIO DE ROTAÇÕES    Sua área: [local]   [Dados disponíveis: parcial/suporte] |
++------------------------------------------------------------------------------------+
+| DECK DE CULTURAS      [Comercial] [Cobertura] [Filtrar] [Ver todas]                 |
+| [sprite Soja] [sprite Milho] [sprite Sorgo] [sprite Girassol] [Caupi] [Braquiária] |
+| [status fonte] [status]   [status]    [status]           [status] [status]          |
++------------------------------------------------------------------------------------+
+| HORIZONTE: Ano 1 / Ano 2   [Ajustar temporadas e meses]                            |
+|                                                                                    |
+|  A. ATUAL (baseline)       B. ALTERNATIVA 1        C. ALTERNATIVA 2                |
+|  +-------------------+    +-------------------+   +-------------------+             |
+|  | Temporada A       |    | Temporada A       |   | Temporada A       |             |
+|  | [sprite] cultura  |    | [+ Escolher]      |   | [+ Escolher]      |             |
+|  +-------------------+    +-------------------+   +-------------------+             |
+|  | Temporada B       |    | Temporada B       |   | Temporada B       |             |
+|  | [sprite] cultura  |    | [+ Escolher]      |   | [+ Escolher]      |             |
+|  +-------------------+    +-------------------+   +-------------------+             |
+|  | Água: N/D ou ...  |    | Água: N/D ou ...  |   | Água: N/D ou ...  |             |
+|  | Solo: N/D ou ...  |    | Solo: N/D ou ...  |   | Solo: N/D ou ...  |             |
+|  | Riscos: [...]     |    | Riscos: [...]     |   | Riscos: [...]     |             |
+|  +-------------------+    +-------------------+   +-------------------+             |
+|  [Ver base]               [Duplicar A] [Editar]   [Duplicar A] [Editar]            |
+|                                                                                    |
+| [GERAR ALTERNATIVAS JUSTIFICADAS]   [ REVISAR COMPARAÇÃO ]                           |
++------------------------------------------------------------------------------------+
+```
+
+**Progressão por exploração:** selecionar/trocar uma cultura mostra diferenças nos indicadores sustentados. Se nenhuma das 3 alternativas pode ser calculada, demonstrar alternativas como hipóteses, com aviso claro, sem inventar notas.
+
+**Botão sem DnD:** cada slot tem `[Escolher/Trocar]` que abre modal acessível de cards. Desktop DnD opcional. Bloqueios críticos explicados no próprio slot, não por erro genérico.
+
+**Timeline visual:** usar `Jan–Dez` somente como meses numéricos localizados; não assumir estação chuvosa ou safra agrícola brasileira em outros hemisférios.
+
+## VI. Tela 4 — Comparação /results
+
+```text
++------------------------------------------------------------------------------------+
+| COMPARAÇÃO DE ESTRATÉGIAS     [Voltar ao laboratório]  [Alterar prioridades]       |
++------------------------------------------------------------------------------------+
+| Evidência: [Parcial / adequada]  Condições históricas NASA: período [...]           |
+|                                                                                    |
+| Critério                  A. Atual             B. Alternativa 1   C. Alternativa 2  |
+| Água (estimativa)         [N/D ou índice]     [N/D ou índice]   [N/D ou índice]  |
+| Potencial de cobertura   [N/D ou índice]     [N/D ou índice]   [N/D ou índice]  |
+| Diversidade funcional    [N/D ou índice]     [N/D ou índice]   [N/D ou índice]  |
+| Risco documentado        [contexto]           [contexto]         [contexto]        |
+| Viabilidade operacional  [contexto/N/D]       [contexto/N/D]     [contexto/N/D]    |
+|                                                                                    |
+| [Ver por que A]         [Ver por que B]       [Ver por que C]                        |
+|                                                                                    |
+| [Benefícios] [Riscos] [Dados ausentes] [Fontes]                                    |
+|                                                                                    |
+| Nota: indicador relativo não é produtividade nem probabilidade.                   |
++------------------------------------------------------------------------------------+
+```
+
+**Alterar pesos:** se há score agregado válido recalcular e explicar, caso contrário não renderizar ranking. Exportação opcional JSON/PDF fora do essencial.
+
+## VII. Tela 5 — Metodologia /methodology
+
+```text
++------------------------------------------------------------------------------------+
+| COMO CHEGAMOS A ESSES RESULTADOS?                                                   |
+| [1] Fonte de clima NASA (dados históricos, limites espaciais/temporais)             |
+| [2] Solo: usuário / estimativa regional / indisponível                              |
+| [3] Características das culturas e fonte por campo                                 |
+| [4] Método de comparação e pesos                                                    |
+| [5] Níveis de evidência, riscos e o que não é possível concluir                     |
+| [6] Referências clicáveis                                                          |
++------------------------------------------------------------------------------------+
+```
+
+## VIII. Mobile (<768px)
+
+### Atlas
+
+```text
++--------------------------------------+
+| FIELD SHIFT             [menu]        |
+| [Buscar ou coordenadas...]            |
+|                                      |
+|         MAPA (~50vh)                 |
+|         [PIN] [+][-]                  |
+|                                      |
+|         [atribuição]                 |
++--------------------------------------+
+| ┌─ arraste para expandir ───────────┐ |
+| | Local • dados NASA • status        | |
+| | [sprite] [sprite] [sprite]         | |
+| | [Ver culturas] [Usar local]        | |
+| └───────────────────────────────────┘ |
++--------------------------------------+
+```
+
+### Fazenda
+
+```text
++--------------------------------------+
+| < Mapa      Minha fazenda            |
+| [Timeline vertical, um evento/linha] |
+| [Solo opcional (acordeão)]           |
+| [Prioridades (sliders)]              |
+| [Continuar para laboratório]         |
++--------------------------------------+
+```
+
+### Lab e comparação
+
+```text
++--------------------------------------+
+| Laboratório                          |
+| [Deck horizontal com scroll]         |
+| [A Atual|B Alt 1|C Alt 2] (tabs)     |
+| [Slots de safra/cultura]             |
+| [+ Trocar cultura]                    |
+| [Indicadores e alertas]              |
+| [Comparar 3 estratégias]             |
++--------------------------------------+
+```
+
+Na comparação usar seletor de estratégia, mas garantir ação de contraste `Comparar critérios` para ver pelo menos dois cenários lado a lado numa tabela horizontal rolável sem perder cabeçalhos.
+
+## IX. Biblioteca de componentes
+
+- `WorldMap`, `MapFallbackCoordinates`, `SelectedLocationMarker`, `LocationExplorerPanel`.
+- `ClimateMetric`, `EvidenceStatusPill` (sem cor isolada), `SourcePopover`, `DataGapMessage`.
+- `CropSprite`, `CropCard`, `CropDetailDrawer`, `CropDeck`.
+- `HistoryTimeline`, `HistoryEventCard`, `SoilPanel`, `PriorityControls`.
+- `RotationBoard`, `RotationScenarioColumn`, `RotationSlotCard`, `CropSelectionDialog`.
+- `ScenarioComparisonTable`, `RiskDisclosure`, `MethodologySourceList`.
+
+## X. Microinterações e estados
+
+| Gatilho | Feedback | Condição de segurança |
+|---|---|---|
+| Clique no mapa | Pin e loading no painel | Só exibir indicador após resposta válida |
+| Seleciona cultura | Card destaca e abre fonte | Dados ausentes = N/D, nunca nota inventada |
+| Troca slot | Pequeno highlight e atualização | Se não suportado, aviso de comparação parcial |
+| Muda prioridade | Rerank quando válido | Sem dados críticos, não ranquear |
+| NASA fora do ar | Banner + retry/fonte | Fixture somente se real e claramente identificada |
+| Região sem evidência local | Painel de lacunas | Não confundir com solo/cultura inviável |
+| Oceano | Aviso e sem rotação | Permitir explorar clima se houver dados |
+
+## XI. Textos UX recomendados
+
+- “Escolha qualquer ponto do mapa para explorar o clima histórico.”
+- “Estas culturas estão disponíveis para exploração. A adequação local depende de evidências adicionais.”
+- “Não há dados suficientes para estimar este indicador nesta localização.”
+- “Esta comparação é parcial: [quais campos faltam].”
+- “NASA POWER apresenta informações climáticas de uma grade regional, não medições específicas da sua parcela.”
+- “Os resultados ajudam a explorar opções, não substituem avaliação agronômica local.”
+
+## XII. Testes de experiência (cenários E2E)
+
+1. Seleção no Brasil: selecionar Rio Verde por botão; pin e painel aparecem; usar como exemplo, não padrão obrigatório.
+2. Seleção em UFs distintas: coordenadas persistem; o retorno NASA e o contexto municipal são resolvidos independentemente, sem extrapolar ZARC, solo ou artefato de uma UF para outra.
+3. Seleção remota: coordenadas digitadas; funciona sem interagir com tiles.
+4. Oceano: informa que o ponto não corresponde a área agrícola terrestre; sem roteiros de rotação.
+5. NASA indisponível: erro, retry, sem falso indicador.
+6. Histórico de três culturas: datas ordenadas, cartas, exclusão/alteração preservando estado.
+7. Laboratório: duplicar baseline, alterar alternativa por teclado; rerender e justificativas.
+8. Sem Kc para cultura selecionada: água = N/D; sem pontuação agregada inadequada.
+9. Mobile 375px: mapa + bottom-sheet, cartas sem corte, alternativas editáveis sem DnD.
+10. Metodologia: fonte por indicador e ressalva observação vs inferência visível.

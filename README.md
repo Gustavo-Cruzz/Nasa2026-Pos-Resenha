@@ -333,12 +333,11 @@ Prepared artifacts are versioned. A fallback from one location must never be reu
 
 ## Documentation
 
-- [PROJECT_SPEC](fieldshift_codex/PROJECT_SPEC.md) — product contract
+- [PLANEJAMENTO](PLANEJAMENTO.md) — product contract, roadmap and implementation history
 - [METHOD](docs/METHOD.md) — calculations and scientific method
 - [SOURCES](docs/SOURCES.md) — sources, licenses, and provenance
 - [VALIDATION](docs/VALIDATION.md) — acceptance rules
 - [DEMO_SCRIPT](docs/DEMO_SCRIPT.md) — reproducible demonstration
-- [SPRINT_LOG](docs/SPRINT_LOG.md) — implementation history and limitations
 
 ## Product Principle
 

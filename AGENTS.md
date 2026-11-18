@@ -1,9 +1,8 @@
-# Field Shift agent rules
+# Instruções do agente — Plantaê
 
-Read `fieldshift_codex/PROJECT_SPEC.md`, `docs/SPRINT_LOG.md`, and this file before editing. Execute one sprint at a time; inspect existing code; plan files, dependencies, and tests; then run lint, typecheck, unit tests, and build before moving on.
-
-Exception (approved 2026-11-14, national scope updated 2026-11-14): FAO-56 ET0 and the monthly precipitation-minus-ET0 balance may be computed as a climate indicator only; ETc, crop water use, irrigation need, yield and forecasts remain out of scope. Never invent NASA measurements, soil attributes, Kc values, crop cycles, thermal limits, calendars, nutrient/productivity gains, or fixtures. Missing evidence remains `null`/unknown. The product scope is Brazil nationwide: keep Brazil-wide municipal/regional context separate from global climate-only technical exploration, and never promote an unprocessed state or coordinate to regional evidence. Use strict TypeScript, Zod at boundaries, pure engine functions, accessible responsive UI, and no secrets, GIS map, or unnecessary dependencies (login and database: only the exception below).
-
-Exception (approved 2026-11-15): a local SQLite database (Node's built-in `node:sqlite`, no extra dependency) and a deliberately simple demo login (username and password, no email, no recovery) may store the user's registered farm for the farm panel. The database is a hackathon store, not a hardened one; on Vercel its file is temporary. Nothing else stores personal data.
-
-At each sprint end, update `docs/SPRINT_LOG.md` with implementation, checks, evidence, limitations, and next sprint; commit only when Git is configured.
+- Seja conciso, direto e preciso. Leia `PLANEJAMENTO.md` e inspecione o código antes de editar; siga um sprint por vez.
+- Planeje arquivos, dependências e testes. Rode lint, typecheck, testes unitários e build; registre implementação, evidências, limitações e próximo passo em `PLANEJAMENTO.md`. Faça commit apenas com Git configurado.
+- Nunca invente medições NASA, atributos de solo, Kc, ciclos, limites térmicos, calendários, ganhos ou fixtures. Preserve valores ausentes como desconhecidos e mantenha fontes, contexto e status de verificação. Simulações e estimativas devem ser identificadas; não as use para recomendações ou ZARC.
+- O produto cobre o Brasil nacionalmente. Separe contexto municipal/regional da exploração climática global e de medições do talhão; não promova coordenadas ou estados sem processamento a evidência regional. NASA POWER representa histórico/reanálise, não previsão.
+- FAO-56 ET0 e precipitação menos ET0 são permitidos apenas como indicadores climáticos; ETc, consumo da cultura, necessidade de irrigação e produtividade permanecem fora do escopo.
+- Use TypeScript estrito, Zod nas fronteiras, funções puras no motor e UI acessível e responsiva. Não exponha segredos nem acrescente dependências sem necessidade. SQLite local e login simples são permitidos apenas para o painel de fazenda, conforme o planejamento; em Vercel o arquivo é temporário.

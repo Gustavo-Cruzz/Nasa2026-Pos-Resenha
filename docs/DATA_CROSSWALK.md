@@ -131,6 +131,6 @@ Divergências entre documentação e código encontradas no inventário. Não fo
 3. A página de metodologia dizia "Sem previsões" / "Open-Meteo … sem previsões", mas existem `/api/forecast` e `/api/climate-risk` (previsão meteorológica de até 16 dias). **Corrigido na nova página.**
 4. `docs/METHOD.md` lista nove parâmetros POWER; o código pede 11 (inclui `PS` e `TSOIL1`).
 5. RONI/ENSO e `TSOIL1` não aparecem em `docs/SOURCES.md` nem em `docs/METHOD.md`.
-6. `docs/SPRINT_LOG.md` cita OpenFreeMap, mas o mapa base atual usa blocos ArcGIS World_Imagery.
+6. `PLANEJAMENTO.md` cita OpenFreeMap, mas o mapa base atual usa blocos ArcGIS World_Imagery.
 7. `docs/RELATORIO_FIT_NASA.md` é histórico (diz "sem IA/ML"); o modelo logístico de veranico foi adicionado depois e está `not_validated` (não emite probabilidade).
 8. A página de metodologia dizia que o tempo atual é atualizado "a cada 15 minutos"; o código (`components/atlas/use-live-weather.ts:8`) atualiza a cada 5 minutos. **Corrigido na nova página.**
