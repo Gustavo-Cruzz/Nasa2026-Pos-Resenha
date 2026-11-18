@@ -7,11 +7,12 @@ import { JOAO_MOODS, MOOD_VARIANTS, pickMoodSrc, type JoaoMood } from '@/lib/exp
 /** Deterministic art on the first render (no hydration mismatch); a random variant is drawn after mount. */
 function useMoodSrc(mood: JoaoMood): string {
   const base = JOAO_MOODS[mood].src ?? (JOAO_MOODS.neutral.src as string);
-  const [picked, setPicked] = useState<string | null>(null);
+  const [picked, setPicked] = useState<{ mood: JoaoMood; src: string | null } | null>(null);
   useEffect(() => {
-    setPicked(MOOD_VARIANTS[mood] ? pickMoodSrc(mood) : null);
+    const frame = requestAnimationFrame(() => setPicked({ mood, src: MOOD_VARIANTS[mood] ? pickMoodSrc(mood) : null }));
+    return () => cancelAnimationFrame(frame);
   }, [mood]);
-  return picked ?? base;
+  return picked?.mood === mood ? picked.src ?? base : base;
 }
 
 /**
